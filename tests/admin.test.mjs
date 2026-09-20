@@ -147,6 +147,30 @@ r = await worker.fetch(post({ text: "con gà", lang: "vi" }), azure);
 eq([r.status, (await r.json()).error.startsWith("Azure TTS 429")], [502, true], "tts: lỗi nhà cung cấp -> 502 kèm lý do");
 r = await worker.fetch(post({ text: "con gà", lang: "vi" }), env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_VOICES: "{oops" }));
 eq(r.status, 500, "tts: TTS_VOICES hỏng -> 500");
+// ---- giọng do admin chọn (body.voice) ----
+globalThis.fetch = async (url, init) => {
+  calls.push({ url: String(url), init });
+  if (String(url).includes("/rpc/is_admin")) return new Response("true");
+  return new Response(new Uint8Array([9]), { status: 200 });
+};
+calls.length = 0;
+r = await worker.fetch(post({ text: "con gà", lang: "vi", voice: "vi-VN-NamMinhNeural" }), env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_REGION: "westeurope", TTS_VOICES: JSON.stringify({ vi: "vi-VN-HoaiMyNeural" }) }));
+eq([r.status, r.headers.get("x-tts-voice")], [200, "vi-VN-NamMinhNeural"], "voice: giọng admin chọn ưu tiên hơn TTS_VOICES");
+eq(calls.find((c) => c.url.includes("microsoft")).init.body.includes("<voice name=\"vi-VN-NamMinhNeural\">"), true, "voice: SSML dùng đúng giọng đã chọn");
+r = await worker.fetch(post({ text: "con gà", lang: "vi" }), env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_REGION: "westeurope", TTS_VOICES: JSON.stringify({ vi: "vi-VN-HoaiMyNeural" }) }));
+eq(r.headers.get("x-tts-voice"), "vi-VN-HoaiMyNeural", "voice: không chọn thì dùng TTS_VOICES");
+for (const bad of ["vi-VN-x\"><break/>", "de-DE-KatjaNeural", "abc", "vi-VN-Ne ural", "vi--x", "../../etc"]) {
+  r = await worker.fetch(post({ text: "con gà", lang: "vi", voice: bad }), env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_REGION: "westeurope" }));
+  eq(r.status, 400, "voice: từ chối tên giọng không hợp lệ / sai ngôn ngữ / có ký tự lạ: " + JSON.stringify(bad));
+}
+{
+  const before = calls.length;
+  await worker.fetch(post({ text: "x", lang: "vi", voice: "vi-VN-x\"><break/>" }), env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_REGION: "westeurope" }));
+  eq(calls.slice(before).some((c) => c.url.includes("microsoft")), false, "voice: giọng bị từ chối thì KHÔNG gọi nhà cung cấp");
+}
+eq((await (await worker.fetch(new Request("https://a.dev/api/config"), env({ TTS_PROVIDER: "Azure", TTS_KEY: "secret-key" }))).json()).ttsProvider, "azure", "config: lộ tên nhà cung cấp (chữ thường)");
+eq(JSON.stringify(await (await worker.fetch(new Request("https://a.dev/api/config"), env({ TTS_PROVIDER: "azure", TTS_KEY: "secret-key" }))).text()).includes("secret-key"), false, "config: KHÔNG lộ khoá TTS");
+
 globalThis.fetch = realFetch;
 
 process.exit(fail);

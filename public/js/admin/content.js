@@ -107,20 +107,24 @@ async function itemsPanel(panel, lesson, say) {
   const refresh = () => itemsPanel(panel, lesson, say);
   const progress = el("span", { class: "muted" });
 
-  const genAll = btn("🔊 Sinh âm thanh còn thiếu (TTS)", async () => {
-    genAll.disabled = true;
-    const r = await audio.generateMissing(items, L, (d, n) => { progress.textContent = ` Đang sinh ${d}/${n}…`; });
+  const runGen = async (replaceTts) => {
+    genAll.disabled = regenAll.disabled = true;
+    const r = await audio.generateMissing(items, L, (d, n) => { progress.textContent = ` Đang sinh ${d}/${n}…`; }, { replaceTts });
     progress.textContent = "";
-    genAll.disabled = false;
+    genAll.disabled = regenAll.disabled = false;
     if (r.total === 0) say("ok", "Không còn âm thanh nào thiếu.");
     else if (r.failed.length === 0) say("ok", `Đã sinh ${r.total} âm thanh.`);
     else say("err", `Đã sinh ${r.ok}/${r.total} âm thanh. ${r.fatal ? `Dừng vì: ${r.fatal.message}` : `Lỗi: ${r.failed.slice(0, 3).map((f) => `${f.text} (${f.slot}): ${f.message}`).join("; ")}`}`);
     refresh();
-  }, "btn small");
+  };
+  const genAll = btn("🔊 Sinh âm thanh còn thiếu (TTS)", () => runGen(false), "btn small");
+  const regenAll = btn("🔄 Sinh lại TTS bằng giọng hiện tại", () => {
+    if (confirm("Sinh lại TOÀN BỘ âm thanh TTS của bài này bằng giọng đang chọn ở tab Cài đặt? (Âm thanh giọng người thật được giữ nguyên. Việc này tốn thêm ký tự TTS.)")) runGen(true);
+  }, "btn small ghost");
 
   const rows = items.map((item) => itemRow(item, L, slots, say, refresh));
   panel.replaceChildren(
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, progress),
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, progress),
     el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
       el("thead", null, el("tr", null, ["Emoji", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
       el("tbody", null, rows))));
@@ -198,7 +202,7 @@ function slotCell(item, slot, say, refresh) {
   const tag = has ? rows.some((r) => r.source === "human") ? "người" : "TTS" : "";
   return el("span", { class: `slot ${has ? "ok" : missingText ? "na" : "miss"}` },
     el("span", { class: "slot-label" }, slot.label, tag && el("small", null, ` ${tag}`)),
-    has ? btn("▶", () => audio.play(rows[0]), "btn tiny", "Nghe thử") : el("span", { class: "slot-x" }, missingText ? "–" : "✗"),
+    has ? btn("▶", () => audio.play(rows[0]), "btn tiny", rows[0].voice_name ? `Nghe thử — giọng ${rows[0].voice_name}` : "Nghe thử") : el("span", { class: "slot-x" }, missingText ? "–" : "✗"),
     missingText ? null : btn("⟳", run(() => audio.generate(item, slot)), "btn tiny", "Sinh lại bằng TTS"),
     missingText ? null : btn("⬆", () => file.click(), "btn tiny", "Tải giọng người thật lên"),
     file);

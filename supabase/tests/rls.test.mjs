@@ -208,5 +208,18 @@ await as(ADM, async () => {
   ok(r.status === "pending" && r.confirmed_at === null && String(before) === String(after), "admin chèn thẳng status=confirmed -> ép về pending, chưa gia hạn");
 });
 
+// ---- 10. giọng TTS do admin chọn (migration 004) ----
+await as(ADM, async () => {
+  await db.query("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify({ vi: "vi-VN-NamMinhNeural" })]);
+  ok((await q("select tts_voices from public.settings"))[0].tts_voices.vi === "vi-VN-NamMinhNeural", "admin lưu được giọng TTS");
+  const e = await fails("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify(["không phải object"])]);
+  ok(e !== null, "tts_voices bắt buộc là object JSON", String(e));
+});
+await as(A, async () => {
+  const r = await db.query("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify({ vi: "hack" })]);
+  ok(r.affectedRows === 0, "phụ huynh KHÔNG đổi được giọng TTS");
+  ok((await q("select tts_voices from public.settings"))[0].tts_voices.vi === "vi-VN-NamMinhNeural", "giọng TTS vẫn nguyên sau khi phụ huynh thử sửa");
+});
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

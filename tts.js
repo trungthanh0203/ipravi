@@ -6,12 +6,15 @@
 //   TTS_KEY       khoá API (đặt dạng Secret)
 //   TTS_REGION    (azure) vd "westeurope"
 //   TTS_VOICES    (tuỳ chọn) JSON ghi đè giọng theo ngôn ngữ, vd {"vi":"vi-VN-NamMinhNeural","de":"de-DE-ConradNeural"}
-// Tên giọng mặc định bên dưới CHƯA được kiểm chứng với nhà cung cấp — nếu báo lỗi, xem danh sách giọng
-// của nhà cung cấp và ghi đè bằng TTS_VOICES. Locale lấy từ tiền tố tên giọng ("vi-VN-...").
+// Tên giọng mặc định (đối chiếu tài liệu nhà cung cấp 2026-09): Azure de-DE-KatjaNeural, en-US-JennyNeural xác nhận trên
+// tài liệu Microsoft; vi-VN-HoaiMyNeural / vi-VN-NamMinhNeural xác nhận qua danh sách giọng Azure (chưa nghe thử chất lượng).
+// Google: tiếng Việt chỉ có Standard/Wavenet (KHÔNG có Neural2) nên mặc định dùng Wavenet; de-DE-Wavenet-A và
+// en-US-Neural2-C dựa trên danh sách giọng. Nếu báo lỗi "voice", xem danh sách giọng của nhà cung cấp rồi ghi đè bằng
+// TTS_VOICES. Locale lấy từ tiền tố tên giọng ("vi-VN-...").
 
 const DEFAULT_VOICES = {
   azure: { vi: "vi-VN-HoaiMyNeural", de: "de-DE-KatjaNeural", en: "en-US-JennyNeural" },
-  google: { vi: "vi-VN-Neural2-A", de: "de-DE-Neural2-A", en: "en-US-Neural2-C" },
+  google: { vi: "vi-VN-Wavenet-A", de: "de-DE-Wavenet-A", en: "en-US-Neural2-C" },
 };
 
 const json = (obj, status = 200) =>
@@ -22,6 +25,8 @@ const json = (obj, status = 200) =>
 
 const xmlEscape = (s) => s.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[c]);
 const locale = (voice) => voice.split("-").slice(0, 2).join("-");
+// Tên giọng được đưa vào SSML/JSON nên chỉ nhận đúng dạng "vi-VN-HoaiMyNeural" (chữ, số, gạch) — không cho chèn mã.
+const VOICE_RE = /^[a-z]{2,3}-[A-Za-z0-9]{2,8}-[A-Za-z0-9-]{2,64}$/;
 
 export async function isAdmin(request, env) {
   const auth = request.headers.get("authorization") || "";
@@ -95,8 +100,14 @@ export async function handleTts(request, env) {
   } catch {
     return json({ error: "TTS_VOICES không phải JSON hợp lệ" }, 500);
   }
-  const voice = overrides[lang] || DEFAULT_VOICES[provider][lang];
-  if (!voice) return json({ error: `Chưa có giọng đọc cho ngôn ngữ "${lang}" — thêm vào TTS_VOICES` }, 400);
+  // Ưu tiên: giọng admin chọn (gửi kèm yêu cầu) > TTS_VOICES của Worker > giọng mặc định
+  const requested = body?.voice ? String(body.voice).trim() : "";
+  if (requested && (!VOICE_RE.test(requested) || requested.split("-")[0] !== lang)) {
+    return json({ error: `Tên giọng "${requested.slice(0, 40)}" không hợp lệ cho ngôn ngữ "${lang}" (ví dụ đúng: ${lang}-XX-TênGiọng)` }, 400);
+  }
+  const voice = requested || overrides[lang] || DEFAULT_VOICES[provider][lang];
+  if (!voice) return json({ error: `Chưa có giọng đọc cho ngôn ngữ "${lang}" — chọn giọng ở tab Cài đặt hoặc thêm vào TTS_VOICES` }, 400);
+  if (!VOICE_RE.test(voice)) return json({ error: `Giọng "${voice.slice(0, 40)}" (từ TTS_VOICES) không hợp lệ` }, 500);
 
   try {
     const bytes = provider === "azure" ? await synthAzure(env, voice, text, slow) : await synthGoogle(env, voice, text, slow);

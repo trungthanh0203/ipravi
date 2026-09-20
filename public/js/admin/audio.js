@@ -20,11 +20,22 @@ async function token() {
   return data.session?.access_token;
 }
 
-export async function synth(text, lang, speed) {
+// Giọng do admin chọn ở tab Cài đặt (settings.tts_voices), lưu đệm để khỏi hỏi CSDL mỗi lần sinh.
+let voicesCache = null;
+export async function getVoices() {
+  if (voicesCache) return voicesCache;
+  const { data } = await sb.from("settings").select("tts_voices").eq("id", 1).single();
+  voicesCache = data?.tts_voices ?? {};
+  return voicesCache;
+}
+export const resetVoices = () => { voicesCache = null; };
+
+// voice: tên giọng cụ thể (tuỳ chọn) — bỏ trống thì Worker dùng TTS_VOICES / giọng mặc định.
+export async function synth(text, lang, speed, voice) {
   const res = await fetch("/api/tts", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${await token()}` },
-    body: JSON.stringify({ text, lang, speed }),
+    body: JSON.stringify({ text, lang, speed, ...(voice ? { voice } : {}) }),
   });
   if (!res.ok) {
     let message = "";
@@ -55,7 +66,8 @@ export async function dropAudio(itemId, lang, speed, onlySource) {
 export async function generate(item, slot) {
   const text = textFor(item, slot.lang);
   if (!text) throw new Error(`Chưa có chữ "${slot.lang}" để đọc`);
-  const { blob, provider, voice } = await synth(text, slot.lang, slot.speed);
+  const chosen = (await getVoices())[slot.lang];
+  const { blob, provider, voice } = await synth(text, slot.lang, slot.speed, chosen);
   const path = `audio/${item.id}/${slot.lang}-${slot.speed}-${Date.now()}.mp3`;
   await upload(path, blob, "audio/mpeg");
   const old = findAudio(item, slot).filter((a) => a.source === "tts");
@@ -93,12 +105,23 @@ export function play(row) {
   return player.play().catch(() => {});
 }
 
+// Nghe thử 1 giọng (không lưu gì): dùng ở tab Cài đặt để chọn giọng nam/nữ trước khi sinh hàng loạt.
+export async function previewVoice(lang, voice, text) {
+  const { blob } = await synth(text, lang, "normal", voice);
+  player?.pause();
+  player = new Audio(URL.createObjectURL(blob));
+  return player.play().catch(() => {});
+}
+
 // Sinh mọi âm thanh còn thiếu của các mục (đồng thời tối đa 3 yêu cầu). Dừng ngay nếu TTS chưa cấu hình / không đủ quyền.
-export async function generateMissing(items, langs, onProgress = () => {}) {
+// replaceTts = true: sinh LẠI cả các ô đang dùng giọng TTS (để đổi giọng); ô có giọng người thật luôn được giữ nguyên.
+export async function generateMissing(items, langs, onProgress = () => {}, { replaceTts = false } = {}) {
   const tasks = [];
   for (const item of items) {
     for (const slot of audioSlots(langs)) {
-      if (textFor(item, slot.lang) && findAudio(item, slot).length === 0) tasks.push({ item, slot });
+      if (!textFor(item, slot.lang)) continue;
+      const rows = findAudio(item, slot);
+      if (rows.length === 0 || (replaceTts && rows.every((r) => r.source === "tts"))) tasks.push({ item, slot });
     }
   }
   const failed = [];

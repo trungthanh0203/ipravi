@@ -19,6 +19,8 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
     `audio.js` [TTS + tải giọng thật], `ops.js` [duyệt/xoá], `notice.js`, `text.js` [chữ giao diện admin])
 - `worker.js` + `tts.js` + `wrangler.jsonc` — Cloudflare Worker: phục vụ `public/`, `/api/config` (cấu hình riêng từng
   bản triển khai đọc từ biến môi trường) và `/api/tts` (sinh giọng đọc, CHỈ admin). `main` KHÔNG được đặt `_worker.js`.
+- `giao-trinh/` — **giáo trình** (khung 4 cấp 🥚🐣🐥🐓, đối chiếu chương trình trong nước + TT 28/2018) và `csv/` nhập được vào app.
+  Không nằm trong `public/` nên không bị deploy. Sửa CSV xong chạy `node tests/curriculum.test.mjs`.
 - `supabase/migrations/NNN_*.sql` chạy TAY; `supabase/seed/` dữ liệu mẫu; `supabase/tests/` test SQL; `tests/` test JS;
   `tests/browser/mock-sb.js` Supabase giả để thử giao diện; `scripts/dev-server.mjs` chạy local.
 
@@ -29,7 +31,7 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 Dashboard → Variables (KHÔNG ghi vào `wrangler.jsonc`; đã có `keep_vars`). Chạy thử local:
 sao `.dev.vars.example` → `.dev.vars`, rồi `npx wrangler dev`. Không có `center_id` ở bảng nào.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql`, `002_emoji.sql`, `003_admin_overview.sql` (theo thứ tự) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql`, `002_emoji.sql`, `003_admin_overview.sql`, `004_tts_voices.sql` (theo thứ tự) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -62,8 +64,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 - **Khu admin:** trẻ chỉ thấy mục `approved` ở CẢ chủ đề, bài và mục từ → duyệt bài phải duyệt luôn chủ đề chứa nó (`ops.setLessonStatus`).
   Nhập CSV luôn tạo NHÁP, chạy lại không tạo trùng (khớp theo tên chủ đề+bài+từ, không phân biệt hoa/thường), ô trống không xoá
   dữ liệu cũ, đổi chữ/nghĩa thì xoá âm thanh cũ của ngôn ngữ đó (`dropAudio`). Xoá nội dung phải dọn file Storage (`ops.js`).
-  `/api/tts` kiểm admin bằng chính token của người gọi qua RPC `is_admin` (không dùng service_role); trình duyệt tải file lên
-  Storage bằng phiên admin. Tên giọng TTS mặc định trong `tts.js` CHƯA kiểm chứng với nhà cung cấp — báo lỗi thì ghi đè `TTS_VOICES`.
+  `/api/tts` kiểm admin bằng chính token của người gọi qua RPC `is_admin` (không dùng service_role); giọng ưu tiên: admin chọn (`settings.tts_voices`, gửi kèm yêu cầu, **kiểm tên giọng bằng regex** vì được đưa vào SSML) > `TTS_VOICES` > mặc định; trình duyệt tải file lên
+  Storage bằng phiên admin. Giọng TTS mặc định trong `tts.js` đã đối chiếu tài liệu nhà cung cấp nhưng CHƯA nghe thử chất lượng/gọi API thật (Google tiếng Việt chỉ có Standard/Wavenet, không có Neural2) — báo lỗi "voice" thì ghi đè `TTS_VOICES`.
 - Giao dịch `payments` (kể cả admin tạo) LUÔN vào ở `pending`; gia hạn/tăng số con chỉ chạy khi cập nhật `pending→confirmed`
   (trigger). Admin ghi nhận thay phụ huynh = chèn rồi xác nhận (`billing.recordPayment`). Thông báo "Đã …" sau thao tác admin
   dùng `notice.set()` (giữ qua lần tải lại danh sách).
@@ -71,8 +73,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 
 ## Kiểm thử
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs` và `node tests/admin.test.mjs` (56 kiểm tra) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (57 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (68 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (61 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (9). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.
@@ -94,7 +96,10 @@ học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng ch�
 - **Âm thanh:** file TTS sinh qua `/api/tts`; mục chưa có file thì khu trẻ tạm dùng giọng đọc của trình duyệt (`speakFallback`).
 - Chấm phát âm bỏ từ loại đầu ("con", "màu", "quả"...) khi so khớp — nếu không, nói sai cả con vật vẫn ~50 điểm.
 
-**Chưa làm:** hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
+**Giọng TTS:** tab Cài đặt chọn giọng theo ngôn ngữ (nghe thử trước), tab Nội dung có "Sinh lại TTS bằng giọng hiện tại" (giữ giọng người thật).
+**Giáo trình:** đã có khung + 176 từ (Cấp 1) + 64 câu (Cấp 2); Cấp 3 (học vần) và Cấp 4 cần thêm loại mục `letter`/`syllable` và hoạt động mới — xem `giao-trinh/…md` mục 7.
+
+**Chưa làm:** đổi thứ tự chủ đề (thứ tự = thứ tự tạo), hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
 trong tab Phụ huynh, giới hạn thời gian/ngày, thu âm giọng người thật ngay trong app, vai trò giáo viên hỗ trợ, xuất/xoá dữ liệu con,
 icon PNG (iOS cần `apple-touch-icon`), hình linh vật/avatar thật, thông báo nhắc học.
 **Chưa thử với Supabase/Storage/TTS thật:** đăng ký/đăng nhập/xác nhận email, đọc nội dung qua RLS với phiên thật, tải file lên Storage,

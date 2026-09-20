@@ -24,6 +24,7 @@ function configResponse(env) {
     supabaseAnonKey: env.SUPABASE_ANON_KEY || "",
     brandColor: env.BRAND_COLOR || "#e8590c",
     languages: parseLanguages(env.LANGUAGES),
+    ttsProvider: String(env.TTS_PROVIDER || "").toLowerCase(), // chỉ tên nhà cung cấp (không bí mật) — để tab Cài đặt gợi ý giọng
   };
   return new Response(JSON.stringify(body), {
     headers: {
