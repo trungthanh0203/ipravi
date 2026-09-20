@@ -1,0 +1,16 @@
+{
+  // Worker "Tôi luyện tiếng Việt". MỖI TRUNG TÂM/ADMIN = 1 Worker riêng (đổi "name" cho
+  // từng bản triển khai, hoặc để mỗi bản 1 repo/nhánh riêng) + 1 dự án Supabase riêng.
+  // Cấu hình theo từng bản (CENTER_NAME, SUPABASE_URL, SUPABASE_ANON_KEY, LANGUAGES,
+  // BRAND_COLOR) đặt ở Cloudflare Dashboard → Workers & Pages → <worker> → Settings →
+  // Variables — KHÔNG ghi vào file này. "keep_vars" giữ nguyên biến đó khi deploy.
+  // "main" KHÔNG được đặt là "_worker.js" (tên dành riêng cho Pages).
+  "name": "toi-luyen-tieng-viet",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+  "keep_vars": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}

@@ -1,0 +1,13 @@
+# Sao chép thành .dev.vars (đã được .gitignore) rồi điền giá trị thật để chạy `npx wrangler dev`
+# hoặc `node scripts/dev-server.mjs`. KHÔNG điền giá trị thật vào file .example này (được commit).
+CENTER_NAME=Tôi luyện tiếng Việt
+SUPABASE_URL=https://xxxxxxxx.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+LANGUAGES=de:Deutsch,en:English
+BRAND_COLOR=#e8590c
+
+# Sinh giọng đọc (TTS) cho công cụ admin — tuỳ chọn. Provider: azure | google. Đặt TTS_KEY dạng Secret khi deploy.
+# TTS_PROVIDER=azure
+# TTS_KEY=...
+# TTS_REGION=westeurope
+# TTS_VOICES={"vi":"vi-VN-HoaiMyNeural","de":"de-DE-KatjaNeural","en":"en-US-JennyNeural"}

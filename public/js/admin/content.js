@@ -1,0 +1,205 @@
+import { sb } from "../supabase.js";
+import { CONFIG } from "../config.js";
+import { el, msg } from "../ui.js";
+import { A } from "./text.js";
+import * as audio from "./audio.js";
+import * as ops from "./ops.js";
+import { notice } from "./notice.js";
+
+const langs = () => CONFIG.languages.map((l) => l.code);
+const pill = (status) => el("span", { class: `pill ${status === "approved" ? "good" : ""}` }, status === "approved" ? A.approved : A.draft);
+const btn = (label, onclick, cls = "btn small ghost", title) => el("button", { class: cls, onclick, title }, label);
+const check = ({ error, data }) => { if (error) throw error; return data; };
+
+let openUnits = new Set();
+let openLesson = null;
+
+export async function mount(box) {
+  box.replaceChildren(el("p", { class: "muted" }, A.loading));
+  try {
+    const [units, lessons] = await Promise.all([
+      sb.from("units").select("*").order("sort_order").then(check),
+      sb.from("lessons").select("*, content_items(count)").order("sort_order").then(check),
+    ]);
+    render(box, units, lessons);
+  } catch (e) {
+    box.replaceChildren(msg("err", A.loadError + e.message));
+  }
+}
+
+function render(box, units, lessons) {
+  const reload = () => mount(box);
+  const flash = el("div");
+  const say = (kind, text) => flash.replaceChildren(msg(kind, text));
+  const carried = notice.take();
+  if (carried) say(carried.kind, carried.text);
+  // Bọc thao tác: báo lỗi thân thiện + tải lại (thông báo thành công giữ qua lần tải lại)
+  const act = (fn, okText) => async () => {
+    try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
+  };
+
+  if (units.length === 0) {
+    return box.replaceChildren(el("div", { class: "card" }, el("p", null, "Chưa có nội dung. Sang tab “Nhập CSV” để thêm chủ đề, bài và từ vựng.")));
+  }
+
+  box.replaceChildren(flash, ...units.map((u) => {
+    const ls = lessons.filter((l) => l.unit_id === u.id);
+    const open = openUnits.has(u.id);
+    return el("div", { class: "card" },
+      el("div", { class: "row" },
+        el("h2", { style: "margin:0" }, `${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
+        el("div", { class: "row-btns", style: "margin:0" },
+          btn(open ? "Thu gọn ▲" : "Mở ▼", () => { open ? openUnits.delete(u.id) : openUnits.add(u.id); reload(); }),
+          u.status === "approved"
+            ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
+            : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
+          btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
+      open ? el("div", null, ls.map((l) => lessonBlock(l, reload, say))) : null);
+  }));
+}
+
+function lessonBlock(lesson, reload, say) {
+  const n = lesson.content_items?.[0]?.count ?? 0;
+  const panel = el("div");
+  const isOpen = openLesson === lesson.id;
+  const act = (fn, okText) => async () => {
+    try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
+  };
+  const head = el("div", { class: "row lesson-row" },
+    el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${n} mục`)),
+    el("div", { class: "row-btns", style: "margin:0" },
+      btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
+      lesson.status === "approved"
+        ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
+        : btn("Duyệt bài", () => approveLesson(lesson, reload, say), "btn small"),
+      btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
+  if (isOpen) itemsPanel(panel, lesson, say);
+  return el("div", { class: "lesson-block" }, head, panel);
+}
+
+async function loadItems(lessonId) {
+  return sb.from("content_items").select("*, translations(lang, meaning), content_audio(*)")
+    .eq("lesson_id", lessonId).order("sort_order").range(0, 999).then(check);
+}
+
+// Duyệt bài: cảnh báo nếu còn mục thiếu âm thanh / emoji / nghĩa (vẫn cho duyệt nếu admin đồng ý)
+async function approveLesson(lesson, reload, say) {
+  try {
+    const items = await loadItems(lesson.id);
+    const slots = audio.audioSlots(langs());
+    const noAudio = items.filter((i) => slots.some((s) => audio.textFor(i, s.lang) && !audio.findAudio(i, s).length)).length;
+    const noEmoji = items.filter((i) => !i.emoji && !i.image_path).length;
+    const noMeaning = items.filter((i) => langs().some((l) => !audio.textFor(i, l))).length;
+    const issues = [noAudio && `${noAudio} mục thiếu âm thanh (bé sẽ nghe giọng máy của trình duyệt)`, noEmoji && `${noEmoji} mục chưa có hình/emoji`, noMeaning && `${noMeaning} mục thiếu nghĩa`].filter(Boolean);
+    if (issues.length && !confirm(`Bài "${lesson.title_vi}" còn:\n- ${issues.join("\n- ")}\n\nVẫn duyệt cho bé học?`)) return;
+    await ops.setLessonStatus(lesson, "approved");
+    notice.set("ok", "Đã duyệt bài (chủ đề chứa bài cũng được hiện).");
+    await reload();
+  } catch (e) { say("err", e.message); }
+}
+
+async function itemsPanel(panel, lesson, say) {
+  panel.replaceChildren(el("p", { class: "muted" }, A.loading));
+  let items;
+  try { items = await loadItems(lesson.id); } catch (e) { return panel.replaceChildren(msg("err", A.loadError + e.message)); }
+  const L = langs();
+  const slots = audio.audioSlots(L);
+  const refresh = () => itemsPanel(panel, lesson, say);
+  const progress = el("span", { class: "muted" });
+
+  const genAll = btn("🔊 Sinh âm thanh còn thiếu (TTS)", async () => {
+    genAll.disabled = true;
+    const r = await audio.generateMissing(items, L, (d, n) => { progress.textContent = ` Đang sinh ${d}/${n}…`; });
+    progress.textContent = "";
+    genAll.disabled = false;
+    if (r.total === 0) say("ok", "Không còn âm thanh nào thiếu.");
+    else if (r.failed.length === 0) say("ok", `Đã sinh ${r.total} âm thanh.`);
+    else say("err", `Đã sinh ${r.ok}/${r.total} âm thanh. ${r.fatal ? `Dừng vì: ${r.fatal.message}` : `Lỗi: ${r.failed.slice(0, 3).map((f) => `${f.text} (${f.slot}): ${f.message}`).join("; ")}`}`);
+    refresh();
+  }, "btn small");
+
+  const rows = items.map((item) => itemRow(item, L, slots, say, refresh));
+  panel.replaceChildren(
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, progress),
+    el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
+      el("thead", null, el("tr", null, ["Emoji", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
+      el("tbody", null, rows))));
+}
+
+function itemRow(item, L, slots, say, refresh) {
+  const inp = (value, cls = "", attrs = {}) => el("input", { type: "text", value: value ?? "", class: `cell ${cls}`, ...attrs });
+  const emoji = inp(item.emoji, "cell-sm");
+  const vi = inp(item.text_vi);
+  const trs = L.map((l) => inp(audio.textFor(item, l)));
+  const minA = inp(item.min_age, "cell-xs", { inputmode: "numeric" });
+  const maxA = inp(item.max_age, "cell-xs", { inputmode: "numeric" });
+  const save = btn("Lưu", null, "btn small");
+  save.style.display = "none";
+  const dirty = () => { save.style.display = ""; };
+  [emoji, vi, ...trs, minA, maxA].forEach((i) => i.addEventListener("input", dirty));
+
+  save.addEventListener("click", async () => {
+    try {
+      save.disabled = true;
+      const patch = {};
+      const num = (v) => (v.trim() === "" ? null : Number(v));
+      const min = num(minA.value), max = num(maxA.value);
+      if ([min, max].some((v) => v != null && (!Number.isInteger(v) || v < 0 || v > 12))) throw new Error("Tuổi phải là số nguyên 0–12");
+      if (min != null && max != null && min > max) throw new Error("Tuổi nhỏ nhất lớn hơn tuổi lớn nhất");
+      if (!vi.value.trim()) throw new Error("Tiếng Việt không được để trống");
+      if (emoji.value.trim() !== (item.emoji ?? "")) patch.emoji = emoji.value.trim() || null;
+      if (min !== item.min_age) patch.min_age = min;
+      if (max !== item.max_age) patch.max_age = max;
+      if (vi.value.trim() !== item.text_vi) { patch.text_vi = vi.value.trim(); await audio.dropAudio(item.id, "vi"); } // âm thanh cũ không còn đúng chữ
+      if (Object.keys(patch).length) check(await sb.from("content_items").update(patch).eq("id", item.id));
+      for (const [i, l] of L.entries()) {
+        const now = trs[i].value.trim();
+        const was = audio.textFor(item, l);
+        if (now === was) continue;
+        if (now) check(await sb.from("translations").upsert({ item_id: item.id, lang: l, meaning: now }, { onConflict: "item_id,lang" }));
+        else check(await sb.from("translations").delete().eq("item_id", item.id).eq("lang", l));
+        await audio.dropAudio(item.id, l);
+      }
+      say("ok", "Đã lưu. Nếu đổi chữ, âm thanh cũ đã bị xoá — hãy sinh lại.");
+      refresh();
+    } catch (e) {
+      save.disabled = false;
+      say("err", e.message);
+    }
+  });
+
+  const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
+  return el("tr", null,
+    el("td", null, emoji), el("td", null, vi), ...trs.map((t) => el("td", null, t)),
+    el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
+    el("td", { class: "nowrap" }, save, " ",
+      btn("✕", async () => {
+        if (!confirm(`Xoá "${item.text_vi}"?`)) return;
+        try { await ops.deleteItem(item.id); refresh(); } catch (e) { say("err", e.message); }
+      }, "btn small ghost danger", "Xoá mục này")));
+}
+
+function slotCell(item, slot, say, refresh) {
+  const rows = audio.findAudio(item, slot);
+  const has = rows.length > 0;
+  const missingText = !audio.textFor(item, slot.lang);
+  const file = el("input", { type: "file", accept: "audio/*", style: "display:none" });
+  const run = (fn) => async (e) => {
+    const b = e.currentTarget;
+    b.disabled = true;
+    try { await fn(); refresh(); } catch (err) { b.disabled = false; say("err", `${slot.label}: ${err.message}`); }
+  };
+  file.addEventListener("change", async () => {
+    if (!file.files[0]) return;
+    const kind = (prompt("Loại giọng: adult (người lớn) hay child (trẻ em)?", "adult") || "adult").trim().toLowerCase();
+    try { await audio.uploadHuman(item, slot, file.files[0], kind === "child" ? "child" : "adult"); refresh(); }
+    catch (err) { say("err", `${slot.label}: ${err.message}`); }
+  });
+  const tag = has ? rows.some((r) => r.source === "human") ? "người" : "TTS" : "";
+  return el("span", { class: `slot ${has ? "ok" : missingText ? "na" : "miss"}` },
+    el("span", { class: "slot-label" }, slot.label, tag && el("small", null, ` ${tag}`)),
+    has ? btn("▶", () => audio.play(rows[0]), "btn tiny", "Nghe thử") : el("span", { class: "slot-x" }, missingText ? "–" : "✗"),
+    missingText ? null : btn("⟳", run(() => audio.generate(item, slot)), "btn tiny", "Sinh lại bằng TTS"),
+    missingText ? null : btn("⬆", () => file.click(), "btn tiny", "Tải giọng người thật lên"),
+    file);
+}

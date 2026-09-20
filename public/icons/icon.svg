@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icon tạm: nền đỏ cam + gà trống. Thay bằng hình linh vật thật khi có. -->
+  <rect width="512" height="512" rx="96" fill="#e8590c"/>
+  <text x="256" y="350" font-size="300" text-anchor="middle">🐓</text>
+</svg>
