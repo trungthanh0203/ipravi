@@ -10,6 +10,7 @@ import * as listenPick from "./activities/listen-pick.js";
 import * as match from "./activities/match.js";
 import * as listenRepeat from "./activities/listen-repeat.js";
 import * as phonics from "./activities/phonics.js";
+import * as reading from "./activities/reading.js";
 
 // Thêm dạng hoạt động mới: viết file trong ./activities/ (export run(ctx) → {correct,total}) rồi thêm 1 dòng ở đây.
 const RUNNERS = {
@@ -22,9 +23,14 @@ const RUNNERS = {
   fill_letter: phonics.runFill,
   read_pick: phonics.runRead,
   order_words: phonics.runOrder,
+  read_quiz: reading.runQuiz,
+  fill_word: reading.runFillWord,
+  write_check: reading.runWriteCheck,
+  spell_word: reading.runSpell,
+  order_story: reading.runStory,
 };
 const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ các dạng cần nhận mặt chữ
-const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words"]);
+const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story"]);
 
 export const starsFor = (score) => (score == null ? 0 : score >= 85 ? 3 : score >= 60 ? 2 : 1);
 
@@ -39,12 +45,14 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
     paint(root, el("div", { class: "card" }, msg("err", T.loadError), el("button", { class: "btn", onclick: onExit }, T.back)));
     return;
   }
+  // Câu hỏi đọc hiểu (type question) chỉ dùng cho hoạt động read_quiz — không phải "từ mới" để học/chơi các hoạt động khác.
+  prefetchItems(items); // (gồm cả câu hỏi) tải sẵn âm thanh của bài trong lúc bé đọc màn hình "Bắt đầu"
+  const questions = items.filter((i) => i.item_type === "question");
+  items = items.filter((i) => i.item_type !== "question");
   if (items.length < 2) {
     paint(root, el("div", { class: "card" }, el("p", null, T.lessonNotEnough), el("button", { class: "btn", onclick: onExit }, T.back)));
     return;
   }
-
-  prefetchItems(items); // tải sẵn âm thanh của bài trong lúc bé đọc màn hình "Bắt đầu"
 
   // Cú chạm "Bắt đầu" mở khoá âm thanh trên iOS trước khi phát tự động.
   await new Promise((resolve) =>
@@ -70,7 +78,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   let step = 0;
   const totalSteps = plan.length + 1; // +1 cho phần học từ mới
   const ctx = {
-    box, account, child, items,
+    box, account, child, items, questions,
     config: {},
     setProgress: (i, n) => { bar.style.width = `${((step + i / Math.max(n, 1)) / totalSteps) * 100}%`; },
     record: (itemId, correct) => {

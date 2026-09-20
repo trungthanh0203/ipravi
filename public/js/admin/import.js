@@ -23,7 +23,7 @@ async function loadExisting(items) {
   const existingItems = [];
   for (const lessonId of wanted) {
     const rows = check(await sb.from("content_items")
-      .select("id, lesson_id, text_vi, say_vi, emoji, item_type, min_age, max_age, sort_order, translations(lang, meaning)")
+      .select("id, lesson_id, text_vi, say_vi, extra, emoji, item_type, min_age, max_age, sort_order, translations(lang, meaning)")
       .eq("lesson_id", lessonId).range(0, 999));
     for (const r of rows) existingItems.push({ ...r, tr: Object.fromEntries((r.translations ?? []).map((t) => [t.lang, t.meaning])) });
   }
@@ -81,7 +81,7 @@ async function execute(plan, ex, onProgress) {
     const payload = part.map((r) => {
       const l = lid(r.item);
       orderIn.set(l, (orderIn.get(l) ?? 0) + 1);
-      return { lesson_id: l, item_type: r.item.type, text_vi: r.item.vi, say_vi: r.item.say || null, emoji: r.item.emoji || null,
+      return { lesson_id: l, item_type: r.item.type, text_vi: r.item.vi, say_vi: r.item.say || null, extra: r.item.type === "question" ? { choices: r.item.choices, answer: r.item.answer } : null, emoji: r.item.emoji || null,
         min_age: r.item.minAge, max_age: r.item.maxAge, sort_order: orderIn.get(l), status: "draft" };
     });
     const rows = check(await sb.from("content_items").insert(payload).select("id, lesson_id, text_vi"));
@@ -95,6 +95,7 @@ async function execute(plan, ex, onProgress) {
   for (const [n, r] of changed.entries()) {
     onProgress("Cập nhật mục đã có", n, changed.length);
     const patch = {};
+    if (r.changed.includes("extra")) patch.extra = { choices: r.item.choices, answer: r.item.answer };
     if (r.changed.includes("emoji")) patch.emoji = r.item.emoji;
     if (r.changed.includes("say")) { patch.say_vi = r.item.say; await dropAudio(r.existing.id, "vi"); } // đổi chữ đọc → âm thanh cũ không còn đúng
     if (r.changed.includes("type")) patch.item_type = r.item.type;

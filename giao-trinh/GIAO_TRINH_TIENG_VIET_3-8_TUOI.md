@@ -1,8 +1,8 @@
 # Giáo trình "Tôi luyện tiếng Việt" — trẻ gốc Việt 3–8 tuổi
 
-> Bản 2 (2026-09-20: thêm Cấp 3 + chia theo cấp). Đây là **khung giáo trình + dữ liệu nhập được** cho app, do AI soạn dựa trên các nguồn công khai
+> Bản 3 (2026-09-20: thêm Cấp 3 và Cấp 4, chia theo cấp). Đây là **khung giáo trình + dữ liệu nhập được** cho app, do AI soạn dựa trên các nguồn công khai
 > (mục 9). **Bắt buộc có người Việt bản ngữ (tốt nhất là giáo viên tiểu học/mầm non) duyệt** trước khi cho trẻ học thật
-> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ), `csv/cap2-ga-con-cau-ngan.csv` (64 câu) và `csv/cap3-ga-choai-hoc-van.csv` (337 mục học vần). Mỗi file ghi cột `level` (1–4) để app xếp đúng cấp.
+> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ), `csv/cap2-ga-con-cau-ngan.csv` (64 câu), `csv/cap3-ga-choai-hoc-van.csv` (337 mục học vần) và `csv/cap4-ga-trong-doc-hieu.csv` (208 mục đọc hiểu/chính tả/viết). Mỗi file ghi cột `level` (1–4) để app xếp đúng cấp.
 
 ## 1. Giáo trình này phải làm được gì
 
@@ -41,7 +41,7 @@
 | **1** | 🥚 **Trứng** | 3–4 | **Nghe – nhận biết – nói từ** | `cap1-trung-tu-vung.csv`: 14 chủ đề, 29 bài, 176 từ |
 | **2** | 🐣 **Gà con** | 4–6 | **Nói câu ngắn (3–6 tiếng)**, lễ phép, đồng dao | `cap2-ga-con-cau-ngan.csv`: 8 chủ đề, 64 câu |
 | **3** | 🐥 **Gà choai** | 5–7 | **Thanh điệu → chữ cái → vần → đọc** (học vần) | `cap3-ga-choai-hoc-van.csv`: 7 chủ đề, 53 bài, 337 mục |
-| **4** | 🐓 **Gà trống** | 6–8+ | **Đọc hiểu đoạn ngắn, viết câu, kể chuyện** | *sau Cấp 3* |
+| **4** | 🐓 **Gà trống** | 6–8+ | **Đọc hiểu đoạn ngắn, viết câu, kể chuyện** | `cap4-ga-trong-doc-hieu.csv`: 6 chủ đề, 29 bài, 208 mục |
 
 Tuổi chỉ là gợi ý: trẻ 6 tuổi chưa nghe–nói tốt vẫn bắt đầu từ Cấp 1 (nhanh hơn), trẻ 4 tuổi nói tốt có thể nhảy sang Cấp 2.
 
@@ -208,13 +208,101 @@ Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" c
 - **Âm thanh:** TTS đọc **chữ/vần đơn lẻ** dễ sai (cột `say` giúp: "b" → "bờ", nhưng vẫn phải **nghe thử từng chữ cái**). Nên **thu giọng người thật** cho 29 chữ cái + các vần khoá (vài chục file, tải ở tab Nội dung).
 - **Từ khoá có thể lệch vùng miền:** lạc (Bắc) = đậu phộng (Nam), bát/chén, hổ/cọp, mận/roi, thơm/dứa. CSV dùng cách nói miền Bắc; admin sửa tại tab Nội dung.
 
-### Cấp 4 — Gà trống 🐓 (đọc hiểu, viết, kể)
+### Cấp 4 — Gà trống 🐓 (đọc hiểu, chính tả, viết, kể chuyện)
 
-- **Chuẩn đầu ra:** đọc trôi chảy **đoạn 3–5 câu** và trả lời câu hỏi (ai, làm gì, ở đâu); **chép và viết chính tả** từ/câu; **đặt câu** với
-  từ cho trước; **kể lại** truyện ngắn; biết dấu chấm, dấu phẩy, viết hoa đầu câu/tên riêng.
-- **Nội dung:** đoạn văn ngắn theo chủ đề Cấp 1–2 (gia đình, trường lớp, Tết, mùa…); **truyện cổ tích/truyền thuyết rút gọn** (Sự tích bánh
-  chưng bánh giầy, Thánh Gióng, Tấm Cám…); **ca dao, tục ngữ ngắn**; từ chỉ sự vật – hoạt động – đặc điểm ở mức làm quen.
-- **Đích:** vào thẳng **Chào tiếng Việt cấp 2–3** hoặc lớp Việt ngữ tại chỗ; hoặc Tiếng Việt lớp 1–2 trong nước (kèm kiểm tra chữ viết tay).
+Cầu nối sang **Tiếng Việt lớp 1–2**, sách **"Chào tiếng Việt" cấp 2–3** hoặc lớp Việt ngữ tại chỗ. Bắt đầu khi bé **đã đọc được từ và câu ngắn** (xong phần lớn Cấp 3) — app chỉ *gợi ý*, không khoá.
+
+- **Dữ liệu:** `csv/cap4-ga-trong-doc-hieu.csv` — **208 mục, 29 bài, 6 chủ đề** (nhập được ngay; cần migration `009_reading.sql`). Bảng dưới sinh từ chính file này.
+- **Chuẩn đầu ra ("con làm được"):** đọc **đoạn 4–6 câu** và trả lời câu hỏi (ai, làm gì, ở đâu, thế nào); **xếp câu thành đoạn**, nhận ra câu **viết đúng** (viết hoa đầu câu, dấu câu); **viết đúng chính tả** các từ dễ lẫn; nói được từ **chỉ hoạt động/đặc điểm** và đặt câu; **kể lại** truyện ngắn theo tranh; biết một số **tục ngữ, ca dao**.
+- **Nhịp học:** 2–3 bài/tuần → ~10–12 tuần. Có thể chạy xen: đoạn văn ↔ truyện cổ tích ↔ chính tả.
+- **Qua cấp khi:** ≥ 80% số mục đạt mức thuộc ≥ 3/5 **và** bé kể lại được 1 truyện ngắn bằng 3–4 câu (phụ huynh nghe).
+- **Câu hỏi đọc hiểu** là mục riêng (`type` = `question`, cột `choices` các đáp án cách nhau bằng `|`, cột `answer` = số thứ tự đáp án đúng). App xáo thứ tự đáp án mỗi lần; câu hỏi **không** tính vào "số từ đã thuộc".
+
+**Hoạt động mới của Cấp 4:**
+
+| Hoạt động | Bé làm gì | Dạy gì |
+|---|---|---|
+| `read_quiz` đọc đoạn – trả lời | Đọc/nghe cả đoạn (bấm 🔊 từng câu hoặc "Nghe cả đoạn"), rồi chọn đáp án; có nút "Đọc lại đoạn văn" | đọc hiểu |
+| `order_story` xếp câu thành chuyện | Chạm các câu (có hình) theo đúng trình tự; mỗi lần chạm nghe câu đó | trình tự, kể chuyện |
+| `fill_word` điền từ | Câu bị bỏ 1 từ, chọn từ đúng trong 3 từ | từ vựng, ngữ pháp |
+| `write_check` chọn câu viết đúng | Chọn câu viết hoa/dấu câu đúng trong 3 câu (2 câu sai: quên viết hoa, thiếu/sai dấu) | viết hoa, dấu câu |
+| `spell_word` chính tả | Nghe + xem hình, xếp chữ cái thành từ (có 2 chữ nhiễu) | chính tả |
+| `order_words`, `read_pick`, `listen_repeat`, `match` (đã có) | Xếp từ thành câu; đọc – chạm hình; nói theo được chấm; ghép | củng cố |
+
+**Nội dung:**
+
+#### Đọc đoạn văn ngắn (6 bài, 48 mục)
+Đoạn 5 câu về đời sống của bé (gia đình, buổi sáng, Tết, ngày mưa, thú cưng, trường học) + **3 câu hỏi đọc hiểu** (ai, làm gì, ở đâu, thế nào). Bé đọc/nghe đoạn văn, xếp lại các câu theo trình tự, điền từ còn thiếu, đọc theo.
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Gia đình của Nam | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Buổi sáng của em | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Tết ở nhà bà | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Ngày mưa | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Chú mèo của em | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Ở trường | 5 | 3 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+
+#### Truyện cổ tích và truyền thuyết (9 bài, 67 mục)
+Truyện quen thuộc **rút gọn thành 5–6 câu mỗi phần** (Sự tích bánh chưng bánh giầy, Thánh Gióng, Hồ Gươm, Con Rồng cháu Tiên, Tấm Cám, Sơn Tinh – Thủy Tinh), mỗi phần kèm 2 câu hỏi. Truyện dài chia 2 phần. Giữ đúng các tình tiết chính; **không** có tình tiết bạo lực (Tấm Cám dừng ở lúc Tấm làm hoàng hậu).
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Sự tích bánh chưng bánh giầy (1) | 5 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Sự tích bánh chưng bánh giầy (2) | 5 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Thánh Gióng (1) | 5 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Thánh Gióng (2) | 6 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Sự tích Hồ Gươm | 6 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Con Rồng cháu Tiên | 6 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Tấm Cám (1) | 5 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Tấm Cám (2) | 5 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+| Sơn Tinh và Thủy Tinh | 6 | 2 | `read_quiz` `order_story` `fill_word` `listen_repeat` |
+
+#### Ca dao, tục ngữ và đồng dao (3 bài, 17 mục)
+Tục ngữ ngắn về **biết ơn, gia đình, học tập, đoàn kết**; ca dao và đồng dao quen thuộc. Nghĩa tiếng Đức/Anh ghi kèm ý nghĩa để phụ huynh giải thích cho bé.
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Tục ngữ: biết ơn và gia đình | 6 | — | `read_pick` `fill_word` `order_words` `listen_repeat` |
+| Tục ngữ: học tập và đoàn kết | 6 | — | `read_pick` `fill_word` `order_words` `listen_repeat` |
+| Ca dao và đồng dao | 5 | — | `read_pick` `fill_word` `order_words` `listen_repeat` |
+
+#### Viết đúng chính tả (4 bài, 33 mục)
+**Viết hoa** đầu câu và tên riêng; **dấu câu** (chấm, chấm hỏi, chấm than, phẩy); **chính tả** dễ lẫn: c/k/q, g/gh, ng/ngh, ch/tr, s/x, d/gi/r. Bé chọn câu viết đúng, xếp chữ cái thành từ.
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Viết hoa đầu câu và tên riêng | 6 | — | `write_check` `fill_word` `order_words` `listen_repeat` |
+| Dấu câu: chấm, chấm hỏi, chấm than | 7 | — | `write_check` `fill_word` `order_words` `listen_repeat` |
+| Chính tả: c, k, q, g, gh, ng, ngh | 10 | — | `spell_word` `fill_letter` `read_pick` `listen_repeat` |
+| Chính tả: ch, tr, s, x, d, gi, r | 10 | — | `spell_word` `fill_letter` `read_pick` `listen_repeat` |
+
+#### Từ chỉ hoạt động và đặc điểm (3 bài, 23 mục)
+Từ chỉ **hoạt động** (nhảy, bơi, viết…) và **đặc điểm** (to, nhỏ, nhanh, chậm…) rồi **đặt câu** với chúng — chuẩn bị cho tiết "từ và câu" của Tiếng Việt lớp 1–2.
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Từ chỉ hoạt động | 8 | — | `read_pick` `spell_word` `match` `listen_repeat` |
+| Từ chỉ đặc điểm | 8 | — | `read_pick` `spell_word` `match` `listen_repeat` |
+| Đặt câu với từ chỉ đặc điểm | 7 | — | `fill_word` `order_words` `write_check` `listen_repeat` |
+
+#### Kể chuyện theo tranh (4 bài, 20 mục)
+Truyện 5 tranh (gieo hạt, đi chợ, cơn mưa, sinh nhật): bé **xếp các câu theo đúng trình tự** rồi kể lại — luyện kể chuyện theo tranh.
+
+| Bài | Câu/từ | Câu hỏi | Hoạt động |
+|---|---|---|---|
+| Em trồng cây | 5 | — | `order_story` `order_words` `read_pick` `listen_repeat` |
+| Đi chợ cùng mẹ | 5 | — | `order_story` `order_words` `read_pick` `listen_repeat` |
+| Cơn mưa và cầu vồng | 5 | — | `order_story` `order_words` `read_pick` `listen_repeat` |
+| Sinh nhật của Lan | 5 | — | `order_story` `order_words` `read_pick` `listen_repeat` |
+
+**Lưu ý khi duyệt Cấp 4 (bắt buộc có người Việt bản ngữ):**
+- **Truyện cổ tích/truyền thuyết** là bản *rút gọn do AI soạn* từ các tình tiết phổ biến; các bản kể trong sách giáo khoa có thể khác chi tiết (vd tên nhân vật, thứ tự sự kiện). Đối chiếu với sách bé sẽ học, sửa ở tab Nội dung (sửa chữ sẽ xoá âm thanh cũ → sinh lại).
+- **Tục ngữ/ca dao/đồng dao** có nhiều dị bản; đã chọn bản phổ biến nhất. Nghĩa tiếng Đức/Anh là *giải thích ý nghĩa*, không dịch từng chữ.
+- **Câu hỏi đọc hiểu:** đáp án nhiễu đã chọn để bé không đoán được bằng loại trừ ngớ ngẩn — kiểm tra lại từng câu.
+- **Điền từ** tự bỏ 1 từ thường trong câu, đáp án nhiễu lấy từ các từ khác trong bài: đôi khi một từ nhiễu cũng hợp nghĩa. Nếu gặp câu như vậy, sửa câu gốc cho rõ nghĩa hơn.
+- **Giọng đọc đoạn dài:** TTS đọc từng *câu* (không đọc cả đoạn một lần), nên ngắt nhịp tự nhiên; nghe thử để chắc dấu thanh đúng.
+- **Chưa có:** tập viết tay/tô chữ, viết đoạn tự do, đọc to cả đoạn có chấm điểm, chữ hoa A–Z đầy đủ, truyện dài hơn.
 
 ## 4. Cách học (gợi ý cho phụ huynh và người dạy)
 
@@ -266,7 +354,8 @@ thực tế, (c) Tiếng Việt lớp 1 bộ sách mà cháu sẽ học nếu v�
 | Âm thanh **người thật** cho chữ cái/vần | TTS đọc chữ đơn lẻ dễ sai | Đã có sẵn cột `source=human`, `voice_kind`, `region` — chỉ cần thu và tải lên |
 | **Biến thể vùng miền** của từ (ba/bố…) | Mục 5 | Cột riêng theo vùng hoặc bộ nội dung riêng |
 | **Kiểm tra cuối cấp** + báo cáo "đã đạt cấp" | Điều kiện lên cấp (mục 3) | Dùng `child_progress.mastery` + `pronunciation_attempts` |
-| Nội dung **Cấp 2 mở rộng** và **Cấp 4** (cần thêm hoạt động đọc hiểu đoạn, chính tả, viết) | Mục 3 | Soạn bằng AI theo `csv` mẫu rồi duyệt |
+| Nội dung **Cấp 2 mở rộng** (thêm chủ đề: đi chợ, bác sĩ, các mùa…) và **Cấp 4 mở rộng** (thêm truyện, đoạn văn, chính tả) | Mục 3 | Soạn bằng AI theo `csv` mẫu rồi duyệt |
+| **Viết tay**, **viết đoạn tự do**, **đọc to cả đoạn có chấm điểm** | Cấp 4+ | Cần canvas viết tay / nhận dạng giọng dài — chưa làm |
 
 ## 8. Quy trình duyệt chất lượng (bắt buộc — nội dung do AI soạn)
 
@@ -292,6 +381,7 @@ các câu dịch sang tiếng Đức của *Tết/lì xì/bánh chưng* (giữ t
 4. Tab **Nội dung**: mở từng chủ đề → **Sinh âm thanh còn thiếu** → nghe kiểm tra → **Duyệt** khi người duyệt đã đồng ý.
 5. Làm tương tự với `cap2-ga-con-cau-ngan.csv` (sau khi Cấp 1 đã có người học). **Cột `level` trong CSV** (1–4) đưa chủ đề vào đúng cấp; đã nhập từ trước thì nhập lại file để cập nhật cấp, hoặc đổi bằng ô chọn ở tab Nội dung.
 6. Chạy migration `008_phonics.sql`, rồi nhập `cap3-ga-choai-hoc-van.csv` (mỗi bài đã ghi sẵn bộ hoạt động ở cột `activities`; sau khi nhập vào tab **Nội dung**, **nghe thử TTS từng chữ cái** — chỗ đọc sai thì thu giọng người thật). Nhập Cấp 3 **sau** khi Cấp 1–2 đã có người học.
+5b. Chạy migration `009_reading.sql`, rồi nhập `cap4-ga-trong-doc-hieu.csv` (nhập sau Cấp 3). File có cột `choices`/`answer` cho câu hỏi đọc hiểu; app kiểm tra và báo lỗi nếu câu hỏi thiếu đáp án.
 7. Mỗi lần sửa file CSV, chạy `node tests/curriculum.test.mjs` để kiểm lỗi (trùng emoji trong bài, thiếu nghĩa, khớp dữ liệu mẫu).
 
 Nội dung mới: dùng nút **"Sao chép câu lệnh cho AI"** ở tab Nhập CSV, dán vào AI, tải kết quả, **kiểm tra** bằng chính tab đó rồi mới đưa người duyệt.

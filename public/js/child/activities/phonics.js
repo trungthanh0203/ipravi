@@ -7,16 +7,16 @@ import { TONES, toneOf, splitSyllable, words, bare } from "../../viet.js";
 
 // Hoạt động học vần (Cấp 3). Cách chơi chung: đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
 // Mỗi hoạt động tự bỏ qua (total 0) nếu bài không có đủ mục phù hợp — vd bài toàn chữ cái không chơi được "ghép âm + vần".
-const SKIP = { correct: 0, total: 0 };
+export const SKIP = { correct: 0, total: 0 };
 const others = (arr, keep, n) => sample(arr.filter((x) => x !== keep), n);
 
 // 1 lượt chọn: options = [{ key, node, cls }]; trả về Promise<boolean> (true nếu không sai lần nào).
-function pick({ ctx, instr, top, options, correct, target, intro, reveal }) {
+export function pick({ ctx, instr, top, options, correct, target, intro, reveal, wide = false }) {
   return new Promise((resolve) => {
     let mistakes = 0;
     let done = false;
     const buttons = options.map((o, i) => el("button", { class: `opt ${o.cls ?? ""}`, onclick: () => choose(o, buttons[i]) }, o.node));
-    const grid = el("div", { class: "opt-grid" }, buttons);
+    const grid = el("div", { class: "opt-grid" + (wide ? " wide" : "") }, buttons);
     const finish = (ok, delay) => {
       done = true;
       if (reveal) grid.after(reveal());
@@ -49,9 +49,9 @@ function pick({ ctx, instr, top, options, correct, target, intro, reveal }) {
   });
 }
 
-const listenBtn = (item) => el("button", { class: "btn ghost", onclick: () => playItem(item) }, "🔊 " + T.listenVi);
+export const listenBtn = (item) => el("button", { class: "btn ghost", onclick: () => playItem(item) }, "🔊 " + T.listenVi);
 
-async function rounds(ctx, pool, play) {
+export async function rounds(ctx, pool, play) {
   if (pool.length < 2) return SKIP;
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 4, pool.length));
   let correct = 0;

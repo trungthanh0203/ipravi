@@ -21,7 +21,7 @@ const H = "unit,unit_emoji,lesson,vi,emoji,type,min_age,max_age,de,en";
 const run = (body, l = langs) => validateRows(parseCsv(`${H}\n${body}`), { langs: l });
 let v = run("Con vật,🐾,Vật nuôi,con chó,🐶,word,3,8,Hund,dog\nCon vật,🐾,Vật nuôi,con mèo,🐱,,,,Katze,cat");
 eq([v.errors.length, v.warnings.length, v.items.length], [0, 0, 2], "hợp lệ: 2 mục, không lỗi/cảnh báo");
-eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", say: "", kinds: [], emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", say: "", kinds: [], choices: [], answer: null, emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
 
 // Học vần: kiểu letter/syllable, cột say, cột activities
 {
@@ -32,7 +32,7 @@ eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, less
   eq(run3("U,3,L,b,,hack,🐄,letter,x,y").errors.length, 1, "học vần: activities lạ bị từ chối");
   eq(run3("U,3,L,b,,,🐄,letter,x,y").errors.length, 0, "học vần: say/activities để trống hợp lệ");
   eq(run3(`U,3,L,b,${"x".repeat(201)},,🐄,letter,x,y`).errors.length, 1, "học vần: say quá dài bị từ chối");
-  eq(Object.keys(ACTIVITY_DEFAULTS).length, 9, "học vần: 9 loại hoạt động có cấu hình mặc định");
+  eq(Object.keys(ACTIVITY_DEFAULTS).length, 14, "học vần + đọc hiểu: 14 loại hoạt động có cấu hình mặc định");
   eq(activitiesFor([]).map((a) => a[0]), STANDARD_ACTIVITIES, "học vần: bài không ghi activities → 4 hoạt động chuẩn");
   eq(activitiesFor(["listen_pick_tone", "read_pick"]), [["listen_pick_tone", { rounds: 5, choices: 3 }], ["read_pick", { rounds: 4, choices: 3 }]], "học vần: bộ hoạt động theo CSV kèm cấu hình");
   const ex = { units: [], lessons: [], items: [] };
@@ -40,6 +40,27 @@ eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, less
   eq(buildPlan([mk([]), mk(["read_pick"])], ex).newLessons, [{ unit: "U", title: "L", kinds: ["read_pick"] }], "học vần: bài mới lấy activities từ dòng có ghi");
   eq(classify({ ...mk([]), say: "bờ", type: "letter" }, { item_type: "letter", say_vi: "bơ", tr: {} }).changed, ["say"], "học vần: đổi say → cập nhật");
   eq(classify({ ...mk([]), say: "", type: "letter" }, { item_type: "letter", say_vi: "bơ", tr: {} }).status, "same", "học vần: say trống không xoá say cũ");
+}
+
+// Đọc hiểu: type question + choices + answer
+{
+  const HQ = "unit,level,lesson,vi,activities,choices,answer,type,de,en";
+  const runQ = (body) => validateRows(parseCsv(HQ + "\n" + body), { langs });
+  const good = runQ('Đoạn,4,Bài 1,Nhà Nam có mấy người?,read_quiz,bốn người|ba người|năm người,1,question,Wie viele?,How many?');
+  eq([good.errors.length, good.items[0].choices, good.items[0].answer], [0, ["bốn người", "ba người", "năm người"], 1], "câu hỏi: đọc choices + answer");
+  for (const [name, row] of [
+    ["thiếu đáp án", "Đ,4,B,Hỏi?,,,,question,x,y"],
+    ["chỉ 1 đáp án", "Đ,4,B,Hỏi?,,a,1,question,x,y"],
+    ["5 đáp án", "Đ,4,B,Hỏi?,,a|b|c|d|e,1,question,x,y"],
+    ["answer vượt số đáp án", "Đ,4,B,Hỏi?,,a|b,3,question,x,y"],
+    ["answer = 0", "Đ,4,B,Hỏi?,,a|b,0,question,x,y"],
+    ["thiếu answer", "Đ,4,B,Hỏi?,,a|b,,question,x,y"],
+    ["đáp án trùng nhau", "Đ,4,B,Hỏi?,,a|A,1,question,x,y"],
+    ["choices ở mục không phải câu hỏi", "Đ,4,B,Câu.,,a|b,1,sentence,x,y"],
+  ]) eq(Math.min(runQ(row).errors.length, 1), 1, "câu hỏi: " + name + " bị từ chối");
+  const it = good.items[0];
+  eq(classify(it, { item_type: "question", extra: { choices: ["bốn người", "ba người", "năm người"], answer: 1 }, tr: { de: "Wie viele?", en: "How many?" } }).status, "same", "câu hỏi: không đổi → same");
+  eq(classify(it, { item_type: "question", extra: { choices: ["bốn người", "ba người", "năm người"], answer: 2 }, tr: {} }).changed.includes("extra"), true, "câu hỏi: đổi đáp án đúng → cập nhật extra");
 }
 
 // Cột level (cấp 1–4)

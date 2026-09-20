@@ -222,3 +222,16 @@ img.visual.big { max-height: 200px; }
 .tile-word.placed { background: var(--brand-light); border-color: var(--brand); cursor: default; }
 .tile-word.used { opacity: .25; }
 .tile-word.wrong { border-color: var(--err); background: #fff0f0; animation: shake .3s; }
+.lesson-btn.next { border-color: var(--brand); background: var(--brand-light); }
+.lesson-btn .lv-tag { margin-left: 8px; }
+
+/* Hoạt động Cấp 4 */
+.opt-grid.wide { grid-template-columns: 1fr; }
+.opt-grid.wide .opt { min-height: 0; padding: 14px 16px; text-align: left; font-size: 20px; }
+.passage { text-align: left; background: #fff; border-radius: 14px; padding: 6px 14px; margin: 10px 0; }
+.passage-line { margin: 8px 0; font-size: 20px; line-height: 1.5; }
+.passage-again { margin: 8px 0; text-align: left; }
+.passage-again summary { cursor: pointer; color: var(--brand-dark); font-weight: 700; }
+.q-text { font-size: 26px; }
+.tile-card { display: flex; align-items: center; gap: 10px; text-align: left; font-size: 18px; font-weight: 600; width: 100%; }
+.tiles-line:has(.tile-card), .tiles-pool:has(.tile-card) { flex-direction: column; align-items: stretch; }

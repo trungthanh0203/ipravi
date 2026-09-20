@@ -208,7 +208,8 @@ function itemRow(item, L, slots, say, refresh) {
 
   const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
   return el("tr", null,
-    el("td", null, emoji), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null), ...trs.map((t) => el("td", null, t)),
+    el("td", null, emoji), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
+      item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
     el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
     el("td", { class: "nowrap" }, save, " ",
       btn("✕", async () => {

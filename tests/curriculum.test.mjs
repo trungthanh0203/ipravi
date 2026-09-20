@@ -78,6 +78,53 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
   for (const [k, items] of lessons) perUnit.set(k.split(" › ")[0], (perUnit.get(k.split(" › ")[0]) ?? 0) + 1);
   console.log(`  ${perUnit.size} chủ đề, ${lessons.size} bài:`, [...perUnit].map(([u, n]) => `${u}(${n})`).join(" · "));
 }
+// ---- Cấp 4 (đọc hiểu, chính tả, viết): luật riêng ----
+{
+  const f = "cap4-ga-trong-doc-hieu.csv";
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
+  for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
+  for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
+  const fail = (m) => { console.log("  CẤP 4:", m); bad = 1; };
+  const lessons = new Map();
+  for (const it of v.items) {
+    if (it.level !== 4) fail(`dòng ${it.row} không ghi level=4`);
+    const k = `${it.unit} › ${it.lesson}`;
+    (lessons.get(k) ?? lessons.set(k, []).get(k)).push(it);
+  }
+  const END = [".", "?", "!"];
+  for (const [k, all] of lessons) {
+    const items = all.filter((i) => i.type !== "question"), qs = all.filter((i) => i.type === "question");
+    if (all.length < 5 || all.length > 10) fail(`${k}: ${all.length} mục (cần 5–10)`);
+    const emojis = all.map((i) => i.emoji);
+    const dup = emojis.filter((e, i) => emojis.indexOf(e) !== i);
+    if (dup.length) fail(`${k}: trùng emoji ${dup.join(" ")}`);
+    if (!all[0].kinds.length) fail(`${k}: dòng đầu chưa ghi activities`);
+    if (all.slice(1).some((i) => i.kinds.length)) fail(`${k}: activities chỉ ghi ở dòng đầu của bài`);
+    if (all.some((i) => !i.tr.de || !i.tr.en)) fail(`${k}: thiếu nghĩa de/en`);
+    if (all.some((i) => !i.emoji)) fail(`${k}: có mục chưa có emoji`);
+    // hoạt động phải chơi được với dữ liệu của bài (khớp điều kiện lọc trong child/activities/reading.js + phonics.js)
+    const sentences = items.filter((i) => words(i.vi).length >= 4);
+    const chars = (i) => [...i.vi.normalize("NFC")].length;
+    const need = {
+      read_quiz: qs.length >= 1 && items.length >= 3 ? 3 : 0,
+      order_story: items.length >= 3 ? 3 : 0,
+      fill_word: sentences.length,
+      write_check: items.filter((i) => words(i.vi).length >= 2 && END.includes(i.vi.at(-1))).length,
+      order_words: items.filter((i) => words(i.vi).length >= 3).length,
+      spell_word: items.filter((i) => i.emoji && !/\s/.test(i.vi) && chars(i) >= 2 && chars(i) <= 8).length,
+      fill_letter: items.filter((i) => splitSyllable(i.vi)?.initial).length,
+      read_pick: items.filter((i) => i.emoji).length,
+    };
+    for (const a of all[0].kinds) if (a in need && need[a] < 3) fail(`${k}: hoạt động ${a} cần ≥3 mục phù hợp, bài chỉ có ${need[a]}`);
+    if (all[0].kinds.includes("read_quiz") && qs.length < 2) fail(`${k}: bài đọc hiểu nên có ≥2 câu hỏi`);
+    if (qs.length && !all[0].kinds.includes("read_quiz")) fail(`${k}: có câu hỏi nhưng không có hoạt động read_quiz`);
+    if (all[0].kinds.length < 3) fail(`${k}: chỉ ${all[0].kinds.length} hoạt động`);
+  }
+  const perUnit = new Map();
+  for (const [k] of lessons) perUnit.set(k.split(" › ")[0], (perUnit.get(k.split(" › ")[0]) ?? 0) + 1);
+  console.log(`  ${perUnit.size} chủ đề, ${lessons.size} bài:`, [...perUnit].map(([u, n]) => `${u}(${n})`).join(" · "));
+}
 // khớp với dữ liệu mẫu đã chạy trên Supabase (không được tạo trùng chủ đề/bài/từ)
 const seedSql = R("supabase/seed/001_sample_content.sql");
 const cap1 = validateRows(parseCsv(R("giao-trinh/csv/cap1-trung-tu-vung.csv")), { langs: ["de", "en"] }).items;

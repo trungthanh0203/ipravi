@@ -174,7 +174,7 @@ Mỗi mục từ/câu hiện trên giao diện trẻ gồm:
 
 ### 4.3 Nội dung và tổ chức bài học
 - Tổ chức: **Chủ đề (unit) → Bài học (lesson) → Hoạt động (activity)**, mỗi bài học nhỏ
-  (khoảng 5–10 mục từ). Trẻ đi theo lộ trình mở khoá dần, không phụ thuộc lịch lớp.
+  (khoảng 5–10 mục từ). Trẻ tự chọn bài nào cũng được (**không khoá bài** — quyết định 2026-09: người học đã biết trước không phải làm lại bài dễ); app chỉ gợi ý "Học tiếp" bài đầu tiên chưa làm. Không phụ thuộc lịch lớp.
 - Chủ đề ưu tiên: gia đình, cơ thể, con vật, đồ ăn, màu sắc, số đếm, đồ chơi, ngôi nhà, thời
   tiết, chào hỏi/lễ phép (xưng hô: ông/bà/bố/mẹ/anh/chị/em), Tết và văn hoá Việt.
 - Mục học: **từ đơn → cụm từ → câu ngắn**; với trẻ 6–8 tuổi thêm câu dài hơn, làm quen dấu
@@ -212,7 +212,7 @@ thay/bổ sung giọng người thật mà không sửa code.
   tự nhiên, có giọng Bắc/Nam nếu được, có giọng phù hợp trẻ em nếu được, giá, vị trí dữ liệu).
 
 ### 4.5 Tiến độ và tạo động lực
-- Sao/huy hiệu/album nhãn dán; hoàn thành bài mở khoá bài kế tiếp.
+- Sao/huy hiệu/album nhãn dán; hoàn thành bài thì bài kế tiếp được gợi ý "Học tiếp" (không khoá).
 - Điểm phát âm (4.6) góp vào sao của bài, nhưng **không chặn** việc sang bài kế tiếp.
 - Lặp lại ngắt quãng nhẹ nhàng (ôn lại từ đã học sau một khoảng thời gian) — đơn giản trước,
   tinh vi sau.

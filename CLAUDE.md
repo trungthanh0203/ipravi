@@ -32,7 +32,7 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 Dashboard → Variables (KHÔNG ghi vào `wrangler.jsonc`; đã có `keep_vars`). Chạy thử local:
 sao `.dev.vars.example` → `.dev.vars`, rồi `npx wrangler dev`. Không có `center_id` ở bảng nào.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `008_phonics.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `009_reading.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -77,6 +77,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   Giọng TRẺ EM: Azure có (vd en-US-AnaNeural) nhưng KHÔNG có cho tiếng Việt → chỉ có bằng thu giọng người thật (`voice_kind='child'`; chưa có UI cho bé chọn).
 - **Cấp học:** `units.level` 1–4 (🥚 Trứng, 🐣 Gà con, 🐥 Gà choai, 🐓 Gà trống; `levels.js` = khung + `levelProgress`/`recommendedLevel`, hàm thuần có test). Bé thấy 4 chặng → chủ đề → bài; **không khoá cấp**, chỉ gợi ý "Con đang ở đây" (cấp có nội dung đầu tiên chưa đạt). "Đạt cấp" = ≥80% số từ có mastery ≥3. CSV có cột `level` (tuỳ chọn; trống = giữ cấp cũ / mặc định 1). Tab Nội dung nhóm theo cấp, đổi cấp bằng ô chọn.
 - **Học vần (Cấp 3):** `item_type` thêm `letter`/`syllable`; `content_items.say_vi` = chữ ĐỌC thành tiếng khi khác chữ hiển thị (chữ "b" → "bờ"; dùng qua `spoken(item)` trong `viet.js` ở TTS admin, giọng trình duyệt, chấm phát âm). `viet.js` = hàm thuần ngữ âm (`toneOf`, `splitSyllable`, `TONES`). 5 hoạt động mới trong `child/activities/phonics.js` (`listen_pick_tone`, `build_syllable`, `fill_letter`, `read_pick`, `order_words`; tự bỏ qua nếu bài không đủ mục phù hợp; các dạng cần nhận mặt chữ bị ẩn với bé <5 tuổi). CSV có cột `say` và `activities` (bộ hoạt động cho bài MỚI; trống = 4 hoạt động chuẩn; bài đã có không đổi). Thêm loại hoạt động mới → sửa `RUNNERS` (lesson.js), `ACTIVITY_DEFAULTS` (csv.js), CHECK ở migration, test. Giáo trình Cấp 3 = `giao-trinh/csv/cap3-ga-choai-hoc-van.csv` (sinh bằng script, có luật kiểm riêng trong `tests/curriculum.test.mjs`: đủ 29 chữ cái, emoji thanh đúng, hoạt động chơi được).
+- **Đọc hiểu (Cấp 4):** `item_type` thêm `question` (câu hỏi đọc hiểu; `content_items.extra` = `{choices:[…], answer:n}`, CSV: cột `choices` cách nhau `|`, `answer` đếm từ 1; CHECK ở DB + kiểm ở `csv.js`). `lesson.js` TÁCH mục question khỏi `items` (chỉ `read_quiz` dùng, qua `ctx.questions`); `child_stats` không đếm câu hỏi. 5 hoạt động mới trong `child/activities/reading.js` (`read_quiz`, `fill_word`, `write_check`, `spell_word`, `order_story`; `arrange()` dùng chung cho xếp chữ/xếp câu; `order_story` dùng THỨ TỰ mục của bài làm đáp án → đừng xáo `sort_order`). Giáo trình Cấp 4 = `giao-trinh/csv/cap4-ga-trong-doc-hieu.csv` (sinh bằng script, luật kiểm riêng trong `tests/curriculum.test.mjs`: hoạt động chơi được, câu hỏi hợp lệ, emoji không trùng).
+- **Không khoá bài:** bé chọn bất kỳ bài/cấp nào (quyết định 2026-09); chỉ gợi ý "Học tiếp".
 - **Thống kê:** RPC `child_stats(p_child, p_tz)` (SECURITY INVOKER — RLS quyết định ai xem; chỉ tính nội dung đã duyệt) trả cấp/sao/chuỗi ngày/14 ngày/điểm phát âm/từ cần ôn. Giao diện: `stats.js` (bản bé `childStatsView`; bản phụ huynh `parentStatsView` trong khu phụ huynh). Thêm số liệu → sửa RPC + test rls.test.mjs mục 13.
 - **Không được dựng lại màn hình khi cùng 1 phiên:** supabase-js phát lại `SIGNED_IN` mỗi lần app/tab được mở lại sau một lúc; `main.js` chỉ cập nhật phiên nếu cùng người dùng (lỗi cũ: bé đang học bị đẩy về danh sách bài). Bé đang học được nhớ trong `sessionStorage` (`state.activeChildId`), nên trang bị hệ điều hành thu hồi rồi nạp lại vẫn vào lại khu học.
 - **Khu admin tải lại không được làm nhảy trang:** mọi `mount(box)` của tab dùng `beginLoad(box)` (`admin/view.js`) — giữ nội dung + chiều cao cũ trong lúc tải, trả lại vị trí cuộn sau khi vẽ. Đừng `box.replaceChildren("Đang tải…")` khi vùng đã có nội dung.
@@ -85,8 +87,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 
 ## Kiểm thử
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (109 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (112 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (120 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (127 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (9). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.
@@ -101,7 +103,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 
 **Đã có:** Worker + dev-server; migration 001 (đã chạy trên Supabase của chủ dự án), **002 + 003 (chủ dự án chạy tay)**; dữ liệu mẫu;
 luồng đăng ký → PIN → tạo hồ sơ con → chọn avatar → khu phụ huynh (công tắc chấm phát âm, **xin thêm con**, lịch sử thanh toán) →
-**khu học của trẻ** (chủ đề → bài mở khoá dần → học từ mới → 4 hoạt động → kết quả) → màn hình hết hạn (**"Tôi đã thanh toán"**).
+**khu học của trẻ** (chủ đề → bài — **không khoá bài/cấp**, chỉ gợi ý "Học tiếp" → học từ mới → 4 hoạt động → kết quả) → màn hình hết hạn (**"Tôi đã thanh toán"**).
 **Khu admin (bước 3):** tab *Nội dung* (chủ đề/bài/mục từ, duyệt/ẩn, sửa tại chỗ, nghe thử, sinh TTS còn thiếu hoặc từng ô, tải giọng người
 thật, xoá kèm dọn file), *Nhập CSV* (kiểm tra + xem trước + chặn khi còn lỗi, file mẫu, câu lệnh cho AI), *Phụ huynh* (RPC tổng quan, ghi nhận
 học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng chờ xác nhận, mức học phí, lịch sử), *Cài đặt*. Đã thử bằng dữ liệu giả.
@@ -109,7 +111,7 @@ học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng ch�
 - Chấm phát âm bỏ từ loại đầu ("con", "màu", "quả"...) khi so khớp — nếu không, nói sai cả con vật vẫn ~50 điểm.
 
 **Giọng TTS:** tab Cài đặt chọn giọng nữ + nam theo ngôn ngữ (nghe thử trước), tab Nội dung có ô ♀/♂ và "Sinh lại TTS bằng giọng hiện tại" (giữ giọng người thật); bé/phụ huynh chọn giọng nghe (migration 005).
-**Giáo trình:** đã có khung + 176 từ (Cấp 1) + 64 câu (Cấp 2) + **337 mục học vần (Cấp 3, 53 bài)**; Cấp 4 (đọc hiểu, chính tả, viết), chữ hoa, đánh vần từng phần, tô chữ chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
+**Giáo trình:** đã có khung + 176 từ (Cấp 1) + 64 câu (Cấp 2) + **337 mục học vần (Cấp 3, 53 bài)**, **208 mục đọc hiểu/chính tả/viết (Cấp 4, 29 bài)**; chữ hoa, đánh vần từng phần, tô chữ/viết tay, đọc to cả đoạn có chấm điểm chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
 
 **Chưa làm:** đổi thứ tự chủ đề (thứ tự = thứ tự tạo), hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
 trong tab Phụ huynh, giới hạn thời gian/ngày, thu âm giọng người thật ngay trong app, vai trò giáo viên hỗ trợ, xuất/xoá dữ liệu con,

@@ -367,5 +367,38 @@ await as(A, async () => {
   });
 }
 
+// ---- 15. đọc hiểu (migration 009) ----
+{
+  const m009 = readFileSync(new URL("../migrations/009_reading.sql", import.meta.url), "utf8");
+  await db.exec(m009); // mục 14 vừa chạy lại 008 (thu hẹp ràng buộc) — chạy lại 009 đúng như admin chạy tuần tự
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('R', 4, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'RL', 'approved') returning id", [u]))[0].id;
+  const ins = (type, extra) => fails("insert into public.content_items (lesson_id, item_type, text_vi, extra, status) values ($1, $2, 'x', $3::jsonb, 'approved')", [l, type, extra == null ? null : JSON.stringify(extra)]);
+  ok((await ins("question", { choices: ["a", "b", "c"], answer: 2 })) === null, "009: câu hỏi hợp lệ (3 đáp án, đúng = 2)");
+  ok((await ins("sentence", null)) === null, "009: mục thường không cần extra");
+  for (const [name, extra] of [["thiếu extra", null], ["chỉ 1 đáp án", { choices: ["a"], answer: 1 }], ["5 đáp án", { choices: ["a", "b", "c", "d", "e"], answer: 1 }],
+    ["answer vượt số đáp án", { choices: ["a", "b"], answer: 3 }], ["answer = 0", { choices: ["a", "b"], answer: 0 }], ["thiếu answer", { choices: ["a", "b"] }]]) {
+    ok(/check/i.test((await ins("question", extra)) ?? ""), `009: câu hỏi ${name} bị chặn`);
+  }
+  for (const k of ["read_quiz", "fill_word", "write_check", "spell_word", "order_story"]) {
+    ok((await fails("insert into public.activities (lesson_id, kind) values ($1, $2)", [l, k])) === null, `009: hoạt động '${k}' hợp lệ`);
+  }
+  // thống kê không đếm câu hỏi: 2 mục (1 câu + 1 câu hỏi) → items_total = 1
+  await db.query("delete from public.content_items where lesson_id = $1", [l]);
+  const s1 = (await q("insert into public.content_items (lesson_id, item_type, text_vi, status) values ($1,'sentence','Câu 1.','approved') returning id", [l]))[0].id;
+  const q1 = (await q("insert into public.content_items (lesson_id, item_type, text_vi, extra, status) values ($1,'question','Hỏi?', '{\"choices\":[\"a\",\"b\"],\"answer\":1}'::jsonb,'approved') returning id", [l]))[0].id;
+  const P = await uid("p9@x.com");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé R','cat') returning id", [P]))[0].id;
+  await db.query("insert into public.child_progress (child_id, item_id, mastery, wrong_count) values ($1,$2,4,0), ($1,$3,4,0), ($1,$3,4,0) on conflict do nothing", [kid, s1, q1]);
+  await as(P, async () => {
+    const st = (await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s;
+    const L4 = st.levels.find((x) => x.level === 4);
+    ok(L4 && L4.items_total === 1 && L4.items_mastered === 1, "009: thống kê KHÔNG đếm câu hỏi đọc hiểu là 'từ đã thuộc'", JSON.stringify(L4));
+  });
+  await db.exec(m009);
+  ok((await q("select count(*)::int as n from public.content_items where lesson_id = $1", [l]))[0].n === 2, "009: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

@@ -10,7 +10,7 @@ import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel } from "../levels.js";
 import { loadStats, childStatsView } from "../stats.js";
 
-// Khu học của trẻ: chủ đề → bài học (mở khoá dần) → chơi. Chỉ tải dữ liệu của màn hình đang xem.
+// Khu học của trẻ: chủ đề → bài học (mở TẤT CẢ, bé chọn bài nào cũng được) → chơi. Chỉ tải dữ liệu của màn hình đang xem.
 export function mount(root) {
   showLevels(root);
 }
@@ -86,18 +86,20 @@ async function showLessons(root, unit) {
   try {
     const lessons = await api.loadLessons(unit.id);
     const scores = await api.loadLessonScores(child().id, lessons.map((l) => l.id));
+    const nextId = lessons.find((l) => !scores.has(l.id))?.id;
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showUnits(root, levelOf(unit)) }, "◀ " + T.back),
       el("h1", null, visual(unit), " ", unit.title_vi),
       el("div", { class: "lesson-list" }, lessons.map((l, i) => {
-        const locked = i > 0 && !scores.has(lessons[i - 1].id); // xong bài trước mới mở bài sau
+        // Không khoá bài: trẻ đã biết trước có thể vào thẳng bài khó. Chỉ GỢI Ý bài nên học tiếp (bài đầu tiên chưa làm).
         const n = starsFor(scores.get(l.id));
+        const next = l.id === nextId;
         return el("button", {
-          class: "lesson-btn", disabled: locked, title: locked ? T.lessonLocked : "",
+          class: "lesson-btn" + (next ? " next" : ""),
           onclick: () => playLesson({ root, lesson: l, child: child(), account: state.account, onExit: () => showLessons(root, unit) }),
         },
-          el("span", { class: "num" }, locked ? "🔒" : String(i + 1)),
-          el("span", { class: "title" }, l.title_vi),
+          el("span", { class: "num" }, scores.has(l.id) ? "✓" : String(i + 1)),
+          el("span", { class: "title" }, l.title_vi, next ? el("span", { class: "lv-tag" }, T.lessonNext) : null),
           el("span", { class: "stars" }, scores.has(l.id) ? "⭐".repeat(n) + "☆".repeat(3 - n) : ""));
       })));
   } catch {
