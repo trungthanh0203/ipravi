@@ -1,0 +1,338 @@
+﻿unit,unit_emoji,level,lesson,vi,say,activities,emoji,type,min_age,max_age,de,en
+Sáu thanh điệu,🎵,3,Tên sáu thanh,ngang,,listen_pick_tone listen_pick_text listen_repeat,➖,syllable,5,8,"Ton ngang: gleichbleibender Ton, ohne Zeichen","ngang tone: level tone, no mark"
+Sáu thanh điệu,🎵,3,Tên sáu thanh,sắc,,,↗️,syllable,5,8,Ton sắc: steigender Ton,sắc tone: rising tone
+Sáu thanh điệu,🎵,3,Tên sáu thanh,huyền,,,↘️,syllable,5,8,Ton huyền: fallender Ton,huyền tone: falling tone
+Sáu thanh điệu,🎵,3,Tên sáu thanh,hỏi,,,❓,syllable,5,8,Ton hỏi: fallend-steigender Ton,hỏi tone: dipping-rising tone
+Sáu thanh điệu,🎵,3,Tên sáu thanh,ngã,,,〰️,syllable,5,8,Ton ngã: gebrochen steigender Ton,ngã tone: broken rising tone
+Sáu thanh điệu,🎵,3,Tên sáu thanh,nặng,,,⬇️,syllable,5,8,"Ton nặng: tiefer, kurzer Ton",nặng tone: heavy tone
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,ma,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"Gespenst (Ton ngang: ohne Zeichen, gleichbleibend)",ghost (level tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,má,,,↗️,syllable,5,8,Wange (Ton sắc: steigend),cheek (rising tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,mà,,,↘️,syllable,5,8,aber (Ton huyền: fallend),but (falling tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,mả,,,❓,syllable,5,8,Grab (Ton hỏi: fallend-steigend),grave (dipping tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,mã,,,〰️,syllable,5,8,Pferd (Ton ngã: gebrochen steigend),horse (broken rising tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ma,mạ,,,⬇️,syllable,5,8,Reissetzling (Ton nặng: tief und kurz),rice seedling (heavy tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: la,la,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"schreien (Ton ngang: ohne Zeichen, gleichbleibend)",to shout (level tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: la,lá,,,↗️,syllable,5,8,Blatt (Ton sắc: steigend),leaf (rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: la,là,,,↘️,syllable,5,8,sein (Ton huyền: fallend),to be (falling tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: la,lả,,,❓,syllable,5,8,"schlaff, erschöpft (Ton hỏi: fallend-steigend)","limp, exhausted (dipping tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: la,lạ,,,⬇️,syllable,5,8,"fremd, seltsam (Ton nặng: tief und kurz)",strange (heavy tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: cú,cú,,listen_pick_tone match listen_repeat,↗️,syllable,5,8,Eule (Ton sắc: steigend),owl (rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: cú,cù,,,↘️,syllable,5,8,kitzeln (Ton huyền: fallend),to tickle (falling tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: cú,củ,,,❓,syllable,5,8,"Knolle, Rübe (Ton hỏi: fallend-steigend)","tuber, root (dipping tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: cú,cũ,,,〰️,syllable,5,8,alt (Ton ngã: gebrochen steigend),old (broken rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: cú,cụ,,,⬇️,syllable,5,8,"Greis, Urgroßeltern (Ton nặng: tief und kurz)","old person, great-grandparent (heavy tone)"
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,ta,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"wir, uns (Ton ngang: ohne Zeichen, gleichbleibend)","we, us (level tone)"
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,tá,,,↗️,syllable,5,8,Dutzend (Ton sắc: steigend),dozen (rising tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,tà,,,↘️,syllable,5,8,Schoß (des Áo dài) (Ton huyền: fallend),tail (of a tunic) (falling tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,tả,,,❓,syllable,5,8,beschreiben (Ton hỏi: fallend-steigend),to describe (dipping tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,tã,,,〰️,syllable,5,8,Windel (Ton ngã: gebrochen steigend),nappy (broken rising tone)
+Sáu thanh điệu,🎵,3,Nghe sáu thanh: ta,tạ,,,⬇️,syllable,5,8,"Gewicht, danken (Ton nặng: tief und kurz)","weight, to thank (heavy tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: bao,bao,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"Sack, wie viele (Ton ngang: ohne Zeichen, gleichbleibend)","bag, how many (level tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: bao,báo,,,↗️,syllable,5,8,"Zeitung, Leopard (Ton sắc: steigend)","newspaper, leopard (rising tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: bao,bào,,,↘️,syllable,5,8,hobeln (Ton huyền: fallend),to plane (falling tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: bao,bảo,,,❓,syllable,5,8,"sagen, auffordern (Ton hỏi: fallend-steigend)",to tell (dipping tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: bao,bão,,,〰️,syllable,5,8,Sturm (Ton ngã: gebrochen steigend),storm (broken rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: ve,ve,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"Zikade, Flasche (Ton ngang: ohne Zeichen, gleichbleibend)","cicada, bottle (level tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: ve,vé,,,↗️,syllable,5,8,Fahrkarte (Ton sắc: steigend),ticket (rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: ve,vè,,,↘️,syllable,5,8,Kinderreim (Ton huyền: fallend),folk rhyme (falling tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: ve,vẻ,,,❓,syllable,5,8,Aussehen (Ton hỏi: fallend-steigend),"look, appearance (dipping tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: ve,vẽ,,,〰️,syllable,5,8,zeichnen (Ton ngã: gebrochen steigend),to draw (broken rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: mai,mai,,listen_pick_tone match listen_repeat,➖,syllable,5,8,"morgen, Aprikosenblüte (Ton ngang: ohne Zeichen, gleichbleibend)","tomorrow, apricot blossom (level tone)"
+Sáu thanh điệu,🎵,3,Nghe các thanh: mai,mái,,,↗️,syllable,5,8,Dach (Ton sắc: steigend),roof (rising tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: mai,mài,,,↘️,syllable,5,8,schleifen (Ton huyền: fallend),to grind (falling tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: mai,mải,,,❓,syllable,5,8,"vertieft, beschäftigt (Ton hỏi: fallend-steigend)",absorbed (dipping tone)
+Sáu thanh điệu,🎵,3,Nghe các thanh: mai,mãi,,,〰️,syllable,5,8,für immer (Ton ngã: gebrochen steigend),forever (broken rising tone)
+Chữ cái,🔤,3,Nhóm 1: a o ô ơ,a,a,listen_pick_text match listen_repeat,👕,letter,5,8,Buchstabe a wie in „áo“ (Hemd),letter a as in “áo” (shirt)
+Chữ cái,🔤,3,Nhóm 1: a o ô ơ,o,o,,🐝,letter,5,8,Buchstabe o wie in „ong“ (Biene),letter o as in “ong” (bee)
+Chữ cái,🔤,3,Nhóm 1: a o ô ơ,ô,ô,,🚗,letter,5,8,Buchstabe ô wie in „ô tô“ (Auto),letter ô as in “ô tô” (car)
+Chữ cái,🔤,3,Nhóm 1: a o ô ơ,ơ,ơ,,🍑,letter,5,8,Buchstabe ơ wie in „mơ“ (Aprikose),letter ơ as in “mơ” (apricot)
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,bà,,read_pick fill_letter listen_repeat,👵,word,5,8,Oma,grandmother
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,cá,,,🐟,word,5,8,Fisch,fish
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,bò,,,🐄,word,5,8,Kuh,cow
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,cờ,,,🚩,word,5,8,Fahne,flag
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,bơ,,,🥑,word,5,8,Avocado,avocado
+Chữ cái,🔤,3,Nhóm 1: từ có a o ô ơ,ô,,,☂️,word,5,8,Schirm,umbrella
+Chữ cái,🔤,3,Nhóm 2: i e ê u ư,i,i,listen_pick_text match listen_repeat,⚪,letter,5,8,Buchstabe i wie in „bi“ (Murmel),letter i as in “bi” (marble)
+Chữ cái,🔤,3,Nhóm 2: i e ê u ư,e,e,,🍦,letter,5,8,Buchstabe e wie in „kem“ (Eis),letter e as in “kem” (ice cream)
+Chữ cái,🔤,3,Nhóm 2: i e ê u ư,ê,ê,,🐐,letter,5,8,Buchstabe ê wie in „dê“ (Ziege),letter ê as in “dê” (goat)
+Chữ cái,🔤,3,Nhóm 2: i e ê u ư,u,u,,🦉,letter,5,8,Buchstabe u wie in „cú“ (Eule),letter u as in “cú” (owl)
+Chữ cái,🔤,3,Nhóm 2: i e ê u ư,ư,ư,,✉️,letter,5,8,Buchstabe ư wie in „thư“ (Brief),letter ư as in “thư” (letter (mail))
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,mì,,read_pick fill_letter listen_repeat,🍜,word,5,8,Nudeln,noodles
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,khỉ,,,🐒,word,5,8,Affe,monkey
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,mẹ,,,👩,word,5,8,Mutter,mother
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,lê,,,🍐,word,5,8,Birne,pear
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,mũ,,,🎩,word,5,8,Hut,hat
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,củ,,,🥕,word,5,8,"Knolle, Rübe",root vegetable
+Chữ cái,🔤,3,Nhóm 2: từ có i e ê u ư,chữ,,,🔤,word,5,8,"Buchstabe, Schrift","letter, writing"
+Chữ cái,🔤,3,Nhóm 3: b m n l,b,bờ,listen_pick_text match listen_repeat,🐄,letter,5,8,Buchstabe b wie in „bò“ (Kuh),letter b as in “bò” (cow)
+Chữ cái,🔤,3,Nhóm 3: b m n l,m,mờ,,🐱,letter,5,8,Buchstabe m wie in „mèo“ (Katze),letter m as in “mèo” (cat)
+Chữ cái,🔤,3,Nhóm 3: b m n l,n,nờ,,👒,letter,5,8,Buchstabe n wie in „nón“ (Kegelhut),letter n as in “nón” (conical hat)
+Chữ cái,🔤,3,Nhóm 3: b m n l,l,lờ,,🍃,letter,5,8,Buchstabe l wie in „lá“ (Blatt),letter l as in “lá” (leaf)
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,bé,,read_pick fill_letter listen_repeat,👶,word,5,8,"Baby, klein","baby, small"
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,bó,,,💐,word,5,8,"Strauß, Bündel",bunch
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,mơ,,,🍑,word,5,8,Aprikose,apricot
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,nơ,,,🎀,word,5,8,Schleife,bow
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,nến,,,🕯️,word,5,8,Kerze,candle
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,lê,,,🍐,word,5,8,Birne,pear
+Chữ cái,🔤,3,Nhóm 3: từ có b m n l,lọ,,,🏺,word,5,8,"Krug, Vase","jar, vase"
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,t,tờ,listen_pick_text match listen_repeat,✋,letter,5,8,Buchstabe t wie in „tay“ (Hand),letter t as in “tay” (hand)
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,c,cờ,,🐟,letter,5,8,Buchstabe c wie in „cá“ (Fisch),letter c as in “cá” (fish)
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,k,cờ,,🍦,letter,5,8,"Buchstabe k wie in „kem“ (Eis), klingt wie c","letter k as in “kem” (ice cream), klingt wie c"
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,q,cờ,,🍎,letter,5,8,"Buchstabe q wie in „quả“ (Frucht), klingt wie c, steht vor u","letter q as in “quả” (fruit), klingt wie c, steht vor u"
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,d,dờ,,🥥,letter,5,8,Buchstabe d wie in „dừa“ (Kokosnuss),letter d as in “dừa” (coconut)
+Chữ cái,🔤,3,Nhóm 4: t c k q d đ,đ,đờ,,💡,letter,5,8,Buchstabe đ wie in „đèn“ (Lampe),letter đ as in “đèn” (lamp)
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,tôm,,read_pick fill_letter listen_repeat,🦐,word,5,8,Garnele,shrimp
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,cam,,,🍊,word,5,8,Orange,orange
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,kéo,,,✂️,word,5,8,Schere,scissors
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,quà,,,🎁,word,5,8,Geschenk,gift
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,dừa,,,🥥,word,5,8,Kokosnuss,coconut
+Chữ cái,🔤,3,Nhóm 4: từ có t c k q d đ,đàn,,,🎻,word,5,8,Instrument,musical instrument
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,h,hờ,listen_pick_text match listen_repeat,🌸,letter,5,8,Buchstabe h wie in „hoa“ (Blume),letter h as in “hoa” (flower)
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,g,gờ,,🐔,letter,5,8,Buchstabe g wie in „gà“ (Huhn),letter g as in “gà” (chicken)
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,r,rờ,,🐢,letter,5,8,Buchstabe r wie in „rùa“ (Schildkröte),letter r as in “rùa” (turtle)
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,s,sờ,,⭐,letter,5,8,Buchstabe s wie in „sao“ (Stern),letter s as in “sao” (star)
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,v,vờ,,🦆,letter,5,8,Buchstabe v wie in „vịt“ (Ente),letter v as in “vịt” (duck)
+Chữ cái,🔤,3,Nhóm 5: h g r s v x,x,xờ,,🍙,letter,5,8,Buchstabe x wie in „xôi“ (Klebreis),letter x as in “xôi” (sticky rice)
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,hổ,,read_pick fill_letter listen_repeat,🐯,word,5,8,Tiger,tiger
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,gạo,,,🌾,word,5,8,Reis (roh),rice grain
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,rau,,,🥬,word,5,8,Gemüse,vegetables
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,sữa,,,🥛,word,5,8,Milch,milk
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,vở,,,📓,word,5,8,Heft,notebook
+Chữ cái,🔤,3,Nhóm 5: từ có h g r s v x,xôi,,,🍙,word,5,8,Klebreis,sticky rice
+Chữ cái,🔤,3,Nhóm 6: ă â y p,ă,á,listen_pick_text match listen_repeat,👁️,letter,5,8,"Buchstabe ă wie in „mắt“ (Auge), kurzes a","letter ă as in “mắt” (eye), kurzes a"
+Chữ cái,🔤,3,Nhóm 6: ă â y p,â,ớ,,🐛,letter,5,8,"Buchstabe â wie in „sâu“ (Raupe), kurzes ơ","letter â as in “sâu” (caterpillar), kurzes ơ"
+Chữ cái,🔤,3,Nhóm 6: ă â y p,y,i dài,,💡,letter,5,8,"Buchstabe y wie in „ý“ (Idee), langes i","letter y as in “ý” (idea), langes i"
+Chữ cái,🔤,3,Nhóm 6: ă â y p,p,pờ,,🔋,letter,5,8,Buchstabe p wie in „pin“ (Batterie),letter p as in “pin” (battery)
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,mắt,,read_pick fill_letter listen_repeat,👁️,word,5,8,Auge,eye
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,răng,,,🦷,word,5,8,Zahn,tooth
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cân,,,⚖️,word,5,8,Waage,scale
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cây,,,🌳,word,5,8,Baum,tree
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,mây,,,☁️,word,5,8,Wolke,cloud
+Chữ cái,🔤,3,Nhóm 6: từ có ă â y,tay,,,✋,word,5,8,Hand,hand
+Ghép âm với nguyên âm,🧩,3,Vần a,ba,,build_syllable fill_letter read_pick listen_repeat,3️⃣,word,5,8,drei,three
+Ghép âm với nguyên âm,🧩,3,Vần a,bà,,,👵,word,5,8,Oma,grandmother
+Ghép âm với nguyên âm,🧩,3,Vần a,cá,,,🐟,word,5,8,Fisch,fish
+Ghép âm với nguyên âm,🧩,3,Vần a,gà,,,🐔,word,5,8,Huhn,chicken
+Ghép âm với nguyên âm,🧩,3,Vần a,lá,,,🍃,word,5,8,Blatt,leaf
+Ghép âm với nguyên âm,🧩,3,Vần a,nhà,,,🏠,word,5,8,Haus,house
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",xe,,build_syllable fill_letter read_pick listen_repeat,🚗,word,5,8,"Fahrzeug, Auto","vehicle, car"
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",bé,,,👶,word,5,8,"Baby, klein","baby, small"
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",mẹ,,,👩,word,5,8,Mutter,mother
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",chè,,,🍵,word,5,8,Tee,tea
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",nghé,,,🐃,word,5,8,Büffelkalb,baby buffalo
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",dê,,,🐐,word,5,8,Ziege,goat
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",hè,,,☀️,word,5,8,Sommer,summer
+Ghép âm với nguyên âm,🧩,3,Vần i,bi,,build_syllable fill_letter read_pick listen_repeat,⚪,word,5,8,Murmel,marble
+Ghép âm với nguyên âm,🧩,3,Vần i,bí,,,🎃,word,5,8,Kürbis,pumpkin
+Ghép âm với nguyên âm,🧩,3,Vần i,mì,,,🍜,word,5,8,Nudeln,noodles
+Ghép âm với nguyên âm,🧩,3,Vần i,khỉ,,,🐒,word,5,8,Affe,monkey
+Ghép âm với nguyên âm,🧩,3,Vần i,chị,,,👧,word,5,8,ältere Schwester,older sister
+Ghép âm với nguyên âm,🧩,3,Vần i,đi,,,🚶,word,5,8,gehen,to go
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",bò,,build_syllable fill_letter read_pick listen_repeat,🐄,word,5,8,Kuh,cow
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cô,,,👩‍🏫,word,5,8,"Lehrerin, Tante","teacher, aunt"
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cờ,,,🚩,word,5,8,Fahne,flag
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",bơ,,,🥑,word,5,8,Avocado,avocado
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",ô,,,☂️,word,5,8,Schirm,umbrella
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",hồ,,,🏞️,word,5,8,See,lake
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",nơ,,,🎀,word,5,8,Schleife,bow
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cỏ,,,🌿,word,5,8,Gras,grass
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",mũ,,build_syllable fill_letter read_pick listen_repeat,🎩,word,5,8,Hut,hat
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",thú,,,🐻,word,5,8,Tier,animal
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",củ,,,🥕,word,5,8,"Knolle, Rübe",root vegetable
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",chữ,,,🔤,word,5,8,"Buchstabe, Schrift","letter, writing"
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",thư,,,✉️,word,5,8,Brief,letter (mail)
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",tủ,,,🗄️,word,5,8,Schrank,cupboard
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",cú,,,🦉,word,5,8,Eule,owl
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",đàn,,build_syllable fill_letter read_pick listen_repeat,🎻,word,5,8,Instrument,musical instrument
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",bạn,,,👫,word,5,8,Freund,friend
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",lan,,,🌺,word,5,8,Orchidee,orchid
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",ăn,,,🍚,word,5,8,essen,to eat
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",cân,,,⚖️,word,5,8,Waage,scale
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",chân,,,🦶,word,5,8,"Fuß, Bein","foot, leg"
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",mận,,,🍑,word,5,8,Pflaume,plum
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",cam,,build_syllable fill_letter read_pick listen_repeat,🍊,word,5,8,Orange,orange
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",tắm,,,🛁,word,5,8,baden,to bathe
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",ấm,,,☕,word,5,8,Teekanne,teapot
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",nấm,,,🍄,word,5,8,Pilz,mushroom
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",mâm,,,🍽️,word,5,8,Tablett,tray
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",nằm,,,🛌,word,5,8,liegen,to lie down
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",hát,,build_syllable fill_letter read_pick listen_repeat,🎤,word,5,8,singen,to sing
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",cát,,,🏖️,word,5,8,Sand,sand
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",bát,,,🥣,word,5,8,Schüssel,bowl
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",mắt,,,👁️,word,5,8,Auge,eye
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",tất,,,🧦,word,5,8,Socken,socks
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",mật,,,🍯,word,5,8,Honig,honey
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",cắt,,,✂️,word,5,8,schneiden,to cut
+Vần có âm cuối,🔗,3,"Vần ang, anh",vàng,,build_syllable fill_letter read_pick listen_repeat,🥇,word,5,8,"Gold, gelb","gold, yellow"
+Vần có âm cuối,🔗,3,"Vần ang, anh",tháng,,,📅,word,5,8,Monat,month
+Vần có âm cuối,🔗,3,"Vần ang, anh",trang,,,📄,word,5,8,Seite,page
+Vần có âm cuối,🔗,3,"Vần ang, anh",sáng,,,🌅,word,5,8,Morgen,morning
+Vần có âm cuối,🔗,3,"Vần ang, anh",chanh,,,🍋,word,5,8,Limette,lime
+Vần có âm cuối,🔗,3,"Vần ang, anh",xanh,,,🍀,word,5,8,"grün, blau","green, blue"
+Vần có âm cuối,🔗,3,"Vần ang, anh",canh,,,🍲,word,5,8,Suppe,soup
+Vần có âm cuối,🔗,3,"Vần ang, anh",tranh,,,🖼️,word,5,8,Bild,painting
+Vần có âm cuối,🔗,3,"Vần ang, anh",bánh,,,🥮,word,5,8,Kuchen,cake
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",sách,,build_syllable fill_letter read_pick listen_repeat,📚,word,5,8,Buch,book
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",lạc,,,🥜,word,5,8,Erdnuss,peanut
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",nhạc,,,🎵,word,5,8,Musik,music
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",thác,,,🌊,word,5,8,Wasserfall,waterfall
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",gạch,,,🧱,word,5,8,Ziegelstein,brick
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",cúc,,,🌼,word,5,8,Chrysantheme,chrysanthemum
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",mực,,,🦑,word,5,8,"Tintenfisch, Tinte","squid, ink"
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",đèn,,build_syllable fill_letter read_pick listen_repeat,💡,word,5,8,Lampe,lamp
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",nến,,,🕯️,word,5,8,Kerze,candle
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",nhện,,,🕷️,word,5,8,Spinne,spider
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",vịt,,,🦆,word,5,8,Ente,duck
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",thịt,,,🥩,word,5,8,Fleisch,meat
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",chín,,,9️⃣,word,5,8,"neun, reif","nine, ripe"
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",nón,,build_syllable fill_letter read_pick listen_repeat,👒,word,5,8,Kegelhut,conical hat
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",tròn,,,⭕,word,5,8,rund,round
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",thơm,,,🍍,word,5,8,"Ananas, duftend","pineapple, fragrant"
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",tôm,,,🦐,word,5,8,Garnele,shrimp
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",cơm,,,🍚,word,5,8,Reis (gekocht),cooked rice
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",hộp,,,📦,word,5,8,Schachtel,box
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",chớp,,,⚡,word,5,8,Blitz,lightning
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",hai,,build_syllable fill_letter read_pick listen_repeat,2️⃣,word,5,8,zwei,two
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",tay,,,✋,word,5,8,Hand,hand
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",cây,,,🌳,word,5,8,Baum,tree
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",bay,,,✈️,word,5,8,fliegen,to fly
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",chai,,,🍾,word,5,8,Flasche,bottle
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",mây,,,☁️,word,5,8,Wolke,cloud
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",voi,,build_syllable fill_letter read_pick listen_repeat,🐘,word,5,8,Elefant,elephant
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",tôi,,,🙋,word,5,8,ich,I
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",xôi,,,🍙,word,5,8,Klebreis,sticky rice
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",núi,,,⛰️,word,5,8,Berg,mountain
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",túi,,,👜,word,5,8,Tasche,bag
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",bơi,,,🏊,word,5,8,schwimmen,to swim
+Vần có âm cuối,🔗,3,"Vần ao, eo",sao,,build_syllable fill_letter read_pick listen_repeat,⭐,word,5,8,Stern,star
+Vần có âm cuối,🔗,3,"Vần ao, eo",cao,,,🦒,word,5,8,"hoch, groß",tall
+Vần có âm cuối,🔗,3,"Vần ao, eo",gạo,,,🌾,word,5,8,Reis (roh),rice grain
+Vần có âm cuối,🔗,3,"Vần ao, eo",cáo,,,🦊,word,5,8,Fuchs,fox
+Vần có âm cuối,🔗,3,"Vần ao, eo",báo,,,🐆,word,5,8,Leopard,leopard
+Vần có âm cuối,🔗,3,"Vần ao, eo",mèo,,,🐱,word,5,8,Katze,cat
+Vần có âm cuối,🔗,3,"Vần ao, eo",heo,,,🐷,word,5,8,Schwein,pig
+Vần có âm cuối,🔗,3,"Vần ao, eo",kéo,,,✂️,word,5,8,Schere,scissors
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",rau,,build_syllable fill_letter read_pick listen_repeat,🥬,word,5,8,Gemüse,vegetables
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",màu,,,🎨,word,5,8,Farbe,colour
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",trâu,,,🐃,word,5,8,Wasserbüffel,water buffalo
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",cầu,,,🌉,word,5,8,Brücke,bridge
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",lều,,,⛺,word,5,8,Zelt,tent
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",thìa,,build_syllable fill_letter read_pick listen_repeat,🥄,word,5,8,Löffel,spoon
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",đĩa,,,🍽️,word,5,8,Teller,plate
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",cua,,,🦀,word,5,8,Krabbe,crab
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",rùa,,,🐢,word,5,8,Schildkröte,turtle
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",vua,,,👑,word,5,8,König,king
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",mưa,,,🌧️,word,5,8,Regen,rain
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",sữa,,,🥛,word,5,8,Milch,milk
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",dừa,,,🥥,word,5,8,Kokosnuss,coconut
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",lửa,,,🔥,word,5,8,Feuer,fire
+Nguyên âm đôi,🎶,3,"Vần ia, ua, ưa",cửa,,,🚪,word,5,8,Tür,door
+Nguyên âm đôi,🎶,3,Vần iê (yê),biển,,build_syllable fill_letter read_pick listen_repeat,🌊,word,5,8,Meer,sea
+Nguyên âm đôi,🎶,3,Vần iê (yê),tiền,,,💵,word,5,8,Geld,money
+Nguyên âm đôi,🎶,3,Vần iê (yê),kiến,,,🐜,word,5,8,Ameise,ant
+Nguyên âm đôi,🎶,3,Vần iê (yê),miệng,,,👄,word,5,8,Mund,mouth
+Nguyên âm đôi,🎶,3,Vần iê (yê),điện,,,🔌,word,5,8,Strom,electricity
+Nguyên âm đôi,🎶,3,Vần iê (yê),xiếc,,,🎪,word,5,8,Zirkus,circus
+Nguyên âm đôi,🎶,3,Vần uô,chuối,,build_syllable fill_letter read_pick listen_repeat,🍌,word,5,8,Banane,banana
+Nguyên âm đôi,🎶,3,Vần uô,muối,,,🧂,word,5,8,Salz,salt
+Nguyên âm đôi,🎶,3,Vần uô,chuông,,,🔔,word,5,8,Glocke,bell
+Nguyên âm đôi,🎶,3,Vần uô,thuốc,,,💊,word,5,8,Medizin,medicine
+Nguyên âm đôi,🎶,3,Vần uô,buồm,,,⛵,word,5,8,Segel,sail
+Nguyên âm đôi,🎶,3,Vần ươ,vườn,,build_syllable fill_letter read_pick listen_repeat,🏡,word,5,8,Garten,garden
+Nguyên âm đôi,🎶,3,Vần ươ,bướm,,,🦋,word,5,8,Schmetterling,butterfly
+Nguyên âm đôi,🎶,3,Vần ươ,trường,,,🏫,word,5,8,Schule,school
+Nguyên âm đôi,🎶,3,Vần ươ,đường,,,🛣️,word,5,8,"Straße, Weg","road, way"
+Nguyên âm đôi,🎶,3,Vần ươ,cười,,,😄,word,5,8,lachen,to laugh
+Nguyên âm đôi,🎶,3,Vần ươ,ngựa,,,🐴,word,5,8,Pferd,horse
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,chó,,build_syllable fill_letter read_pick listen_repeat,🐶,word,5,8,Hund,dog
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,chim,,,🐦,word,5,8,Vogel,bird
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,chuột,,,🐭,word,5,8,Maus,mouse
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,chổi,,,🧹,word,5,8,Besen,broom
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,trứng,,,🥚,word,5,8,Ei,egg
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,trăng,,,🌙,word,5,8,Mond,moon
+Phụ âm ghép và chính tả,✍️,3,Âm ch và tr,trống,,,🥁,word,5,8,Trommel,drum
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",khỉ,,build_syllable fill_letter read_pick listen_repeat,🐒,word,5,8,Affe,monkey
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",khóa,,,🔑,word,5,8,"Schlüssel, Schloss","key, lock"
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",khăn,,,🧣,word,5,8,"Schal, Tuch","scarf, cloth"
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",ghế,,,🪑,word,5,8,Stuhl,chair
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",nghé,,,🐃,word,5,8,Büffelkalb,baby buffalo
+Phụ âm ghép và chính tả,✍️,3,"Âm kh, gh và ngh",nghĩ,,,💭,word,5,8,denken,to think
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",giày,,build_syllable fill_letter read_pick listen_repeat,👟,word,5,8,Schuhe,shoes
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",giường,,,🛏️,word,5,8,Bett,bed
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",gió,,,💨,word,5,8,Wind,wind
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",ngô,,,🌽,word,5,8,Mais,corn
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",ngủ,,,😴,word,5,8,schlafen,to sleep
+Phụ âm ghép và chính tả,✍️,3,"Âm gi, ng và nh",nhẫn,,,💍,word,5,8,Ring,ring
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",phở,,build_syllable fill_letter read_pick listen_repeat,🍜,word,5,8,Nudelsuppe Phở,pho noodle soup
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",quà,,,🎁,word,5,8,Geschenk,gift
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",quả,,,🍎,word,5,8,Frucht,fruit
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",quần,,,👖,word,5,8,Hose,trousers
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",thỏ,,,🐰,word,5,8,Hase,rabbit
+Phụ âm ghép và chính tả,✍️,3,"Âm ph, qu và th",thuyền,,,⛵,word,5,8,Boot,boat
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",cá,,build_syllable fill_letter read_pick listen_repeat,🐟,word,5,8,Fisch,fish
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",cờ,,,🚩,word,5,8,Fahne,flag
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",kem,,,🍦,word,5,8,Eis,ice cream
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",kéo,,,✂️,word,5,8,Schere,scissors
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",kiến,,,🐜,word,5,8,Ameise,ant
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",quả,,,🍎,word,5,8,Frucht,fruit
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",gà,,,🐔,word,5,8,Huhn,chicken
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",ghế,,,🪑,word,5,8,Stuhl,chair
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",ngô,,,🌽,word,5,8,Mais,corn
+Phụ âm ghép và chính tả,✍️,3,"Luật chính tả: c/k/q, g/gh, ng/ngh",nghé,,,🐃,word,5,8,Büffelkalb,baby buffalo
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con chó,,read_pick listen_pick_text match listen_repeat,🐶,word,5,8,Hund,dog
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con mèo,,,🐱,word,5,8,Katze,cat
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con gà,,,🐔,word,5,8,Huhn,chicken
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con vịt,,,🦆,word,5,8,Ente,duck
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con heo,,,🐷,word,5,8,Schwein,pig
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con bò,,,🐮,word,5,8,Kuh,cow
+Đọc từ và câu ngắn,📖,3,Đọc từ: con vật quanh nhà,con cá,,,🐟,word,5,8,Fisch,fish
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,bố,,read_pick listen_pick_text match listen_repeat,👨,word,5,8,Papa,dad
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,mẹ,,,👩,word,5,8,Mama,mom
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,ông,,,👴,word,5,8,Opa,grandpa
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,bà,,,👵,word,5,8,Oma,grandma
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,anh,,,👦,word,5,8,großer Bruder,older brother
+Đọc từ và câu ngắn,📖,3,Đọc từ: người thân,chị,,,👧,word,5,8,große Schwester,older sister
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,cơm,,read_pick listen_pick_text match listen_repeat,🍚,word,5,8,Reis,rice
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,phở,,,🍜,word,5,8,Pho (Nudelsuppe),pho (noodle soup)
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,bánh mì,,,🥖,word,5,8,Brot,bread
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,trứng,,,🥚,word,5,8,Ei,egg
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,rau,,,🥬,word,5,8,Gemüse,vegetables
+Đọc từ và câu ngắn,📖,3,Đọc từ: bữa cơm,canh,,,🍲,word,5,8,Suppe,soup
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái giường,,read_pick listen_pick_text match listen_repeat,🛏️,phrase,5,8,Bett,bed
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái ghế,,,🪑,phrase,5,8,Stuhl,chair
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái cửa,,,🚪,phrase,5,8,Tür,door
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái đèn,,,💡,phrase,5,8,Lampe,lamp
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái tivi,,,📺,phrase,5,8,Fernseher,TV
+Đọc từ và câu ngắn,📖,3,Đọc từ: trong nhà,cái đồng hồ,,,⏰,phrase,5,8,Uhr,clock
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con chào bà ạ.,,read_pick order_words listen_repeat,👵,sentence,5,8,"Hallo, Oma.","Hello, Grandma."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con chào ông ạ.,,,👴,sentence,5,8,"Hallo, Opa.","Hello, Grandpa."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con chào bố ạ.,,,👨,sentence,5,8,"Hallo, Papa.","Hello, Dad."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con chào mẹ ạ.,,,👩,sentence,5,8,"Hallo, Mama.","Hello, Mom."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con cảm ơn mẹ ạ.,,,🙏,sentence,5,8,"Danke, Mama.","Thank you, Mom."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con xin lỗi ạ.,,,🙇,sentence,5,8,Es tut mir leid.,I'm sorry.
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con mời bà ăn cơm ạ.,,,🍚,sentence,5,8,"Oma, komm bitte essen.","Grandma, please come and eat."
+Đọc từ và câu ngắn,📖,3,Đọc câu: chào và cảm ơn,Con đi học đây ạ.,,,🎒,sentence,5,8,Ich gehe jetzt zur Schule.,I'm off to school now.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Đây là bố.,,read_pick order_words listen_repeat,👨,sentence,5,8,Das ist Papa.,This is Dad.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Đây là mẹ.,,,👩,sentence,5,8,Das ist Mama.,This is Mom.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Đây là bà.,,,👵,sentence,5,8,Das ist Oma.,This is Grandma.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Nhà con có bốn người.,,,🏠,sentence,5,8,Wir sind zu viert zu Hause.,There are four people in my family.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Mẹ nấu cơm.,,,🍳,sentence,5,8,Mama kocht Reis.,Mom is cooking rice.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Bố đi làm.,,,💼,sentence,5,8,Papa geht zur Arbeit.,Dad goes to work.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Bà kể chuyện.,,,📚,sentence,5,8,Oma erzählt eine Geschichte.,Grandma tells a story.
+Đọc từ và câu ngắn,📖,3,Đọc câu: nói về gia đình,Con yêu gia đình.,,,❤️,sentence,5,8,Ich liebe meine Familie.,I love my family.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Con rửa tay.,,read_pick order_words listen_repeat,🧼,sentence,5,8,Ich wasche mir die Hände.,I wash my hands.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Con ăn cơm.,,,🍚,sentence,5,8,Ich esse Reis.,I eat rice.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Con uống sữa.,,,🥛,sentence,5,8,Ich trinke Milch.,I drink milk.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Con thích quả chuối.,,,🍌,sentence,5,8,Ich mag Bananen.,I like bananas.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Cơm ngon quá!,,,😋,sentence,5,8,Das Essen schmeckt so gut!,The food is so delicious!
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Mẹ nấu canh.,,,🍲,sentence,5,8,Mama kocht Suppe.,Mom is cooking soup.
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Nóng quá!,,,🥵,sentence,5,8,Das ist heiß!,It's hot!
+Đọc từ và câu ngắn,📖,3,Đọc câu: ăn uống,Con ăn phở.,,,🍜,sentence,5,8,Ich esse Pho.,I eat pho.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con mèo kêu meo meo.,,read_pick order_words listen_repeat,🐱,sentence,5,8,Die Katze macht miau.,The cat says meow.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con chó sủa gâu gâu.,,,🐶,sentence,5,8,Der Hund bellt wau wau.,The dog barks woof woof.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con gà gáy ò ó o.,,,🐓,sentence,5,8,Der Hahn kräht kikeriki.,The rooster crows cock-a-doodle-doo.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con vịt kêu cạc cạc.,,,🦆,sentence,5,8,Die Ente macht quak quak.,The duck says quack quack.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con heo kêu ụt ịt.,,,🐷,sentence,5,8,Das Schwein grunzt.,The pig oinks.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Con ếch kêu ộp ộp.,,,🐸,sentence,5,8,Der Frosch quakt.,The frog croaks.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Trời mưa rồi.,,,🌧️,sentence,5,8,Es regnet.,It's raining.
+Đọc từ và câu ngắn,📖,3,Đọc câu: con vật kêu,Trời nắng đẹp quá.,,,☀️,sentence,5,8,Was für ein schöner sonniger Tag!,What a beautiful sunny day!

@@ -338,5 +338,34 @@ await as(A, async () => {
   ok((await q("select level from public.units where id=$1", [u2]))[0].level === 4, "007: chạy lại migration không ghi đè cấp admin đã chỉnh");
 }
 
+// ---- 14. học vần: kiểu mục, chữ đọc riêng, hoạt động mới (migration 008) ----
+{
+  const m008 = readFileSync(new URL("../migrations/008_phonics.sql", import.meta.url), "utf8");
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('P', 3, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'PL', 'approved') returning id", [u]))[0].id;
+  for (const t of ["letter", "syllable", "word", "sentence"]) {
+    const e = await fails("insert into public.content_items (lesson_id, item_type, text_vi) values ($1, $2, 'x')", [l, t]);
+    ok(e === null, `008: item_type '${t}' hợp lệ`, String(e));
+  }
+  ok(/check/i.test(await fails("insert into public.content_items (lesson_id, item_type, text_vi) values ($1, 'robot', 'x')", [l]) ?? ""), "008: item_type lạ vẫn bị chặn");
+  await db.query("insert into public.content_items (lesson_id, item_type, text_vi, say_vi) values ($1, 'letter', 'b', 'bờ')", [l]);
+  ok((await q("select say_vi from public.content_items where text_vi = 'b'"))[0].say_vi === "bờ", "008: lưu được chữ đọc riêng (say_vi)");
+  for (const k of ["listen_pick_tone", "build_syllable", "fill_letter", "read_pick", "order_words", "listen_pick", "match"]) {
+    ok((await fails("insert into public.activities (lesson_id, kind) values ($1, $2)", [l, k])) === null, `008: hoạt động '${k}' hợp lệ`);
+  }
+  ok(/check/i.test(await fails("insert into public.activities (lesson_id, kind) values ($1, 'hack')", [l]) ?? ""), "008: hoạt động lạ bị chặn");
+  await db.exec(m008);
+  ok((await q("select count(*)::int as n from public.content_items where lesson_id = $1", [l]))[0].n === 5, "008: chạy lại migration không mất dữ liệu");
+  // Trẻ (phụ huynh) đọc được mục letter đã duyệt qua RLS; chỉ admin ghi
+  await db.query("update public.content_items set status = 'approved' where lesson_id = $1", [l]);
+  const P = await uid("p8@x.com");
+  await as(P, async () => {
+    ok((await q("select say_vi from public.content_items where text_vi = 'b'"))[0]?.say_vi === "bờ", "008: phụ huynh còn hạn đọc được mục chữ cái đã duyệt");
+    const r = await db.query("update public.content_items set say_vi = 'hack' where text_vi = 'b'");
+    ok(r.affectedRows === 0, "008: phụ huynh KHÔNG sửa được nội dung");
+  });
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

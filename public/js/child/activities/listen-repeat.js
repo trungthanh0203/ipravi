@@ -4,6 +4,7 @@ import { sample } from "../util.js";
 import { playItem, say, visual, nativeLang, nativeLabel } from "../media.js";
 import { sfx } from "../sfx.js";
 import { pronunciationSupported, recognizeOnce, scorePronunciation, tier } from "../../pronunciation.js";
+import { spoken } from "../../viet.js";
 
 const PASS_SCORE = 55; // đạt để tính là "đúng" cho tiến độ; ngưỡng dễ, sẽ chỉnh sau khi thử với giọng trẻ thật
 const stars = (n) => "⭐".repeat(n) + "☆".repeat(3 - n);
@@ -31,7 +32,7 @@ function round(ctx, item, withIntro) {
         const text = await recognizeOnce("vi-VN");
         if (!text) { feedback.textContent = T.pronNoSpeech; return; }
         attempts++;
-        const score = scorePronunciation(item.text_vi, text);
+        const score = scorePronunciation(spoken(item), text);
         best = Math.max(best, score);
         ctx.savePron(item.id, score, text);
         const t = tier(score);

@@ -1,8 +1,8 @@
 # Giáo trình "Tôi luyện tiếng Việt" — trẻ gốc Việt 3–8 tuổi
 
-> Bản 1 (2026-09-20). Đây là **khung giáo trình + dữ liệu nhập được** cho app, do AI soạn dựa trên các nguồn công khai
+> Bản 2 (2026-09-20: thêm Cấp 3 + chia theo cấp). Đây là **khung giáo trình + dữ liệu nhập được** cho app, do AI soạn dựa trên các nguồn công khai
 > (mục 9). **Bắt buộc có người Việt bản ngữ (tốt nhất là giáo viên tiểu học/mầm non) duyệt** trước khi cho trẻ học thật
-> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ) và `csv/cap2-ga-con-cau-ngan.csv` (64 câu).
+> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ), `csv/cap2-ga-con-cau-ngan.csv` (64 câu) và `csv/cap3-ga-choai-hoc-van.csv` (337 mục học vần). Mỗi file ghi cột `level` (1–4) để app xếp đúng cấp.
 
 ## 1. Giáo trình này phải làm được gì
 
@@ -40,7 +40,7 @@
 |---|---|---|---|---|
 | **1** | 🥚 **Trứng** | 3–4 | **Nghe – nhận biết – nói từ** | `cap1-trung-tu-vung.csv`: 14 chủ đề, 29 bài, 176 từ |
 | **2** | 🐣 **Gà con** | 4–6 | **Nói câu ngắn (3–6 tiếng)**, lễ phép, đồng dao | `cap2-ga-con-cau-ngan.csv`: 8 chủ đề, 64 câu |
-| **3** | 🐥 **Gà choai** | 5–7 | **Thanh điệu → chữ cái → vần → đọc** (học vần) | *chưa có dữ liệu — cần thêm tính năng app, mục 7* |
+| **3** | 🐥 **Gà choai** | 5–7 | **Thanh điệu → chữ cái → vần → đọc** (học vần) | `cap3-ga-choai-hoc-van.csv`: 7 chủ đề, 53 bài, 337 mục |
 | **4** | 🐓 **Gà trống** | 6–8+ | **Đọc hiểu đoạn ngắn, viết câu, kể chuyện** | *sau Cấp 3* |
 
 Tuổi chỉ là gợi ý: trẻ 6 tuổi chưa nghe–nói tốt vẫn bắt đầu từ Cấp 1 (nhanh hơn), trẻ 4 tuổi nói tốt có thể nhảy sang Cấp 2.
@@ -72,20 +72,141 @@ Tuổi chỉ là gợi ý: trẻ 6 tuổi chưa nghe–nói tốt vẫn bắt đ
 
 ### Cấp 3 — Gà choai 🐥 (học vần: thanh → chữ cái → vần → đọc)
 
-Đây là cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" cấp 1** (cũng bắt đầu bằng ngữ âm + dấu thanh). Chỉ bắt đầu khi trẻ **từ ~5
-tuổi** và đã xong phần lớn Cấp 1.
+Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" cấp độ 1** (cấp 1 của bộ sách này được nhà xuất bản mô tả là làm quen chữ cái, phụ âm, nguyên âm và thanh điệu). Chỉ bắt đầu khi bé **từ ~5 tuổi** và đã xong phần lớn Cấp 1 (app chỉ *gợi ý*, không khoá).
 
-| Giai đoạn | Nội dung | Số bài dự kiến |
+- **Dữ liệu:** `csv/cap3-ga-choai-hoc-van.csv` — **337 mục, 53 bài, 7 chủ đề** (nhập được ngay; cần migration `008_phonics.sql`). Bảng bên dưới sinh từ chính file này.
+- **Chuẩn đầu ra ("con làm được"):** phân biệt bằng tai **6 thanh**; nhận **29 chữ cái** và âm của chúng; **ghép âm + vần** thành tiếng; đọc được **từ và câu ngắn đã học**; biết luật **c/k/q, g/gh, ng/ngh**.
+- **Nhịp học:** 3–4 bài/tuần → ~14–16 tuần. Thứ tự: 3A (thanh) → 3B (chữ cái) → 3C (ghép vần) → 3D (đọc). Có thể chạy **3A song song 3B** vì 3A không cần biết chữ.
+- **Qua cấp khi:** ≥ 80% số mục có mức thuộc ≥ 3/5 (như mọi cấp) **và** bé tự đọc được ≥ 80% từ/câu ở 3D (phụ huynh nghe thử).
+
+**Cách một bài chạy (khoảng 10–12 phút):** *nghe – nhìn – nói – chơi* — ① học mục mới (nghe, nhìn hình) → ② 3–4 hoạt động (bên dưới) → ③ nhận sao. Mọi mục đều có **hình + âm thanh**; trẻ chưa đọc được vẫn học bằng tai và mắt.
+
+**Hoạt động mới của Cấp 3** (chọn bằng cột `activities` trong CSV):
+
+| Hoạt động | Bé làm gì | Dạy gì |
 |---|---|---|
-| **3A — Nghe âm & thanh (chưa cần chữ)** | Nhận ra **6 thanh** qua nghe: *ngang (không dấu), sắc, huyền, hỏi, ngã, nặng*; cặp tối thiểu để so: **la–lá–là–lạ**, **củ–cũ–cụ**, **má–mà–mạ–ma**, **cá–cà–cả**. Mẹo hình: ngang = mặt hồ phẳng; sắc = mũi tên lên; huyền = trượt cầu tuột; hỏi = lượn xuống rồi lên; ngã = gồ ghề; nặng = rơi bịch. Nhận âm đầu ("con **b**ò – **b**a – **b**óng: cùng âm gì?") | ~8 |
-| **3B — 29 chữ cái & âm** | Thứ tự đề xuất (dễ nghe, dễ phân biệt): ① **a o ô ơ** ② **i e ê u ư** ③ **b m n l** ④ **t c k q d đ** ⑤ **h g r s v x** ⑥ **ă â y p**. Mỗi nhóm 3 bài: nhìn chữ – nghe âm – tìm chữ trong từ quen (bò, mẹ, cá…). Học **chữ in thường trước**, chữ hoa sau | ~18 |
-| **3C — Ghép vần** | Phụ âm + nguyên âm (ba, bà, cá, mẹ…) → **vần có âm cuối** (an, at, am, ap, ang, ac, anh, ach…) → **vần đôi/ba** (ia, ua, ưa, iê/yê, uô, ươ…) → **phụ âm ghép** (ch, kh, nh, ng/ngh, gh, gi, ph, th, tr, qu). Ghi chú luật c/k/q, g/gh, ng/ngh | ~16 |
-| **3D — Đọc từ & câu ngắn** | Đọc từ 1–2 tiếng có hình; câu 3–6 tiếng lấy từ Cấp 2 (trẻ *đã nói được* nên dễ nhận mặt chữ); chép từ | ~14 |
+| `listen_pick_tone` nghe – chọn thanh | Nghe 1 tiếng, chọn ký hiệu đúng (➖ ↗️ ↘️ ❓ 〰️ ⬇️) | phân biệt 6 thanh bằng tai |
+| `listen_pick_text` nghe – chọn chữ | Nghe âm/tiếng, chọn đúng chữ | nối âm ↔ chữ |
+| `build_syllable` ghép âm + vần | Nghe từ có hình, chọn âm đầu rồi phần vần | cấu tạo tiếng (âm đầu + vần + thanh) |
+| `fill_letter` điền chữ còn thiếu | Thấy `＿à` + hình, chọn âm đầu | nhận âm đầu, chính tả |
+| `read_pick` đọc – chạm hình | Thấy chữ, chọn hình đúng (không nghe trước) | đọc hiểu từ/câu |
+| `order_words` sắp xếp từ thành câu | Nghe câu, chạm các từ theo thứ tự | trật tự từ, đọc câu |
+| `match`, `listen_repeat` (đã có) | Ghép chữ ↔ hình; nói theo và được chấm | củng cố, phát âm |
 
-- **Chuẩn đầu ra:** nhận 29 chữ cái + 6 thanh; **đánh vần và đọc** từ/câu ngắn đã học; chép được từ.
-- **Lưu ý:** thứ tự chữ cái ở trên là **thiết kế riêng** cho học qua app, *không sao chép* một bộ sách giáo khoa; các bộ SGK Tiếng Việt 1
-  trong nước sắp xếp khác nhau — về sau có thể thêm bảng đối chiếu theo bộ sách cháu sẽ học.
-- **Âm thanh:** đọc **chữ cái/vần đơn lẻ** bằng TTS dễ sai; nên **thu giọng người thật** cho 29 chữ cái và ~30 vần khoá (rất ít, vài chục file).
+**Nội dung theo giai đoạn:**
+
+#### Sáu thanh điệu (8 bài, 43 mục)
+**3A — Nghe thanh (chưa cần đọc chữ).** Bé nghe một tiếng rồi chọn *ký hiệu* của thanh (➖ ↗️ ↘️ ❓ 〰️ ⬇️). Bài đầu học *tên* 6 thanh (mỗi tên tự mang thanh của nó: ngang, sắc, huyền, hỏi, ngã, nặng); 7 bài sau là các bộ tiếng chỉ khác thanh (ma–má–mà–mả–mã–mạ, la–lá–là–lả–lạ, củ–cũ–cụ…).
+
+| Bài | Mục |
+|---|---|
+| Tên sáu thanh | ngang, sắc, huyền, hỏi, ngã, nặng |
+| Nghe sáu thanh: ma | ma, má, mà, mả, mã, mạ |
+| Nghe các thanh: la | la, lá, là, lả, lạ |
+| Nghe các thanh: cú | cú, cù, củ, cũ, cụ |
+| Nghe sáu thanh: ta | ta, tá, tà, tả, tã, tạ |
+| Nghe các thanh: bao | bao, báo, bào, bảo, bão |
+| Nghe các thanh: ve | ve, vé, vè, vẻ, vẽ |
+| Nghe các thanh: mai | mai, mái, mài, mải, mãi |
+
+#### Chữ cái (12 bài, 67 mục)
+**3B — 29 chữ cái, chia 6 nhóm** theo thứ tự dễ nghe – dễ phân biệt. Mỗi nhóm 2 bài: (1) *chữ + âm + từ khoá có hình* (b–bờ–bò 🐄); (2) *từ quen có chữ đó* (nhìn chữ, tìm chữ trong từ).
+
+| Bài | Mục |
+|---|---|
+| Nhóm 1: a o ô ơ | a, o, ô, ơ |
+| Nhóm 1: từ có a o ô ơ | bà, cá, bò, cờ, bơ, ô |
+| Nhóm 2: i e ê u ư | i, e, ê, u, ư |
+| Nhóm 2: từ có i e ê u ư | mì, khỉ, mẹ, lê, mũ, củ, chữ |
+| Nhóm 3: b m n l | b, m, n, l |
+| Nhóm 3: từ có b m n l | bé, bó, mơ, nơ, nến, lê, lọ |
+| Nhóm 4: t c k q d đ | t, c, k, q, d, đ |
+| Nhóm 4: từ có t c k q d đ | tôm, cam, kéo, quà, dừa, đàn |
+| Nhóm 5: h g r s v x | h, g, r, s, v, x |
+| Nhóm 5: từ có h g r s v x | hổ, gạo, rau, sữa, vở, xôi |
+| Nhóm 6: ă â y p | ă, â, y, p |
+| Nhóm 6: từ có ă â y | mắt, răng, cân, cây, mây, tay |
+
+#### Ghép âm với nguyên âm (5 bài, 34 mục)
+**3C-1 — Âm + nguyên âm đơn.** Bé nghe một từ có hình rồi **ghép âm đầu + phần vần** (b + à = bà). Từ thật, có hình, quen thuộc.
+
+| Bài | Mục |
+|---|---|
+| Vần a | ba, bà, cá, gà, lá, nhà |
+| "Vần e |  ê",  ê",  ê",  ê",  ê",  ê",  ê" |
+| Vần i | bi, bí, mì, khỉ, chị, đi |
+| "Vần o |  ô,  ô,  ô,  ô,  ô,  ô,  ô,  ô |
+| "Vần u |  ư",  ư",  ư",  ư",  ư",  ư",  ư" |
+
+#### Vần có âm cuối (11 bài, 74 mục)
+**3C-2 — Vần có âm cuối** (an, ăn, ân, am, at, ang, anh, ac, en, on, ai, oi, ao, au…) — nhóm theo vần, mỗi bài 5–9 từ thật có hình.
+
+| Bài | Mục |
+|---|---|
+| "Vần an |  ăn,  ăn,  ăn,  ăn,  ăn,  ăn,  ăn |
+| "Vần am |  ăm,  ăm,  ăm,  ăm,  ăm,  ăm |
+| "Vần at |  ăt,  ăt,  ăt,  ăt,  ăt,  ăt,  ăt |
+| "Vần ang |  anh",  anh",  anh",  anh",  anh",  anh",  anh",  anh",  anh" |
+| "Vần ac |  ach,  ach,  ach,  ach,  ach,  ach,  ach |
+| "Vần en |  ên,  ên,  ên,  ên,  ên,  ên |
+| "Vần on |  ôm,  ôm,  ôm,  ôm,  ôm,  ôm,  ôm |
+| "Vần ai |  ay,  ay,  ay,  ay,  ay,  ay |
+| "Vần oi |  ôi,  ôi,  ôi,  ôi,  ôi,  ôi |
+| "Vần ao |  eo",  eo",  eo",  eo",  eo",  eo",  eo",  eo" |
+| "Vần au |  âu,  âu,  âu,  âu,  âu |
+
+#### Nguyên âm đôi (4 bài, 27 mục)
+**3C-3 — Nguyên âm đôi** ia/ua/ưa, iê, uô, ươ (ia–iê, ua–uô, ưa–ươ là các cặp bé hay lẫn).
+
+| Bài | Mục |
+|---|---|
+| "Vần ia |  ua,  ua,  ua,  ua,  ua,  ua,  ua,  ua,  ua,  ua |
+| Vần iê (yê) | biển, tiền, kiến, miệng, điện, xiếc |
+| Vần uô | chuối, muối, chuông, thuốc, buồm |
+| Vần ươ | vườn, bướm, trường, đường, cười, ngựa |
+
+#### Phụ âm ghép và chính tả (5 bài, 35 mục)
+**3C-4 — Phụ âm ghép** (ch, tr, kh, gh, ngh, gi, ng, nh, ph, qu, th) và **luật chính tả** c/k/q, g/gh, ng/ngh.
+
+| Bài | Mục |
+|---|---|
+| Âm ch và tr | chó, chim, chuột, chổi, trứng, trăng, trống |
+| "Âm kh |  gh và ngh",  gh và ngh",  gh và ngh",  gh và ngh",  gh và ngh",  gh và ngh" |
+| "Âm gi |  ng và nh",  ng và nh",  ng và nh",  ng và nh",  ng và nh",  ng và nh" |
+| "Âm ph |  qu và th",  qu và th",  qu và th",  qu và th",  qu và th",  qu và th" |
+| "Luật chính tả: c/k/q |  g/gh,  g/gh,  g/gh,  g/gh,  g/gh,  g/gh,  g/gh,  g/gh,  g/gh,  g/gh |
+
+#### Đọc từ và câu ngắn (8 bài, 57 mục)
+**3D — Đọc từ và câu ngắn.** Dùng lại từ và câu Cấp 1–2 (bé *đã nói được*, nên chỉ việc nhận mặt chữ): đọc từ → chạm hình; sắp xếp các từ thành câu.
+
+| Bài | Mục |
+|---|---|
+| Đọc từ: con vật quanh nhà | con chó, con mèo, con gà, con vịt, con heo, con bò, con cá |
+| Đọc từ: người thân | bố, mẹ, ông, bà, anh, chị |
+| Đọc từ: bữa cơm | cơm, phở, bánh mì, trứng, rau, canh |
+| Đọc từ: trong nhà | cái giường, cái ghế, cái cửa, cái đèn, cái tivi, cái đồng hồ |
+| Đọc câu: chào và cảm ơn | Con chào bà ạ., Con chào ông ạ., Con chào bố ạ., Con chào mẹ ạ., Con cảm ơn mẹ ạ., Con xin lỗi ạ., Con mời bà ăn cơm ạ., Con đi học đây ạ. |
+| Đọc câu: nói về gia đình | Đây là bố., Đây là mẹ., Đây là bà., Nhà con có bốn người., Mẹ nấu cơm., Bố đi làm., Bà kể chuyện., Con yêu gia đình. |
+| Đọc câu: ăn uống | Con rửa tay., Con ăn cơm., Con uống sữa., Con thích quả chuối., Cơm ngon quá!, Mẹ nấu canh., Nóng quá!, Con ăn phở. |
+| Đọc câu: con vật kêu | Con mèo kêu meo meo., Con chó sủa gâu gâu., Con gà gáy ò ó o., Con vịt kêu cạc cạc., Con heo kêu ụt ịt., Con ếch kêu ộp ộp., Trời mưa rồi., Trời nắng đẹp quá. |
+
+**Bảng 29 chữ cái và âm đọc** (cột `say` trong CSV; app đọc *âm*, không đọc *tên chữ*):
+
+| Nhóm | Chữ → âm đọc |
+|---|---|
+| ① | a → a · o → o · ô → ô · ơ → ơ |
+| ② | i → i · e → e · ê → ê · u → u · ư → ư |
+| ③ | b → bờ · m → mờ · n → nờ · l → lờ |
+| ④ | t → tờ · c → cờ · k → cờ · q → cờ · d → dờ · đ → đờ |
+| ⑤ | h → hờ · g → gờ · r → rờ · s → sờ · v → vờ · x → xờ |
+| ⑥ | ă → á · â → ớ · y → i dài · p → pờ |
+
+- Thứ tự nhóm là **thiết kế riêng** cho học qua app (dễ nghe → khó phân biệt), *không sao chép* một bộ SGK; các bộ Tiếng Việt 1 trong nước sắp xếp khác nhau. Chữ in thường trước; **chữ hoa chưa soạn** (làm ở bản sau, gắn với tên riêng: An, Bình…).
+- **Thanh điệu:** 6 thanh nhưng chỉ 5 dấu (thanh ngang không dấu). Mẹo hình: ngang = mặt hồ phẳng ➖, sắc = mũi tên lên ↗️, huyền = cầu tuột ↘️, hỏi = lượn xuống rồi lên ❓, ngã = sóng gồ ghề 〰️, nặng = rơi bịch ⬇️.
+- **Ghi chú cho phụ huynh song ngữ:** nghĩa tiếng Đức/Anh của các bài thanh điệu ghi kèm tên thanh (vd "Wange (Ton sắc: steigend)") để phụ huynh biết bé đang học cặp nào.
+- **Đối chiếu Chào tiếng Việt cấp 1:** nhà xuất bản chỉ công bố *mục tiêu chung* (chữ cái, phụ âm, nguyên âm, thanh điệu, học qua trò chơi/bài hát); **không công bố danh sách bài** nên Cấp 3 này *bám định hướng*, chưa đối chiếu từng bài. Người duyệt có sách trong tay nên đối chiếu và ghi lại chỗ khác.
+- **Âm thanh:** TTS đọc **chữ/vần đơn lẻ** dễ sai (cột `say` giúp: "b" → "bờ", nhưng vẫn phải **nghe thử từng chữ cái**). Nên **thu giọng người thật** cho 29 chữ cái + các vần khoá (vài chục file, tải ở tab Nội dung).
+- **Từ khoá có thể lệch vùng miền:** lạc (Bắc) = đậu phộng (Nam), bát/chén, hổ/cọp, mận/roi, thơm/dứa. CSV dùng cách nói miền Bắc; admin sửa tại tab Nội dung.
 
 ### Cấp 4 — Gà trống 🐓 (đọc hiểu, viết, kể)
 
@@ -138,14 +259,14 @@ thực tế, (c) Tiếng Việt lớp 1 bộ sách mà cháu sẽ học nếu v�
 
 | Cần | Vì sao | Ghi chú kỹ thuật |
 |---|---|---|
-| Kiểu mục **`letter`** (chữ cái) và **`syllable`** (vần/tiếng) | Cấp 3 | Bảng `content_items.item_type` hiện chỉ có word/phrase/sentence/story/song → cần migration |
-| Hoạt động **nghe – chọn thanh** | Dạy 6 thanh | Nghe từ, chọn 1 trong 2–3 hình/chữ chỉ khác nhau về thanh (la–lá–là) |
-| Hoạt động **nghe – chọn chữ cái/âm**, **ghép âm + vần**, **đánh vần theo**, **điền chữ còn thiếu**, **sắp xếp từ thành câu**, **nghe – chọn chữ (chính tả)** | Cấp 3–4 | Thêm file trong `js/child/activities/` + 1 dòng ở `RUNNERS` |
+| ~~Kiểu mục `letter`/`syllable`, hoạt động nghe–chọn thanh, ghép âm + vần, điền chữ, đọc–chạm hình, sắp xếp câu~~ | Cấp 3 | **Đã làm** (migration 008, `child/activities/phonics.js`) |
+| Hoạt động **đánh vần theo** (đọc từng phần: bờ – a – ba – huyền – bà) | Cấp 3 | Cần âm thanh từng phần → thu giọng người thật cho 29 chữ cái + vần khoá |
+| **Chữ hoa**, **tập viết nét/tô chữ** | Cấp 3–4 | Chữ hoa thêm bằng CSV; tô chữ cần canvas + dữ liệu nét (làm sau) |
 | **Thứ tự chủ đề** (kéo thả / nút lên–xuống) | Hiện thứ tự = thứ tự tạo; 2 chủ đề mẫu đang đứng đầu | Trước mắt: **xoá 2 chủ đề mẫu rồi nhập `cap1…csv`** để đúng thứ tự (chưa có học sinh thật) |
 | Âm thanh **người thật** cho chữ cái/vần | TTS đọc chữ đơn lẻ dễ sai | Đã có sẵn cột `source=human`, `voice_kind`, `region` — chỉ cần thu và tải lên |
 | **Biến thể vùng miền** của từ (ba/bố…) | Mục 5 | Cột riêng theo vùng hoặc bộ nội dung riêng |
 | **Kiểm tra cuối cấp** + báo cáo "đã đạt cấp" | Điều kiện lên cấp (mục 3) | Dùng `child_progress.mastery` + `pronunciation_attempts` |
-| Nội dung **Cấp 2 mở rộng** và **Cấp 4** | Mục 3 | Soạn bằng AI theo `csv` mẫu rồi duyệt |
+| Nội dung **Cấp 2 mở rộng** và **Cấp 4** (cần thêm hoạt động đọc hiểu đoạn, chính tả, viết) | Mục 3 | Soạn bằng AI theo `csv` mẫu rồi duyệt |
 
 ## 8. Quy trình duyệt chất lượng (bắt buộc — nội dung do AI soạn)
 
@@ -170,7 +291,8 @@ các câu dịch sang tiếng Đức của *Tết/lì xì/bánh chưng* (giữ t
 3. Tab **Cài đặt → Giọng đọc (TTS)**: nghe thử và chọn giọng (nam/nữ) cho tiếng Việt và tiếng bản ngữ.
 4. Tab **Nội dung**: mở từng chủ đề → **Sinh âm thanh còn thiếu** → nghe kiểm tra → **Duyệt** khi người duyệt đã đồng ý.
 5. Làm tương tự với `cap2-ga-con-cau-ngan.csv` (sau khi Cấp 1 đã có người học). **Cột `level` trong CSV** (1–4) đưa chủ đề vào đúng cấp; đã nhập từ trước thì nhập lại file để cập nhật cấp, hoặc đổi bằng ô chọn ở tab Nội dung.
-6. Mỗi lần sửa file CSV, chạy `node tests/curriculum.test.mjs` để kiểm lỗi (trùng emoji trong bài, thiếu nghĩa, khớp dữ liệu mẫu).
+6. Chạy migration `008_phonics.sql`, rồi nhập `cap3-ga-choai-hoc-van.csv` (mỗi bài đã ghi sẵn bộ hoạt động ở cột `activities`; sau khi nhập vào tab **Nội dung**, **nghe thử TTS từng chữ cái** — chỗ đọc sai thì thu giọng người thật). Nhập Cấp 3 **sau** khi Cấp 1–2 đã có người học.
+7. Mỗi lần sửa file CSV, chạy `node tests/curriculum.test.mjs` để kiểm lỗi (trùng emoji trong bài, thiếu nghĩa, khớp dữ liệu mẫu).
 
 Nội dung mới: dùng nút **"Sao chép câu lệnh cho AI"** ở tab Nhập CSV, dán vào AI, tải kết quả, **kiểm tra** bằng chính tab đó rồi mới đưa người duyệt.
 

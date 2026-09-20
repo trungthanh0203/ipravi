@@ -3,6 +3,7 @@ import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.j
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
+import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken } from "../public/js/viet.js";
 import { guessGender } from "../public/js/voice-names.js";
 
 let fail = 0;
@@ -74,6 +75,20 @@ eq(guessGender(""), null, "giới: rỗng = null");
   eq(recommendedLevel(levelProgress(null)), null, "cấp: chưa có nội dung/thống kê → null");
   eq(levelProgress(st([L(1, 0, 0)]))[0].passed, false, "cấp: 0 từ không được coi là đạt");
 }
+
+// Ngữ âm tiếng Việt
+eq(TONES.map((t) => t.key), ["ngang", "sac", "huyen", "hoi", "nga", "nang"], "viet: 6 thanh");
+eq(["ma", "má", "mà", "mả", "mã", "mạ"].map(toneOf), ["ngang", "sac", "huyen", "hoi", "nga", "nang"], "viet: toneOf 6 thanh");
+eq([toneOf("ơ"), toneOf("â"), toneOf("ă"), toneOf("ê"), toneOf("ư")], ["ngang", "ngang", "ngang", "ngang", "ngang"], "viet: dấu mũ/móc/trăng KHÔNG phải thanh");
+eq([toneOf("ấ"), toneOf("ầ"), toneOf("ở"), toneOf("ữ"), toneOf("ợ")], ["sac", "huyen", "hoi", "nga", "nang"], "viet: thanh trên nguyên âm có dấu mũ/móc");
+eq(["ngang", "sắc", "huyền", "hỏi", "ngã", "nặng"].map(toneOf), ["ngang", "sac", "huyen", "hoi", "nga", "nang"], "viet: tên 6 thanh mang đúng thanh của nó");
+eq([stripTone("bà"), stripTone("nghiêng"), stripTone("mượn"), stripTone("đạo")], ["ba", "nghiêng", "mươn", "đao"], "viet: stripTone giữ dấu mũ/móc/đ");
+for (const [w, i, r] of [["bà", "b", "à"], ["nghé", "ngh", "é"], ["ăn", "", "ăn"], ["ba", "b", "a"], ["gì", "g", "ì"], ["gìn", "g", "ìn"], ["giá", "gi", "á"], ["giữ", "gi", "ữ"],
+  ["quả", "qu", "ả"], ["nhà", "nh", "à"], ["ngô", "ng", "ô"], ["thuyền", "th", "uyền"], ["trăng", "tr", "ăng"], ["kem", "k", "em"], ["đèn", "đ", "èn"], ["chuối", "ch", "uối"], ["ô", "", "ô"], ["Bà", "b", "à"]])
+  eq(splitSyllable(w), { initial: i, rest: r }, `viet: tách "${w}" = ${i || "∅"} + ${r}`);
+eq([splitSyllable("con mèo"), splitSyllable(""), splitSyllable(null)], [null, null, null], "viet: không phải 1 tiếng → null");
+eq(words("Con chào bà ạ.").map(bare), ["Con", "chào", "bà", "ạ"], "viet: tách tiếng trong câu + bỏ dấu câu");
+eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken(null)], ["bờ", "bà", ""], "viet: spoken ưu tiên chữ đọc riêng (say)");
 
 // Worker
 const env = { CENTER_NAME: "Trung tâm A", SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "k", LANGUAGES: "de:Deutsch,en:English", ASSETS: { fetch: async () => new Response("asset") } };

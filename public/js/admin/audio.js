@@ -1,6 +1,7 @@
 import { sb, contentUrl } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { guessGender } from "../voice-names.js";
+import { spoken } from "../viet.js";
 
 // Âm thanh của nội dung: sinh bằng TTS (qua Worker /api/tts), tải giọng người thật lên, nghe thử, xoá.
 // File lưu ở bucket "content", đường dẫn có mốc thời gian (sw.js cache-trước theo URL nên URL phải đổi khi sinh lại).
@@ -50,7 +51,7 @@ export function audioSlots(langs, voices = {}) {
 }
 
 export const textFor = (item, lang) =>
-  lang === "vi" ? item.text_vi : item.translations?.find((t) => t.lang === lang)?.meaning ?? "";
+  lang === "vi" ? spoken(item) : item.translations?.find((t) => t.lang === lang)?.meaning ?? "";
 
 // Dòng cũ chưa có gender (vd file người thật tải lên trước đây) tính là giọng nữ.
 export const findAudio = (item, slot) =>

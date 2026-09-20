@@ -50,7 +50,7 @@ async function showLevels(root) {
             el("div", { class: "lv-name" }, `Cấp ${L.n} · ${L.name}`, L.n === rec ? el("span", { class: "lv-tag" }, T.levelHere) : null),
             el("div", { class: "muted" }, usable ? `${L.focus}` : T.levelSoon + " · " + L.focus),
             usable && stats && p.hasContent ? [
-              el("div", { class: "bar" }, el("div", { class: "bar-fill", style: `width:${p.percent}%` })),
+              el("div", { class: "meter" }, el("div", { class: "meter-fill", style: `width:${p.percent}%` })),
               el("span", { class: "muted" }, `${T.levelWords(p.items_mastered, p.items_total)}${p.passed ? " · " + T.levelPassed : ""}`)] : usable ? el("span", { class: "muted" }, T.levelUnits(us.length)) : null));
       })),
       stats ? el("div", { style: "text-align:center; margin-top:16px" }, el("button", { class: "btn ghost", onclick: () => showStats(root, stats) }, T.statsBtn)) : null);

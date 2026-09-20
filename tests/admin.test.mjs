@@ -1,5 +1,5 @@
 // Kiểm thử phần lõi của công cụ admin: đọc/kiểm tra CSV và endpoint TTS của Worker. Chạy: node tests/admin.test.mjs
-import { parseCsv, validateRows, classify, buildTemplate, keyOf, buildPlan } from "../public/js/admin/csv.js";
+import { parseCsv, validateRows, classify, buildTemplate, keyOf, buildPlan, activitiesFor, ACTIVITY_DEFAULTS, STANDARD_ACTIVITIES } from "../public/js/admin/csv.js";
 import worker from "../worker.js";
 
 let fail = 0;
@@ -21,7 +21,26 @@ const H = "unit,unit_emoji,lesson,vi,emoji,type,min_age,max_age,de,en";
 const run = (body, l = langs) => validateRows(parseCsv(`${H}\n${body}`), { langs: l });
 let v = run("Con vật,🐾,Vật nuôi,con chó,🐶,word,3,8,Hund,dog\nCon vật,🐾,Vật nuôi,con mèo,🐱,,,,Katze,cat");
 eq([v.errors.length, v.warnings.length, v.items.length], [0, 0, 2], "hợp lệ: 2 mục, không lỗi/cảnh báo");
-eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", say: "", kinds: [], emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+
+// Học vần: kiểu letter/syllable, cột say, cột activities
+{
+  const H3 = "unit,level,lesson,vi,say,activities,emoji,type,de,en";
+  const run3 = (body) => validateRows(parseCsv(H3 + "\n" + body), { langs });
+  const r = run3("Chữ cái,3,Nhóm 1,b,bờ,listen_pick_text listen_repeat,🐄,letter,Buchstabe b,letter b\nChữ cái,3,Nhóm 1,ba,,,👨,syllable,Silbe ba,syllable ba");
+  eq([r.errors.length, r.items[0].say, r.items[0].kinds, r.items[0].type, r.items[1].kinds, r.items[1].say], [0, "bờ", ["listen_pick_text", "listen_repeat"], "letter", [], ""], "học vần: đọc letter, say, activities");
+  eq(run3("U,3,L,b,,hack,🐄,letter,x,y").errors.length, 1, "học vần: activities lạ bị từ chối");
+  eq(run3("U,3,L,b,,,🐄,letter,x,y").errors.length, 0, "học vần: say/activities để trống hợp lệ");
+  eq(run3(`U,3,L,b,${"x".repeat(201)},,🐄,letter,x,y`).errors.length, 1, "học vần: say quá dài bị từ chối");
+  eq(Object.keys(ACTIVITY_DEFAULTS).length, 9, "học vần: 9 loại hoạt động có cấu hình mặc định");
+  eq(activitiesFor([]).map((a) => a[0]), STANDARD_ACTIVITIES, "học vần: bài không ghi activities → 4 hoạt động chuẩn");
+  eq(activitiesFor(["listen_pick_tone", "read_pick"]), [["listen_pick_tone", { rounds: 5, choices: 3 }], ["read_pick", { rounds: 4, choices: 3 }]], "học vần: bộ hoạt động theo CSV kèm cấu hình");
+  const ex = { units: [], lessons: [], items: [] };
+  const mk = (kinds) => ({ row: 2, unit: "U", unitEmoji: "", level: 3, lesson: "L", vi: "x", say: "", kinds, emoji: "", type: "letter", minAge: null, maxAge: null, tr: {} });
+  eq(buildPlan([mk([]), mk(["read_pick"])], ex).newLessons, [{ unit: "U", title: "L", kinds: ["read_pick"] }], "học vần: bài mới lấy activities từ dòng có ghi");
+  eq(classify({ ...mk([]), say: "bờ", type: "letter" }, { item_type: "letter", say_vi: "bơ", tr: {} }).changed, ["say"], "học vần: đổi say → cập nhật");
+  eq(classify({ ...mk([]), say: "", type: "letter" }, { item_type: "letter", say_vi: "bơ", tr: {} }).status, "same", "học vần: say trống không xoá say cũ");
+}
 
 // Cột level (cấp 1–4)
 {
@@ -104,7 +123,7 @@ eq([t.errors.length, t.warnings.length, t.items.length], [0, 0, 3], "file mẫu 
   const p = buildPlan(items, ex);
   eq(p.counts, { new: 4, update: 1, same: 1 }, "buildPlan: đếm mới/cập nhật/không đổi");
   eq(p.newUnits, [{ title: "Màu sắc", emoji: "🎨" }], "buildPlan: chủ đề mới (lấy unit_emoji)");
-  eq(p.newLessons, [{ unit: "Con vật", title: "Sở thú" }, { unit: "Màu sắc", title: "Màu cơ bản" }], "buildPlan: bài mới, không lặp");
+  eq(p.newLessons, [{ unit: "Con vật", title: "Sở thú", kinds: [] }, { unit: "Màu sắc", title: "Màu cơ bản", kinds: [] }], "buildPlan: bài mới, không lặp");
   eq(p.rows.map((r) => r.status), ["same", "update", "new", "new", "new", "new"], "buildPlan: trạng thái từng dòng");
   eq(p.rows[1].changed, ["tr:de"], "buildPlan: dòng cập nhật chỉ đổi nghĩa");
   eq(buildPlan(items, { units: [], lessons: [], items: [] }).counts, { new: 6, update: 0, same: 0 }, "buildPlan: CSDL trống -> tất cả mới");

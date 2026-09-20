@@ -1,8 +1,24 @@
 // Đọc + kiểm tra CSV nội dung học. Hàm thuần (không đụng DOM/mạng) để kiểm thử được.
-// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, level (cấp 1–4), emoji, type, min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
+// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, level (cấp 1–4), emoji, type, say (chữ để đọc thành tiếng), activities, min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
 // Ô trống KHÔNG xoá dữ liệu đã có khi nhập lại (chỉ ô có giá trị mới được cập nhật).
 
-export const ITEM_TYPES = ["word", "phrase", "sentence", "story", "song"];
+export const ITEM_TYPES = ["word", "phrase", "sentence", "story", "song", "letter", "syllable"];
+
+// Hoạt động chuẩn từng loại + cấu hình mặc định. Cột CSV "activities" (các loại cách nhau bằng khoảng trắng) chọn bộ hoạt động cho bài MỚI;
+// bỏ trống = bộ chuẩn của Cấp 1–2 (STANDARD_ACTIVITIES). Bài ĐÃ CÓ không bị đổi hoạt động khi nhập lại.
+export const ACTIVITY_DEFAULTS = {
+  listen_pick: { rounds: 5, choices: 3 },
+  match: { pairs: 4 },
+  listen_pick_text: { rounds: 4, choices: 3 },
+  listen_repeat: { rounds: 3 },
+  listen_pick_tone: { rounds: 5, choices: 3 },
+  build_syllable: { rounds: 4 },
+  fill_letter: { rounds: 4, choices: 3 },
+  read_pick: { rounds: 4, choices: 3 },
+  order_words: { rounds: 3 },
+};
+export const STANDARD_ACTIVITIES = ["listen_pick", "match", "listen_pick_text", "listen_repeat"];
+export const activitiesFor = (kinds) => (kinds?.length ? kinds : STANDARD_ACTIVITIES).map((kind) => [kind, { ...ACTIVITY_DEFAULTS[kind] }]);
 
 // Tự nhận dấu phân cách: dấu phẩy, chấm phẩy (Excel tiếng Đức/Việt hay xuất dạng này) hoặc Tab.
 function detectDelimiter(line) {
@@ -58,7 +74,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   }
   if (errors.length) return { items, errors, warnings };
 
-  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs]);
+  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "say", "activities", "emoji", "type", "min_age", "max_age", ...langs]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
   for (const l of langs) if (col(l) < 0) warnings.push({ row: 1, msg: `Không có cột nghĩa "${l}" — các mục sẽ thiếu nghĩa ${l}` });
 
@@ -90,6 +106,10 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       return num;
     };
     const minAge = age("min_age"), maxAge = age("max_age");
+    const say = get("say");
+    if (say.length > 200) problems.push("say (chữ đọc) dài quá 200 ký tự");
+    const kinds = get("activities").toLowerCase().split(/[\s;|]+/).filter(Boolean);
+    for (const k of kinds) if (!ACTIVITY_DEFAULTS[k]) problems.push(`activities: "${k}" không hợp lệ (dùng: ${Object.keys(ACTIVITY_DEFAULTS).join(", ")})`);
     let level = null;
     if (get("level") !== "") {
       level = Number(get("level"));
@@ -114,7 +134,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       if (v) tr[l] = v;
       else warnings.push({ row: n, msg: `"${vi}": thiếu nghĩa "${l}"` });
     }
-    items.push({ row: n, unit, unitEmoji, level, lesson, vi, emoji, type, minAge, maxAge, tr });
+    items.push({ row: n, unit, unitEmoji, level, lesson, vi, say, kinds, emoji, type, minAge, maxAge, tr });
   });
 
   if (items.length === 0 && errors.length === 0) errors.push({ row: 1, msg: "File không có dòng dữ liệu nào" });
@@ -126,6 +146,7 @@ export function classify(item, ex) {
   if (!ex) return { status: "new", changed: [] };
   const changed = [];
   if (item.emoji && item.emoji !== (ex.emoji ?? "")) changed.push("emoji");
+  if (item.say && item.say !== (ex.say_vi ?? "")) changed.push("say");
   if (item.type !== (ex.item_type ?? "word")) changed.push("type");
   if (item.minAge != null && item.minAge !== ex.min_age) changed.push("min_age");
   if (item.maxAge != null && item.maxAge !== ex.max_age) changed.push("max_age");
@@ -180,7 +201,10 @@ export function buildPlan(items, ex) {
     const lk = `${keyOf(it.unit)}|${keyOf(it.lesson)}`;
     if (!l && !seenL.has(lk)) {
       seenL.add(lk);
-      newLessons.push({ unit: it.unit, title: it.lesson });
+      newLessons.push({ unit: it.unit, title: it.lesson, kinds: it.kinds ?? [] });
+    } else if (!l) {
+      const nl = newLessons.find((x) => keyOf(x.unit) === keyOf(it.unit) && keyOf(x.title) === keyOf(it.lesson));
+      if (nl && !nl.kinds.length && it.kinds?.length) nl.kinds = it.kinds; // dòng đầu chưa ghi hoạt động thì lấy của dòng sau
     }
     const existing = l ? itemByKey.get(`${l.id}|${keyOf(it.vi)}`) : undefined;
     const c = classify(it, existing);

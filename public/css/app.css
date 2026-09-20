@@ -179,8 +179,8 @@ img.visual.big { max-height: 200px; }
 .level-card .lv-body { flex: 1; min-width: 0; }
 .level-card .lv-name { font-weight: 800; font-size: 20px; }
 .level-card .lv-tag { display: inline-block; background: var(--brand); color: #fff; font-size: 13px; padding: 2px 10px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
-.bar { height: 12px; background: #f1e4d8; border-radius: 99px; overflow: hidden; margin: 6px 0 4px; }
-.bar-fill { height: 100%; background: linear-gradient(90deg, #f59f00, var(--brand)); border-radius: 99px; min-width: 0; transition: width .4s; }
+.meter { height: 12px; background: #f1e4d8; border-radius: 99px; overflow: hidden; margin: 6px 0 4px; }
+.meter-fill { height: 100%; background: linear-gradient(90deg, #f59f00, var(--brand)); border-radius: 99px; min-width: 0; transition: width .4s; }
 .level-bar { margin: 12px 0; }
 .level-bar.soon { opacity: .6; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 10px; margin: 12px 0; }
@@ -207,3 +207,18 @@ img.visual.big { max-height: 200px; }
 .level-group { margin: 22px 0; }
 .level-head { border-left: 6px solid var(--brand); padding-left: 12px; margin-bottom: 8px; }
 .level-head h2 { margin: 0; }
+
+/* Hoạt động học vần */
+.opt-tone { flex-direction: column; gap: 4px; }
+.tone-sym { font-size: 34px; line-height: 1; }
+.tone-name { font-size: 20px; font-weight: 800; }
+.lesson-box .word { text-align: center; }
+.spell { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 24px; font-weight: 800; margin: 6px 0; }
+.slot-box { min-width: 44px; padding: 6px 10px; text-align: center; border: 3px dashed #f4c9a5; border-radius: 12px; background: #fff; }
+.slot-box.on { border-style: solid; border-color: var(--brand); background: var(--brand-light); }
+.tiles-line, .tiles-pool { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 14px 0; min-height: 52px; }
+.tiles-line { border-bottom: 3px solid #f4c9a5; padding-bottom: 10px; }
+.tile-word { font: inherit; font-size: 22px; font-weight: 800; padding: 10px 16px; border-radius: 14px; border: 3px solid #f4c9a5; background: #fff; color: inherit; cursor: pointer; }
+.tile-word.placed { background: var(--brand-light); border-color: var(--brand); cursor: default; }
+.tile-word.used { opacity: .25; }
+.tile-word.wrong { border-color: var(--err); background: #fff0f0; animation: shake .3s; }

@@ -9,6 +9,7 @@ import * as intro from "./activities/intro.js";
 import * as listenPick from "./activities/listen-pick.js";
 import * as match from "./activities/match.js";
 import * as listenRepeat from "./activities/listen-repeat.js";
+import * as phonics from "./activities/phonics.js";
 
 // Thêm dạng hoạt động mới: viết file trong ./activities/ (export run(ctx) → {correct,total}) rồi thêm 1 dòng ở đây.
 const RUNNERS = {
@@ -16,8 +17,14 @@ const RUNNERS = {
   listen_pick_text: listenPick.runText,
   match: match.run,
   listen_repeat: listenRepeat.run,
+  listen_pick_tone: phonics.runTone,
+  build_syllable: phonics.runBuild,
+  fill_letter: phonics.runFill,
+  read_pick: phonics.runRead,
+  order_words: phonics.runOrder,
 };
-const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ dạng "nghe – chạm chữ"
+const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ các dạng cần nhận mặt chữ
+const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words"]);
 
 export const starsFor = (score) => (score == null ? 0 : score >= 85 ? 3 : score >= 60 ? 2 : 1);
 
@@ -45,7 +52,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
       el("button", { class: "btn ghost small", onclick: onExit }, T.back))));
 
   const age = childAge(child);
-  const plan = activities.filter((a) => RUNNERS[a.kind] && !(a.kind === "listen_pick_text" && age != null && age < MIN_AGE_FOR_TEXT));
+  const plan = activities.filter((a) => RUNNERS[a.kind] && !(TEXT_KINDS.has(a.kind) && age != null && age < MIN_AGE_FOR_TEXT));
 
   let aborted = false;
   let abort;

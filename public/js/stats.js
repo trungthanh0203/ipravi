@@ -42,7 +42,7 @@ export function levelBars(progress) {
         el("b", null, `${p.emoji} Cấp ${p.n} · ${p.name}`),
         p.passed ? el("span", { class: "pill good" }, T.levelPassed) : !p.hasContent ? el("span", { class: "pill" }, T.levelSoon) : null),
       p.hasContent
-        ? [el("div", { class: "bar" }, el("div", { class: "bar-fill", style: `width:${p.percent}%` })),
+        ? [el("div", { class: "meter" }, el("div", { class: "meter-fill", style: `width:${p.percent}%` })),
            el("span", { class: "muted" }, `${T.levelWords(p.items_mastered, p.items_total)} · ${T.levelLessons(p.lessons_done, p.lessons_total)} (${p.percent}%)`)]
         : el("span", { class: "muted" }, p.focus))));
 }

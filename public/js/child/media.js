@@ -3,6 +3,7 @@ import { state } from "../state.js";
 import { CONFIG } from "../config.js";
 import { pickAudio, playUrl, stopAudio } from "../audio.js";
 import { el } from "../ui.js";
+import { spoken } from "../viet.js";
 
 const TTS_LANG = { vi: "vi-VN", de: "de-DE", en: "en-US" };
 
@@ -65,7 +66,7 @@ export function playItem(item, { lang = "vi", slow = false } = {}) {
   const base = { lang, gender: voiceGender(), voiceKind: prefs.voiceKind, region: prefs.region };
   const row = pickAudio(rows, { ...base, speed: slow ? "slow" : "normal" }) ?? (slow ? pickAudio(rows, { ...base, speed: "normal" }) : null);
   if (row) return playUrl(contentUrl(row.file_path));
-  return speakFallback(lang === "vi" ? item.text_vi : meaningOf(item, lang), lang, slow);
+  return speakFallback(lang === "vi" ? spoken(item) : meaningOf(item, lang), lang, slow);
 }
 
 // Lời của linh vật (hướng dẫn, khen). Tạm dùng giọng trình duyệt như trên.

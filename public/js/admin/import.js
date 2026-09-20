@@ -2,7 +2,7 @@ import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { el, msg } from "../ui.js";
 import { A, CSV_HELP, aiPrompt } from "./text.js";
-import { parseCsv, validateRows, buildPlan, buildTemplate, keyOf } from "./csv.js";
+import { parseCsv, validateRows, buildPlan, buildTemplate, keyOf, activitiesFor } from "./csv.js";
 import { dropAudio } from "./audio.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
@@ -23,19 +23,12 @@ async function loadExisting(items) {
   const existingItems = [];
   for (const lessonId of wanted) {
     const rows = check(await sb.from("content_items")
-      .select("id, lesson_id, text_vi, emoji, item_type, min_age, max_age, sort_order, translations(lang, meaning)")
+      .select("id, lesson_id, text_vi, say_vi, emoji, item_type, min_age, max_age, sort_order, translations(lang, meaning)")
       .eq("lesson_id", lessonId).range(0, 999));
     for (const r of rows) existingItems.push({ ...r, tr: Object.fromEntries((r.translations ?? []).map((t) => [t.lang, t.meaning])) });
   }
   return { units, lessons, items: existingItems };
 }
-
-const STANDARD_ACTIVITIES = [
-  ["listen_pick", { rounds: 5, choices: 3 }],
-  ["match", { pairs: 4 }],
-  ["listen_pick_text", { rounds: 4, choices: 3 }],
-  ["listen_repeat", { rounds: 3 }],
-];
 
 // Ghi vào CSDL. Chạy lại an toàn (không tạo trùng): chủ đề/bài/mục đã có được tái sử dụng.
 async function execute(plan, ex, onProgress) {
@@ -69,9 +62,10 @@ async function execute(plan, ex, onProgress) {
     const titleOfUnit = new Map([...unitId].map(([k, v]) => [v, k]));
     rows.forEach((l) => lessonId.set(`${titleOfUnit.get(l.unit_id)}|${keyOf(l.title_vi)}`, l.id));
     counts.lessons = rows.length;
-    // Mỗi bài mới có sẵn 4 hoạt động chuẩn (nháp, được duyệt cùng bài)
+    // Mỗi bài mới có sẵn bộ hoạt động (theo cột "activities" của CSV; trống = 4 hoạt động chuẩn), nháp, được duyệt cùng bài
+    const kindsByKey = new Map(plan.newLessons.map((l) => [`${keyOf(l.unit)}|${keyOf(l.title)}`, l.kinds]));
     check(await sb.from("activities").insert(rows.flatMap((l) =>
-      STANDARD_ACTIVITIES.map(([kind, config], i) => ({ lesson_id: l.id, kind, config, sort_order: i + 1, status: "draft" })))));
+      activitiesFor(kindsByKey.get(`${titleOfUnit.get(l.unit_id)}|${keyOf(l.title_vi)}`)).map(([kind, config], i) => ({ lesson_id: l.id, kind, config, sort_order: i + 1, status: "draft" })))));
   }
 
   const lid = (it) => lessonId.get(`${keyOf(it.unit)}|${keyOf(it.lesson)}`);
@@ -87,7 +81,7 @@ async function execute(plan, ex, onProgress) {
     const payload = part.map((r) => {
       const l = lid(r.item);
       orderIn.set(l, (orderIn.get(l) ?? 0) + 1);
-      return { lesson_id: l, item_type: r.item.type, text_vi: r.item.vi, emoji: r.item.emoji || null,
+      return { lesson_id: l, item_type: r.item.type, text_vi: r.item.vi, say_vi: r.item.say || null, emoji: r.item.emoji || null,
         min_age: r.item.minAge, max_age: r.item.maxAge, sort_order: orderIn.get(l), status: "draft" };
     });
     const rows = check(await sb.from("content_items").insert(payload).select("id, lesson_id, text_vi"));
@@ -102,6 +96,7 @@ async function execute(plan, ex, onProgress) {
     onProgress("Cập nhật mục đã có", n, changed.length);
     const patch = {};
     if (r.changed.includes("emoji")) patch.emoji = r.item.emoji;
+    if (r.changed.includes("say")) { patch.say_vi = r.item.say; await dropAudio(r.existing.id, "vi"); } // đổi chữ đọc → âm thanh cũ không còn đúng
     if (r.changed.includes("type")) patch.item_type = r.item.type;
     if (r.changed.includes("min_age")) patch.min_age = r.item.minAge;
     if (r.changed.includes("max_age")) patch.max_age = r.item.maxAge;
