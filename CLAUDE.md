@@ -31,7 +31,7 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 Dashboard → Variables (KHÔNG ghi vào `wrangler.jsonc`; đã có `keep_vars`). Chạy thử local:
 sao `.dev.vars.example` → `.dev.vars`, rồi `npx wrangler dev`. Không có `center_id` ở bảng nào.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `005_voice_gender.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `006_voice_repair_summary.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -66,6 +66,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   dữ liệu cũ, đổi chữ/nghĩa thì xoá âm thanh cũ của ngôn ngữ đó (`dropAudio`). Xoá nội dung phải dọn file Storage (`ops.js`).
   `/api/tts` kiểm admin bằng chính token của người gọi qua RPC `is_admin` (không dùng service_role); giọng ưu tiên: admin chọn (`settings.tts_voices` = `{lang:{female,male}}`, gửi kèm yêu cầu, **kiểm tên giọng bằng regex** vì được đưa vào SSML) > `TTS_VOICES` > mặc định theo giới (`DEFAULT_VOICES` trong `tts.js`, ~15 ngôn ngữ gồm ko/ja); `/api/config.ttsVoices` cho app biết ngôn ngữ nào có TTS; trình duyệt tải file lên
   Storage bằng phiên admin. Giọng TTS mặc định trong `tts.js` đã đối chiếu tài liệu nhà cung cấp nhưng CHƯA nghe thử chất lượng/gọi API thật (Google tiếng Việt chỉ có Standard/Wavenet, không có Neural2) — báo lỗi "voice" thì ghi đè `TTS_VOICES`.
+  **Giới của giọng:** `TTS_VOICES`/`tts_voices` nên là `{female,male}`; nếu là CHUỖI thì giới được đoán từ TÊN giọng (`public/js/voice-names.js` `guessGender`, dùng chung Worker + admin) — lỗi cũ: coi mọi chuỗi là giọng nữ nên chuỗi `vi-VN-NamMinhNeural` làm mọi file "nữ" đọc bằng giọng nam. `admin/audio.generate` từ chối lưu khi giọng thật trái giới ô; migration 006 vá nhãn cũ + RPC `admin_audio_summary` (Cài đặt → "Kiểm tra giọng đã sinh").
 - Giao dịch `payments` (kể cả admin tạo) LUÔN vào ở `pending`; gia hạn/tăng số con chỉ chạy khi cập nhật `pending→confirmed`
   (trigger). Admin ghi nhận thay phụ huynh = chèn rồi xác nhận (`billing.recordPayment`). Thông báo "Đã …" sau thao tác admin
   dùng `notice.set()` (giữ qua lần tải lại danh sách).
@@ -78,7 +79,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 ## Kiểm thử
 
 - **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (83 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (69 kiểm tra) và
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (79 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (9). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.

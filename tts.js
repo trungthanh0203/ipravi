@@ -6,7 +6,7 @@
 //   TTS_KEY       khoá API (đặt dạng Secret)
 //   TTS_REGION    (azure) vd "westeurope"
 //   TTS_VOICES    (tuỳ chọn) JSON ghi đè giọng mặc định, vd {"vi":{"male":"vi-VN-NamMinhNeural"},"de":"de-DE-ConradNeural"}
-//                 (giá trị chuỗi = giọng NỮ; dạng {female,male} cho từng giới)
+//                 Nên dùng dạng {female,male}. Nếu ghi CHUỖI thì giới được đoán từ TÊN giọng (NamMinh → chỉ dùng cho giọng nam).
 //
 // Giọng mỗi ngôn ngữ có 2 giới: nữ (female) và nam (male). Chọn giọng theo thứ tự ưu tiên:
 //   giọng admin chọn ở tab Cài đặt (gửi kèm yêu cầu) > TTS_VOICES > giọng mặc định bên dưới.
@@ -16,6 +16,8 @@
 // ja (Nanami/Keita) đã đối chiếu tài liệu/danh sách giọng. Các giọng còn lại (fr, es, it, zh, pt, nl, pl, ru, th, cs, en-US-Guy và
 // toàn bộ giọng Google) là tên phổ biến nhưng CHƯA được kiểm chứng từng giọng — nếu nhà cung cấp báo lỗi giọng thì đổi ở tab Cài đặt.
 // Giọng TRẺ EM: Azure có (vd en-US-AnaNeural) nhưng KHÔNG có cho tiếng Việt — muốn giọng trẻ em tiếng Việt phải thu giọng người thật.
+
+import { guessGender } from "./public/js/voice-names.js";
 
 const DEFAULT_VOICES = {
   azure: {
@@ -62,8 +64,14 @@ function parseOverrides(env) {
   }
 }
 
-// Giá trị chuỗi = giọng nữ (tương thích bản cũ); dạng {female, male} thì lấy đúng giới.
-const fromOverride = (v, gender) => (!v ? "" : typeof v === "string" ? (gender === "male" ? "" : v) : v[gender] || "");
+// Dạng {female, male}: lấy đúng giới. Dạng CHUỖI (bản cũ, không nói giới): đoán giới từ TÊN giọng — chuỗi "vi-VN-NamMinhNeural"
+// chỉ dùng cho giọng NAM, không bao giờ được dùng cho giọng nữ (lỗi cũ: coi mọi chuỗi là giọng nữ nên mọi file "nữ" đọc bằng giọng nam).
+// Tên lạ (không đoán được) coi là giọng nữ như trước.
+const fromOverride = (v, gender) => {
+  if (!v) return "";
+  if (typeof v === "string") return (guessGender(v) ?? "female") === gender ? v : "";
+  return v[gender] || "";
+};
 
 // Giọng có hiệu lực (mặc định + TTS_VOICES) theo ngôn ngữ — đưa vào /api/config để app biết ngôn ngữ nào có TTS. Không bí mật.
 export function effectiveVoices(env) {

@@ -2,7 +2,8 @@ import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { el, msg } from "../ui.js";
 import { A } from "./text.js";
-import { getVoices, resetVoices, previewVoice } from "./audio.js";
+import { getVoices, resetVoices, previewVoice, audioSummary } from "./audio.js";
+import { guessGender } from "../voice-names.js";
 
 // Câu đọc thử theo ngôn ngữ (mỗi giọng phải đọc đúng tiếng của nó).
 const SAMPLE = {
@@ -30,7 +31,7 @@ export async function mount(box) {
   const { data: s, error } = await sb.from("settings").select("*").eq("id", 1).single();
   if (error) return box.replaceChildren(msg("err", A.loadError + error.message));
 
-  box.replaceChildren(generalCard(s), await voiceCard(s));
+  box.replaceChildren(generalCard(s), await voiceCard(s), diagnosticCard());
 }
 
 function generalCard(s) {
@@ -117,6 +118,10 @@ async function voiceCard() {
         if (!v.startsWith(`${code}-`) || !VOICE_RE.test(v.slice(code.length + 1))) {
           return feedback.replaceChildren(msg("err", `Giọng "${v}" không hợp lệ: tên giọng phải bắt đầu bằng "${code}-" (ví dụ ${CONFIG.ttsVoices?.[code]?.[gender] || `${code}-XX-TênGiọng`}).`));
         }
+        const actual = guessGender(v);
+        if (actual && actual !== gender) {
+          return feedback.replaceChildren(msg("err", `Giọng "${v}" là giọng ${actual === "male" ? "nam" : "nữ"} nhưng đang nhập ở ô giọng ${gender === "male" ? "nam" : "nữ"} — chuyển sang ô còn lại.`));
+        }
         (voices[code] ??= {})[gender] = v;
       }
     }
@@ -137,4 +142,38 @@ async function voiceCard() {
       el("thead", null, el("tr", null, ["Ngôn ngữ", "Giọng nữ", "Giọng nam", "Ghi chú"].map((h) => el("th", null, h)))), el("tbody", null, rows))),
     el("p", { class: "muted" }, "Tiếng Việt luôn sinh cả nữ và nam để bé chọn. Ngôn ngữ gốc của bé mặc định chỉ sinh giọng nữ (tiết kiệm ký tự TTS); ngôn ngữ nhà cung cấp không có giọng sẽ dùng giọng trình duyệt. Azure có giọng trẻ em ở một số ngôn ngữ nhưng không có cho tiếng Việt."),
     feedback, save);
+}
+
+// Kiểm tra âm thanh đã sinh: mỗi dòng = 1 (ngôn ngữ, giới, nguồn, giọng) + số file. ⚠ khi tên giọng (TTS) trái với giới của nhãn.
+function diagnosticCard() {
+  const out = el("div");
+  const run = el("button", { class: "btn ghost", type: "button" }, "Kiểm tra âm thanh đã sinh");
+  run.addEventListener("click", async () => {
+    run.disabled = true;
+    out.replaceChildren(el("p", { class: "muted" }, A.loading));
+    try {
+      const rows = await audioSummary();
+      if (!rows.length) return out.replaceChildren(el("p", { class: "muted" }, "Chưa có file âm thanh nào."));
+      const bad = rows.filter((r) => r.source === "tts" && r.gender && guessGender(r.voice_name) && guessGender(r.voice_name) !== r.gender);
+      const tr = (r) => {
+        const mismatch = bad.includes(r);
+        return el("tr", null,
+          el("td", null, r.lang), el("td", null, r.gender === "male" ? "♂ nam" : r.gender === "female" ? "♀ nữ" : "—"),
+          el("td", null, r.source === "human" ? "người thật" : "TTS"), el("td", null, (mismatch ? "⚠ " : "") + (r.voice_name || "—")), el("td", null, String(r.files)));
+      };
+      out.replaceChildren(
+        el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
+          el("thead", null, el("tr", null, ["Ngôn ngữ", "Giới (nhãn)", "Nguồn", "Giọng đã dùng", "Số file"].map((h) => el("th", null, h)))),
+          el("tbody", null, rows.map(tr)))),
+        bad.length
+          ? msg("err", "Có file gắn nhãn giới KHÔNG khớp giọng thật (dòng ⚠). Chạy migration 006 để vá nhãn, rồi tab Nội dung → “Sinh lại TTS bằng giọng hiện tại”.")
+          : msg("ok", "Nhãn giới khớp với giọng đã dùng."));
+    } catch (e) {
+      out.replaceChildren(msg("err", e.message));
+    } finally {
+      run.disabled = false;
+    }
+  });
+  return el("div", { class: "card" }, el("h2", null, "Kiểm tra giọng đã sinh"),
+    el("p", { class: "muted" }, "Xem mỗi ngôn ngữ/giới đang dùng giọng nào và bao nhiêu file. Giọng nữ phải là HoaiMy…, giọng nam là NamMinh…"), run, out);
 }

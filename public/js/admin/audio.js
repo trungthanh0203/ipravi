@@ -1,5 +1,6 @@
 import { sb, contentUrl } from "../supabase.js";
 import { CONFIG } from "../config.js";
+import { guessGender } from "../voice-names.js";
 
 // Âm thanh của nội dung: sinh bằng TTS (qua Worker /api/tts), tải giọng người thật lên, nghe thử, xoá.
 // File lưu ở bucket "content", đường dẫn có mốc thời gian (sw.js cache-trước theo URL nên URL phải đổi khi sinh lại).
@@ -11,13 +12,13 @@ import { CONFIG } from "../config.js";
 
 export const GENDER_MARK = { female: "♀", male: "♂" };
 
-// Giọng admin chọn ở tab Cài đặt: {lang:{female?,male?}} (bản cũ lưu chuỗi = giọng nữ).
+// Giọng admin chọn ở tab Cài đặt: {lang:{female?,male?}}. Bản cũ lưu chuỗi: giới đoán từ TÊN giọng (NamMinh → nam), tên lạ → nữ.
 let voicesCache = null;
 export async function getVoices() {
   if (voicesCache) return voicesCache;
   const { data } = await sb.from("settings").select("tts_voices").eq("id", 1).single();
   const raw = data?.tts_voices ?? {};
-  voicesCache = Object.fromEntries(Object.entries(raw).map(([lang, v]) => [lang, typeof v === "string" ? { female: v } : v ?? {}]));
+  voicesCache = Object.fromEntries(Object.entries(raw).map(([lang, v]) => [lang, typeof v === "string" ? { [guessGender(v) ?? "female"]: v } : v ?? {}]));
   return voicesCache;
 }
 export const resetVoices = () => { voicesCache = null; };
@@ -99,6 +100,11 @@ export async function generate(item, slot) {
   if (!text) throw new Error(`Chưa có chữ "${slot.lang}" để đọc`);
   const chosen = (await getVoices())[slot.lang]?.[slot.gender];
   const { blob, provider, voice } = await synth(text, slot.lang, slot.speed, chosen, slot.gender);
+  // Chặn gán nhãn sai: giọng thực tế dùng có giới khác ô (vd giọng nam nằm ở ô nữ) thì KHÔNG lưu, báo admin sửa cấu hình.
+  const actual = guessGender(voice);
+  if (actual && actual !== slot.gender) {
+    throw new Error(`Giọng "${voice}" là giọng ${actual === "male" ? "nam" : "nữ"} nhưng đang dùng cho ô ${slot.gender === "male" ? "nam" : "nữ"} — sửa ở tab Cài đặt (hoặc biến TTS_VOICES) rồi thử lại.`);
+  }
   const path = `audio/${item.id}/${slot.lang}-${slot.gender}-${slot.speed}-${Date.now()}.mp3`;
   await upload(path, blob, "audio/mpeg");
   const old = findAudio(item, slot).filter((a) => a.source === "tts");
@@ -106,11 +112,18 @@ export async function generate(item, slot) {
     item_id: item.id, lang: slot.lang, speed: slot.speed, gender: slot.gender, source: "tts", voice_kind: "adult",
     provider, voice_name: voice, file_path: path,
   });
-  if (error) throw error;
+  if (error) throw /column .*gender/i.test(error.message ?? "") ? new Error("CSDL chưa có cột gender — chạy migration 005 (rồi 006) trong Supabase SQL Editor.") : error;
   if (old.length) {
     await sb.storage.from("content").remove(old.map((a) => a.file_path));
     await sb.from("content_audio").delete().in("id", old.map((a) => a.id));
   }
+}
+
+// Thống kê file đã sinh theo (ngôn ngữ, giới, nguồn, giọng) — RPC admin_audio_summary (migration 006).
+export async function audioSummary() {
+  const { data, error } = await sb.rpc("admin_audio_summary");
+  if (error) throw new Error(/admin_audio_summary/.test(error.message ?? "") ? "Chưa chạy migration 006 trong Supabase SQL Editor." : error.message);
+  return data ?? [];
 }
 
 // Tải file giọng người thật lên ô này (giới lấy từ ô; voiceKind: adult | child), thay bản người thật cũ của cùng ô.

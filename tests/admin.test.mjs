@@ -135,7 +135,7 @@ eq(az.init.headers["Ocp-Apim-Subscription-Key"], "k", "azure: gửi khoá qua he
 eq(az.init.body.includes('xml:lang="vi-VN"') && az.init.body.includes('rate="-30%"') && az.init.body.includes("con &lt;gà&gt; &amp; vịt"), true, "azure: SSML đúng locale, nghe chậm -30%, escape XML");
 eq(calls.find((c) => c.url.includes("/rpc/is_admin")).init.headers.authorization, "Bearer tok", "kiểm admin bằng chính token của người gọi");
 
-r = await worker.fetch(post({ text: "Hund", lang: "de" }), env({ TTS_PROVIDER: "google", TTS_KEY: "gk", TTS_VOICES: '{"de":"de-DE-Wavenet-B"}' }));
+r = await worker.fetch(post({ text: "Hund", lang: "de", gender: "male" }), env({ TTS_PROVIDER: "google", TTS_KEY: "gk", TTS_VOICES: '{"de":"de-DE-Wavenet-B"}' }));
 eq([r.status, r.headers.get("x-tts-voice")], [200, "de-DE-Wavenet-B"], "google: TTS_VOICES ghi đè giọng");
 eq(new TextDecoder().decode(await r.arrayBuffer()), "abc", "google: giải mã base64");
 const g = calls.find((c) => c.url.includes("googleapis"));
@@ -185,6 +185,13 @@ globalThis.fetch = async (url, init) => {
   eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }), [200, "vi-VN-NamMinhNeural", "male"], "gender: nam -> NamMinh");
   eq(await voiceOf({ text: "a", lang: "ko", gender: "male" }), [200, "ko-KR-InJoonNeural", "male"], "tiếng Hàn: giọng nam mặc định");
   eq(await voiceOf({ text: "a", lang: "ja" }), [200, "ja-JP-NanamiNeural", "female"], "tiếng Nhật: giọng nữ mặc định");
+  // LỖI THẬT: TTS_VOICES={"vi":"vi-VN-NamMinhNeural"} (chuỗi) từng làm giọng NỮ đọc bằng giọng nam
+  const legacy = az({ TTS_VOICES: JSON.stringify({ vi: "vi-VN-NamMinhNeural" }) });
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "female" }, legacy), [200, "vi-VN-HoaiMyNeural", "female"], "chuỗi TTS_VOICES là giọng NAM: giọng nữ vẫn là HoaiMy");
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }, legacy), [200, "vi-VN-NamMinhNeural", "male"], "chuỗi TTS_VOICES là giọng NAM: dùng cho giọng nam");
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "female" }, az({ TTS_VOICES: JSON.stringify({ vi: { female: "vi-VN-Khac" } }) })), [200, "vi-VN-Khac", "female"], "object {female}: giọng nữ ghi đè");
+  const cfgV = (await (await worker.fetch(new Request("https://a.dev/api/config"), legacy)).json()).ttsVoices.vi;
+  eq(cfgV, { female: "vi-VN-HoaiMyNeural", male: "vi-VN-NamMinhNeural" }, "config: chuỗi NamMinh không đè giọng nữ");
   eq((await voiceOf({ text: "a", lang: "vi", gender: "robot" }))[0], 400, "gender: giá trị lạ bị từ chối");
   eq((await voiceOf({ text: "a", lang: "xx" }))[0], 400, "ngôn ngữ không có giọng -> 400 (app dùng giọng trình duyệt)");
   eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }, az({ TTS_VOICES: JSON.stringify({ vi: { male: "vi-VN-Khac" } }) })), [200, "vi-VN-Khac", "male"], "TTS_VOICES dạng {female,male}: giọng nam ghi đè");

@@ -5,6 +5,7 @@ import { A } from "./text.js";
 import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
+import { guessGender } from "../voice-names.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
 const pill = (status) => el("span", { class: `pill ${status === "approved" ? "good" : ""}` }, status === "approved" ? A.approved : A.draft);
@@ -202,8 +203,10 @@ function slotCell(item, slot, say, refresh) {
     catch (err) { say("err", `${slot.label}: ${err.message}`); }
   });
   const tag = has ? rows.some((r) => r.source === "human") ? "người" : "TTS" : "";
+  // ⚠ = file TTS đọc bằng giọng có giới KHÁC nhãn ô (dữ liệu cũ gán sai) → cần sinh lại
+  const wrong = rows.find((r) => r.source === "tts" && guessGender(r.voice_name) && guessGender(r.voice_name) !== slot.gender);
   return el("span", { class: `slot ${has ? "ok" : missingText ? "na" : "miss"}` },
-    el("span", { class: "slot-label" }, slot.label, tag && el("small", null, ` ${tag}`)),
+    el("span", { class: "slot-label" }, slot.label, tag && el("small", null, ` ${tag}`), wrong && el("span", { title: `Giọng ${wrong.voice_name} không đúng giới của ô này — bấm ⟳ để sinh lại` }, " ⚠")),
     has ? btn("▶", () => audio.play(rows[0]), "btn tiny", rows[0].voice_name ? `Nghe thử — giọng ${rows[0].voice_name}` : "Nghe thử") : el("span", { class: "slot-x" }, missingText ? "–" : "✗"),
     missingText ? null : btn("⟳", run(() => audio.generate(item, slot)), "btn tiny", "Sinh lại bằng TTS"),
     missingText ? null : btn("⬆", () => file.click(), "btn tiny", "Tải giọng người thật lên"),

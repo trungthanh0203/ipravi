@@ -253,5 +253,34 @@ await as(B, async () => {
   ok(r.affectedRows === 0, "phụ huynh B KHÔNG đổi được giọng con của A");
 });
 
+// ---- 12. vá giọng gán sai giới + thống kê (migration 006) ----
+{
+  const m006 = readFileSync(new URL("../migrations/006_voice_repair_summary.sql", import.meta.url), "utf8");
+  // Tái hiện lỗi thật: giọng NAM nằm ở ô nữ; file "nữ" thực ra là giọng nam; cùng 1 ô có 2 file; giọng người thật không được đụng
+  await db.query("delete from public.content_audio where item_id = $1", [item]);
+  await db.query("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify({ vi: { female: "vi-VN-NamMinhNeural" }, de: { male: "de-DE-KatjaNeural" }, en: { female: "en-US-JennyNeural", male: "en-US-GuyNeural" } })]);
+  await db.query("insert into public.content_audio (item_id, lang, speed, gender, source, voice_name, file_path) values ($1,'vi','normal','female','tts','vi-VN-NamMinhNeural','sai1.mp3'), ($1,'vi','normal','male','tts','vi-VN-NamMinhNeural','dung-cu.mp3'), ($1,'vi','slow','female','tts','vi-VN-HoaiMyNeural','nu-dung.mp3'), ($1,'vi','normal','female','human',null,'nguoi-that.mp3'), ($1,'de','normal','male','tts','de-DE-KatjaNeural','de-sai.mp3'), ($1,'xx','normal','male','tts','xx-XX-LaLam','la.mp3')", [item]);
+  await db.exec(m006);
+  await db.exec(m006);
+  const tv = (await q("select tts_voices from public.settings"))[0].tts_voices;
+  ok(tv.vi.male === "vi-VN-NamMinhNeural" && !("female" in tv.vi), "006: giọng NAM ở ô nữ được chuyển sang ô nam", JSON.stringify(tv.vi));
+  ok(tv.de.female === "de-DE-KatjaNeural" && !("male" in tv.de), "006: giọng NỮ ở ô nam được chuyển sang ô nữ", JSON.stringify(tv.de));
+  ok(tv.en.female === "en-US-JennyNeural" && tv.en.male === "en-US-GuyNeural", "006: cấu hình đúng giữ nguyên");
+  const rows = Object.fromEntries((await q("select file_path, lang, speed, gender, source from public.content_audio where item_id = $1", [item])).map((r) => [r.file_path, r]));
+  ok(!rows["sai1.mp3"] && rows["dung-cu.mp3"]?.gender === "male", "006: file 'nữ' dùng giọng NamMinh → đổi nhãn nam, bản trùng cùng ô bị xoá (giữ bản mới nhất)", Object.keys(rows).join());
+  ok(rows["nu-dung.mp3"]?.gender === "female", "006: file nữ đúng (HoaiMy) giữ nguyên");
+  ok(rows["nguoi-that.mp3"]?.gender === "female" && rows["nguoi-that.mp3"]?.source === "human", "006: giọng người thật không bị đụng");
+  ok(rows["de-sai.mp3"]?.gender === "female", "006: file 'nam' dùng giọng Katja → đổi nhãn nữ");
+  ok(rows["la.mp3"]?.gender === "male", "006: tên giọng lạ (không đoán được) giữ nguyên nhãn");
+}
+await as(ADM, async () => {
+  const rows = await q("select * from public.admin_audio_summary()");
+  ok(rows.length >= 3 && rows.every((r) => Number(r.files) >= 1), "RPC admin_audio_summary: admin thấy thống kê theo (ngôn ngữ, giới, nguồn, giọng)", String(rows.length));
+});
+await as(A, async () => {
+  const e = await fails("select * from public.admin_audio_summary()");
+  ok(e && /Chỉ admin/.test(e), "RPC admin_audio_summary: phụ huynh bị từ chối", String(e));
+});
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

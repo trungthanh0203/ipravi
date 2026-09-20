@@ -2,6 +2,7 @@
 import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.js";
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
+import { guessGender } from "../public/js/voice-names.js";
 
 let fail = 0;
 const eq = (a, b, m) => { if (JSON.stringify(a) !== JSON.stringify(b)) { console.log("FAIL", m, a, b); fail = 1; } else console.log("ok  ", m); };
@@ -49,6 +50,13 @@ eq(pickAudio(rows, { lang: "de" }).id, 5, "audio nghĩa tiếng Đức");
   eq(pickAudio([row(1, "tts", null), row(2, "tts", "male")], { lang: "vi", gender: "female" }).id, 1, "giới: dòng cũ chưa có gender vẫn dùng được");
   eq(pickAudio([], { lang: "vi", gender: "male" }), null, "giới: không có file nào -> null (khu trẻ dùng giọng trình duyệt)");
 }
+
+// Đoán giới từ tên giọng (lỗi thật: giọng nam bị coi là nữ)
+eq(guessGender("vi-VN-NamMinhNeural"), "male", "giới: NamMinh = nam");
+eq(guessGender("vi-VN-HoaiMyNeural"), "female", "giới: HoaiMy = nữ");
+eq(guessGender("vi-VN-Wavenet-B"), "male", "giới: Google Wavenet-B = nam");
+eq(guessGender("xx-XX-LaLam"), null, "giới: tên lạ = không đoán");
+eq(guessGender(""), null, "giới: rỗng = null");
 
 // Worker
 const env = { CENTER_NAME: "Trung tâm A", SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "k", LANGUAGES: "de:Deutsch,en:English", ASSETS: { fetch: async () => new Response("asset") } };
