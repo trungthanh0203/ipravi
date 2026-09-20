@@ -5,6 +5,7 @@
   // BRAND_COLOR) đặt ở Cloudflare Dashboard → Workers & Pages → <worker> → Settings →
   // Variables — KHÔNG ghi vào file này. "keep_vars" giữ nguyên biến đó khi deploy.
   // "main" KHÔNG được đặt là "_worker.js" (tên dành riêng cho Pages).
+
   "name": "tiengviet",
   "main": "worker.js",
   "compatibility_date": "2026-09-01",
