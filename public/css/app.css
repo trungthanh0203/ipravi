@@ -235,3 +235,21 @@ img.visual.big { max-height: 200px; }
 .q-text { font-size: 26px; }
 .tile-card { display: flex; align-items: center; gap: 10px; text-align: left; font-size: 18px; font-weight: 600; width: 100%; }
 .tiles-line:has(.tile-card), .tiles-pool:has(.tile-card) { flex-direction: column; align-items: stretch; }
+.visual.emoji.multi { font-size: 38px; letter-spacing: 2px; white-space: nowrap; }
+.visual.emoji.multi.big { font-size: 64px; }
+@media (max-width: 420px) { .visual.emoji.multi { font-size: 30px; } .visual.emoji.multi.big { font-size: 52px; } }
+
+/* Tab Thu âm */
+.rec-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.rec-field { display: flex; flex-direction: column; gap: 4px; }
+.rec-card { text-align: center; }
+.rec-text { font-size: 72px; font-weight: 800; margin: 12px 0 4px; line-height: 1.1; }
+.rec-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 14px 0; }
+.rec-meter { width: min(320px, 90%); }
+.rec-btn { background: #c92a2a; }
+.rec-btn.recording { animation: recpulse 1s infinite; }
+@keyframes recpulse { 50% { box-shadow: 0 0 0 10px rgba(201, 42, 42, .25); } }
+.rec-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.rec-chips .chip { font: inherit; cursor: pointer; }
+.rec-chips .chip.ok { border-color: var(--ok); }
+.rec-chips .chip.now { background: var(--brand); color: #fff; border-color: var(--brand); }

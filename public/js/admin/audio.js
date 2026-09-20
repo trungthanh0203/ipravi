@@ -128,19 +128,27 @@ export async function audioSummary() {
 }
 
 // Tải file giọng người thật lên ô này (giới lấy từ ô; voiceKind: adult | child), thay bản người thật cũ của cùng ô.
-export async function uploadHuman(item, slot, file, voiceKind = "adult") {
+// region: "bac" | "trung" | "nam" | null (không phân vùng). Bản cũ thay thế = cùng ô + cùng loại giọng + cùng vùng.
+export async function uploadHuman(item, slot, file, voiceKind = "adult", region = null) {
   const ext = (file.name.split(".").pop() || "mp3").toLowerCase().replace(/[^a-z0-9]/g, "");
   const path = `audio/${item.id}/${slot.lang}-${slot.gender}-${slot.speed}-human-${Date.now()}.${ext}`;
   await upload(path, file, file.type || "audio/mpeg");
-  const old = findAudio(item, slot).filter((a) => a.source === "human" && a.voice_kind === voiceKind);
+  const old = findAudio(item, slot).filter((a) => a.source === "human" && a.voice_kind === voiceKind && (a.region ?? null) === region);
   const { error } = await sb.from("content_audio").insert({
-    item_id: item.id, lang: slot.lang, speed: slot.speed, gender: slot.gender, source: "human", voice_kind: voiceKind, file_path: path,
+    item_id: item.id, lang: slot.lang, speed: slot.speed, gender: slot.gender, source: "human", voice_kind: voiceKind, region, file_path: path,
   });
   if (error) throw error;
   if (old.length) {
     await sb.storage.from("content").remove(old.map((a) => a.file_path));
     await sb.from("content_audio").delete().in("id", old.map((a) => a.id));
   }
+}
+
+// Xoá 1 bản thu (dòng + file trong Storage).
+export async function deleteAudioRow(row) {
+  await sb.storage.from("content").remove([row.file_path]);
+  const { error } = await sb.from("content_audio").delete().eq("id", row.id);
+  if (error) throw error;
 }
 
 let player = null;

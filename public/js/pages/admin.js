@@ -6,7 +6,7 @@ import { A } from "../admin/text.js";
 
 // Khu quản trị: mỗi tab là 1 module trong js/admin/ (tải khi bấm vào — chỉ tải dữ liệu của tab đang xem).
 // Thứ tự TABS = thứ tự nút trên giao diện; tab mặc định là tab NHẸ nhất ("content" chỉ đọc danh sách chủ đề/bài).
-const TABS = ["content", "import", "parents", "billing", "settings"];
+const TABS = ["content", "record", "import", "parents", "billing", "settings"];
 let tab = "content";
 
 export function mount(root) {

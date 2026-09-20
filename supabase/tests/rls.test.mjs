@@ -400,5 +400,34 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.content_items where lesson_id = $1", [l]))[0].n === 2, "009: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 16. ngân hàng âm: chủ đề ẩn (migration 010) ----
+{
+  const m010 = readFileSync(new URL("../migrations/010_sound_bank.sql", import.meta.url), "utf8");
+  await db.exec(m010); // mục 15 vừa chạy lại 009 (thay child_stats) — chạy lại 010 đúng thứ tự
+  await db.query("delete from public.units");
+  const u1 = (await q("insert into public.units (title_vi, level, status) values ('Thường', 1, 'approved') returning id"))[0].id;
+  const uh = (await q("insert into public.units (title_vi, level, status, hidden) values ('Ngân hàng âm', 1, 'approved', true) returning id"))[0].id;
+  ok((await q("select hidden from public.units where id = $1", [u1]))[0].hidden === false, "010: chủ đề mặc định KHÔNG ẩn");
+  const mk = async (u, t) => {
+    const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1,$2,'approved') returning id", [u, t]))[0].id;
+    return (await q("insert into public.content_items (lesson_id, item_type, text_vi, status) values ($1,'syllable','x','approved') returning id", [l]))[0].id;
+  };
+  const itNormal = await mk(u1, "L1"), itHidden = await mk(uh, "LH");
+  const P = await uid("p10@x.com"), kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé H','owl') returning id", [P]))[0].id;
+  await db.query("insert into public.child_progress (child_id, item_id, mastery) values ($1,$2,4), ($1,$3,4)", [kid, itNormal, itHidden]);
+  await db.query("insert into public.content_audio (item_id, lang, speed, gender, source, voice_kind, file_path) values ($1,'vi','normal','male','human','adult','a.wav')", [itHidden]);
+  await as(P, async () => {
+    const st = (await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s;
+    const L1 = st.levels.find((x) => x.level === 1);
+    ok(L1 && L1.items_total === 1 && L1.items_mastered === 1 && L1.lessons_total === 1, "010: thống kê KHÔNG đếm chủ đề ẩn", JSON.stringify(L1));
+    ok((await q("select id from public.content_items where id = $1", [itHidden])).length === 1, "010: bé/phụ huynh vẫn ĐỌC được mục trong chủ đề ẩn (để phát âm thanh)");
+    ok((await q("select id from public.content_audio where item_id = $1", [itHidden])).length === 1, "010: đọc được âm thanh của chủ đề ẩn");
+    const r = await db.query("update public.units set hidden = false where id = $1", [uh]);
+    ok(r.affectedRows === 0, "010: phụ huynh KHÔNG đổi được cờ ẩn");
+  });
+  await db.exec(m010);
+  ok((await q("select count(*)::int as n from public.units"))[0].n === 2, "010: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

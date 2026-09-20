@@ -140,7 +140,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     if (seen.has(dupKey)) return errors.push({ row: n, msg: `Trùng với dòng ${seen.get(dupKey)} (cùng chủ đề, bài, từ "${vi}")` });
     seen.set(dupKey, n);
 
-    if (!emoji) warnings.push({ row: n, msg: `"${vi}": chưa có emoji (sẽ hiện dấu ❓ cho trẻ)` });
+    if (!emoji && type !== "question") warnings.push({ row: n, msg: `"${vi}": chưa có emoji (sẽ hiện dấu ❓ cho trẻ)` });
     const tr = {};
     for (const l of langs) {
       if (col(l) < 0) continue;

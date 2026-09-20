@@ -4,6 +4,8 @@ import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
 import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken } from "../public/js/viet.js";
+import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan } from "../public/js/sounds.js";
+import { peakOf, rmsOf, trimSilence, normalizePeak, resample, encodeWav, processTake, durationMs } from "../public/js/admin/wav.js";
 import { guessGender } from "../public/js/voice-names.js";
 
 let fail = 0;
@@ -89,6 +91,53 @@ for (const [w, i, r] of [["bà", "b", "à"], ["nghé", "ngh", "é"], ["ăn", "",
 eq([splitSyllable("con mèo"), splitSyllable(""), splitSyllable(null)], [null, null, null], "viet: không phải 1 tiếng → null");
 eq(words("Con chào bà ạ.").map(bare), ["Con", "chào", "bà", "ạ"], "viet: tách tiếng trong câu + bỏ dấu câu");
 eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken(null)], ["bờ", "bà", ""], "viet: spoken ưu tiên chữ đọc riêng (say)");
+
+// Ngân hàng âm
+{
+  const plan = bankPlan();
+  const all = plan.flatMap((p) => p.items.map((i) => i.text));
+  eq(new Set(all).size, all.length, "ngân hàng âm: không có âm trùng");
+  eq(plan.every((p) => p.items.length >= 1 && p.items.length <= 24), true, "ngân hàng âm: mỗi bài 1–24 âm (thu từng đợt ngắn)");
+  eq(initialSound("b"), "bờ", "âm đầu: b → bờ");
+  eq([initialSound("k"), initialSound("q"), initialSound("gh"), initialSound("ngh")], ["cờ", "cờ", "gờ", "ngờ"], "âm đầu: k/q/gh/ngh đọc như c/c/g/ng");
+  eq(initialSound("zz"), "", "âm đầu lạ → rỗng");
+  eq(VOWELS.length, 12, "nguyên âm đơn: 12");
+  eq(VOWELS.find((v) => v[0] === "ă")[1], "á", "ă đọc là á");
+  eq(TONE_NAMES.length, 6, "6 tên thanh");
+  // mọi âm đầu mà splitSyllable có thể trả ra đều có cách đọc
+  const inits = ["b", "c", "ch", "d", "đ", "g", "gh", "gi", "h", "k", "kh", "l", "m", "n", "ng", "ngh", "nh", "p", "ph", "qu", "r", "s", "t", "th", "tr", "v", "x"];
+  eq(inits.filter((i) => !initialSound(i)), [], "mọi âm đầu tiếng Việt đều có cách đọc");
+  eq(VAN_GROUPS.flatMap((g) => g[1]).every((v) => /^[a-zăâêôơưiyeuo]+$/.test(v)), true, "vần: chỉ gồm chữ cái tiếng Việt");
+  eq(VAN_GROUPS.flatMap((g) => g[1]).length >= 70, true, "vần: ≥ 70 vần");
+}
+
+// Xử lý âm thanh thu
+{
+  const sr = 8000;
+  const tone = (n, amp) => Float32Array.from({ length: n }, (_, i) => amp * Math.sin((2 * Math.PI * 440 * i) / sr));
+  const sil = (n) => new Float32Array(n);
+  const cat = (...a) => { const o = new Float32Array(a.reduce((s, x) => s + x.length, 0)); let p = 0; for (const x of a) { o.set(x, p); p += x.length; } return o; };
+  const x = cat(sil(4000), tone(4000, 0.3), sil(4000));
+  const t = trimSilence(x, sr);
+  eq(t.length < x.length && t.length >= 4000, true, "cắt lặng: bỏ khoảng lặng, giữ tiếng");
+  eq(t.length <= 4000 + 2 * Math.round(0.12 * sr) + 2, true, "cắt lặng: chừa ≤ 120 ms mỗi đầu");
+  eq(trimSilence(sil(100), sr).length, 100, "cắt lặng: toàn im lặng → trả nguyên");
+  const n = normalizePeak(tone(1000, 0.1));
+  eq(Math.abs(peakOf(n) - 10 ** (-1 / 20)) < 0.01, true, "chuẩn hoá: đỉnh về -1 dBFS");
+  eq(peakOf(normalizePeak(tone(1000, 1e-6))) < 0.5, true, "chuẩn hoá: không khuếch đại vô hạn tiếng cực nhỏ");
+  eq(peakOf(normalizePeak(sil(50))), 0, "chuẩn hoá: im lặng giữ nguyên");
+  eq(resample(tone(48000, 0.5), 48000, 24000).length, 24000, "đổi tần số: 48k → 24k còn một nửa số mẫu");
+  eq(resample(tone(100, 0.5), 8000, 8000).length, 100, "đổi tần số: cùng tần số giữ nguyên");
+  const wav = encodeWav(Float32Array.from([0, 1, -1, 2, -2]), 24000);
+  const dv = new DataView(wav.buffer);
+  const str = (o, l) => String.fromCharCode(...wav.slice(o, o + l));
+  eq([str(0, 4), str(8, 4), str(12, 4), str(36, 4)], ["RIFF", "WAVE", "fmt ", "data"], "WAV: tiêu đề RIFF/WAVE/fmt/data");
+  eq([dv.getUint16(22, true), dv.getUint32(24, true), dv.getUint16(34, true)], [1, 24000, 16], "WAV: mono, 24 kHz, 16-bit");
+  eq([dv.getInt16(44, true), dv.getInt16(46, true), dv.getInt16(48, true), dv.getInt16(50, true), dv.getInt16(52, true)], [0, 32767, -32768, 32767, -32768], "WAV: mẫu 16-bit, vượt ±1 được kẹp");
+  eq(dv.getUint32(40, true), 10, "WAV: kích thước dữ liệu = 2 byte/mẫu");
+  const take = processTake(cat(sil(24000), tone(24000, 0.05), sil(24000)), 48000);
+  eq([take.ms > 400 && take.ms < 1000, take.wav.length > 44, Math.abs(rmsOf(Float32Array.from([1, -1, 1, -1])) - 1) < 1e-9, durationMs(sil(8000), 8000)], [true, true, true, 1000], "processTake: cắt lặng + 24 kHz + WAV (tiếng ~0,5 s + đệm)");
+}
 
 // Worker
 const env = { CENTER_NAME: "Trung tâm A", SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "k", LANGUAGES: "de:Deutsch,en:English", ASSETS: { fetch: async () => new Response("asset") } };

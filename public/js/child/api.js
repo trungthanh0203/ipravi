@@ -18,7 +18,7 @@ export const clearCache = () => memo.clear();
 export const loadUnits = () => cached("units", async () => {
   const { data, error } = await sb.from("units").select("*").order("sort_order");
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).filter((u) => !u.hidden); // chủ đề ẩn (ngân hàng âm) chỉ để lấy âm thanh
 });
 
 export const loadLessons = (unitId) => cached("lessons:" + unitId, async () => {

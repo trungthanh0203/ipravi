@@ -73,7 +73,7 @@ function render(box, units, lessons) {
 
   // Nhóm theo cấp: tiêu đề mỗi cấp cho biết số chủ đề/bài/mục và bao nhiêu đã duyệt (cấp trống hiện "chưa có nội dung").
   const groups = LEVELS.map((L) => {
-    const us = units.filter((u) => levelOf(u) === L.n);
+    const us = units.filter((u) => !u.hidden && levelOf(u) === L.n);
     const ls = lessons.filter((l) => us.some((u) => u.id === l.unit_id));
     const items = ls.reduce((a, l) => a + (l.content_items?.[0]?.count ?? 0), 0);
     const approved = us.filter((u) => u.status === "approved").length;
@@ -85,6 +85,13 @@ function render(box, units, lessons) {
           : `Chưa có nội dung — ${L.focus}`)),
       us.map(unitCard));
   });
+  // Chủ đề ẨN (ngân hàng âm): bé không thấy; ở đây để sinh TTS / xem — thu giọng người thật ở tab "Thu âm".
+  const hidden = units.filter((u) => u.hidden);
+  if (hidden.length) {
+    groups.push(el("section", { class: "level-group" },
+      el("div", { class: "level-head" }, el("h2", null, "🎙️ Ngân hàng âm (ẩn với bé)"), el("span", { class: "muted" }, "Âm chữ cái, vần, tên dấu thanh — thu giọng người thật ở tab “Thu âm”.")),
+      hidden.map(unitCard)));
+  }
   box.replaceChildren(flash, ...groups);
 }
 
@@ -118,7 +125,7 @@ async function approveLesson(lesson, reload, say) {
     const items = await loadItems(lesson.id);
     const slots = audio.audioSlots(langs(), await audio.getVoices());
     const noAudio = items.filter((i) => slots.some((s) => audio.textFor(i, s.lang) && !audio.findAudio(i, s).length)).length;
-    const noEmoji = items.filter((i) => !i.emoji && !i.image_path).length;
+    const noEmoji = items.filter((i) => !i.emoji && !i.image_path && i.item_type !== "question").length; // câu hỏi đọc hiểu không hiển thị hình
     const noMeaning = items.filter((i) => langs().some((l) => !audio.textFor(i, l))).length;
     const issues = [noAudio && `${noAudio} mục thiếu âm thanh (bé sẽ nghe giọng máy của trình duyệt)`, noEmoji && `${noEmoji} mục chưa có hình/emoji`, noMeaning && `${noMeaning} mục thiếu nghĩa`].filter(Boolean);
     if (issues.length && !confirm(`Bài "${lesson.title_vi}" còn:\n- ${issues.join("\n- ")}\n\nVẫn duyệt cho bé học?`)) return;

@@ -1,7 +1,7 @@
 // Chữ giao diện của khu admin (tiếng Việt). Chữ của phụ huynh/trẻ nằm ở ../strings.js.
 export const A = {
   title: "Quản trị",
-  tabs: { content: "Nội dung", import: "Nhập CSV", parents: "Phụ huynh", billing: "Học phí & thanh toán", settings: "Cài đặt" },
+  tabs: { content: "Nội dung", record: "Thu âm", import: "Nhập CSV", parents: "Phụ huynh", billing: "Học phí & thanh toán", settings: "Cài đặt" },
   teacherSoon: "Vai trò giáo viên hỗ trợ sẽ làm ở giai đoạn sau.",
   loading: "Đang tải…",
   loadError: "Không tải được dữ liệu: ",

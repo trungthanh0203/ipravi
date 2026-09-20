@@ -96,13 +96,16 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
   for (const [k, all] of lessons) {
     const items = all.filter((i) => i.type !== "question"), qs = all.filter((i) => i.type === "question");
     if (all.length < 5 || all.length > 10) fail(`${k}: ${all.length} mục (cần 5–10)`);
-    const emojis = all.map((i) => i.emoji);
+    const emojis = items.map((i) => i.emoji);
     const dup = emojis.filter((e, i) => emojis.indexOf(e) !== i);
     if (dup.length) fail(`${k}: trùng emoji ${dup.join(" ")}`);
     if (!all[0].kinds.length) fail(`${k}: dòng đầu chưa ghi activities`);
     if (all.slice(1).some((i) => i.kinds.length)) fail(`${k}: activities chỉ ghi ở dòng đầu của bài`);
     if (all.some((i) => !i.tr.de || !i.tr.en)) fail(`${k}: thiếu nghĩa de/en`);
-    if (all.some((i) => !i.emoji)) fail(`${k}: có mục chưa có emoji`);
+    if (items.some((i) => !i.emoji)) fail(`${k}: có mục chưa có hình (emoji)`);
+    if (qs.some((i) => i.emoji)) fail(`${k}: câu hỏi không hiển thị hình — bỏ emoji ở dòng câu hỏi`);
+    // hình gồm tối đa 3 emoji (cảnh ghép) để vừa khung
+    if (items.some((i) => [...new Intl.Segmenter().segment(i.emoji)].length > 3)) fail(`${k}: hình quá 3 emoji`);
     // hoạt động phải chơi được với dữ liệu của bài (khớp điều kiện lọc trong child/activities/reading.js + phonics.js)
     const sentences = items.filter((i) => words(i.vi).length >= 4);
     const chars = (i) => [...i.vi.normalize("NFC")].length;
