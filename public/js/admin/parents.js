@@ -1,6 +1,7 @@
 import { sb } from "../supabase.js";
 import { el, msg } from "../ui.js";
 import { A } from "./text.js";
+import { beginLoad } from "./view.js";
 import { notice } from "./notice.js";
 import { suggestExtraFee, recordPayment } from "./billing.js";
 
@@ -15,7 +16,7 @@ function statusOf(p) {
 }
 
 export async function mount(box) {
-  box.replaceChildren(el("p", { class: "muted" }, A.loading));
+  const done = beginLoad(box);
   try {
     const [rows, plans, settings] = await Promise.all([
       sb.rpc("admin_parent_overview").then(check),
@@ -26,6 +27,7 @@ export async function mount(box) {
   } catch (e) {
     box.replaceChildren(msg("err", A.loadError + e.message));
   }
+  done();
 }
 
 function render(box, rows, plans, settings) {

@@ -23,7 +23,7 @@ function shell(root, ...body) {
     el("div", { class: "row child-header" },
       el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
       voiceToggle(),
-      el("button", { class: "btn ghost small", onclick: () => { stopAudio(); state.activeChildId = null; render(); } }, T.childExit)),
+      el("button", { class: "btn ghost small", onclick: () => { stopAudio(); api.clearCache(); state.activeChildId = null; render(); } }, T.childExit)),
     ...body));
 }
 

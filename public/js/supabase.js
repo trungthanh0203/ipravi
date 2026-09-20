@@ -1,4 +1,5 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+// Bản supabase-js tải về sẵn (scripts/vendor-supabase.mjs) — cùng nguồn với app, không gọi CDN bên thứ ba lúc khởi động.
+import { createClient } from "../vendor/supabase/supabase-supabase-js.js";
 
 export let sb = null;
 

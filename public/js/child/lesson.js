@@ -2,7 +2,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
-import { say, voiceToggle } from "./media.js";
+import { say, voiceToggle, prefetchItems } from "./media.js";
 import { childAge } from "./util.js";
 import * as api from "./api.js";
 import * as intro from "./activities/intro.js";
@@ -43,6 +43,8 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
     paint(root, el("div", { class: "card" }, el("p", null, T.lessonNotEnough), el("button", { class: "btn", onclick: onExit }, T.back)));
     return;
   }
+
+  prefetchItems(items); // tải sẵn âm thanh của bài trong lúc bé đọc màn hình "Bắt đầu"
 
   // Cú chạm "Bắt đầu" mở khoá âm thanh trên iOS trước khi phát tự động.
   await new Promise((resolve) =>

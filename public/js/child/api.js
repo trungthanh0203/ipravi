@@ -3,17 +3,29 @@ import { clamp } from "./util.js";
 
 // Chỉ tải dữ liệu của màn hình đang cần (chủ đề → bài → nội dung 1 bài). RLS tự lọc mục đã duyệt + còn hạn.
 
-export async function loadUnits() {
+// Danh sách chủ đề/bài ít đổi → nhớ 1 phút trong bộ nhớ để bé bấm qua lại giữa các màn hình không phải chờ mạng mỗi lần.
+const TTL = 60_000;
+const memo = new Map();
+async function cached(key, load) {
+  const hit = memo.get(key);
+  if (hit && Date.now() - hit.t < TTL) return hit.v;
+  const v = await load();
+  memo.set(key, { t: Date.now(), v });
+  return v;
+}
+export const clearCache = () => memo.clear();
+
+export const loadUnits = () => cached("units", async () => {
   const { data, error } = await sb.from("units").select("*").order("sort_order");
   if (error) throw error;
   return data ?? [];
-}
+});
 
-export async function loadLessons(unitId) {
+export const loadLessons = (unitId) => cached("lessons:" + unitId, async () => {
   const { data, error } = await sb.from("lessons").select("*").eq("unit_id", unitId).order("sort_order");
   if (error) throw error;
   return data ?? [];
-}
+});
 
 // Mục của 1 bài kèm nghĩa + âm thanh.
 export async function loadLessonItems(lessonId) {

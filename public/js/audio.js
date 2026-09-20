@@ -28,10 +28,47 @@ export function stopAudio() {
   if ("speechSynthesis" in globalThis) speechSynthesis.cancel();
 }
 
+// Bộ nhớ đệm âm thanh: tải NGUYÊN file trước (nền) rồi phát từ blob → bấm 🔊 là nghe ngay, không chờ mạng mỗi lần
+// (phát trực tiếp qua thẻ <audio> thì mỗi lần bấm đều xin lại từ máy chủ). Lỗi/hết chỗ → tự quay về phát theo URL.
+const MAX_CACHED = 300;
+const blobUrls = new Map(); // url → objectURL
+const inflight = new Set();
+let running = 0;
+const waiting = [];
+
+function pump() {
+  while (running < 4 && waiting.length) {
+    const url = waiting.shift();
+    running++;
+    fetch(url)
+      .then((r) => (r.ok ? r.blob() : null))
+      .then((b) => {
+        if (!b) return;
+        if (blobUrls.size >= MAX_CACHED) {
+          const [oldest, obj] = blobUrls.entries().next().value;
+          URL.revokeObjectURL(obj);
+          blobUrls.delete(oldest);
+        }
+        blobUrls.set(url, URL.createObjectURL(b));
+      })
+      .catch(() => {})
+      .finally(() => { running--; inflight.delete(url); pump(); });
+  }
+}
+
+export function prefetchAudio(urls) {
+  for (const url of urls) {
+    if (!url || blobUrls.has(url) || inflight.has(url)) continue;
+    inflight.add(url);
+    waiting.push(url);
+  }
+  pump();
+}
+
 // Trả về Promise resolve khi phát XONG (hoặc lỗi) — để nối tiếp các bước, không bao giờ reject.
 export function playUrl(url) {
   stopAudio();
-  const a = new Audio(url);
+  const a = new Audio(blobUrls.get(url) ?? url);
   current = a;
   return new Promise((resolve) => {
     a.onended = () => resolve();

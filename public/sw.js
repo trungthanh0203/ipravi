@@ -1,7 +1,7 @@
 // Service worker: mạng trước (luôn lấy bản mới của trang/JS), rơi về cache khi mất mạng;
 // hình + âm thanh nội dung (Supabase Storage bucket "content") cache trước để phát tức thì.
 // Đổi VERSION để xoá cache cũ.
-const VERSION = "v1";
+const VERSION = "v2"; // đổi khi tải lại public/vendor/ (vendor được cache-trước)
 const SHELL = `shell-${VERSION}`;
 const MEDIA = `media-${VERSION}`;
 
@@ -23,11 +23,12 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
 
   if (url.pathname.includes("/storage/v1/object/public/content/")) {
+    if (req.headers.has("range")) return; // <audio> xin từng khúc (206): để trình duyệt tự xử lý; app tự tải nguyên file để cache (audio.js prefetch)
     e.respondWith(cacheFirst(req, MEDIA));
     return;
   }
   if (url.origin === self.location.origin) {
-    e.respondWith(networkFirst(req, SHELL));
+    e.respondWith(url.pathname.startsWith("/vendor/") ? cacheFirst(req, SHELL) : networkFirst(req, SHELL));
   }
   // Các yêu cầu khác (Supabase API, CDN) để trình duyệt xử lý bình thường.
 });
@@ -50,6 +51,6 @@ async function cacheFirst(req, cacheName) {
   const hit = await cache.match(req);
   if (hit) return hit;
   const res = await fetch(req);
-  if (res.ok) cache.put(req, res.clone());
+  if (res.status === 200) cache.put(req, res.clone()); // 206 (một phần) không cache được
   return res;
 }

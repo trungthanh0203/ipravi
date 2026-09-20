@@ -7,6 +7,7 @@ import * as ops from "./ops.js";
 import { notice } from "./notice.js";
 import { guessGender } from "../voice-names.js";
 import { LEVELS, levelOf } from "../levels.js";
+import { beginLoad } from "./view.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
 const pill = (status) => el("span", { class: `pill ${status === "approved" ? "good" : ""}` }, status === "approved" ? A.approved : A.draft);
@@ -16,16 +17,24 @@ const check = ({ error, data }) => { if (error) throw error; return data; };
 let openUnits = new Set();
 let openLesson = null;
 
+// Trả vị trí cuộn sau khi vẽ xong. Nếu có bài đang mở thì danh sách từ được tải thêm (bất đồng bộ) → đợi itemsPanel gọi.
+let pendingDone = null;
+const flushDone = () => { const d = pendingDone; pendingDone = null; d?.(); };
+
 export async function mount(box) {
-  box.replaceChildren(el("p", { class: "muted" }, A.loading));
+  const done = beginLoad(box);
   try {
     const [units, lessons] = await Promise.all([
       sb.from("units").select("*").order("sort_order").then(check),
       sb.from("lessons").select("*, content_items(count)").order("sort_order").then(check),
     ]);
+    flushDone(); // lượt tải trước (nếu còn treo) không được giữ chiều cao mãi
+    if (openLesson) { pendingDone = done; setTimeout(flushDone, 4000); } // an toàn: bài đang mở đã bị xoá thì không đợi mãi
     render(box, units, lessons);
+    if (!openLesson) done();
   } catch (e) {
     box.replaceChildren(msg("err", A.loadError + e.message));
+    done();
   }
 }
 
@@ -120,9 +129,9 @@ async function approveLesson(lesson, reload, say) {
 }
 
 async function itemsPanel(panel, lesson, say) {
-  panel.replaceChildren(el("p", { class: "muted" }, A.loading));
+  const done = beginLoad(panel); // vùng đã có nội dung → giữ nguyên trong lúc tải lại (không nhảy trang)
   let items;
-  try { items = await loadItems(lesson.id); } catch (e) { return panel.replaceChildren(msg("err", A.loadError + e.message)); }
+  try { items = await loadItems(lesson.id); } catch (e) { panel.replaceChildren(msg("err", A.loadError + e.message)); done(); return flushDone(); }
   const L = langs();
   const slots = audio.audioSlots(L, await audio.getVoices());
   const refresh = () => itemsPanel(panel, lesson, say);
@@ -151,6 +160,8 @@ async function itemsPanel(panel, lesson, say) {
     el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
       el("thead", null, el("tr", null, ["Emoji", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
       el("tbody", null, rows))));
+  done();
+  flushDone();
 }
 
 function itemRow(item, L, slots, say, refresh) {

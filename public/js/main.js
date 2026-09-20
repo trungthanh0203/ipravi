@@ -41,6 +41,11 @@ async function boot() {
     setTimeout(async () => {
       if (!session) {
         resetState();
+      } else if (state.session?.user?.id === session.user.id && state.account) {
+        // supabase-js phát lại SIGNED_IN mỗi khi tab/app được mở lại sau một lúc (lấy lại phiên). Cùng một người → chỉ cập nhật phiên,
+        // KHÔNG dựng lại màn hình (lỗi cũ: bé đang học bị đẩy về danh sách bài mỗi khi quay lại app).
+        state.session = session;
+        return;
       } else {
         state.session = session;
         try {

@@ -1,7 +1,7 @@
 import { contentUrl, sb } from "../supabase.js";
 import { state } from "../state.js";
 import { CONFIG } from "../config.js";
-import { pickAudio, playUrl, stopAudio } from "../audio.js";
+import { pickAudio, playUrl, stopAudio, prefetchAudio } from "../audio.js";
 import { el } from "../ui.js";
 import { spoken } from "../viet.js";
 
@@ -71,3 +71,17 @@ export function playItem(item, { lang = "vi", slow = false } = {}) {
 
 // Lời của linh vật (hướng dẫn, khen). Tạm dùng giọng trình duyệt như trên.
 export const say = (text) => speakFallback(text, "vi");
+
+// Tải trước (nền) âm thanh sẽ dùng của các mục trong 1 bài: tiếng Việt thường + chậm và nghĩa bản ngữ, đúng giọng bé đang chọn.
+export function prefetchItems(items) {
+  const prefs = state.account?.voice_pref ?? {};
+  const base = { gender: voiceGender(), voiceKind: prefs.voiceKind, region: prefs.region };
+  const urls = [];
+  for (const item of items) {
+    for (const [lang, speed] of [["vi", "normal"], ["vi", "slow"], [nativeLang(), "normal"]]) {
+      const row = pickAudio(item.content_audio ?? [], { ...base, lang, speed });
+      if (row) urls.push(contentUrl(row.file_path));
+    }
+  }
+  prefetchAudio(urls);
+}
