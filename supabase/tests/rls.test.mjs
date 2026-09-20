@@ -2,6 +2,7 @@
 // Chạy: npm i --no-save @electric-sql/pglite && node supabase/tests/rls.test.mjs   (node_modules đã .gitignore)
 // Giả lập phần Supabase: schema auth (users, uid()), role anon/authenticated, schema storage.
 import { newDb } from "./_pg.mjs";
+import { readFileSync } from "node:fs";
 
 const db = await newDb();
 let pass = 0, fail = 0;
@@ -219,6 +220,37 @@ await as(A, async () => {
   const r = await db.query("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify({ vi: "hack" })]);
   ok(r.affectedRows === 0, "phụ huynh KHÔNG đổi được giọng TTS");
   ok((await q("select tts_voices from public.settings"))[0].tts_voices.vi === "vi-VN-NamMinhNeural", "giọng TTS vẫn nguyên sau khi phụ huynh thử sửa");
+});
+
+// ---- 11. giọng nữ/nam (migration 005) ----
+const audioAs = (extra) => `insert into public.content_audio (item_id, lang, file_path, source, ${extra.cols}) values (${item}, 'vi', 'x.mp3', 'tts', ${extra.vals})`;
+await as(ADM, async () => {
+  ok((await fails(audioAs({ cols: "gender", vals: "'male'" }))) === null, "âm thanh: gender = male hợp lệ");
+  const e = await fails(audioAs({ cols: "gender", vals: "'robot'" }));
+  ok(e !== null, "âm thanh: gender lạ bị từ chối", String(e));
+});
+// Dữ liệu cũ (chưa có gender) được suy ra từ tên giọng khi chạy lại migration; chạy lại nhiều lần không đổi kết quả
+await db.query("insert into public.content_audio (item_id, lang, file_path, source, voice_name) values ($1,'vi','a.mp3','tts','vi-VN-NamMinhNeural'), ($1,'vi','b.mp3','tts','vi-VN-HoaiMyNeural'), ($1,'vi','c.mp3','human',null)", [item]);
+await db.query("update public.settings set tts_voices = $1::jsonb where id = 1", [JSON.stringify({ vi: "vi-VN-HoaiMyNeural", de: { female: "de-DE-KatjaNeural", male: "de-DE-ConradNeural" } })]);
+const mig005 = readFileSync(new URL("../migrations/005_voice_gender.sql", import.meta.url), "utf8");
+await db.exec(mig005);
+await db.exec(mig005);
+const g = Object.fromEntries((await q("select file_path, gender from public.content_audio where file_path in ('a.mp3','b.mp3','c.mp3')")).map((r) => [r.file_path, r.gender]));
+ok(g["a.mp3"] === "male" && g["b.mp3"] === "female" && g["c.mp3"] === null, "migration 005: suy ra giới từ tên giọng; file người thật giữ null", JSON.stringify(g));
+const tv = (await q("select tts_voices from public.settings"))[0].tts_voices;
+ok(tv.vi.female === "vi-VN-HoaiMyNeural" && tv.de.male === "de-DE-ConradNeural", "migration 005: chuỗi cũ -> {female}; dạng mới giữ nguyên; chạy 2 lần không hỏng", JSON.stringify(tv));
+await as(A, async () => {
+  const kid = (await q("select id from public.child_profiles where parent_id = $1 limit 1", [A]))[0].id;
+  await db.query("update public.child_profiles set voice_gender = 'male' where id = $1", [kid]);
+  ok((await q("select voice_gender from public.child_profiles where id = $1", [kid]))[0].voice_gender === "male", "phụ huynh (phiên của bé) đổi được giọng của con mình");
+  const e = await fails("update public.child_profiles set voice_gender = 'robot' where id = $1", [kid]);
+  ok(e !== null, "voice_gender lạ bị từ chối", String(e));
+  await db.query("update public.accounts set voice_pref = $1::jsonb where id = $2", [JSON.stringify({ gender: "female" }), A]);
+  ok((await q("select voice_pref from public.accounts where id = $1", [A]))[0].voice_pref.gender === "female", "phụ huynh đặt giọng mặc định (voice_pref.gender)");
+});
+await as(B, async () => {
+  const r = await db.query("update public.child_profiles set voice_gender = 'female' where parent_id = $1", [A]);
+  ok(r.affectedRows === 0, "phụ huynh B KHÔNG đổi được giọng con của A");
 });
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

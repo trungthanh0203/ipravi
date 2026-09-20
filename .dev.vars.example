@@ -10,4 +10,4 @@ BRAND_COLOR=#e8590c
 # TTS_PROVIDER=azure
 # TTS_KEY=...
 # TTS_REGION=westeurope
-# TTS_VOICES={"vi":"vi-VN-HoaiMyNeural","de":"de-DE-KatjaNeural","en":"en-US-JennyNeural"}
+# TTS_VOICES={"vi":{"female":"vi-VN-HoaiMyNeural","male":"vi-VN-NamMinhNeural"}}   (tuỳ chọn; giọng cũng chọn được ở tab Cài đặt của app)

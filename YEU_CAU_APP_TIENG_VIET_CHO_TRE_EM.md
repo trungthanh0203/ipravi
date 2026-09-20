@@ -70,6 +70,7 @@ riêng, tên miền riêng) nhưng có thể tái dùng mẫu thiết kế đã 
 | 16 | **Cổng phụ huynh dùng mã PIN 4 số.** 2 con dùng chung thiết bị: **chấp nhận** giới hạn "chạm avatar của anh/chị vẫn vào được hồ sơ đó" ở MVP. |
 | 17 | Tư vấn pháp lý GDPR/dữ liệu trẻ em: **làm sau**, nhưng vẫn là việc bắt buộc trước khi công khai (mục 9.5). |
 | 18 | **App riêng hoàn toàn**, không dùng chung dữ liệu/tài khoản với iLapra. |
+| 19 | **Giọng đọc:** tiếng Việt có **giọng nữ và giọng nam** (TTS); **bé chọn giọng** bằng nút 👩/👨 trong lúc học (nhớ theo từng bé), phụ huynh đặt giọng mặc định. **Ngôn ngữ gốc của bé:** ưu tiên file TTS, **không có TTS thì dùng giọng của trình duyệt**. Giọng **trẻ em** tiếng Việt: TTS không có → chỉ bằng thu giọng người thật (giai đoạn sau). Ngôn ngữ gốc dự kiến ~10 ngôn ngữ (đã thêm mặc định cho Hàn, Nhật…), mỗi bản triển khai bật một tập con qua biến `LANGUAGES`. |
 
 ## 3. Người dùng và vai trò
 
@@ -437,7 +438,7 @@ chính sách "mua trong ứng dụng" của cửa hàng. Nếu sau này đổi �
 - `content_items`: loại (từ/cụm/câu/truyện/bài hát), văn bản tiếng Việt, hình (`image_path`, hoặc
   `emoji` khi chưa có ảnh — cả `units` cũng có `emoji`; AI soạn nội dung chỉ cần gợi ý 1 emoji), chủ đề,
   mức độ, **độ tuổi gợi ý**, thứ tự, trạng thái duyệt.
-- `content_audio`: item, **ngôn ngữ của audio** (`vi` cho tiếng Việt; `de`/`en`… cho audio
+- `content_audio`: item, **giới của giọng (`gender`: female/male)**, **ngôn ngữ của audio** (`vi` cho tiếng Việt; `de`/`en`… cho audio
   đọc bản dịch), **`source`** (`tts` | `human`), **`voice_kind`** (`adult` | `child`), **giọng
   vùng miền** (chỉ với `vi`), tốc độ (thường/chậm), **nhà cung cấp/tên giọng**, URL file. Hiện chỉ có
   `tts`; thêm `human` = thêm dữ liệu. Luật chọn giọng nằm ở 1 hàm chung (xem 4.4).

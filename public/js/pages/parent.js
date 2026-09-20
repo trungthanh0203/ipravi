@@ -7,6 +7,26 @@ import { avatarEmoji } from "../data.js";
 import { pronunciationSupported } from "../pronunciation.js";
 import { requestExtraChild, myPayments } from "../payments.js";
 
+// Giọng nghe mặc định cho các bé (bé nào tự đổi bằng nút 👩/👨 thì theo lựa chọn của bé đó).
+function voiceCard() {
+  const a = state.account;
+  const feedback = el("div");
+  const current = () => a.voice_pref?.gender ?? "female";
+  const opts = [["female", "👩 " + T.voiceFemale], ["male", "👨 " + T.voiceMale]];
+  const buttons = opts.map(([g, label]) => el("button", { type: "button", onclick: () => choose(g) }, label));
+  const paintButtons = () => buttons.forEach((b, i) => b.classList.toggle("on", opts[i][0] === current()));
+  async function choose(g) {
+    feedback.replaceChildren();
+    const next = { ...(a.voice_pref ?? {}), gender: g };
+    const { error } = await sb.from("accounts").update({ voice_pref: next }).eq("id", a.id);
+    if (error) return feedback.replaceChildren(msg("err", error.message));
+    a.voice_pref = next;
+    paintButtons();
+  }
+  paintButtons();
+  return el("div", { class: "card" }, el("h2", null, T.voiceTitle), el("p", { class: "muted" }, T.voiceHelp), el("div", { class: "tabs" }, buttons), feedback);
+}
+
 // Thêm con: mặc định 1 con/tài khoản; muốn thêm phải xin + trả phí cho người dạy, người dạy xác nhận thì được cấp.
 function addChildCard() {
   const a = state.account;
@@ -84,6 +104,7 @@ export function mount(root) {
       el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
       state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname))),
+    voiceCard(),
     pronunciationToggle(),
     addChildCard(),
     el("p", { class: "muted" }, T.soon),

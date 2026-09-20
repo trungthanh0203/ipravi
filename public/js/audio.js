@@ -2,12 +2,15 @@
 // người thật / trẻ em / người lớn / vùng miền chỉ là thêm dữ liệu (bảng content_audio), không sửa code.
 
 // rows: các dòng content_audio của 1 mục. Trả về dòng tốt nhất, hoặc null (=> ẩn nút nghe).
-// prefs: { lang, speed = "normal", voiceKind, region }
+// prefs: { lang, speed = "normal", gender, voiceKind, region }
+// gender ("female"|"male") là lựa chọn RÕ của bé/phụ huynh nên được ưu tiên cao nhất: giọng đúng giới thắng cả giọng người thật
+// khác giới. Không có giọng đúng giới thì vẫn dùng giọng còn lại (không bao giờ im lặng nếu còn file nào).
 export function pickAudio(rows, prefs) {
-  const { lang, speed = "normal", voiceKind, region } = prefs;
+  const { lang, speed = "normal", voiceKind, region, gender } = prefs;
   const candidates = rows.filter((r) => r.lang === lang && r.speed === speed);
   if (candidates.length === 0) return null;
   const score = (r) =>
+    (gender && r.gender === gender ? 150 : 0) +
     (r.source === "human" ? 100 : 0) +
     (voiceKind && r.voice_kind === voiceKind ? 10 : 0) +
     (region && r.region === region ? 5 : 0);

@@ -122,7 +122,7 @@ r = await worker.fetch(post({ text: "", lang: "vi" }), azure);
 eq(r.status, 400, "tts: văn bản trống -> 400");
 r = await worker.fetch(post({ text: "x".repeat(301), lang: "vi" }), azure);
 eq(r.status, 400, "tts: quá 300 ký tự -> 400");
-r = await worker.fetch(post({ text: "hola", lang: "es" }), azure);
+r = await worker.fetch(post({ text: "hola", lang: "xx" }), azure);
 eq(r.status, 400, "tts: ngôn ngữ chưa có giọng -> 400");
 
 calls.length = 0;
@@ -170,6 +170,35 @@ for (const bad of ["vi-VN-x\"><break/>", "de-DE-KatjaNeural", "abc", "vi-VN-Ne u
 }
 eq((await (await worker.fetch(new Request("https://a.dev/api/config"), env({ TTS_PROVIDER: "Azure", TTS_KEY: "secret-key" }))).json()).ttsProvider, "azure", "config: lộ tên nhà cung cấp (chữ thường)");
 eq(JSON.stringify(await (await worker.fetch(new Request("https://a.dev/api/config"), env({ TTS_PROVIDER: "azure", TTS_KEY: "secret-key" }))).text()).includes("secret-key"), false, "config: KHÔNG lộ khoá TTS");
+
+// ---- giọng nữ/nam + nhiều ngôn ngữ ----
+globalThis.fetch = async (url, init) => {
+  calls.push({ url: String(url), init });
+  if (String(url).includes("/rpc/is_admin")) return new Response("true");
+  if (String(url).includes("googleapis")) return new Response(JSON.stringify({ audioContent: btoa("x") }), { status: 200 });
+  return new Response(new Uint8Array([7]), { status: 200 });
+};
+{
+  const az = (o = {}) => env({ TTS_PROVIDER: "azure", TTS_KEY: "k", TTS_REGION: "westeurope", ...o });
+  const voiceOf = async (body, e = az()) => { const x = await worker.fetch(post(body), e); return [x.status, x.headers.get("x-tts-voice"), x.headers.get("x-tts-gender")]; };
+  eq(await voiceOf({ text: "a", lang: "vi" }), [200, "vi-VN-HoaiMyNeural", "female"], "gender: mặc định = nữ");
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }), [200, "vi-VN-NamMinhNeural", "male"], "gender: nam -> NamMinh");
+  eq(await voiceOf({ text: "a", lang: "ko", gender: "male" }), [200, "ko-KR-InJoonNeural", "male"], "tiếng Hàn: giọng nam mặc định");
+  eq(await voiceOf({ text: "a", lang: "ja" }), [200, "ja-JP-NanamiNeural", "female"], "tiếng Nhật: giọng nữ mặc định");
+  eq((await voiceOf({ text: "a", lang: "vi", gender: "robot" }))[0], 400, "gender: giá trị lạ bị từ chối");
+  eq((await voiceOf({ text: "a", lang: "xx" }))[0], 400, "ngôn ngữ không có giọng -> 400 (app dùng giọng trình duyệt)");
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }, az({ TTS_VOICES: JSON.stringify({ vi: { male: "vi-VN-Khac" } }) })), [200, "vi-VN-Khac", "male"], "TTS_VOICES dạng {female,male}: giọng nam ghi đè");
+  eq((await voiceOf({ text: "a", lang: "vi", gender: "male" }, az({ TTS_VOICES: JSON.stringify({ vi: "vi-VN-ChiNu" }) })))[1], "vi-VN-NamMinhNeural", "TTS_VOICES dạng chuỗi chỉ ghi đè giọng NỮ, giọng nam vẫn mặc định");
+  eq((await voiceOf({ text: "a", lang: "vi", gender: "male", voice: "vi-VN-AdminChon" }))[1], "vi-VN-AdminChon", "giọng admin chọn ưu tiên hơn mặc định");
+  eq((await voiceOf({ text: "a", lang: "vi" }, az({ TTS_VOICES: "[1,2]" })))[0], 500, "TTS_VOICES không phải object -> 500");
+  const g = env({ TTS_PROVIDER: "google", TTS_KEY: "k" });
+  eq(await voiceOf({ text: "a", lang: "vi", gender: "male" }, g), [200, "vi-VN-Wavenet-B", "male"], "google: giọng nam tiếng Việt");
+  eq((await voiceOf({ text: "a", lang: "ko" }, g))[0], 400, "google: ngôn ngữ chưa có giọng mặc định -> 400");
+  const cfgOf = async (e) => (await (await worker.fetch(new Request("https://a.dev/api/config"), e)).json()).ttsVoices;
+  eq(Object.keys(await cfgOf(az())).includes("ko") && Object.keys(await cfgOf(az())).includes("ja"), true, "config: liệt kê ngôn ngữ có TTS (có Hàn, Nhật)");
+  eq((await cfgOf(env())), {}, "config: chưa cấu hình TTS -> không có ngôn ngữ nào");
+  eq((await cfgOf(az({ TTS_VOICES: JSON.stringify({ xx: "xx-XX-Thu" }) }))).xx, { female: "xx-XX-Thu", male: "" }, "config: ngôn ngữ thêm bằng TTS_VOICES cũng được tính");
+}
 
 globalThis.fetch = realFetch;
 

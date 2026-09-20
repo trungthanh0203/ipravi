@@ -86,7 +86,7 @@ async function loadItems(lessonId) {
 async function approveLesson(lesson, reload, say) {
   try {
     const items = await loadItems(lesson.id);
-    const slots = audio.audioSlots(langs());
+    const slots = audio.audioSlots(langs(), await audio.getVoices());
     const noAudio = items.filter((i) => slots.some((s) => audio.textFor(i, s.lang) && !audio.findAudio(i, s).length)).length;
     const noEmoji = items.filter((i) => !i.emoji && !i.image_path).length;
     const noMeaning = items.filter((i) => langs().some((l) => !audio.textFor(i, l))).length;
@@ -103,7 +103,7 @@ async function itemsPanel(panel, lesson, say) {
   let items;
   try { items = await loadItems(lesson.id); } catch (e) { return panel.replaceChildren(msg("err", A.loadError + e.message)); }
   const L = langs();
-  const slots = audio.audioSlots(L);
+  const slots = audio.audioSlots(L, await audio.getVoices());
   const refresh = () => itemsPanel(panel, lesson, say);
   const progress = el("span", { class: "muted" });
 
@@ -112,8 +112,9 @@ async function itemsPanel(panel, lesson, say) {
     const r = await audio.generateMissing(items, L, (d, n) => { progress.textContent = ` Đang sinh ${d}/${n}…`; }, { replaceTts });
     progress.textContent = "";
     genAll.disabled = regenAll.disabled = false;
+    const skip = r.skipped.length ? ` Bỏ qua ${r.skipped.join(", ")} (nhà cung cấp chưa có giọng → bé nghe giọng trình duyệt).` : "";
     if (r.total === 0) say("ok", "Không còn âm thanh nào thiếu.");
-    else if (r.failed.length === 0) say("ok", `Đã sinh ${r.total} âm thanh.`);
+    else if (r.failed.length === 0) say("ok", `Đã sinh ${r.ok}/${r.total} âm thanh.${skip}`);
     else say("err", `Đã sinh ${r.ok}/${r.total} âm thanh. ${r.fatal ? `Dừng vì: ${r.fatal.message}` : `Lỗi: ${r.failed.slice(0, 3).map((f) => `${f.text} (${f.slot}): ${f.message}`).join("; ")}`}`);
     refresh();
   };
@@ -125,6 +126,7 @@ async function itemsPanel(panel, lesson, say) {
   const rows = items.map((item) => itemRow(item, L, slots, say, refresh));
   panel.replaceChildren(
     el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, progress),
+    el("p", { class: "muted" }, "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị."),
     el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
       el("thead", null, el("tr", null, ["Emoji", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
       el("tbody", null, rows))));

@@ -2,7 +2,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
-import { say } from "./media.js";
+import { say, voiceToggle } from "./media.js";
 import { childAge } from "./util.js";
 import * as api from "./api.js";
 import * as intro from "./activities/intro.js";
@@ -54,7 +54,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   const box = el("div", { class: "lesson-box" });
   paint(root, el("div", null,
     el("div", { class: "row lesson-head" },
-      el("div", { class: "bar" }, bar),
+      el("div", { class: "bar" }, bar), voiceToggle(),
       el("button", { class: "btn ghost small", onclick: () => { aborted = true; stopAudio(); abort(); onExit(); } }, "✕ " + T.quit)),
     box));
 

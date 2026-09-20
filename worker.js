@@ -3,7 +3,7 @@
 // trung tâm dùng chung 1 mã nguồn. supabaseAnonKey là khoá CÔNG KHAI theo thiết kế
 // của Supabase (bảo mật nằm ở RLS) — KHÔNG đưa service_role key vào đây.
 
-import { handleTts } from "./tts.js";
+import { handleTts, effectiveVoices } from "./tts.js";
 
 function parseLanguages(raw) {
   // "de:Deutsch,en:English" -> [{code:"de",label:"Deutsch"},{code:"en",label:"English"}]
@@ -25,6 +25,7 @@ function configResponse(env) {
     brandColor: env.BRAND_COLOR || "#e8590c",
     languages: parseLanguages(env.LANGUAGES),
     ttsProvider: String(env.TTS_PROVIDER || "").toLowerCase(), // chỉ tên nhà cung cấp (không bí mật) — để tab Cài đặt gợi ý giọng
+    ttsVoices: effectiveVoices(env), // {lang:{female,male}} giọng có hiệu lực — app biết ngôn ngữ nào có TTS (không bí mật)
   };
   return new Response(JSON.stringify(body), {
     headers: {

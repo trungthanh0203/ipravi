@@ -69,6 +69,10 @@ export const T = {
   pronMicDenied: "Cần cho phép dùng micro. Nhờ bố mẹ giúp con nhé.",
   pronMsg: { excellent: "Tuyệt vời!", good: "Giỏi lắm!", ok: "Khá lắm!", retry: "Mình thử lại nhé!" },
 
+  voiceTitle: "Giọng nghe của bé",
+  voiceHelp: "Chọn giọng đọc mặc định. Trong lúc học, bé có thể tự đổi bằng nút 👩 / 👨 (mỗi bé nhớ riêng lựa chọn của mình).",
+  voiceFemale: "Giọng nữ",
+  voiceMale: "Giọng nam",
   parentPron: "Bật chấm điểm phát âm",
   parentPronHelp:
     "Bé nói vào micro, ứng dụng nhận dạng và chấm điểm. Lưu ý: âm thanh được trình duyệt (Google/Apple) xử lý; ứng dụng không lưu lại đoạn ghi âm.",

@@ -37,6 +37,19 @@ eq(pickAudio(rows, { lang: "vi", speed: "slow" }).id, 4, "nghe chậm");
 eq(pickAudio(rows, { lang: "en" }), null, "không có audio => null");
 eq(pickAudio(rows, { lang: "de" }).id, 5, "audio nghĩa tiếng Đức");
 
+// Chọn giọng theo giới bé chọn
+{
+  const row = (id, source, gender, speed = "normal", extra = {}) => ({ id, lang: "vi", speed, source, gender, voice_kind: "adult", region: null, ...extra });
+  const rs = [row(1, "tts", "female"), row(2, "tts", "male"), row(3, "human", "female")];
+  eq(pickAudio(rs, { lang: "vi", gender: "male" }).id, 2, "giới: bé chọn nam -> giọng TTS nam thắng cả giọng người thật nữ");
+  eq(pickAudio(rs, { lang: "vi", gender: "female" }).id, 3, "giới: bé chọn nữ -> giọng người thật nữ thắng TTS nữ");
+  eq(pickAudio(rs, { lang: "vi" }).id, 3, "giới: không chọn -> người thật thắng như cũ");
+  eq(pickAudio([row(1, "tts", "female")], { lang: "vi", gender: "male" }).id, 1, "giới: chưa có giọng nam -> vẫn dùng giọng nữ (không im lặng)");
+  eq(pickAudio([row(1, "tts", "female"), row(2, "tts", "male", "slow")], { lang: "vi", gender: "male", speed: "normal" }).id, 1, "giới: tốc độ khác không lẫn (nam chậm không dùng cho nam thường)");
+  eq(pickAudio([row(1, "tts", null), row(2, "tts", "male")], { lang: "vi", gender: "female" }).id, 1, "giới: dòng cũ chưa có gender vẫn dùng được");
+  eq(pickAudio([], { lang: "vi", gender: "male" }), null, "giới: không có file nào -> null (khu trẻ dùng giọng trình duyệt)");
+}
+
 // Worker
 const env = { CENTER_NAME: "Trung tâm A", SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "k", LANGUAGES: "de:Deutsch,en:English", ASSETS: { fetch: async () => new Response("asset") } };
 const cfg = await (await worker.fetch(new Request("https://a.dev/api/config"), env)).json();

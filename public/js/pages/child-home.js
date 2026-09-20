@@ -4,7 +4,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { avatarEmoji } from "../data.js";
 import { stopAudio } from "../audio.js";
-import { visual } from "../child/media.js";
+import { visual, voiceToggle } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 
@@ -20,6 +20,7 @@ function shell(root, ...body) {
   paint(root, el("div", null,
     el("div", { class: "row child-header" },
       el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
+      voiceToggle(),
       el("button", { class: "btn ghost small", onclick: () => { stopAudio(); state.activeChildId = null; render(); } }, T.childExit)),
     ...body));
 }
