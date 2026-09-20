@@ -267,3 +267,14 @@ img.visual.big { max-height: 200px; }
 
 /* Chữ hoa */
 .case-cell { font-size: 40px; min-height: 84px; }
+
+/* Mẫu chữ thảo tiểu học (Playwrite VN, SIL OFL) — dùng cho hoạt động tô chữ */
+@font-face { font-family: "Playwrite VN"; src: url("../vendor/fonts/PlaywriteVN.woff2") format("woff2"); font-weight: 100 400; font-display: swap; }
+
+/* Tô chữ */
+.trace-center { display: flex; justify-content: center; margin: 8px 0; }
+.trace-wrap { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(80, 40, 10, .12); background: #fff; }
+.trace-layer { position: absolute; left: 0; top: 0; }
+.trace-ink { cursor: crosshair; }
+.trace-msg { text-align: center; min-height: 1.4em; margin: 4px 0; }
+.visual.sm.emoji { font-size: 36px; }

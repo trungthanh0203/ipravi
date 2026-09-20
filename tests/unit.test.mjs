@@ -3,7 +3,8 @@ import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.j
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
-import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts, caseParts, lookalikes, capitalIndexes, hasProperName } from "../public/js/viet.js";
+import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts, caseParts, lookalikes, capitalIndexes, hasProperName, traceTexts } from "../public/js/viet.js";
+import { dilate, labelParts, scoreTrace } from "../public/js/trace-score.js";
 import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan, sayOfPart } from "../public/js/sounds.js";
 import { peakOf, rmsOf, trimSilence, normalizePeak, resample, encodeWav, processTake, durationMs } from "../public/js/admin/wav.js";
 import { guessGender } from "../public/js/voice-names.js";
@@ -148,6 +149,38 @@ eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken
   eq(capitalIndexes("Bà ở Hà Nội."), [0, 2, 3], "viết hoa: địa danh 2 tiếng đều hoa");
   eq(capitalIndexes("trời mưa rồi."), [], "viết hoa: câu toàn chữ thường → không có (dữ liệu sai)");
   eq([hasProperName("Bà ở Hà Nội."), hasProperName("Con mèo ngủ."), hasProperName("Ăn cơm đi con.")], [true, false, false], "viết hoa: chỉ tính tên riêng ngoài từ đầu câu");
+}
+
+// Tô chữ
+{
+  eq([traceTexts("A a"), traceTexts("Ngh ngh"), traceTexts("bà"), traceTexts("trứng"), traceTexts("a")], [["A", "a"], ["Ngh", "ngh"], ["bà"], ["trứng"], ["a"]], "tô chữ: cặp hoa–thường → 2 chuỗi; từ/chữ → 1 chuỗi");
+  eq([traceTexts("con mèo"), traceTexts("Con chào bà ạ."), traceTexts("chuyện kể"), traceTexts("nghiêngnghiêng"), traceTexts("")], [null, null, null, null, null], "tô chữ: cụm từ/câu/quá dài/rỗng → không tô");
+  const W = 120, H = 40;
+  const grid = () => new Uint8Array(W * H);
+  const rect = (g, x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) g[y * W + x] = 1; return g; };
+  // Chữ mẫu: 1 nét ngang dài (thân chữ) + 1 chấm nhỏ phía trên (như dấu thanh)
+  const glyph = rect(rect(grid(), 10, 24, 109, 26), 58, 6, 61, 9);
+  const params = { glyph, w: W, h: H, tolIn: 3, tolOut: 5 };
+  const score = (ink) => scoreTrace({ ...params, ink });
+  eq(dilate(rect(grid(), 10, 10, 10, 10), W, H, 2).reduce((a, b) => a + b, 0), 25, "giãn nở: 1 điểm bán kính 2 → khối 5×5");
+  eq(labelParts(glyph, W, H).parts.length, 2, "nhãn mảnh: thân + dấu = 2 mảnh");
+  const both = rect(rect(grid(), 8, 22, 111, 28), 56, 4, 63, 11);
+  const sBoth = score(both);
+  eq([sBoth.ok, sBoth.stars, sBoth.coverage > 0.98, sBoth.excess < 0.05, sBoth.missed.length], [true, 3, true, true, 0], "tô chấm: tô đủ thân + dấu → đạt, 3 sao");
+  const noMark = score(rect(grid(), 8, 22, 111, 28));
+  eq([noMark.ok, noMark.coverage > 0.9, noMark.missed.length, noMark.minPart], [false, true, 1, 0], "tô chấm: tô thân mà BỎ dấu → KHÔNG đạt dù độ phủ chung cao (mảnh dấu = 0)");
+  const half = score(rect(rect(grid(), 8, 22, 60, 28), 56, 4, 63, 11));
+  eq([half.ok, half.coverage < 0.7], [false, true], "tô chấm: chỉ tô nửa chữ → chưa đạt");
+  const scribble = grid();
+  for (let y = 0; y < H; y += 3) rect(scribble, 0, y, W - 1, Math.min(H - 1, y + 1));
+  const sc = score(scribble);
+  eq([sc.ok, sc.excess > 0.5], [false, true], "tô chấm: vẽ nguệch ngoạc khắp nơi → không đạt (nét thừa nhiều)");
+  const off = score(rect(rect(grid(), 8, 32, 111, 38), 56, 14, 63, 21));
+  eq([off.ok, off.coverage < 0.3], [false, true], "tô chấm: tô lệch xa chữ mẫu → không đạt");
+  const near = score(rect(rect(grid(), 8, 24, 111, 30), 56, 6, 63, 13));
+  eq(near.ok, true, "tô chấm: lệch nhẹ (trong dung sai) vẫn đạt");
+  eq(score(grid()).blank, true, "tô chấm: chưa tô gì → blank");
+  eq(scoreTrace({ glyph: grid(), ink: both, w: W, h: H, tolIn: 3, tolOut: 5 }).ok, false, "tô chấm: chữ mẫu rỗng không làm lỗi");
 }
 
 // Xử lý âm thanh thu

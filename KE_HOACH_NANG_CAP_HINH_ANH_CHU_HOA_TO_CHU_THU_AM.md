@@ -1,6 +1,6 @@
 # Kế hoạch nâng cấp: hình ảnh, chữ hoa, tô chữ, đánh vần từng phần, thu giọng người thật
 
-> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ, ④ Hình ảnh: chưa làm · Chữ hoa ✅ (migration 012, đã chốt C1–C4).**
+> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ ✅ giai đoạn 1 (migration 013) · ④ Hình ảnh: chưa làm · Chữ hoa ✅ (migration 012, đã chốt C1–C4).**
 >
 > Bản nháp để **bàn và chốt** (2026-09-20). Chưa code phần nào ngoài mục 1.1 (đã sửa nhanh hình ở Cấp 4). Mọi ước lượng tính theo
 > "phiên làm việc" (S ≈ 1 phiên ngắn, M ≈ 1–2 phiên, L ≈ 3+ phiên). Cuối file có **danh sách quyết định cần bạn chọn**.
@@ -127,7 +127,8 @@ Kèm `listen_pick_text` và `listen_repeat` sẵn có (nghe âm → chọn chữ
 
 ## 5. Tô chữ
 
-### Giai đoạn 1 — tô theo mẫu, chấm độ phủ (cỡ M)
+### Giai đoạn 1 — tô theo mẫu, chấm độ phủ (cỡ M) — ✅ ĐÃ LÀM
+> Thực tế đã làm hơn kế hoạch: chấm **từng mảnh** của chữ (thân/dấu thanh/dấu mũ) chứ không chỉ độ phủ chung; khoanh cam mảnh chưa tô; đã kiểm phông có đủ glyph cho toàn bộ chuỗi cần tô; xem `child/activities/trace.js`, `trace-score.js`.
 - **Mẫu chữ:** phông **Playwrite VN** (Google Fonts, TypeTogether) — thiết kế theo *mẫu chữ thảo tiểu học Việt Nam*, có kiểu **đứng** và **nghiêng**, có bản **"Guides" có dòng kẻ**; miễn phí cho dùng thương mại. **Tự lưu phông trong app** (không gọi Google — GDPR) và **xác nhận lại giấy phép** khi tải về.
 - **Cách chơi:** chữ mờ (viền nét đứt) hiện trên khung có dòng kẻ; bé dùng ngón tay/bút cảm ứng tô lên; nút "Xoá làm lại". Kỹ thuật: Canvas + Pointer Events (`touch-action: none` để không cuộn trang khi tô), rà soát **độ phủ** (bao nhiêu % chữ mẫu được tô) và **nét thừa** (mực nằm ngoài chữ) → 1–3 sao. **Không bao giờ hiện "sai"**, chỉ khuyến khích tô lại.
 - Áp dụng cho: chữ cái thường/hoa, dấu thanh, chữ số, từ ngắn (2–3 chữ) — dùng luôn `text_vi` của mục, **không cần dữ liệu mới**. Hoạt động mới `trace` (+ CHECK ở migration).

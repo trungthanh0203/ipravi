@@ -90,6 +90,7 @@ Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" c
 | `match_case` ghép hoa ↔ thường | Ghép các thẻ chữ hoa với chữ thường; chạm thẻ nào nghe âm của chữ đó | nhận hình chữ hoa |
 | `pick_case` chọn chữ tương ứng | Thấy `b` chọn `B` (hoặc ngược lại) trong 3 chữ; đáp án nhiễu là chữ **hình gần giống** (B/D/P, Q/O/G…) | phân biệt chữ hoa dễ lẫn |
 | `fix_capital` chạm từ cần viết hoa | Câu hiện toàn chữ thường, chạm các từ phải viết hoa (đầu câu + tên riêng); được sửa lại 1 lần | quy tắc viết hoa |
+| `trace` tô chữ | Dùng ngón tay/bút cảm ứng tô theo chữ mẫu **mẫu chữ thảo** (chữ, chữ hoa, từ ngắn); phải tô đủ cả thân chữ lẫn **dấu thanh/dấu mũ**; được sửa lại 1 lần, chỗ chưa tô được khoanh màu cam | nét chữ, dấu thanh. *Chưa kiểm thứ tự nét; không thay tập viết trên vở* |
 | `spell_along` đánh vần theo phần | Xem và nghe các phần lần lượt sáng lên (bờ – a – ba – huyền – bà), rồi tự chạm theo đúng thứ tự; âm từng phần lấy từ "ngân hàng âm" (giọng thu hoặc TTS) | cách đánh vần, quan hệ âm đầu – vần – dấu |
 | `build_syllable` ghép âm + vần | Nghe từ có hình, chọn âm đầu rồi phần vần | cấu tạo tiếng (âm đầu + vần + thanh) |
 | `fill_letter` điền chữ còn thiếu | Thấy `＿à` + hình, chọn âm đầu | nhận âm đầu, chính tả |

@@ -1,7 +1,7 @@
 // Service worker: mạng trước (luôn lấy bản mới của trang/JS), rơi về cache khi mất mạng;
 // hình + âm thanh nội dung (Supabase Storage bucket "content") cache trước để phát tức thì.
 // Đổi VERSION để xoá cache cũ.
-const VERSION = "v2"; // đổi khi tải lại public/vendor/ (vendor được cache-trước)
+const VERSION = "v3"; // đổi khi tải lại public/vendor/ (vendor được cache-trước)
 const SHELL = `shell-${VERSION}`;
 const MEDIA = `media-${VERSION}`;
 

@@ -458,5 +458,18 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 5, "012: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 19. tô chữ (migration 013) ----
+{
+  const m013 = readFileSync(new URL("../migrations/013_trace.sql", import.meta.url), "utf8");
+  await db.exec(m013);
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('TR', 3, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'TRL', 'approved') returning id", [u]))[0].id;
+  for (const k of ["trace", "match_case", "spell_along", "order_story"]) ok((await fails("insert into public.activities (lesson_id, kind) values ($1, $2)", [l, k])) === null, `013: hoạt động '${k}' hợp lệ`);
+  ok(/check/i.test((await fails("insert into public.activities (lesson_id, kind) values ($1, 'hack')", [l])) ?? ""), "013: hoạt động lạ vẫn bị chặn");
+  await db.exec(m013);
+  ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 4, "013: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

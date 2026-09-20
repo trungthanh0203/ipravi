@@ -93,3 +93,13 @@ export function capitalIndexes(sentence) {
 }
 // Câu có ít nhất 1 tên riêng ngoài từ đầu câu (để bài "chạm từ cần viết hoa" có gì để học ngoài chữ đầu câu).
 export const hasProperName = (sentence) => capitalIndexes(sentence).some((i) => i > 0);
+
+// ---- Tô chữ ----
+// Các chuỗi cần tô của 1 mục: cặp chữ hoa/thường → [hoa, thường]; 1 từ/1 chữ (tối đa 8 ký tự) → [chữ]; còn lại (câu, cụm từ) → null (không tô).
+export function traceTexts(text) {
+  const cp = caseParts(text);
+  if (cp) return [cp.upper, cp.lower];
+  const t = String(text ?? "").normalize("NFC").trim();
+  if (!t || /\s/.test(t) || [...t].length > 8) return null;
+  return [t];
+}
