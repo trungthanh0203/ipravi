@@ -166,10 +166,10 @@ các câu dịch sang tiếng Đức của *Tết/lì xì/bánh chưng* (giữ t
 ## 9. Cách đưa vào app
 
 1. Thay 2 chủ đề mẫu (nếu muốn đúng thứ tự): tab **Nội dung → Xoá** chủ đề "Con vật" và "Màu sắc" (chưa có học sinh thật).
-2. Tab **Nhập CSV** → chọn `giao-trinh/csv/cap1-trung-tu-vung.csv` → **Kiểm tra** (phải 0 lỗi, 0 cảnh báo) → **Nhập vào**.
+2. Tab **Nhập CSV** (chạy migration `007_levels_stats.sql` trước) → chọn `giao-trinh/csv/cap1-trung-tu-vung.csv` → **Kiểm tra** (phải 0 lỗi, 0 cảnh báo) → **Nhập vào**.
 3. Tab **Cài đặt → Giọng đọc (TTS)**: nghe thử và chọn giọng (nam/nữ) cho tiếng Việt và tiếng bản ngữ.
 4. Tab **Nội dung**: mở từng chủ đề → **Sinh âm thanh còn thiếu** → nghe kiểm tra → **Duyệt** khi người duyệt đã đồng ý.
-5. Làm tương tự với `cap2-ga-con-cau-ngan.csv` (sau khi Cấp 1 đã có người học).
+5. Làm tương tự với `cap2-ga-con-cau-ngan.csv` (sau khi Cấp 1 đã có người học). **Cột `level` trong CSV** (1–4) đưa chủ đề vào đúng cấp; đã nhập từ trước thì nhập lại file để cập nhật cấp, hoặc đổi bằng ô chọn ở tab Nội dung.
 6. Mỗi lần sửa file CSV, chạy `node tests/curriculum.test.mjs` để kiểm lỗi (trùng emoji trong bài, thiếu nghĩa, khớp dữ liệu mẫu).
 
 Nội dung mới: dùng nút **"Sao chép câu lệnh cho AI"** ở tab Nhập CSV, dán vào AI, tải kết quả, **kiểm tra** bằng chính tab đó rồi mới đưa người duyệt.

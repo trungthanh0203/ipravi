@@ -1,5 +1,5 @@
 // Đọc + kiểm tra CSV nội dung học. Hàm thuần (không đụng DOM/mạng) để kiểm thử được.
-// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, emoji, type, min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
+// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, level (cấp 1–4), emoji, type, min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
 // Ô trống KHÔNG xoá dữ liệu đã có khi nhập lại (chỉ ô có giá trị mới được cập nhật).
 
 export const ITEM_TYPES = ["word", "phrase", "sentence", "story", "song"];
@@ -58,7 +58,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   }
   if (errors.length) return { items, errors, warnings };
 
-  const known = new Set(["unit", "unit_emoji", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs]);
+  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
   for (const l of langs) if (col(l) < 0) warnings.push({ row: 1, msg: `Không có cột nghĩa "${l}" — các mục sẽ thiếu nghĩa ${l}` });
 
@@ -90,6 +90,11 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       return num;
     };
     const minAge = age("min_age"), maxAge = age("max_age");
+    let level = null;
+    if (get("level") !== "") {
+      level = Number(get("level"));
+      if (!Number.isInteger(level) || level < 1 || level > 4) { problems.push("level (cấp) phải là số nguyên 1–4"); level = null; }
+    }
     if (minAge != null && maxAge != null && minAge > maxAge) problems.push("min_age lớn hơn max_age");
 
     if (problems.length) {
@@ -109,7 +114,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       if (v) tr[l] = v;
       else warnings.push({ row: n, msg: `"${vi}": thiếu nghĩa "${l}"` });
     }
-    items.push({ row: n, unit, unitEmoji, lesson, vi, emoji, type, minAge, maxAge, tr });
+    items.push({ row: n, unit, unitEmoji, level, lesson, vi, emoji, type, minAge, maxAge, tr });
   });
 
   if (items.length === 0 && errors.length === 0) errors.push({ row: 1, msg: "File không có dòng dữ liệu nào" });
@@ -130,14 +135,14 @@ export function classify(item, ex) {
 
 // File mẫu tải về cho admin.
 export function buildTemplate(langs) {
-  const head = ["unit", "unit_emoji", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs];
+  const head = ["unit", "unit_emoji", "level", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs];
   const ex = {
     de: ["Hund", "Katze", "rot"], en: ["dog", "cat", "red"],
   };
   const sample = [
-    ["Con vật", "🐾", "Con vật quanh nhà", "con chó", "🐶", "word", "3", "8"],
-    ["Con vật", "🐾", "Con vật quanh nhà", "con mèo", "🐱", "word", "3", "8"],
-    ["Màu sắc", "🎨", "Các màu cơ bản", "màu đỏ", "🔴", "word", "3", "8"],
+    ["Con vật", "🐾", "1", "Con vật quanh nhà", "con chó", "🐶", "word", "3", "8"],
+    ["Con vật", "🐾", "1", "Con vật quanh nhà", "con mèo", "🐱", "word", "3", "8"],
+    ["Màu sắc", "🎨", "1", "Các màu cơ bản", "màu đỏ", "🔴", "word", "3", "8"],
   ];
   const q = (v) => (/[",;\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
   const lines = [head, ...sample.map((r, i) => [...r, ...langs.map((l) => ex[l]?.[i] ?? "")])];
@@ -152,6 +157,8 @@ export function buildPlan(items, ex) {
   const lessonByKey = new Map(ex.lessons.map((l) => [`${l.unit_id}|${keyOf(l.title_vi)}`, l]));
   const itemByKey = new Map(ex.items.map((i) => [`${i.lesson_id}|${keyOf(i.text_vi)}`, i]));
   const newUnits = [];
+  const levelChanges = []; // chủ đề ĐÃ CÓ mà CSV ghi cấp khác → cập nhật cấp
+  const seenLevel = new Set();
   const newLessons = [];
   const seenU = new Set();
   const seenL = new Set();
@@ -161,7 +168,13 @@ export function buildPlan(items, ex) {
     const u = unitByKey.get(keyOf(it.unit));
     if (!u && !seenU.has(keyOf(it.unit))) {
       seenU.add(keyOf(it.unit));
-      newUnits.push({ title: it.unit, emoji: it.unitEmoji || "📚" });
+      newUnits.push({ title: it.unit, emoji: it.unitEmoji || "📚", ...(it.level ? { level: it.level } : {}) });
+    } else if (!u) {
+      const nu = newUnits.find((x) => keyOf(x.title) === keyOf(it.unit));
+      if (nu && !nu.level && it.level) nu.level = it.level; // dòng đầu chưa ghi cấp thì lấy cấp của dòng sau
+    } else if (it.level && it.level !== (u.level ?? 1) && !seenLevel.has(u.id)) {
+      seenLevel.add(u.id);
+      levelChanges.push({ id: u.id, title: u.title_vi, level: it.level });
     }
     const l = u ? lessonByKey.get(`${u.id}|${keyOf(it.lesson)}`) : undefined;
     const lk = `${keyOf(it.unit)}|${keyOf(it.lesson)}`;
@@ -174,5 +187,5 @@ export function buildPlan(items, ex) {
     counts[c.status]++;
     return { item: it, existing, ...c };
   });
-  return { rows, newUnits, newLessons, counts };
+  return { rows, newUnits, newLessons, levelChanges, counts };
 }

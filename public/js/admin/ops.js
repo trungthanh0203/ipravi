@@ -19,6 +19,10 @@ export async function setLessonsStatus(lessonIds, status) {
   }
 }
 
+export async function setUnitLevel(unitId, level) {
+  check(await sb.from("units").update({ level: Number(level) }).eq("id", unitId));
+}
+
 export async function setUnitStatus(unitId, status) {
   check(await sb.from("units").update({ status }).eq("id", unitId));
   await setLessonsStatus(await lessonIdsOfUnit(unitId), status);

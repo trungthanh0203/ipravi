@@ -11,7 +11,7 @@ const check = ({ error, data }) => { if (error) throw error; return data; };
 
 // Đọc dữ liệu ĐÃ CÓ liên quan tới file (chỉ các bài có trong file — không tải cả bảng, tránh trần 1000 dòng).
 async function loadExisting(items) {
-  const units = check(await sb.from("units").select("id, title_vi, sort_order"));
+  const units = check(await sb.from("units").select("*"));
   const lessons = check(await sb.from("lessons").select("id, unit_id, title_vi, sort_order"));
   const unitByKey = new Map(units.map((u) => [keyOf(u.title_vi), u]));
   const wanted = new Set();
@@ -48,11 +48,13 @@ async function execute(plan, ex, onProgress) {
   if (plan.newUnits.length) {
     let order = Math.max(0, ...ex.units.map((u) => u.sort_order ?? 0));
     const rows = check(await sb.from("units")
-      .insert(plan.newUnits.map((u) => ({ title_vi: u.title, emoji: u.emoji, sort_order: ++order, status: "draft" })))
+      .insert(plan.newUnits.map((u) => ({ title_vi: u.title, emoji: u.emoji, level: u.level ?? 1, sort_order: ++order, status: "draft" })))
       .select("id, title_vi"));
     rows.forEach((u) => { unitId.set(keyOf(u.title_vi), u.id); });
     counts.units = rows.length;
   }
+
+  for (const c of plan.levelChanges ?? []) check(await sb.from("units").update({ level: c.level }).eq("id", c.id));
 
   onProgress("Tạo bài học", 0, 1);
   if (plan.newLessons.length) {
@@ -180,7 +182,7 @@ export function mount(box, { onImported } = {}) {
     preview.replaceChildren(
       el("p", null, plan
         ? `${v.items.length} dòng hợp lệ: ${plan.counts.new} mới, ${plan.counts.update} cập nhật, ${plan.counts.same} không đổi` +
-          ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài.`
+          ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài` + (plan.levelChanges?.length ? `, đổi cấp ${plan.levelChanges.length} chủ đề.` : ".")
         : "Chưa thể nhập — sửa các lỗi sau rồi kiểm tra lại."),
       v.errors.length ? el("div", { class: "msg err" }, el("b", null, `${v.errors.length} lỗi (phải sửa):`),
         el("ul", null, v.errors.slice(0, 50).map((e) => el("li", null, `Dòng ${e.row}: ${e.msg}`))),

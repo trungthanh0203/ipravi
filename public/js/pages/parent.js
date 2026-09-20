@@ -6,6 +6,7 @@ import { T } from "../strings.js";
 import { avatarEmoji } from "../data.js";
 import { pronunciationSupported } from "../pronunciation.js";
 import { requestExtraChild, myPayments } from "../payments.js";
+import { loadStats, parentStatsView } from "../stats.js";
 
 // Giọng nghe mặc định cho các bé (bé nào tự đổi bằng nút 👩/👨 thì theo lựa chọn của bé đó).
 function voiceCard() {
@@ -92,6 +93,30 @@ function pronunciationToggle() {
     feedback);
 }
 
+// Tiến độ học: chọn bé (nếu có nhiều bé) → thống kê từ RPC child_stats. Chỉ tải khi bé được chọn.
+function progressCard() {
+  const body = el("div");
+  const picker = el("div", { class: "child-select" });
+  let current = state.children[0]?.id;
+  async function show(id) {
+    current = id;
+    [...picker.children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
+    body.replaceChildren(el("p", { class: "muted" }, T.loading));
+    try {
+      const stats = await loadStats(id);
+      if (current === id) body.replaceChildren(parentStatsView(stats));
+    } catch {
+      if (current === id) body.replaceChildren(msg("err", T.statsError));
+    }
+  }
+  if (state.children.length > 1) {
+    picker.replaceChildren(...state.children.map((c) => el("button", { type: "button", "data-id": c.id, onclick: () => show(c.id) }, avatarEmoji(c.avatar_id), " ", c.nickname)));
+  }
+  if (current) show(current);
+  else body.replaceChildren(el("p", { class: "muted" }, T.parentNoChild));
+  return el("div", { class: "card" }, el("h2", null, T.parentStatsTitle), picker, body);
+}
+
 // TODO: dashboard theo từng con (tiến độ, điểm phát âm), chế độ cùng học (từ Việt 🔊 + nghĩa 🔊),
 // cài đặt (giới hạn thời gian, bật/tắt chấm phát âm, đổi PIN), học phí + "Xin thêm tài khoản cho con".
 export function mount(root) {
@@ -104,6 +129,7 @@ export function mount(root) {
       el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
       state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname))),
+    progressCard(),
     voiceCard(),
     pronunciationToggle(),
     addChildCard(),

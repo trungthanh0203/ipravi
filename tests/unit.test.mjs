@@ -2,6 +2,7 @@
 import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.js";
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
+import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
 import { guessGender } from "../public/js/voice-names.js";
 
 let fail = 0;
@@ -57,6 +58,22 @@ eq(guessGender("vi-VN-HoaiMyNeural"), "female", "giới: HoaiMy = nữ");
 eq(guessGender("vi-VN-Wavenet-B"), "male", "giới: Google Wavenet-B = nam");
 eq(guessGender("xx-XX-LaLam"), null, "giới: tên lạ = không đoán");
 eq(guessGender(""), null, "giới: rỗng = null");
+
+// Cấp học
+{
+  const st = (levels) => ({ levels });
+  const L = (level, items_total, items_mastered, lessons_total = 1, lessons_done = 0) => ({ level, items_total, items_mastered, lessons_total, lessons_done });
+  eq(LEVELS.map((l) => l.n), [1, 2, 3, 4], "cấp: có đúng 4 cấp");
+  eq([levelOf({ level: 3 }), levelOf({}), levelOf({ level: 9 }), levelOf(null)], [3, 1, 4, 1], "cấp: levelOf kẹp 1–4, mặc định 1");
+  eq([percent(1, 3), percent(0, 0)], [33, 0], "cấp: percent");
+  const p = levelProgress(st([L(1, 10, 8), L(2, 10, 3)]));
+  eq(p.map((x) => [x.hasContent, x.passed, x.percent]), [[true, true, 80], [true, false, 30], [false, false, 0], [false, false, 0]], "cấp: đạt cấp khi ≥80% từ đã thuộc; cấp chưa có nội dung = 'sắp có'");
+  eq(recommendedLevel(p), 2, "cấp: gợi ý = cấp đầu tiên chưa qua");
+  eq(recommendedLevel(levelProgress(st([L(1, 10, 9), L(2, 10, 10)]))), 2, "cấp: qua hết thì gợi ý cấp cuối có nội dung");
+  eq(recommendedLevel(levelProgress(st([L(1, 10, 0)]))), 1, "cấp: chưa học gì → cấp 1");
+  eq(recommendedLevel(levelProgress(null)), null, "cấp: chưa có nội dung/thống kê → null");
+  eq(levelProgress(st([L(1, 0, 0)]))[0].passed, false, "cấp: 0 từ không được coi là đạt");
+}
 
 // Worker
 const env = { CENTER_NAME: "Trung tâm A", SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "k", LANGUAGES: "de:Deutsch,en:English", ASSETS: { fetch: async () => new Response("asset") } };

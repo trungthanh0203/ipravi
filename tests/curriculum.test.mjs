@@ -4,11 +4,13 @@ const R = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 // đủ nghĩa de/en, khớp dữ liệu mẫu đã chạy trên Supabase). Chạy: node tests/curriculum.test.mjs
 import { parseCsv, validateRows, keyOf } from "../public/js/admin/csv.js";
 let bad = 0;
-for (const f of ["cap1-trung-tu-vung.csv", "cap2-ga-con-cau-ngan.csv"]) {
+for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.csv", 2]]) {
   const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
   console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
   for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
+  const wrongLevel = v.items.filter((i) => i.level !== level);
+  if (wrongLevel.length) { console.log(`  CẤP SAI: ${wrongLevel.length} dòng không ghi level=${level} (dòng đầu: ${wrongLevel[0].row})`); bad = 1; }
   const lessons = new Map(); const units = new Map();
   for (const it of v.items) {
     const k = `${it.unit} › ${it.lesson}`;

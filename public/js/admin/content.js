@@ -6,6 +6,7 @@ import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
 import { guessGender } from "../voice-names.js";
+import { LEVELS, levelOf } from "../levels.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
 const pill = (status) => el("span", { class: `pill ${status === "approved" ? "good" : ""}` }, status === "approved" ? A.approved : A.draft);
@@ -43,20 +44,39 @@ function render(box, units, lessons) {
     return box.replaceChildren(el("div", { class: "card" }, el("p", null, "Chưa có nội dung. Sang tab “Nhập CSV” để thêm chủ đề, bài và từ vựng.")));
   }
 
-  box.replaceChildren(flash, ...units.map((u) => {
+  const unitCard = (u) => {
     const ls = lessons.filter((l) => l.unit_id === u.id);
     const open = openUnits.has(u.id);
+    const levelSel = el("select", { title: "Cấp của chủ đề", "aria-label": "Cấp của chủ đề", onchange: act(() => ops.setUnitLevel(u.id, levelSel.value), "Đã đổi cấp của chủ đề.") },
+      LEVELS.map((L) => el("option", { value: String(L.n), selected: L.n === levelOf(u) }, `${L.emoji} Cấp ${L.n}`)));
     return el("div", { class: "card" },
       el("div", { class: "row" },
         el("h2", { style: "margin:0" }, `${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
         el("div", { class: "row-btns", style: "margin:0" },
+          levelSel,
           btn(open ? "Thu gọn ▲" : "Mở ▼", () => { open ? openUnits.delete(u.id) : openUnits.add(u.id); reload(); }),
           u.status === "approved"
             ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
             : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
           btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
       open ? el("div", null, ls.map((l) => lessonBlock(l, reload, say))) : null);
-  }));
+  };
+
+  // Nhóm theo cấp: tiêu đề mỗi cấp cho biết số chủ đề/bài/mục và bao nhiêu đã duyệt (cấp trống hiện "chưa có nội dung").
+  const groups = LEVELS.map((L) => {
+    const us = units.filter((u) => levelOf(u) === L.n);
+    const ls = lessons.filter((l) => us.some((u) => u.id === l.unit_id));
+    const items = ls.reduce((a, l) => a + (l.content_items?.[0]?.count ?? 0), 0);
+    const approved = us.filter((u) => u.status === "approved").length;
+    return el("section", { class: "level-group" },
+      el("div", { class: "level-head" },
+        el("h2", null, `${L.emoji} Cấp ${L.n} · ${L.name}`),
+        el("span", { class: "muted" }, us.length
+          ? `${us.length} chủ đề (${approved} đã duyệt) · ${ls.length} bài · ${items} mục · ${L.focus}`
+          : `Chưa có nội dung — ${L.focus}`)),
+      us.map(unitCard));
+  });
+  box.replaceChildren(flash, ...groups);
 }
 
 function lessonBlock(lesson, reload, say) {

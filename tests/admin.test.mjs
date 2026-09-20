@@ -21,7 +21,27 @@ const H = "unit,unit_emoji,lesson,vi,emoji,type,min_age,max_age,de,en";
 const run = (body, l = langs) => validateRows(parseCsv(`${H}\n${body}`), { langs: l });
 let v = run("Con vật,🐾,Vật nuôi,con chó,🐶,word,3,8,Hund,dog\nCon vật,🐾,Vật nuôi,con mèo,🐱,,,,Katze,cat");
 eq([v.errors.length, v.warnings.length, v.items.length], [0, 0, 2], "hợp lệ: 2 mục, không lỗi/cảnh báo");
-eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", lesson: "Vật nuôi", vi: "con chó", emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+
+// Cột level (cấp 1–4)
+{
+  const H2 = "unit,unit_emoji,level,lesson,vi,emoji,type,min_age,max_age,de,en";
+  const run2 = (body) => validateRows(parseCsv(`${H2}
+${body}`), { langs });
+  const ok2 = run2("Con vật,🐾,2,Vật nuôi,con chó,🐶,word,3,8,Hund,dog");
+  eq([ok2.errors.length, ok2.items[0].level], [0, 2], "level: đọc được cấp 2");
+  eq(run2("Con vật,🐾,,Vật nuôi,con chó,🐶,word,3,8,Hund,dog").items[0].level, null, "level: ô trống = null");
+  for (const bad of ["0", "5", "abc", "1.5"]) eq(run2(`Con vật,🐾,${bad},Vật nuôi,con chó,🐶,word,3,8,Hund,dog`).errors.length, 1, `level: "${bad}" bị từ chối`);
+  const mk = (level) => ({ row: 2, unit: "Mới", unitEmoji: "🆕", level, lesson: "B", vi: "x", emoji: "", type: "word", minAge: null, maxAge: null, tr: {} });
+  const ex = { units: [{ id: 1, title_vi: "Cũ", sort_order: 1, level: 1 }], lessons: [], items: [] };
+  eq(buildPlan([mk(3)], ex).newUnits[0].level, 3, "buildPlan: chủ đề mới mang cấp từ CSV");
+  eq("level" in buildPlan([mk(null)], ex).newUnits[0], false, "buildPlan: CSV không ghi cấp → không đặt (CSDL mặc định cấp 1)");
+  eq(buildPlan([mk(null), mk(2)], ex).newUnits[0].level, 2, "buildPlan: dòng sau ghi cấp thì bổ sung cho chủ đề mới");
+  const old = (level) => ({ ...mk(level), unit: "cũ" });
+  eq(buildPlan([old(2), old(2)], ex).levelChanges, [{ id: 1, title: "Cũ", level: 2 }], "buildPlan: chủ đề đã có đổi cấp → 1 thay đổi (không lặp)");
+  eq(buildPlan([old(1)], ex).levelChanges, [], "buildPlan: cùng cấp → không đổi");
+  eq(buildPlan([old(null)], ex).levelChanges, [], "buildPlan: CSV không ghi cấp → không đụng cấp cũ");
+}
 eq([v.items[1].type, v.items[1].minAge], ["word", null], "type mặc định = word, tuổi trống = null");
 
 v = run(",,,,,,,,,");

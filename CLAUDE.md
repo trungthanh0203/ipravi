@@ -31,7 +31,7 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 Dashboard → Variables (KHÔNG ghi vào `wrangler.jsonc`; đã có `keep_vars`). Chạy thử local:
 sao `.dev.vars.example` → `.dev.vars`, rồi `npx wrangler dev`. Không có `center_id` ở bảng nào.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `006_voice_repair_summary.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `007_levels_stats.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -74,12 +74,14 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   ngôn ngữ KHÔNG có TTS → không có ô âm thanh → khu trẻ dùng giọng trình duyệt (`speakFallback`). Bé chọn giọng: `child_profiles.voice_gender` (nút 👩/👨 trong lúc học) >
   mặc định phụ huynh `accounts.voice_pref.gender` > nữ. `pickAudio` ưu tiên giới đã chọn > người thật > loại giọng > vùng miền; thiếu giới đó thì dùng giới còn lại.
   Giọng TRẺ EM: Azure có (vd en-US-AnaNeural) nhưng KHÔNG có cho tiếng Việt → chỉ có bằng thu giọng người thật (`voice_kind='child'`; chưa có UI cho bé chọn).
+- **Cấp học:** `units.level` 1–4 (🥚 Trứng, 🐣 Gà con, 🐥 Gà choai, 🐓 Gà trống; `levels.js` = khung + `levelProgress`/`recommendedLevel`, hàm thuần có test). Bé thấy 4 chặng → chủ đề → bài; **không khoá cấp**, chỉ gợi ý "Con đang ở đây" (cấp có nội dung đầu tiên chưa đạt). "Đạt cấp" = ≥80% số từ có mastery ≥3. CSV có cột `level` (tuỳ chọn; trống = giữ cấp cũ / mặc định 1). Tab Nội dung nhóm theo cấp, đổi cấp bằng ô chọn.
+- **Thống kê:** RPC `child_stats(p_child, p_tz)` (SECURITY INVOKER — RLS quyết định ai xem; chỉ tính nội dung đã duyệt) trả cấp/sao/chuỗi ngày/14 ngày/điểm phát âm/từ cần ôn. Giao diện: `stats.js` (bản bé `childStatsView`; bản phụ huynh `parentStatsView` trong khu phụ huynh). Thêm số liệu → sửa RPC + test rls.test.mjs mục 13.
 - Đừng để 1 hàm "tải dữ liệu" gánh việc ẩn (hiện khung UI...). Chỉ tải dữ liệu màn hình đang cần.
 
 ## Kiểm thử
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (83 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (79 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (99 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (95 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (9). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.

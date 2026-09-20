@@ -282,5 +282,61 @@ await as(A, async () => {
   ok(e && /Chỉ admin/.test(e), "RPC admin_audio_summary: phụ huynh bị từ chối", String(e));
 });
 
+// ---- 13. cấp của chủ đề + thống kê học tập (migration 007) ----
+{
+  const C = await uid("c@x.com"), D = await uid("d@x.com");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé Cúc','frog') returning id", [C]))[0].id;
+  ok((await q("select column_name from information_schema.columns where table_name='units' and column_name='level'")).length === 1, "007: units có cột level");
+  await db.query("delete from public.units"); // bỏ nội dung của các mục test trước (cascade) để đếm chính xác
+  const eLevel = await fails("insert into public.units (title_vi, level) values ('X', 5)");
+  ok(eLevel && /check/i.test(eLevel), "007: level chỉ nhận 1–4", String(eLevel));
+  // Cấp 1: 1 chủ đề duyệt (2 bài, 3 từ) + 1 bài NHÁP; Cấp 2: 1 chủ đề duyệt (1 bài, 1 câu); 1 chủ đề NHÁP cấp 3
+  const u1 = (await q("insert into public.units (title_vi, level, status) values ('S-Cấp1', 1, 'approved') returning id"))[0].id;
+  const u2 = (await q("insert into public.units (title_vi, level, status) values ('S-Cấp2', 2, 'approved') returning id"))[0].id;
+  const u3 = (await q("insert into public.units (title_vi, level, status) values ('S-Cấp3 nháp', 3, 'draft') returning id"))[0].id;
+  const les = async (u, t, st = "approved") => (await q("insert into public.lessons (unit_id, title_vi, status) values ($1,$2,$3) returning id", [u, t, st]))[0].id;
+  const l1 = await les(u1, "B1"), l2 = await les(u1, "B2"), l3 = await les(u1, "B-nháp", "draft"), l4 = await les(u2, "B3"), l5 = await les(u3, "B4");
+  const itm = async (l, t, st = "approved") => (await q("insert into public.content_items (lesson_id, text_vi, status) values ($1,$2,$3) returning id", [l, t, st]))[0].id;
+  const a = await itm(l1, "a"), b = await itm(l1, "b"), c = await itm(l2, "c"), d = await itm(l3, "d"), e2 = await itm(l4, "e"), f = await itm(l5, "f");
+  await itm(l1, "nháp", "draft");
+  // Bé: thuộc a,b (mastery 3,4), c chưa thuộc và từng sai, e thuộc; d/f nằm ở nội dung chưa duyệt (không được tính)
+  for (const [it, m, w] of [[a, 3, 0], [b, 4, 0], [c, 1, 2], [e2, 5, 0], [d, 5, 0], [f, 5, 0]])
+    await db.query("insert into public.child_progress (child_id, item_id, mastery, wrong_count) values ($1,$2,$3,$4)", [kid, it, m, w]);
+  const log = (lesson, score, mins, ago) => db.query("insert into public.activity_log (child_id, lesson_id, kind, score, duration_seconds, created_at) values ($1,$2,'lesson',$3,$4, now() - $5::interval)", [kid, lesson, score, mins * 60, ago]);
+  await log(l1, 50, 5, "0 days"); await log(l1, 90, 10, "0 days"); await log(l2, 70, 8, "1 day"); await log(l4, 100, 6, "3 days"); await log(l3, 100, 6, "0 days");
+  await db.query("insert into public.pronunciation_attempts (child_id, item_id, score) values ($1,$2,80), ($1,$2,60)", [kid, a]);
+
+  await as(C, async () => {
+    const st = (await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s;
+    const L = Object.fromEntries(st.levels.map((x) => [x.level, x]));
+    ok(L[1].items_total === 3 && L[1].items_mastered === 2 && L[1].lessons_total === 2 && L[1].lessons_done === 2, "007 thống kê: Cấp 1 = 3 từ (2 thuộc), 2 bài (2 xong); nội dung nháp không tính", JSON.stringify(L[1]));
+    ok(L[2].items_total === 1 && L[2].items_mastered === 1 && L[2].lessons_done === 1, "007 thống kê: Cấp 2", JSON.stringify(L[2]));
+    ok(!L[3], "007 thống kê: chủ đề nháp (cấp 3) không hiện", JSON.stringify(st.levels));
+    ok(st.stars === 3 + 2 + 3, "007 thống kê: sao = điểm CAO NHẤT mỗi bài (90→3, 70→2, 100→3)", String(st.stars));
+    ok(st.streak === 2, "007 thống kê: chuỗi ngày (hôm nay + hôm qua; hôm kia trống)", String(st.streak));
+    ok(st.week.minutes === 5 + 10 + 8 + 6 + 6 && st.week.lessons === 5, "007 thống kê: 7 ngày gần nhất", JSON.stringify(st.week));
+    ok(st.days.length === 14 && st.days[13].minutes === 5 + 10 + 6, "007 thống kê: 14 ngày, hôm nay ở cuối", JSON.stringify(st.days[13]));
+    ok(st.pron.avg === 70 && st.pron.count === 2, "007 thống kê: điểm phát âm TB", JSON.stringify(st.pron));
+    ok(st.review.length === 1 && st.review[0].text_vi === "c", "007 thống kê: từ cần ôn = từng sai + chưa thuộc", JSON.stringify(st.review));
+    const bad = (await q("select public.child_stats($1, 'Không/CóMúiGiờNày') as s", [kid]))[0].s;
+    ok(bad.days.length === 14, "007 thống kê: múi giờ lạ → dùng UTC, không lỗi");
+  });
+  await as(D, async () => {
+    const e = await fails("select public.child_stats($1, 'UTC')", [kid]);
+    ok(e && /không có quyền/i.test(e), "007 thống kê: phụ huynh khác KHÔNG xem được thống kê của bé", String(e));
+  });
+  await as(ADM, async () => ok((await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s.stars === 8, "007 thống kê: admin xem được"));
+  // Hết hạn: nội dung bị khoá theo RLS → thống kê trả rỗng nhưng không lỗi
+  await db.query("update public.accounts set access_until = now() - interval '1 day' where id = $1", [C]);
+  await as(C, async () => {
+    const st = (await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s;
+    ok(Array.isArray(st.levels) && st.days.length === 14, "007 thống kê: tài khoản hết hạn vẫn gọi được, không lỗi", JSON.stringify(st.levels));
+  });
+  // Backfill cấp 2 theo tên chủ đề: chạy lại migration không đổi cấp đã chỉnh tay
+  await db.query("update public.units set level = 4 where id = $1", [u2]);
+  await db.exec(readFileSync(new URL("../migrations/007_levels_stats.sql", import.meta.url), "utf8"));
+  ok((await q("select level from public.units where id=$1", [u2]))[0].level === 4, "007: chạy lại migration không ghi đè cấp admin đã chỉnh");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

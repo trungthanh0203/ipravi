@@ -14,14 +14,14 @@ export const A = {
 };
 
 export const CSV_HELP =
-  "Cột bắt buộc: unit (chủ đề), lesson (bài), vi (từ/câu tiếng Việt). Cột tuỳ chọn: unit_emoji, emoji, type " +
+  "Cột bắt buộc: unit (chủ đề), lesson (bài), vi (từ/câu tiếng Việt). Cột tuỳ chọn: unit_emoji, level (cấp 1–4, để trống = cấp 1), emoji, type " +
   "(word | phrase | sentence | story | song), min_age, max_age (0–12), và mỗi ngôn ngữ 1 cột nghĩa (de, en…). " +
   "Nhập lại file cũ sẽ cập nhật mục đã có (không tạo trùng); ô trống không xoá dữ liệu cũ. " +
   "Mục nhập vào luôn ở trạng thái NHÁP — bé chỉ thấy sau khi bạn bấm Duyệt.";
 
 // Câu lệnh mẫu để dán vào AI (ChatGPT, Claude...) rồi tải kết quả dưới dạng CSV.
 export function aiPrompt(langs) {
-  const cols = ["unit", "unit_emoji", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs].join(",");
+  const cols = ["unit", "unit_emoji", "level", "lesson", "vi", "emoji", "type", "min_age", "max_age", ...langs].join(",");
   return `Bạn là giáo viên tiếng Việt cho trẻ em gốc Việt 3–8 tuổi sống ở nước ngoài. Hãy soạn nội dung học về chủ đề: [ĐIỀN CHỦ ĐỀ, ví dụ: "Gia đình"].
 
 Trả về DUY NHẤT một file CSV (UTF-8, phân cách bằng dấu phẩy, dòng đầu là tiêu đề) với đúng các cột:
@@ -29,6 +29,7 @@ ${cols}
 
 Quy tắc:
 - unit: tên chủ đề (ngắn, tiếng Việt). unit_emoji: 1 emoji đại diện chủ đề.
+- level: cấp của chủ đề — 1 (Trứng: nghe, nhận biết, nói từ), 2 (Gà con: nói câu ngắn), 3 (Gà choai: học vần, chữ cái), 4 (Gà trống: đọc hiểu, viết). Mọi dòng cùng chủ đề ghi cùng 1 số.
 - lesson: tên bài, mỗi bài 5–10 mục từ. Chia chủ đề thành 1–3 bài từ dễ đến khó.
 - vi: từ hoặc cụm từ tiếng Việt đầy đủ dấu thanh, dùng từ đời thường trẻ em hay nghe (ví dụ "con chó", "màu đỏ", "bà ngoại").
 - emoji: đúng 1 emoji mô tả rõ nghĩa của từ. Nếu không có emoji phù hợp thì để trống.
