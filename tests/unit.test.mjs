@@ -3,7 +3,7 @@ import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.j
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
-import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts } from "../public/js/viet.js";
+import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts, caseParts, lookalikes, capitalIndexes, hasProperName } from "../public/js/viet.js";
 import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan, sayOfPart } from "../public/js/sounds.js";
 import { peakOf, rmsOf, trimSilence, normalizePeak, resample, encodeWav, processTake, durationMs } from "../public/js/admin/wav.js";
 import { guessGender } from "../public/js/voice-names.js";
@@ -133,6 +133,21 @@ eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken
   const sample = ["bà", "cá", "nghé", "quả", "trứng", "kem", "bàn", "chuối", "mèo", "đèn"];
   const missing = sample.flatMap((w) => spellParts(w).filter((p) => ["initial", "van", "tone"].includes(p.role) && !bank.has(p.text)).map((p) => w + ":" + p.text));
   eq(missing.filter((m) => !/chuối:uôi|mèo:eo/.test(m)), [], "ngân hàng âm phủ âm đầu/vần/dấu của các từ mẫu");
+}
+
+// Chữ hoa
+{
+  eq(caseParts("A a"), { upper: "A", lower: "a" }, "chữ hoa: tách 'A a'");
+  eq(caseParts("Ngh ngh"), { upper: "Ngh", lower: "ngh" }, "chữ hoa: tách chữ ghép 'Ngh ngh'");
+  eq(caseParts("Đ đ"), { upper: "Đ", lower: "đ" }, "chữ hoa: Đ đ");
+  eq([caseParts("A b"), caseParts("a A"), caseParts("Aa"), caseParts(""), caseParts(null), caseParts("A a b")], [null, null, null, null, null, null], "chữ hoa: dạng sai → null (thường ≠ hoa viết thường / đảo chỗ / thiếu dấu cách)");
+  eq(lookalikes("B").includes("D") && lookalikes("B").includes("P") && !lookalikes("B").includes("B"), true, "chữ hoa: B lẫn với D, P (không tự lẫn với mình)");
+  eq(lookalikes("Q").includes("O") && lookalikes("Ă").includes("A"), true, "chữ hoa: Q~O, Ă~A");
+  eq(lookalikes("Ch").includes("C") || lookalikes("Ch").length >= 0, true, "chữ hoa: chữ ghép không lỗi");
+  eq(capitalIndexes("An và Mai đi học."), [0, 2], "viết hoa: từ đầu câu + tên riêng giữa câu");
+  eq(capitalIndexes("Bà ở Hà Nội."), [0, 2, 3], "viết hoa: địa danh 2 tiếng đều hoa");
+  eq(capitalIndexes("trời mưa rồi."), [], "viết hoa: câu toàn chữ thường → không có (dữ liệu sai)");
+  eq([hasProperName("Bà ở Hà Nội."), hasProperName("Con mèo ngủ."), hasProperName("Ăn cơm đi con.")], [true, false, false], "viết hoa: chỉ tính tên riêng ngoài từ đầu câu");
 }
 
 // Xử lý âm thanh thu

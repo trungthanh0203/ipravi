@@ -12,6 +12,7 @@ import * as listenRepeat from "./activities/listen-repeat.js";
 import * as phonics from "./activities/phonics.js";
 import * as reading from "./activities/reading.js";
 import * as spell from "./activities/spell.js";
+import * as casing from "./activities/casing.js";
 
 // Thêm dạng hoạt động mới: viết file trong ./activities/ (export run(ctx) → {correct,total}) rồi thêm 1 dòng ở đây.
 const RUNNERS = {
@@ -30,9 +31,12 @@ const RUNNERS = {
   spell_word: reading.runSpell,
   order_story: reading.runStory,
   spell_along: spell.runSpellAlong,
+  match_case: casing.runMatchCase,
+  pick_case: casing.runPickCase,
+  fix_capital: casing.runFixCapital,
 };
 const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ các dạng cần nhận mặt chữ
-const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story", "spell_along"]);
+const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story", "spell_along", "match_case", "pick_case", "fix_capital"]);
 
 export const starsFor = (score) => (score == null ? 0 : score >= 85 ? 3 : score >= 60 ? 2 : 1);
 

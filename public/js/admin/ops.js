@@ -19,6 +19,21 @@ export async function setLessonsStatus(lessonIds, status) {
   }
 }
 
+// Đổi chỗ chủ đề với chủ đề liền kề CÙNG CẤP (dir = -1 lên, +1 xuống). Thứ tự = sort_order; gán lại các giá trị sort_order hiện có của nhóm
+// (làm cho tăng dần thật sự nếu đang trùng nhau) chứ không đụng chủ đề ở cấp khác.
+export async function moveUnit(units, unit, dir, levelOf) {
+  const group = units.filter((u) => !u.hidden && levelOf(u) === levelOf(unit)).sort((a, b) => (a.sort_order - b.sort_order) || (a.id - b.id));
+  const i = group.findIndex((u) => u.id === unit.id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= group.length) return;
+  const orders = [];
+  group.forEach((u, k) => orders.push(k === 0 ? u.sort_order : Math.max(u.sort_order, orders[k - 1] + 1)));
+  [group[i], group[j]] = [group[j], group[i]];
+  for (let k = 0; k < group.length; k++) {
+    if (group[k].sort_order !== orders[k]) check(await sb.from("units").update({ sort_order: orders[k] }).eq("id", group[k].id));
+  }
+}
+
 export async function setUnitLevel(unitId, level) {
   check(await sb.from("units").update({ level: Number(level) }).eq("id", unitId));
 }

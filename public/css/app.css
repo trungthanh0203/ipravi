@@ -264,3 +264,6 @@ img.visual.big { max-height: 200px; }
 .spell-part.role-tone { border-color: #1c7ed6; }
 .spell-part.role-whole { border-color: var(--brand); background: var(--brand-light); }
 .spell-part.on { transform: scale(1.18); background: #fff3bf; box-shadow: 0 0 0 4px rgba(245, 159, 0, .35); }
+
+/* Chữ hoa */
+.case-cell { font-size: 40px; min-height: 84px; }

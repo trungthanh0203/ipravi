@@ -32,7 +32,7 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 Dashboard → Variables (KHÔNG ghi vào `wrangler.jsonc`; đã có `keep_vars`). Chạy thử local:
 sao `.dev.vars.example` → `.dev.vars`, rồi `npx wrangler dev`. Không có `center_id` ở bảng nào.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `011_spell_along.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `012_case_activities.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -81,6 +81,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 - **Hình của mục:** `image_path` (ảnh) ưu tiên hơn `emoji`; emoji có thể là "cảnh" 2–3 emoji (`visual()` tự thu nhỏ). Câu hỏi đọc hiểu KHÔNG có hình (giao diện không hiển thị). Hoạt động dựa vào hình (`read_pick`, `match`…) chỉ hợp khi hình thật sự đúng nghĩa — đừng dùng cho câu trừu tượng/tục ngữ. Kế hoạch nâng cấp (vai trò hình, Twemoji, ảnh riêng, chữ hoa, tô chữ, đánh vần từng phần, thu âm trong app): `KE_HOACH_NANG_CAP_HINH_ANH_CHU_HOA_TO_CHU_THU_AM.md` (chờ chốt quyết định D1–D6).
 - **Thu giọng người thật (tab "Thu âm", `admin/record.js`):** thu bằng Web Audio (`mic.js`, mẫu thô — KHÔNG MediaRecorder vì định dạng khác nhau giữa trình duyệt) → `wav.js` (hàm thuần: cắt lặng, chuẩn hoá −1 dBFS, 24 kHz, WAV mono 16-bit; có test) → `audio.uploadHuman` (Storage + `content_audio`, `source=human`, `gender`, `voice_kind`, `region`). Mặc định giọng NAM người lớn; giọng nữ/trẻ em chọn ở ô "Giọng"/"Loại giọng" (giọng trẻ em cần đồng ý bằng văn bản của phụ huynh trẻ — GDPR). Có tải hàng loạt (tên file = chữ của mục). **Ngân hàng âm** (`sounds.js` + `admin/bank.js`): chủ đề ẨN `units.hidden=true` (bé không thấy; `loadUnits` lọc, `child_stats` bỏ; RLS vẫn cho đọc để phát âm) chứa âm phụ âm (bờ, cờ…), nguyên âm, tên 6 thanh, ~85 vần — dùng cho đánh vần theo phần. Micro chỉ thử được trên máy thật.
 - **Đánh vần theo phần (`spell_along`, `child/activities/spell.js`):** `viet.spellParts("bà")` → bờ – a – ba – huyền – bà (bỏ phần trùng/không cần). Mỗi phần tra trong NGÂN HÀNG ÂM (`api.loadSoundBank()`, Map chữ → mục kèm âm thanh, nhớ 5 phút) → `media.playPart()`: giọng người thật/TTS nếu đã có file, không thì giọng trình duyệt (`sayOfPart`: ă → á). Bước ① nghe–nhìn (các phần sáng lần lượt, chạm phần nào nghe phần đó), bước ② tự đánh vần (`arrange()`). Bài chưa có hoạt động này thì thêm bằng SQL (bài đã nhập không tự đổi hoạt động). Muốn giọng TTS tốt hơn giọng trình duyệt cho các âm nhỏ: tab Nội dung → "Ngân hàng âm" → Sinh âm thanh còn thiếu.
+- **Chữ hoa (`child/activities/casing.js`):** mục chữ hoa có dạng `"A a"` (`type=letter`; `viet.caseParts` tách, chữ thường phải = chữ hoa viết thường; chữ ghép `"Ngh ngh"`). 3 hoạt động tự sinh từ dữ liệu, không cần cột mới: `match_case` (ghép hoa–thường), `pick_case` (nhiễu = chữ hình gần giống, `viet.lookalikes`), `fix_capital` (chạm từ phải viết hoa: `viet.capitalIndexes` = từ đầu câu + từ viết hoa giữa câu, nên câu dữ liệu PHẢI viết hoa đúng). Bài chữ hoa dùng hình tên riêng chỉ để trang trí → không dùng hoạt động chọn theo hình (test giáo trình cho phép trùng emoji ở bài không có hoạt động chọn theo hình). Nút ▲▼ ở tab Nội dung đổi thứ tự chủ đề trong cùng cấp (`ops.moveUnit`, hoán đổi `sort_order`).
 - **Không khoá bài:** bé chọn bất kỳ bài/cấp nào (quyết định 2026-09); chỉ gợi ý "Học tiếp".
 - **Thống kê:** RPC `child_stats(p_child, p_tz)` (SECURITY INVOKER — RLS quyết định ai xem; chỉ tính nội dung đã duyệt) trả cấp/sao/chuỗi ngày/14 ngày/điểm phát âm/từ cần ôn. Giao diện: `stats.js` (bản bé `childStatsView`; bản phụ huynh `parentStatsView` trong khu phụ huynh). Thêm số liệu → sửa RPC + test rls.test.mjs mục 13.
 - **Không được dựng lại màn hình khi cùng 1 phiên:** supabase-js phát lại `SIGNED_IN` mỗi lần app/tab được mở lại sau một lúc; `main.js` chỉ cập nhật phiên nếu cùng người dùng (lỗi cũ: bé đang học bị đẩy về danh sách bài). Bé đang học được nhớ trong `sessionStorage` (`state.activeChildId`), nên trang bị hệ điều hành thu hồi rồi nạp lại vẫn vào lại khu học.
@@ -91,7 +92,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 ## Kiểm thử
 
 - **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (120 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (137 kiểm tra) và
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (144 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (9). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.
@@ -114,9 +115,9 @@ học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng ch�
 - Chấm phát âm bỏ từ loại đầu ("con", "màu", "quả"...) khi so khớp — nếu không, nói sai cả con vật vẫn ~50 điểm.
 
 **Giọng TTS:** tab Cài đặt chọn giọng nữ + nam theo ngôn ngữ (nghe thử trước), tab Nội dung có ô ♀/♂ và "Sinh lại TTS bằng giọng hiện tại" (giữ giọng người thật); bé/phụ huynh chọn giọng nghe (migration 005).
-**Giáo trình:** đã có khung + 176 từ (Cấp 1) + 64 câu (Cấp 2) + **337 mục học vần (Cấp 3, 53 bài)**, **208 mục đọc hiểu/chính tả/viết (Cấp 4, 29 bài)**; chữ hoa, đánh vần từng phần, tô chữ/viết tay, đọc to cả đoạn có chấm điểm chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
+**Giáo trình:** đã có khung + 176 từ (Cấp 1) + 64 câu (Cấp 2) + **383 mục học vần + chữ hoa (Cấp 3, 62 bài)**, **208 mục đọc hiểu/chính tả/viết (Cấp 4, 29 bài)**; chữ hoa, đánh vần từng phần, tô chữ/viết tay, đọc to cả đoạn có chấm điểm chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
 
-**Chưa làm:** đổi thứ tự chủ đề (thứ tự = thứ tự tạo), hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
+**Chưa làm:** hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
 trong tab Phụ huynh, giới hạn thời gian/ngày, thu âm giọng người thật ngay trong app, vai trò giáo viên hỗ trợ, xuất/xoá dữ liệu con,
 icon PNG (iOS cần `apple-touch-icon`), hình linh vật/avatar thật, thông báo nhắc học.
 **Chưa thử với Supabase/Storage/TTS thật:** đăng ký/đăng nhập/xác nhận email, đọc nội dung qua RLS với phiên thật, tải file lên Storage,

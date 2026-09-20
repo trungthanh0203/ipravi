@@ -1,6 +1,6 @@
 # Kế hoạch nâng cấp: hình ảnh, chữ hoa, tô chữ, đánh vần từng phần, thu giọng người thật
 
-> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ, ④ Hình ảnh: chưa làm · Chữ hoa: kế hoạch ở mục 4 (chờ bạn chốt).**
+> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ, ④ Hình ảnh: chưa làm · Chữ hoa ✅ (migration 012, đã chốt C1–C4).**
 >
 > Bản nháp để **bàn và chốt** (2026-09-20). Chưa code phần nào ngoài mục 1.1 (đã sửa nhanh hình ở Cấp 4). Mọi ước lượng tính theo
 > "phiên làm việc" (S ≈ 1 phiên ngắn, M ≈ 1–2 phiên, L ≈ 3+ phiên). Cuối file có **danh sách quyết định cần bạn chọn**.
@@ -87,7 +87,7 @@ Tôi rà 208 mục và thấy 4 loại lỗi; đã xử lý những gì làm đ�
 - **Điểm cần chốt:** *cách đánh vần khác nhau giữa các bộ sách* (có tranh cãi khi đổi chương trình 2018); nên chốt theo sách mà bé sẽ học — xem quyết định D3. Có thể đặt chuỗi là **tuỳ chỉnh được** ở tab Cài đặt.
 - Cỡ: **M**; phần lớn là giao diện + hàm tách/tra âm (có test).
 
-## 4. Chữ hoa — kế hoạch chi tiết (chờ bạn chốt)
+## 4. Chữ hoa — ✅ ĐÃ LÀM (C1–C4 đã chốt theo đề xuất: chủ đề riêng sau "Chữ cái", từ khoá là tên riêng, có nút đổi thứ tự, có bài chữ ghép)
 
 **Mục tiêu bé làm được:** nhận ra 29 chữ hoa; **ghép mỗi chữ hoa với chữ thường**; biết **khi nào viết hoa** (đầu câu, tên riêng, địa danh); (sau này) tô chữ hoa.
 

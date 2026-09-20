@@ -69,3 +69,27 @@ export function spellParts(word) {
   parts.push({ role: "whole", text: whole });
   return parts;
 }
+
+// ---- Chữ hoa ----
+// Mục chữ hoa có dạng "A a" / "Ch ch" (chữ hoa, dấu cách, chữ thường). Trả về { upper, lower } hoặc null.
+export function caseParts(text) {
+  const t = String(text ?? "").normalize("NFC").trim().split(/\s+/);
+  if (t.length !== 2) return null;
+  const [upper, lower] = t;
+  if (!upper || upper[0] === upper[0].toLowerCase() || lower !== upper.toLowerCase()) return null;
+  return { upper, lower };
+}
+
+// Chữ hoa hay bị lẫn (dùng làm đáp án nhiễu, ưu tiên hơn chữ ngẫu nhiên): hình dạng gần nhau.
+const LOOKALIKES = [["B", "D", "P", "R"], ["Q", "O", "G", "C"], ["M", "N", "H"], ["I", "L", "T"], ["U", "V", "Ư"], ["A", "Ă", "Â"], ["O", "Ô", "Ơ"], ["E", "Ê"], ["D", "Đ"], ["S", "X"], ["K", "X"], ["Y", "V"]];
+export function lookalikes(upper) {
+  const first = upper[0];
+  return [...new Set(LOOKALIKES.filter((g) => g.includes(first)).flat().filter((c) => c !== first))];
+}
+
+// Những từ PHẢI viết hoa trong câu: từ đầu câu + các từ viết hoa giữa câu (tên riêng, địa danh). Trả chỉ số từ (theo words()).
+export function capitalIndexes(sentence) {
+  return words(sentence).map((w, i) => ({ w: bare(w), i })).filter(({ w }) => w && w[0] !== w[0].toLowerCase()).map(({ i }) => i);
+}
+// Câu có ít nhất 1 tên riêng ngoài từ đầu câu (để bài "chạm từ cần viết hoa" có gì để học ngoài chữ đầu câu).
+export const hasProperName = (sentence) => capitalIndexes(sentence).some((i) => i > 0);

@@ -109,6 +109,52 @@ Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cân,,,⚖️,word,5,8,Waage,scale
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cây,,,🌳,word,5,8,Baum,tree
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,mây,,,☁️,word,5,8,Wolke,cloud
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,tay,,,✋,word,5,8,Hand,hand
+Chữ hoa,🅰️,3,Chữ hoa nhóm 1: A O Ô Ơ,A a,a,match_case pick_case listen_pick_text listen_repeat,👦,letter,5,8,Großbuchstabe A (klein: a) wie in „An“ (Vorname),capital letter A (lowercase a) as in “An” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 1: A O Ô Ơ,O o,o,,👧,letter,5,8,Großbuchstabe O (klein: o) wie in „Oanh“ (Vorname),capital letter O (lowercase o) as in “Oanh” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 1: A O Ô Ơ,Ô ô,ô,,👴,letter,5,8,Großbuchstabe Ô (klein: ô) wie in „Ông“ (Wort am Satzanfang),capital letter Ô (lowercase ô) as in “Ông” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 1: A O Ô Ơ,Ơ ơ,ơ,,🙋,letter,5,8,Großbuchstabe Ơ (klein: ơ) wie in „Ơi“ (Wort am Satzanfang),capital letter Ơ (lowercase ơ) as in “Ơi” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 2: I E Ê U Ư,I i,i,match_case pick_case listen_pick_text listen_repeat,🤫,letter,5,8,Großbuchstabe I (klein: i) wie in „Im“ (Wort am Satzanfang),capital letter I (lowercase i) as in “Im” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 2: I E Ê U Ư,E e,e,,🧒,letter,5,8,Großbuchstabe E (klein: e) wie in „Em“ (Wort am Satzanfang),capital letter E (lowercase e) as in “Em” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 2: I E Ê U Ư,Ê ê,ê,,🏡,letter,5,8,Großbuchstabe Ê (klein: ê) wie in „Êđê“ (Volksgruppe),capital letter Ê (lowercase ê) as in “Êđê” (an ethnic group)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 2: I E Ê U Ư,U u,u,,👧,letter,5,8,Großbuchstabe U (klein: u) wie in „Uyên“ (Vorname),capital letter U (lowercase u) as in “Uyên” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 2: I E Ê U Ư,Ư ư,ư,,👍,letter,5,8,Großbuchstabe Ư (klein: ư) wie in „Ừ“ (Wort am Satzanfang),capital letter Ư (lowercase ư) as in “Ừ” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 3: B M N L,B b,bờ,match_case pick_case listen_pick_text listen_repeat,👦,letter,5,8,Großbuchstabe B (klein: b) wie in „Bình“ (Vorname),capital letter B (lowercase b) as in “Bình” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 3: B M N L,M m,mờ,,👧,letter,5,8,Großbuchstabe M (klein: m) wie in „Mai“ (Vorname),capital letter M (lowercase m) as in “Mai” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 3: B M N L,N n,nờ,,👦,letter,5,8,Großbuchstabe N (klein: n) wie in „Nam“ (Vorname),capital letter N (lowercase n) as in “Nam” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 3: B M N L,L l,lờ,,👧,letter,5,8,Großbuchstabe L (klein: l) wie in „Lan“ (Vorname),capital letter L (lowercase l) as in “Lan” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,T t,tờ,match_case pick_case listen_pick_text listen_repeat,👧,letter,5,8,Großbuchstabe T (klein: t) wie in „Tâm“ (Vorname),capital letter T (lowercase t) as in “Tâm” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,C c,cờ,,👧,letter,5,8,Großbuchstabe C (klein: c) wie in „Cúc“ (Vorname),capital letter C (lowercase c) as in “Cúc” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,K k,cờ,,👧,letter,5,8,Großbuchstabe K (klein: k) wie in „Kim“ (Vorname),capital letter K (lowercase k) as in “Kim” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,Q q,cờ,,👦,letter,5,8,Großbuchstabe Q (klein: q) wie in „Quang“ (Vorname),capital letter Q (lowercase q) as in “Quang” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,D d,dờ,,👧,letter,5,8,Großbuchstabe D (klein: d) wie in „Dung“ (Vorname),capital letter D (lowercase d) as in “Dung” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 4: T C K Q D Đ,Đ đ,đờ,,🌉,letter,5,8,Großbuchstabe Đ (klein: đ) wie in „Đà Nẵng“ (Ortsname),capital letter Đ (lowercase đ) as in “Đà Nẵng” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,H h,hờ,match_case pick_case listen_pick_text listen_repeat,🏛️,letter,5,8,Großbuchstabe H (klein: h) wie in „Hà Nội“ (Ortsname),capital letter H (lowercase h) as in “Hà Nội” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,G g,gờ,,🌄,letter,5,8,Großbuchstabe G (klein: g) wie in „Gia Lai“ (Ortsname),capital letter G (lowercase g) as in “Gia Lai” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,R r,rờ,,🌊,letter,5,8,Großbuchstabe R (klein: r) wie in „Rạch Giá“ (Ortsname),capital letter R (lowercase r) as in “Rạch Giá” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,S s,sờ,,👦,letter,5,8,Großbuchstabe S (klein: s) wie in „Sơn“ (Vorname),capital letter S (lowercase s) as in “Sơn” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,V v,vờ,,🌏,letter,5,8,Großbuchstabe V (klein: v) wie in „Việt Nam“ (Ortsname),capital letter V (lowercase v) as in “Việt Nam” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 5: H G R S V X,X x,xờ,,🌸,letter,5,8,Großbuchstabe X (klein: x) wie in „Xuân“ (Vorname),capital letter X (lowercase x) as in “Xuân” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 6: Ă Â Y P,Ă ă,á,match_case pick_case listen_pick_text listen_repeat,🍚,letter,5,8,Großbuchstabe Ă (klein: ă) wie in „Ăn“ (Wort am Satzanfang),capital letter Ă (lowercase ă) as in “Ăn” (a word at the start of a sentence)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 6: Ă Â Y P,Â â,ớ,,🧚,letter,5,8,Großbuchstabe Â (klein: â) wie in „Âu Cơ“ (Vorname),capital letter Â (lowercase â) as in “Âu Cơ” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 6: Ă Â Y P,Y y,i dài,,⛰️,letter,5,8,Großbuchstabe Y (klein: y) wie in „Yên Bái“ (Ortsname),capital letter Y (lowercase y) as in “Yên Bái” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa nhóm 6: Ă Â Y P,P p,pờ,,🌲,letter,5,8,Großbuchstabe P (klein: p) wie in „Pleiku“ (Ortsname),capital letter P (lowercase p) as in “Pleiku” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Ch ch,chờ,match_case pick_case listen_pick_text listen_repeat,👧,letter,5,8,Großbuchstabe Ch (klein: ch) wie in „Chi“ (Vorname),capital letter Ch (lowercase ch) as in “Chi” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Gh gh,gờ,,🏖️,letter,5,8,Großbuchstabe Gh (klein: gh) wie in „Ghềnh Ráng“ (Ortsname),capital letter Gh (lowercase gh) as in “Ghềnh Ráng” (a place name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Gi gi,giờ,,👧,letter,5,8,Großbuchstabe Gi (klein: gi) wie in „Giang“ (Vorname),capital letter Gi (lowercase gi) as in “Giang” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Kh kh,khờ,,👦,letter,5,8,Großbuchstabe Kh (klein: kh) wie in „Khoa“ (Vorname),capital letter Kh (lowercase kh) as in “Khoa” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Ng ng,ngờ,,👧,letter,5,8,Großbuchstabe Ng (klein: ng) wie in „Nga“ (Vorname),capital letter Ng (lowercase ng) as in “Nga” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh,Ngh ngh,ngờ,,👦,letter,5,8,Großbuchstabe Ngh (klein: ngh) wie in „Nghĩa“ (Vorname),capital letter Ngh (lowercase ngh) as in “Nghĩa” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 2: Nh Ph Qu Th Tr,Nh nh,nhờ,match_case pick_case listen_pick_text listen_repeat,👧,letter,5,8,Großbuchstabe Nh (klein: nh) wie in „Nhung“ (Vorname),capital letter Nh (lowercase nh) as in “Nhung” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 2: Nh Ph Qu Th Tr,Ph ph,phờ,,👦,letter,5,8,Großbuchstabe Ph (klein: ph) wie in „Phúc“ (Vorname),capital letter Ph (lowercase ph) as in “Phúc” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 2: Nh Ph Qu Th Tr,Qu qu,quờ,,👧,letter,5,8,Großbuchstabe Qu (klein: qu) wie in „Quyên“ (Vorname),capital letter Qu (lowercase qu) as in “Quyên” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 2: Nh Ph Qu Th Tr,Th th,thờ,,👧,letter,5,8,Großbuchstabe Th (klein: th) wie in „Thảo“ (Vorname),capital letter Th (lowercase th) as in “Thảo” (a first name)
+Chữ hoa,🅰️,3,Chữ hoa ghép 2: Nh Ph Qu Th Tr,Tr tr,trờ,,👧,letter,5,8,Großbuchstabe Tr (klein: tr) wie in „Trang“ (Vorname),capital letter Tr (lowercase tr) as in “Trang” (a first name)
+Chữ hoa,🅰️,3,Tên riêng viết hoa,An và Mai đi học.,,fix_capital write_check order_words listen_repeat,🎒,sentence,5,8,An und Mai gehen zur Schule.,An and Mai go to school.
+Chữ hoa,🅰️,3,Tên riêng viết hoa,Bà ở Hà Nội.,,,👵,sentence,5,8,Oma wohnt in Hanoi.,Grandma lives in Hanoi.
+Chữ hoa,🅰️,3,Tên riêng viết hoa,Cô Hoa dạy em hát.,,,🎤,sentence,5,8,Frau Hoa bringt mir das Singen bei.,Ms Hoa teaches me to sing.
+Chữ hoa,🅰️,3,Tên riêng viết hoa,Nam và Bình chơi bóng.,,,⚽,sentence,5,8,Nam und Bình spielen Ball.,Nam and Bình play ball.
+Chữ hoa,🅰️,3,Tên riêng viết hoa,Mẹ đưa Lan đến trường.,,,🏫,sentence,5,8,Mama bringt Lan zur Schule.,Mum takes Lan to school.
+Chữ hoa,🅰️,3,Tên riêng viết hoa,Ông kể chuyện về Thánh Gióng.,,,📖,sentence,5,8,Opa erzählt die Geschichte von Thánh Gióng.,Grandpa tells the story of Thánh Gióng.
 Ghép âm với nguyên âm,🧩,3,Vần a,ba,,spell_along build_syllable read_pick listen_repeat,3️⃣,word,5,8,drei,three
 Ghép âm với nguyên âm,🧩,3,Vần a,bà,,,👵,word,5,8,Oma,grandmother
 Ghép âm với nguyên âm,🧩,3,Vần a,cá,,,🐟,word,5,8,Fisch,fish

@@ -15,7 +15,7 @@ export const A = {
 
 export const CSV_HELP =
   "Cột bắt buộc: unit (chủ đề), lesson (bài), vi (từ/câu tiếng Việt). Cột tuỳ chọn: unit_emoji, level (cấp 1–4, để trống = cấp 1), emoji, type " +
-  "(word | phrase | sentence | story | song | letter | syllable), say (chữ để đọc thành tiếng khi khác chữ hiển thị, vd chữ “b” đọc là “bờ”), activities (bộ hoạt động cho bài mới, cách nhau bằng khoảng trắng: listen_pick match listen_pick_text listen_repeat listen_pick_tone build_syllable fill_letter read_pick order_words read_quiz fill_word write_check spell_word order_story spell_along), choices + answer (câu hỏi đọc hiểu: đáp án cách nhau bằng dấu |, answer = số thứ tự đáp án đúng), min_age, max_age (0–12), và mỗi ngôn ngữ 1 cột nghĩa (de, en…). " +
+  "(word | phrase | sentence | story | song | letter | syllable), say (chữ để đọc thành tiếng khi khác chữ hiển thị, vd chữ “b” đọc là “bờ”), activities (bộ hoạt động cho bài mới, cách nhau bằng khoảng trắng: listen_pick match listen_pick_text listen_repeat listen_pick_tone build_syllable fill_letter read_pick order_words read_quiz fill_word write_check spell_word order_story spell_along match_case pick_case fix_capital), choices + answer (câu hỏi đọc hiểu: đáp án cách nhau bằng dấu |, answer = số thứ tự đáp án đúng), min_age, max_age (0–12), và mỗi ngôn ngữ 1 cột nghĩa (de, en…). " +
   "Nhập lại file cũ sẽ cập nhật mục đã có (không tạo trùng); ô trống không xoá dữ liệu cũ. " +
   "Mục nhập vào luôn ở trạng thái NHÁP — bé chỉ thấy sau khi bạn bấm Duyệt.";
 

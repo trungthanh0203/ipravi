@@ -2,7 +2,7 @@
 
 > Bản 3 (2026-09-20: thêm Cấp 3 và Cấp 4, chia theo cấp). Đây là **khung giáo trình + dữ liệu nhập được** cho app, do AI soạn dựa trên các nguồn công khai
 > (mục 9). **Bắt buộc có người Việt bản ngữ (tốt nhất là giáo viên tiểu học/mầm non) duyệt** trước khi cho trẻ học thật
-> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ), `csv/cap2-ga-con-cau-ngan.csv` (64 câu), `csv/cap3-ga-choai-hoc-van.csv` (337 mục học vần) và `csv/cap4-ga-trong-doc-hieu.csv` (208 mục đọc hiểu/chính tả/viết). Mỗi file ghi cột `level` (1–4) để app xếp đúng cấp.
+> (mục 8). File dữ liệu: `csv/cap1-trung-tu-vung.csv` (176 từ), `csv/cap2-ga-con-cau-ngan.csv` (64 câu), `csv/cap3-ga-choai-hoc-van.csv` (383 mục học vần và chữ hoa) và `csv/cap4-ga-trong-doc-hieu.csv` (208 mục đọc hiểu/chính tả/viết). Mỗi file ghi cột `level` (1–4) để app xếp đúng cấp.
 
 ## 1. Giáo trình này phải làm được gì
 
@@ -40,7 +40,7 @@
 |---|---|---|---|---|
 | **1** | 🥚 **Trứng** | 3–4 | **Nghe – nhận biết – nói từ** | `cap1-trung-tu-vung.csv`: 14 chủ đề, 29 bài, 176 từ |
 | **2** | 🐣 **Gà con** | 4–6 | **Nói câu ngắn (3–6 tiếng)**, lễ phép, đồng dao | `cap2-ga-con-cau-ngan.csv`: 8 chủ đề, 64 câu |
-| **3** | 🐥 **Gà choai** | 5–7 | **Thanh điệu → chữ cái → vần → đọc** (học vần) | `cap3-ga-choai-hoc-van.csv`: 7 chủ đề, 53 bài, 337 mục |
+| **3** | 🐥 **Gà choai** | 5–7 | **Thanh điệu → chữ cái → vần → đọc** (học vần) | `cap3-ga-choai-hoc-van.csv`: 8 chủ đề, 62 bài, 383 mục |
 | **4** | 🐓 **Gà trống** | 6–8+ | **Đọc hiểu đoạn ngắn, viết câu, kể chuyện** | `cap4-ga-trong-doc-hieu.csv`: 6 chủ đề, 29 bài, 208 mục |
 
 Tuổi chỉ là gợi ý: trẻ 6 tuổi chưa nghe–nói tốt vẫn bắt đầu từ Cấp 1 (nhanh hơn), trẻ 4 tuổi nói tốt có thể nhảy sang Cấp 2.
@@ -74,7 +74,7 @@ Tuổi chỉ là gợi ý: trẻ 6 tuổi chưa nghe–nói tốt vẫn bắt đ
 
 Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" cấp độ 1** (cấp 1 của bộ sách này được nhà xuất bản mô tả là làm quen chữ cái, phụ âm, nguyên âm và thanh điệu). Chỉ bắt đầu khi bé **từ ~5 tuổi** và đã xong phần lớn Cấp 1 (app chỉ *gợi ý*, không khoá).
 
-- **Dữ liệu:** `csv/cap3-ga-choai-hoc-van.csv` — **337 mục, 53 bài, 7 chủ đề** (nhập được ngay; cần migration `008_phonics.sql`). Bảng bên dưới sinh từ chính file này.
+- **Dữ liệu:** `csv/cap3-ga-choai-hoc-van.csv` — **383 mục, 62 bài, 8 chủ đề** (nhập được ngay; cần migration `008_phonics.sql`). Bảng bên dưới sinh từ chính file này.
 - **Chuẩn đầu ra ("con làm được"):** phân biệt bằng tai **6 thanh**; nhận **29 chữ cái** và âm của chúng; **ghép âm + vần** thành tiếng; đọc được **từ và câu ngắn đã học**; biết luật **c/k/q, g/gh, ng/ngh**.
 - **Nhịp học:** 3–4 bài/tuần → ~14–16 tuần. Thứ tự: 3A (thanh) → 3B (chữ cái) → 3C (ghép vần) → 3D (đọc). Có thể chạy **3A song song 3B** vì 3A không cần biết chữ.
 - **Qua cấp khi:** ≥ 80% số mục có mức thuộc ≥ 3/5 (như mọi cấp) **và** bé tự đọc được ≥ 80% từ/câu ở 3D (phụ huynh nghe thử).
@@ -87,6 +87,9 @@ Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" c
 |---|---|---|
 | `listen_pick_tone` nghe – chọn thanh | Nghe 1 tiếng, chọn ký hiệu đúng (➖ ↗️ ↘️ ❓ 〰️ ⬇️) | phân biệt 6 thanh bằng tai |
 | `listen_pick_text` nghe – chọn chữ | Nghe âm/tiếng, chọn đúng chữ | nối âm ↔ chữ |
+| `match_case` ghép hoa ↔ thường | Ghép các thẻ chữ hoa với chữ thường; chạm thẻ nào nghe âm của chữ đó | nhận hình chữ hoa |
+| `pick_case` chọn chữ tương ứng | Thấy `b` chọn `B` (hoặc ngược lại) trong 3 chữ; đáp án nhiễu là chữ **hình gần giống** (B/D/P, Q/O/G…) | phân biệt chữ hoa dễ lẫn |
+| `fix_capital` chạm từ cần viết hoa | Câu hiện toàn chữ thường, chạm các từ phải viết hoa (đầu câu + tên riêng); được sửa lại 1 lần | quy tắc viết hoa |
 | `spell_along` đánh vần theo phần | Xem và nghe các phần lần lượt sáng lên (bờ – a – ba – huyền – bà), rồi tự chạm theo đúng thứ tự; âm từng phần lấy từ "ngân hàng âm" (giọng thu hoặc TTS) | cách đánh vần, quan hệ âm đầu – vần – dấu |
 | `build_syllable` ghép âm + vần | Nghe từ có hình, chọn âm đầu rồi phần vần | cấu tạo tiếng (âm đầu + vần + thanh) |
 | `fill_letter` điền chữ còn thiếu | Thấy `＿à` + hình, chọn âm đầu | nhận âm đầu, chính tả |
@@ -127,6 +130,21 @@ Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" c
 | Nhóm 5: từ có h g r s v x | hổ, gạo, rau, sữa, vở, xôi |
 | Nhóm 6: ă â y p | ă, â, y, p |
 | Nhóm 6: từ có ă â y | mắt, răng, cân, cây, mây, tay |
+
+#### Chữ hoa (9 bài, 46 mục)
+**3B+ — Chữ hoa, dạy SAU khi bé đã biết chữ thường** (đặt ngay sau "Chữ cái"; nếu chủ đề nằm cuối cấp thì dùng nút ▲ ở tab Nội dung để đưa lên). Mỗi mục là **một cặp "A a"** (chữ hoa + chữ thường), chia **6 nhóm giống chữ thường** + 2 bài chữ ghép (Ch, Gh, Gi, Kh, Ng, Ngh, Nh, Ph, Qu, Th, Tr). **Từ khoá là tên riêng/địa danh** (An, Bình, Hà Nội, Việt Nam…) vì đó là nơi dùng chữ hoa; với Ă, Ơ, Ư, I, Ô, E hiếm mở đầu tên riêng nên dùng **từ đầu câu** (Ăn, Ơi, Ừ, Im, Ông, Em). Bài cuối "Tên riêng viết hoa" luyện **chạm các từ phải viết hoa** trong câu. *Danh sách tên do AI gợi ý — người Việt bản ngữ cần duyệt (tên tự nhiên, trung tính giữa các miền).*
+
+| Bài | Mục |
+|---|---|
+| Chữ hoa nhóm 1: A O Ô Ơ | A a, O o, Ô ô, Ơ ơ |
+| Chữ hoa nhóm 2: I E Ê U Ư | I i, E e, Ê ê, U u, Ư ư |
+| Chữ hoa nhóm 3: B M N L | B b, M m, N n, L l |
+| Chữ hoa nhóm 4: T C K Q D Đ | T t, C c, K k, Q q, D d, Đ đ |
+| Chữ hoa nhóm 5: H G R S V X | H h, G g, R r, S s, V v, X x |
+| Chữ hoa nhóm 6: Ă Â Y P | Ă ă, Â â, Y y, P p |
+| Chữ hoa ghép 1: Ch Gh Gi Kh Ng Ngh | Ch ch, Gh gh, Gi gi, Kh kh, Ng ng, Ngh ngh |
+| Chữ hoa ghép 2: Nh Ph Qu Th Tr | Nh nh, Ph ph, Qu qu, Th th, Tr tr |
+| Tên riêng viết hoa | An và Mai đi học., Bà ở Hà Nội., Cô Hoa dạy em hát., Nam và Bình chơi bóng., Mẹ đưa Lan đến trường., Ông kể chuyện về Thánh Gióng. |
 
 #### Ghép âm với nguyên âm (5 bài, 34 mục)
 **3C-1 — Âm + nguyên âm đơn.** Bé nghe một từ có hình rồi **ghép âm đầu + phần vần** (b + à = bà). Từ thật, có hình, quen thuộc.
