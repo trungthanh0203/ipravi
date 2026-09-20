@@ -1,14 +1,16 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
-import { shuffle, sample } from "../util.js";
+import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 
 // Ghép cặp: nối hình (cột trái) với chữ Việt (cột phải). Chạm 1 chữ là nghe đọc chữ đó,
 // nên trẻ chưa biết đọc vẫn ghép được nhờ âm thanh.
 export async function run(ctx) {
-  const n = Math.min(ctx.config.pairs ?? 4, ctx.items.length);
-  const chosen = sample(ctx.items, n);
+  const pool = ctx.items.filter(isLiteral); // ghép hình ↔ chữ: chỉ mục có hình đúng nghĩa
+  if (pool.length < 2) return { correct: 0, total: 0 };
+  const n = Math.min(ctx.config.pairs ?? 4, pool.length);
+  const chosen = sample(pool, n);
   const missed = new Set();
   let matched = 0;
   let selL = null;

@@ -8,6 +8,10 @@ import { notice } from "./notice.js";
 import { guessGender } from "../voice-names.js";
 import { LEVELS, levelOf } from "../levels.js";
 import { beginLoad } from "./view.js";
+import * as images from "./images.js";
+import { matchFiles } from "./image-util.js";
+import { emojiNodes } from "../emoji.js";
+import { contentUrl } from "../supabase.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
 const pill = (status) => el("span", { class: `pill ${status === "approved" ? "good" : ""}` }, status === "approved" ? A.approved : A.draft);
@@ -18,7 +22,43 @@ let openUnits = new Set();
 let openLesson = null;
 
 // Trả vị trí cuộn sau khi vẽ xong. Nếu có bài đang mở thì danh sách từ được tải thêm (bất đồng bộ) → đợi itemsPanel gọi.
+// ---- Hình của mục/chủ đề: xem trước + vai trò (đúng nghĩa/trang trí) + tải/gỡ ảnh riêng ----
+const thumb = (thing, cls = "") => thing.image_path
+  ? el("img", { class: `thumb ${cls}`, src: contentUrl(thing.image_path), alt: "", loading: "lazy" })
+  : el("span", { class: `thumb emoji ${cls}` }, ...emojiNodes(thing.emoji || "❓"));
+
+// Nút tải/gỡ ảnh cho 1 mục hoặc chủ đề (table: "content_items" | "units"). Xong thì gọi after().
+function imageButtons(table, row, say, after) {
+  const file = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", style: "display:none" });
+  file.addEventListener("change", async () => {
+    if (!file.files[0]) return;
+    try {
+      const r = await images.setImage(table, row, file.files[0]);
+      say("ok", `Đã lưu ảnh (${Math.round(r.bytes / 1024)} KB, đã thu nhỏ). Bé sẽ thấy ảnh này thay cho emoji.`);
+      after();
+    } catch (e) { say("err", e.message); }
+  });
+  return el("span", { class: "img-btns" },
+    btn("🖼", () => file.click(), "btn tiny", row.image_path ? "Thay ảnh riêng" : "Tải ảnh riêng (thay emoji)"),
+    row.image_path ? btn("✕", async () => {
+      if (!confirm("Gỡ ảnh riêng? Bé sẽ thấy lại emoji.")) return;
+      try { await images.clearImage(table, row); say("ok", "Đã gỡ ảnh."); after(); } catch (e) { say("err", e.message); }
+    }, "btn tiny ghost", "Gỡ ảnh riêng, dùng lại emoji") : null,
+    file);
+}
+
+// Ô chọn vai trò hình: ✓ đúng nghĩa (được dùng để chọn/ghép/đoán) | ✦ trang trí (chỉ để nhìn).
+function picRole(item, say) {
+  const s = el("select", { class: "cell", title: "Vai trò của hình. Hoạt động chọn/ghép theo hình chỉ dùng mục 'đúng nghĩa'.", onchange: async () => {
+    try { check(await sb.from("content_items").update({ pic: s.value || null }).eq("id", item.id)); item.pic = s.value || null; say("ok", "Đã lưu vai trò hình."); }
+    catch (e) { say("err", e.message); }
+  } },
+  el("option", { value: "", selected: item.pic !== "decor" }, "✓ Đúng nghĩa"), el("option", { value: "decor", selected: item.pic === "decor" }, "✦ Trang trí"));
+  return s;
+}
+
 let pendingDone = null;
+let cardView = false; // duyệt hình theo thẻ lớn
 const flushDone = () => { const d = pendingDone; pendingDone = null; d?.(); };
 
 export async function mount(box) {
@@ -62,6 +102,7 @@ function render(box, units, lessons) {
       el("div", { class: "row" },
         el("h2", { style: "margin:0" }, `${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
         el("div", { class: "row-btns", style: "margin:0" },
+          thumb(u, "tiny"), imageButtons("units", u, say, reload),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
           levelSel,
@@ -162,13 +203,49 @@ async function itemsPanel(panel, lesson, say) {
     if (confirm("Sinh lại TOÀN BỘ âm thanh TTS của bài này bằng giọng đang chọn ở tab Cài đặt? (Âm thanh giọng người thật được giữ nguyên. Việc này tốn thêm ký tự TTS.)")) runGen(true);
   }, "btn small ghost");
 
-  const rows = items.map((item) => itemRow(item, L, slots, say, refresh));
+  // Tải nhiều ảnh: tên file = chữ của mục ("bánh chưng.png"; không dấu "banh-chung.png" cũng được nếu không mơ hồ)
+  const batchInput = el("input", { type: "file", multiple: true, accept: "image/png,image/jpeg,image/webp", style: "display:none" });
+  batchInput.addEventListener("change", async () => {
+    const { matched, unmatched, ambiguous } = matchFiles([...batchInput.files], items);
+    let ok = 0;
+    const failed = [];
+    for (const [k, m] of matched.entries()) {
+      progress.textContent = ` Đang tải ảnh ${k + 1}/${matched.length}…`;
+      try { await images.setImage("content_items", m.item, m.file); ok++; } catch (e) { failed.push(`${m.file.name} (${e.message})`); }
+    }
+    progress.textContent = "";
+    const bad = [...unmatched.map((n) => n + " (không khớp mục nào)"), ...ambiguous.map((n) => n + " (mơ hồ: hãy đặt tên đúng chữ có dấu)"), ...failed];
+    say(bad.length ? "err" : "ok", `Đã tải ${ok}/${batchInput.files.length} ảnh.${bad.length ? " Không tải được: " + bad.slice(0, 6).join("; ") + (bad.length > 6 ? "…" : "") : ""}`);
+    refresh();
+  });
+  const toggle = btn(cardView ? "📋 Xem dạng bảng" : "🖼 Xem dạng thẻ (duyệt hình)", () => { cardView = !cardView; refresh(); }, "btn small ghost");
+  const batchBtn = btn("🖼 Tải nhiều ảnh", () => batchInput.click(), "btn small ghost", "Chọn nhiều file ảnh; tên file = chữ của mục, vd bánh chưng.png");
+
+  const cardOf = (item) => {
+    const emoji = el("input", { type: "text", value: item.emoji ?? "", class: "cell cell-sm", maxlength: "16", title: "Emoji (dùng khi chưa có ảnh riêng)" });
+    emoji.addEventListener("change", async () => {
+      try { check(await sb.from("content_items").update({ emoji: emoji.value.trim() || null }).eq("id", item.id)); say("ok", "Đã lưu emoji."); refresh(); }
+      catch (e) { say("err", e.message); }
+    });
+    return el("div", { class: "item-card" + (item.pic === "decor" ? " decor" : "") },
+      el("div", { class: "item-pic" }, thumb(item, "big")),
+      el("b", null, item.text_vi),
+      el("div", { class: "muted" }, audio.textFor(item, L[0]) || "\u00a0"),
+      el("label", { class: "rec-field" }, el("span", { class: "muted" }, "Vai trò hình"), picRole(item, say)),
+      el("div", { class: "row-btns", style: "margin:0;justify-content:flex-start" }, emoji, imageButtons("content_items", item, say, refresh)));
+  };
+
+  const rows = cardView ? [] : items.map((item) => itemRow(item, L, slots, say, refresh));
   panel.replaceChildren(
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, progress),
-    el("p", { class: "muted" }, "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị."),
-    el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
-      el("thead", null, el("tr", null, ["Emoji", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
-      el("tbody", null, rows))));
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, toggle, batchBtn, progress, batchInput),
+    el("p", { class: "muted" }, cardView
+      ? "Duyệt hình: xem cả bài dạng thẻ lớn để kiểm tra hình có đúng nghĩa/hợp lý không. Hình ✦ trang trí (thẻ mờ) không được dùng để chọn/ghép trong các trò chơi."
+      : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 🖼 tải ảnh riêng thay emoji."),
+    cardView
+      ? el("div", { class: "item-grid" }, items.map(cardOf))
+      : el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
+        el("thead", null, el("tr", null, ["Emoji", "Hình", "Tiếng Việt", ...L.map((l) => l.toUpperCase()), "Tuổi", "Âm thanh", ""].map((h) => el("th", null, h)))),
+        el("tbody", null, rows))));
   done();
   flushDone();
 }
@@ -217,7 +294,7 @@ function itemRow(item, L, slots, say, refresh) {
 
   const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
   return el("tr", null,
-    el("td", null, emoji), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
+    el("td", null, emoji), el("td", { class: "pic-cell" }, thumb(item), picRole(item, say), imageButtons("content_items", item, say, refresh)), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
       item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
     el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
     el("td", { class: "nowrap" }, save, " ",

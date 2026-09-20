@@ -6,6 +6,7 @@ import { el } from "../ui.js";
 import { spoken, spellParts } from "../viet.js";
 import { sayOfPart } from "../sounds.js";
 import { loadSoundBank } from "./api.js";
+import { emojiNodes, graphemes } from "../emoji.js";
 
 const TTS_LANG = { vi: "vi-VN", de: "de-DE", en: "en-US" };
 
@@ -17,9 +18,9 @@ export const meaningOf = (item, lang = nativeLang()) => item.translations?.find(
 // Hình của mục/chủ đề: ưu tiên ảnh thật, không có thì dùng emoji.
 export function visual(thing, cls = "") {
   if (thing.image_path) return el("img", { class: `visual ${cls}`, src: contentUrl(thing.image_path), alt: "" });
-  // Hình có thể là "cảnh" ghép 2–3 emoji (vd 🐉🌊): thu nhỏ chữ để vừa khung.
-  const many = thing.emoji && [...new Intl.Segmenter().segment(thing.emoji)].length > 1;
-  return el("span", { class: `visual emoji ${many ? "multi " : ""}${cls}`, "aria-hidden": "true" }, thing.emoji || "❓");
+  // Hình có thể là "cảnh" ghép 2–3 emoji (vd 🐉🌊): thu nhỏ chữ để vừa khung. Emoji vẽ bằng Twemoji (giống nhau mọi máy) — xem emoji.js.
+  const many = thing.emoji && graphemes(thing.emoji).length > 1;
+  return el("span", { class: `visual emoji ${many ? "multi " : ""}${cls}`, "aria-hidden": "true" }, ...emojiNodes(thing.emoji || "❓"));
 }
 
 // TẠM THỜI: đọc bằng giọng của trình duyệt khi mục chưa có file âm thanh (TTS sinh sẵn sẽ làm ở

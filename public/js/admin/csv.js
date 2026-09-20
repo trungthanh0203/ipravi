@@ -1,5 +1,5 @@
 // Đọc + kiểm tra CSV nội dung học. Hàm thuần (không đụng DOM/mạng) để kiểm thử được.
-// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, level (cấp 1–4), emoji, type, say (chữ để đọc thành tiếng), activities, choices + answer (chỉ cho type question), min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
+// Cột: unit, lesson, vi (bắt buộc) · unit_emoji, level (cấp 1–4), emoji, type, say (chữ để đọc thành tiếng), activities, choices + answer (chỉ cho type question), pic (literal = hình đúng nghĩa | decor = chỉ trang trí; trống = literal), min_age, max_age · <mã ngôn ngữ> (de, en...) = nghĩa.
 // Ô trống KHÔNG xoá dữ liệu đã có khi nhập lại (chỉ ô có giá trị mới được cập nhật).
 
 export const ITEM_TYPES = ["word", "phrase", "sentence", "story", "song", "letter", "syllable", "question"];
@@ -84,7 +84,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   }
   if (errors.length) return { items, errors, warnings };
 
-  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "say", "activities", "choices", "answer", "emoji", "type", "min_age", "max_age", ...langs]);
+  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "say", "activities", "choices", "answer", "pic", "emoji", "type", "min_age", "max_age", ...langs]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
   for (const l of langs) if (col(l) < 0) warnings.push({ row: 1, msg: `Không có cột nghĩa "${l}" — các mục sẽ thiếu nghĩa ${l}` });
 
@@ -129,6 +129,9 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       else if (new Set(choices.map((c) => c.toLowerCase())).size !== choices.length) problems.push("các đáp án (choices) bị trùng nhau");
       if (!Number.isInteger(answer) || answer < 1 || answer > Math.max(choices.length, 1)) problems.push("answer phải là số thứ tự đáp án đúng (1 đến số đáp án)");
     } else if (choices.length || answerRaw !== "") problems.push("choices/answer chỉ dùng cho type question");
+    const picRaw = get("pic").toLowerCase();
+    if (picRaw && !["literal", "decor"].includes(picRaw)) problems.push('pic phải là "literal" (hình đúng nghĩa) hoặc "decor" (trang trí)');
+    const pic = picRaw === "decor" ? "decor" : picRaw === "literal" ? "literal" : null;
     let level = null;
     if (get("level") !== "") {
       level = Number(get("level"));
@@ -153,7 +156,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       if (v) tr[l] = v;
       else warnings.push({ row: n, msg: `"${vi}": thiếu nghĩa "${l}"` });
     }
-    items.push({ row: n, unit, unitEmoji, level, lesson, vi, say, kinds, choices, answer, emoji, type, minAge, maxAge, tr });
+    items.push({ row: n, unit, unitEmoji, level, lesson, vi, say, kinds, choices, answer, pic, emoji, type, minAge, maxAge, tr });
   });
 
   if (items.length === 0 && errors.length === 0) errors.push({ row: 1, msg: "File không có dòng dữ liệu nào" });
@@ -166,6 +169,7 @@ export function classify(item, ex) {
   const changed = [];
   if (item.emoji && item.emoji !== (ex.emoji ?? "")) changed.push("emoji");
   if (item.say && item.say !== (ex.say_vi ?? "")) changed.push("say");
+  if (item.pic && item.pic !== (ex.pic ?? "literal")) changed.push("pic");
   if (item.type === "question" && JSON.stringify({ choices: item.choices, answer: item.answer }) !== JSON.stringify({ choices: ex.extra?.choices, answer: ex.extra?.answer })) changed.push("extra");
   if (item.type !== (ex.item_type ?? "word")) changed.push("type");
   if (item.minAge != null && item.minAge !== ex.min_age) changed.push("min_age");

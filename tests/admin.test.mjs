@@ -21,7 +21,7 @@ const H = "unit,unit_emoji,lesson,vi,emoji,type,min_age,max_age,de,en";
 const run = (body, l = langs) => validateRows(parseCsv(`${H}\n${body}`), { langs: l });
 let v = run("Con vật,🐾,Vật nuôi,con chó,🐶,word,3,8,Hund,dog\nCon vật,🐾,Vật nuôi,con mèo,🐱,,,,Katze,cat");
 eq([v.errors.length, v.warnings.length, v.items.length], [0, 0, 2], "hợp lệ: 2 mục, không lỗi/cảnh báo");
-eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", say: "", kinds: [], choices: [], answer: null, emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
+eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, lesson: "Vật nuôi", vi: "con chó", say: "", kinds: [], choices: [], answer: null, pic: null, emoji: "🐶", type: "word", minAge: 3, maxAge: 8, tr: { de: "Hund", en: "dog" } }, "hợp lệ: nội dung dòng 1");
 
 // Học vần: kiểu letter/syllable, cột say, cột activities
 {
@@ -61,6 +61,21 @@ eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, less
   const it = good.items[0];
   eq(classify(it, { item_type: "question", extra: { choices: ["bốn người", "ba người", "năm người"], answer: 1 }, tr: { de: "Wie viele?", en: "How many?" } }).status, "same", "câu hỏi: không đổi → same");
   eq(classify(it, { item_type: "question", extra: { choices: ["bốn người", "ba người", "năm người"], answer: 2 }, tr: {} }).changed.includes("extra"), true, "câu hỏi: đổi đáp án đúng → cập nhật extra");
+}
+
+// Vai trò hình: cột pic
+{
+  const HP = "unit,level,lesson,vi,pic,emoji,type,de,en";
+  const runP = (body) => validateRows(parseCsv(HP + "\n" + body), { langs });
+  const it = (pic) => runP(`U,1,L,con chó,${pic},🐶,word,Hund,dog`);
+  eq([it("").errors.length, it("").items[0].pic], [0, null], "pic: trống = literal (null)");
+  eq([it("decor").items[0].pic, it("DECOR").items[0].pic, it("literal").items[0].pic], ["decor", "decor", "literal"], "pic: đọc decor/literal (không phân biệt hoa thường)");
+  eq(it("xyz").errors.length, 1, "pic: giá trị lạ bị từ chối");
+  const base = { item_type: "word", emoji: "🐶", tr: { de: "Hund", en: "dog" } };
+  const p = (pic) => ({ ...it("").items[0], pic });
+  eq(classify(p("decor"), { ...base, pic: null }).changed, ["pic"], "pic: đổi literal → decor = cập nhật");
+  eq(classify(p("literal"), { ...base, pic: null }).status, "same", "pic: 'literal' khớp null (mặc định)");
+  eq(classify(p(null), { ...base, pic: "decor" }).status, "same", "pic: CSV để trống không xoá vai trò đã đặt");
 }
 
 // Cột level (cấp 1–4)

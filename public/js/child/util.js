@@ -13,6 +13,9 @@ export function shuffle(arr) {
 // Lấy ngẫu nhiên n phần tử (không lặp).
 export const sample = (arr, n) => shuffle(arr).slice(0, Math.max(0, n));
 
+// Hình của mục có dùng làm ĐÁP ÁN/GỢI Ý được không: có hình (emoji/ảnh) và không bị đánh dấu "trang trí" (pic = 'decor').
+export const isLiteral = (item) => item.pic !== "decor" && Boolean(item.emoji || item.image_path);
+
 export function childAge(child) {
   return child?.birth_year ? new Date().getFullYear() - child.birth_year : null;
 }

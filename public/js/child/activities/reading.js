@@ -1,6 +1,6 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
-import { shuffle, sample } from "../util.js";
+import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { stopAudio } from "../../audio.js";
@@ -126,7 +126,7 @@ export async function runWriteCheck(ctx) {
 
 // 4) Chính tả: nghe + xem hình rồi xếp các chữ cái thành từ (có 2 chữ nhiễu).
 export async function runSpell(ctx) {
-  const ok = (i) => (i.emoji || i.image_path) && !/\s/.test(i.text_vi) && [...i.text_vi.normalize("NFC")].length >= 2 && [...i.text_vi.normalize("NFC")].length <= 8;
+  const ok = (i) => isLiteral(i) && !/\s/.test(i.text_vi) && [...i.text_vi.normalize("NFC")].length >= 2 && [...i.text_vi.normalize("NFC")].length <= 8;
   const pool = ctx.items.filter(ok);
   const alphabet = [...new Set(pool.flatMap((i) => [...i.text_vi.normalize("NFC").toLowerCase()]))];
   return rounds(ctx, pool, (target, first) => {

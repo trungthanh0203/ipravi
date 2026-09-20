@@ -134,6 +134,7 @@ export function mount(root) {
     pronunciationToggle(),
     addChildCard(),
     el("p", { class: "muted" }, T.soon),
+    el("p", { class: "muted", style: "font-size:12px" }, T.credits),
     el("button", { class: "btn", onclick: () => { state.parentOpen = false; render(); } }, T.parentBack),
     " ",
     el("button", { class: "btn ghost", onclick: () => sb.auth.signOut() }, T.logout)));

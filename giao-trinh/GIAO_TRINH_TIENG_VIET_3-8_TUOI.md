@@ -393,6 +393,9 @@ Người duyệt là **người Việt bản ngữ**; nếu được thì nhờ 
 Điểm cần nhờ người duyệt chú ý riêng trong 2 file này: cách nói *"con mời bà ăn cơm ạ"*, *"con heo kêu ụt ịt"*, *"con ếch kêu ộp ộp"*, *"con gà gáy ò ó o"*,
 các câu dịch sang tiếng Đức của *Tết/lì xì/bánh chưng* (giữ tên riêng + giải thích ngắn), và cách gọi *chú/cô* (theo họ hàng bên nội hay ngoại).
 
+## 8b. Hình minh hoạ (mới)
+Hình mặc định là **emoji Twemoji** (giống nhau trên mọi máy). Với mục emoji không đúng (đặc trưng Việt Nam, cảnh truyện, từ trừu tượng) dùng **ảnh riêng**; danh sách ~180 hình cần vẽ và hướng dẫn cho hoạ sĩ nằm ở `hinh/`. Mỗi mục có **vai trò hình** (cột CSV `pic`): `literal` = hình đúng nghĩa, dùng để chọn/ghép; `decor` = chỉ trang trí (câu, tục ngữ, tên riêng, truyện…). Người duyệt dùng **"Xem dạng thẻ (duyệt hình)"** ở tab Nội dung để kiểm hình cả bài.
+
 ## 9. Cách đưa vào app
 
 1. Thay 2 chủ đề mẫu (nếu muốn đúng thứ tự): tab **Nội dung → Xoá** chủ đề "Con vật" và "Màu sắc" (chưa có học sinh thật).

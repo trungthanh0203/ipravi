@@ -5,6 +5,10 @@ import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
 import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts, caseParts, lookalikes, capitalIndexes, hasProperName, traceTexts } from "../public/js/viet.js";
 import { dilate, labelParts, scoreTrace } from "../public/js/trace-score.js";
+import { twemojiName, graphemes, isEmojiGrapheme, emojiUrl } from "../public/js/emoji.js";
+import { fitSize, slugify, baseName, matchFiles, checkImageFile, MAX_SIDE } from "../public/js/admin/image-util.js";
+import { isLiteral } from "../public/js/child/util.js";
+import { TWEMOJI } from "../public/js/twemoji-index.js";
 import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan, sayOfPart } from "../public/js/sounds.js";
 import { peakOf, rmsOf, trimSilence, normalizePeak, resample, encodeWav, processTake, durationMs } from "../public/js/admin/wav.js";
 import { guessGender } from "../public/js/voice-names.js";
@@ -181,6 +185,35 @@ eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken
   eq(near.ok, true, "tô chấm: lệch nhẹ (trong dung sai) vẫn đạt");
   eq(score(grid()).blank, true, "tô chấm: chưa tô gì → blank");
   eq(scoreTrace({ glyph: grid(), ink: both, w: W, h: H, tolIn: 3, tolOut: 5 }).ok, false, "tô chấm: chữ mẫu rỗng không làm lỗi");
+}
+
+// Twemoji
+{
+  eq([twemojiName("🐶"), twemojiName("☀️"), twemojiName("3️⃣"), twemojiName("👩‍🏫")], ["1f436", "2600", "33-20e3", "1f469-200d-1f3eb"], "twemoji: tên file (bỏ FE0F, giữ nguyên chuỗi ZWJ)");
+  eq(twemojiName("👨‍⚕️"), "1f468-200d-2695-fe0f", "twemoji: chuỗi ZWJ giữ FE0F");
+  eq(twemojiName("👨‍👩‍👧‍👦"), "1f468-200d-1f469-200d-1f467-200d-1f466", "twemoji: emoji gia đình (ZWJ)");
+  eq(graphemes("🐉🌊").length, 2, "twemoji: cảnh 2 emoji = 2 hình");
+  eq(graphemes("👨‍👩‍👧‍👦❤️").length, 2, "twemoji: emoji ZWJ dài vẫn là 1 hình");
+  eq([isEmojiGrapheme("🐶"), isEmojiGrapheme("a"), isEmojiGrapheme("3️⃣")], [true, false, true], "twemoji: nhận diện emoji (kể cả keycap)");
+  eq([emojiUrl("🐶")?.endsWith("/vendor/twemoji/1f436.svg"), emojiUrl("a")], [true, null], "twemoji: emojiUrl có file → đường dẫn, không có → null (rơi về phông máy)");
+  eq(TWEMOJI.size > 300, true, "twemoji: chỉ mục có > 300 emoji");
+}
+
+// Ảnh minh hoạ + vai trò hình
+{
+  eq([fitSize(2000, 1000), fitSize(300, 200), fitSize(1000, 4000), fitSize(1, 1)], [{ w: 512, h: 256 }, { w: 300, h: 200 }, { w: 128, h: 512 }, { w: 1, h: 1 }], "ảnh: fitSize thu nhỏ cạnh dài ≤ 512, không phóng to, giữ tỉ lệ");
+  eq(MAX_SIDE, 512, "ảnh: cạnh dài tối đa 512");
+  eq([slugify("bánh chưng"), slugify("Đà Nẵng"), slugify("  Hà  Nội! "), slugify("")], ["banh-chung", "da-nang", "ha-noi", ""], "ảnh: slugify bỏ dấu, đ → d");
+  eq(baseName("bánh chưng.final.png"), "bánh chưng.final", "ảnh: baseName bỏ đuôi cuối");
+  const items = [{ id: 1, text_vi: "bánh chưng" }, { id: 2, text_vi: "ba" }, { id: 3, text_vi: "bà" }, { id: 4, text_vi: "Đà Nẵng" }];
+  const f = (n) => ({ name: n });
+  const m = matchFiles([f("bánh chưng.png"), f("banh-chung.webp"), f("bà.jpg"), f("ba.png"), f("da-nang.png"), f("la-lung.png")], items);
+  eq(m.matched.map((x) => x.item.id + ":" + x.file.name), ["1:bánh chưng.png", "1:banh-chung.webp", "3:bà.jpg", "2:ba.png", "4:da-nang.png"], "ảnh: ghép file theo tên (đúng dấu trước, không dấu nếu duy nhất)");
+  eq(m.unmatched, ["la-lung.png"], "ảnh: file không khớp mục nào");
+  eq(matchFiles([f("Ba.png")], [{ id: 2, text_vi: "ba" }, { id: 3, text_vi: "bà" }]).matched[0].item.id, 2, "ảnh: khớp đúng chữ (không phân biệt hoa/thường) ưu tiên");
+  eq(matchFiles([f("ma.png")], [{ id: 5, text_vi: "má" }, { id: 6, text_vi: "mạ" }]).ambiguous, ["ma.png"], "ảnh: tên không dấu mà ứng với ≥2 mục → báo mơ hồ, không ghép bừa");
+  eq([checkImageFile({ type: "image/png", name: "a.png", size: 1000 }), checkImageFile({ type: "image/svg+xml", name: "a.svg", size: 10 })?.includes("SVG"), checkImageFile({ type: "text/plain", name: "a.txt", size: 1 })?.includes("ảnh"), checkImageFile({ type: "image/png", name: "a.png", size: 13e6 })?.includes("12 MB")], [null, true, true, true], "ảnh: từ chối SVG / không phải ảnh / quá lớn");
+  eq([isLiteral({ emoji: "🐶" }), isLiteral({ emoji: "🐶", pic: "decor" }), isLiteral({ image_path: "img/x.webp" }), isLiteral({}), isLiteral({ emoji: "🐶", pic: "literal" })], [true, false, true, false, true], "vai trò hình: chỉ hình đúng nghĩa (có hình, không phải decor) được dùng làm đáp án");
 }
 
 // Xử lý âm thanh thu

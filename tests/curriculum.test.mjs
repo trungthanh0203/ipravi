@@ -56,7 +56,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
     const picKinds = ["listen_pick", "read_pick", "match", "order_story", "fill_letter", "build_syllable", "spell_word"];
     const usesPictures = items[0].kinds.some((a) => picKinds.includes(a));
     if (items.length < min || items.length > 10) fail(`${k}: ${items.length} mục (cần ${min}–10)`);
-    const emojis = items.map((i) => i.emoji);
+    const emojis = items.filter((i) => i.pic !== "decor").map((i) => i.emoji); // hình trang trí được phép trùng
     const dup = emojis.filter((e, i) => emojis.indexOf(e) !== i);
     if (dup.length && usesPictures) fail(`${k}: trùng emoji ${dup.join(" ")} (bài có hoạt động chọn theo hình)`);
     if (!items[0].kinds.length) fail(`${k}: dòng đầu chưa ghi activities`);
@@ -66,7 +66,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
     const withInit = single.filter((i) => splitSyllable(i.vi).initial);
     const caseNeed = items.filter((i) => caseParts(i.vi)).length;
     const need = { trace: items.filter((i) => traceTexts(i.vi)).length, match_case: caseNeed, pick_case: caseNeed, fix_capital: items.filter((i) => words(i.vi).length >= 3 && hasProperName(i.vi)).length, spell_along: items.filter((i) => (spellParts(i.vi)?.length ?? 0) >= 2).length, listen_pick_tone: single.length, build_syllable: withInit.length, fill_letter: withInit.length,
-      read_pick: items.filter((i) => i.emoji).length, order_words: items.filter((i) => words(i.vi).length >= 3).length };
+      read_pick: items.filter((i) => i.emoji && i.pic !== "decor").length, order_words: items.filter((i) => words(i.vi).length >= 3).length };
     for (const a of items[0].kinds) if (a in need && need[a] < 3) fail(`${k}: hoạt động ${a} cần ≥3 mục phù hợp, bài chỉ có ${need[a]}`);
     if (items[0].kinds.length < 2) fail(`${k}: chỉ ${items[0].kinds.length} hoạt động`);
     const noTr = items.filter((i) => !i.tr.de || !i.tr.en);
@@ -109,7 +109,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
   for (const [k, all] of lessons) {
     const items = all.filter((i) => i.type !== "question"), qs = all.filter((i) => i.type === "question");
     if (all.length < 5 || all.length > 10) fail(`${k}: ${all.length} mục (cần 5–10)`);
-    const emojis = items.map((i) => i.emoji);
+    const emojis = items.filter((i) => i.pic !== "decor").map((i) => i.emoji);
     const dup = emojis.filter((e, i) => emojis.indexOf(e) !== i);
     if (dup.length) fail(`${k}: trùng emoji ${dup.join(" ")}`);
     if (!all[0].kinds.length) fail(`${k}: dòng đầu chưa ghi activities`);
@@ -129,9 +129,9 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
       write_check: items.filter((i) => words(i.vi).length >= 2 && END.includes(i.vi.at(-1))).length,
       order_words: items.filter((i) => words(i.vi).length >= 3).length,
       trace: items.filter((i) => traceTexts(i.vi)).length,
-      spell_word: items.filter((i) => i.emoji && !/\s/.test(i.vi) && chars(i) >= 2 && chars(i) <= 8).length,
+      spell_word: items.filter((i) => i.emoji && i.pic !== "decor" && !/\s/.test(i.vi) && chars(i) >= 2 && chars(i) <= 8).length,
       fill_letter: items.filter((i) => splitSyllable(i.vi)?.initial).length,
-      read_pick: items.filter((i) => i.emoji).length,
+      read_pick: items.filter((i) => i.emoji && i.pic !== "decor").length,
     };
     for (const a of all[0].kinds) if (a in need && need[a] < 3) fail(`${k}: hoạt động ${a} cần ≥3 mục phù hợp, bài chỉ có ${need[a]}`);
     if (all[0].kinds.includes("read_quiz") && qs.length < 2) fail(`${k}: bài đọc hiểu nên có ≥2 câu hỏi`);
@@ -141,6 +141,20 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
   const perUnit = new Map();
   for (const [k] of lessons) perUnit.set(k.split(" › ")[0], (perUnit.get(k.split(" › ")[0]) ?? 0) + 1);
   console.log(`  ${perUnit.size} chủ đề, ${lessons.size} bài:`, [...perUnit].map(([u, n]) => `${u}(${n})`).join(" · "));
+}
+// ---- Mọi emoji trong CSV giáo trình phải có file Twemoji (nếu thiếu: node scripts/vendor-twemoji.mjs rồi tăng VERSION ở public/sw.js) ----
+{
+  const { graphemes, isEmojiGrapheme, emojiUrl } = await import("../public/js/emoji.js");
+  const missing = new Set();
+  for (const f of ["cap1-trung-tu-vung.csv", "cap2-ga-con-cau-ngan.csv", "cap3-ga-choai-hoc-van.csv", "cap4-ga-trong-doc-hieu.csv"]) {
+    const { headers, rows } = parseCsv(R("giao-trinh/csv/" + f));
+    for (const col of ["emoji", "unit_emoji"]) {
+      const i = headers.indexOf(col);
+      if (i >= 0) for (const r of rows) for (const g of graphemes(r[i] ?? "")) if (isEmojiGrapheme(g) && !emojiUrl(g)) missing.add(g);
+    }
+  }
+  if (missing.size) { console.log("  THIẾU HÌNH TWEMOJI:", [...missing].join(" ")); bad = 1; }
+  else console.log("\nTwemoji: mọi emoji trong CSV giáo trình đều có file hình");
 }
 // khớp với dữ liệu mẫu đã chạy trên Supabase (không được tạo trùng chủ đề/bài/từ)
 const seedSql = R("supabase/seed/001_sample_content.sql");

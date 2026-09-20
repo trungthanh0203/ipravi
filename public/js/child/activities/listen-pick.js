@@ -1,15 +1,15 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
-import { shuffle, sample } from "../util.js";
+import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 
 // Nghe – chạm: nghe từ tiếng Việt rồi chọn đúng hình (mode "picture") hoặc đúng chữ (mode "text").
 // Đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
-function round(ctx, target, mode, withIntro) {
+function round(ctx, pool, target, mode, withIntro) {
   return new Promise((resolve) => {
-    const n = Math.min(ctx.config.choices ?? 3, ctx.items.length);
-    const opts = shuffle([target, ...sample(ctx.items.filter((i) => i.id !== target.id), n - 1)]);
+    const n = Math.min(ctx.config.choices ?? 3, pool.length);
+    const opts = shuffle([target, ...sample(pool.filter((i) => i.id !== target.id), n - 1)]);
     const instr = mode === "text" ? T.instrPickText : T.instrPick;
     let mistakes = 0;
     let done = false;
@@ -57,12 +57,15 @@ function round(ctx, target, mode, withIntro) {
 }
 
 async function play(ctx, mode) {
-  const rounds = Math.min(ctx.config.rounds ?? 5, ctx.items.length);
-  const targets = sample(ctx.items, rounds);
+  // Chọn theo HÌNH chỉ dùng mục có hình đúng nghĩa (pic ≠ decor); chọn theo chữ dùng mọi mục
+  const pool = mode === "picture" ? ctx.items.filter(isLiteral) : ctx.items;
+  if (pool.length < 2) return { correct: 0, total: 0 };
+  const rounds = Math.min(ctx.config.rounds ?? 5, pool.length);
+  const targets = sample(pool, rounds);
   let correct = 0;
   for (let i = 0; i < targets.length; i++) {
     ctx.setProgress(i, targets.length);
-    const ok = await round(ctx, targets[i], mode, i === 0);
+    const ok = await round(ctx, pool, targets[i], mode, i === 0);
     ctx.record(targets[i].id, ok);
     if (ok) correct++;
   }

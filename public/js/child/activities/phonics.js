@@ -1,6 +1,6 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
-import { shuffle, sample } from "../util.js";
+import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { TONES, toneOf, splitSyllable, words, bare } from "../../viet.js";
@@ -118,7 +118,7 @@ export async function runFill(ctx) {
 
 // 4) Đọc – chạm hình: thấy chữ (từ/câu) rồi chọn đúng hình. Không phát âm trước — bé tự đọc; chọn đúng mới nghe đáp án.
 export async function runRead(ctx) {
-  const pool = ctx.items.filter((i) => i.emoji || i.image_path);
+  const pool = ctx.items.filter(isLiteral); // chỉ dùng mục có hình ĐÚNG NGHĨA (pic ≠ decor)
   const n = Math.min(ctx.config.choices ?? 3, pool.length);
   return rounds(ctx, pool, (target, first) => {
     const options = shuffle([target, ...others(pool, target, n - 1)]).map((o) => ({ key: o.id, node: visual(o) }));

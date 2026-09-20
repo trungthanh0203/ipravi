@@ -1,6 +1,6 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
-import { sample } from "../util.js";
+import { sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { traceTexts } from "../../viet.js";
@@ -183,7 +183,7 @@ function traceOne(ctx, item, text, pairIndex, first) {
     const label = pairIndex === 0 ? T.traceUpper : pairIndex === 1 ? T.traceLower : null;
     ctx.box.replaceChildren(
       el("p", { class: "instr" }, T.instrTrace),
-      el("div", { class: "row-btns", style: "justify-content:center" }, item.emoji || item.image_path ? visual(item, "sm") : null, el("button", { class: "btn ghost small", onclick: () => playItem(item) }, "🔊 " + T.listenVi), label ? el("span", { class: "pill" }, label) : null),
+      el("div", { class: "row-btns", style: "justify-content:center" }, isLiteral(item) ? visual(item, "sm") : null, el("button", { class: "btn ghost small", onclick: () => playItem(item) }, "🔊 " + T.listenVi), label ? el("span", { class: "pill" }, label) : null),
       el("div", { class: "trace-center" }, tracer.root),
       stars, msgLine,
       el("div", { class: "row-btns", style: "justify-content:center" },

@@ -58,6 +58,22 @@ async function removeAudioFiles(itemIds) {
   }
 }
 
+// Xoá file ảnh riêng (Storage) của các mục / chủ đề bị xoá.
+async function removeImageFiles({ itemIds = [], unitIds = [] }) {
+  for (const ids of chunk(itemIds)) {
+    const { data, error } = await sb.from("content_items").select("image_path").in("id", ids);
+    if (error) throw error;
+    const paths = (data ?? []).map((r) => r.image_path).filter(Boolean);
+    if (paths.length) await sb.storage.from("content").remove(paths);
+  }
+  if (unitIds.length) {
+    const { data, error } = await sb.from("units").select("image_path").in("id", unitIds);
+    if (error) throw error;
+    const paths = (data ?? []).map((r) => r.image_path).filter(Boolean);
+    if (paths.length) await sb.storage.from("content").remove(paths);
+  }
+}
+
 async function itemIdsOfLessons(lessonIds) {
   const out = [];
   for (const ids of chunk(lessonIds)) {
@@ -70,15 +86,20 @@ async function itemIdsOfLessons(lessonIds) {
 
 export async function deleteItem(itemId) {
   await removeAudioFiles([itemId]);
+  await removeImageFiles({ itemIds: [itemId] });
   check(await sb.from("content_items").delete().eq("id", itemId));
 }
 
 export async function deleteLesson(lessonId) {
-  await removeAudioFiles(await itemIdsOfLessons([lessonId]));
+  const ids = await itemIdsOfLessons([lessonId]);
+  await removeAudioFiles(ids);
+  await removeImageFiles({ itemIds: ids });
   check(await sb.from("lessons").delete().eq("id", lessonId));
 }
 
 export async function deleteUnit(unitId) {
-  await removeAudioFiles(await itemIdsOfLessons(await lessonIdsOfUnit(unitId)));
+  const ids = await itemIdsOfLessons(await lessonIdsOfUnit(unitId));
+  await removeAudioFiles(ids);
+  await removeImageFiles({ itemIds: ids, unitIds: [unitId] });
   check(await sb.from("units").delete().eq("id", unitId));
 }

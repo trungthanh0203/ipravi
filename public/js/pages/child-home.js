@@ -8,6 +8,7 @@ import { visual, voiceToggle } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel } from "../levels.js";
+import { emojiNodes } from "../emoji.js";
 import { loadStats, childStatsView } from "../stats.js";
 
 // Khu học của trẻ: chủ đề → bài học (mở TẤT CẢ, bé chọn bài nào cũng được) → chơi. Chỉ tải dữ liệu của màn hình đang xem.
@@ -45,7 +46,7 @@ async function showLevels(root) {
         const us = unitsOf(L.n), p = progress[L.n - 1];
         const usable = us.length > 0;
         return el("button", { class: "level-card" + (L.n === rec ? " rec" : ""), disabled: !usable, onclick: () => showUnits(root, L.n, units) },
-          el("span", { class: "lv-emoji" }, L.emoji),
+          el("span", { class: "lv-emoji" }, ...emojiNodes(L.emoji)),
           el("span", { class: "lv-body" },
             el("div", { class: "lv-name" }, `Cấp ${L.n} · ${L.name}`, L.n === rec ? el("span", { class: "lv-tag" }, T.levelHere) : null),
             el("div", { class: "muted" }, usable ? `${L.focus}` : T.levelSoon + " · " + L.focus),

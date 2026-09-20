@@ -122,6 +122,7 @@ export const T = {
   traceMissed: "Tô thêm vào chỗ khoanh màu cam nhé!",
   traceMore: "Con tô kín theo chữ mẫu hơn một chút nhé!",
   traceEnough: "Được rồi, con tập thêm sau nhé!",
+  credits: "Hình biểu tượng: Twemoji © Twitter, Inc. và các cộng tác viên, giấy phép CC-BY 4.0. Chữ mẫu tô chữ: Playwrite VN © TypeTogether, SIL Open Font License.",
   instrPickText: "Con nghe rồi chạm vào chữ đúng nhé!",
   instrMatch: "Nối hình với chữ đúng nhé!",
   instrRepeat: "Con nói theo nhé!",

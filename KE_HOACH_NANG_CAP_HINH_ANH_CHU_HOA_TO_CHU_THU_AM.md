@@ -1,6 +1,6 @@
 # Kế hoạch nâng cấp: hình ảnh, chữ hoa, tô chữ, đánh vần từng phần, thu giọng người thật
 
-> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ ✅ giai đoạn 1 (migration 013) · ④ Hình ảnh: chưa làm · Chữ hoa ✅ (migration 012, đã chốt C1–C4).**
+> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ ✅ giai đoạn 1 (migration 013) · ④ Hình ảnh ✅ (migration 014: vai trò hình + Twemoji + ảnh riêng) · Chữ hoa ✅ (migration 012, đã chốt C1–C4).**
 >
 > Bản nháp để **bàn và chốt** (2026-09-20). Chưa code phần nào ngoài mục 1.1 (đã sửa nhanh hình ở Cấp 4). Mọi ước lượng tính theo
 > "phiên làm việc" (S ≈ 1 phiên ngắn, M ≈ 1–2 phiên, L ≈ 3+ phiên). Cuối file có **danh sách quyết định cần bạn chọn**.

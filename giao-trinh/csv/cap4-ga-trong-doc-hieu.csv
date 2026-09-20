@@ -1,209 +1,209 @@
-﻿unit,unit_emoji,level,lesson,vi,say,activities,choices,answer,emoji,type,min_age,max_age,de,en
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nhà Nam có bốn người.,,read_quiz order_story fill_word listen_repeat,,,🏠4️⃣,sentence,6,8,Nams Familie hat vier Mitglieder.,Nam's family has four people.
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Bố Nam là bác sĩ.,,,,,👨‍⚕️,sentence,6,8,Nams Vater ist Arzt.,Nam's father is a doctor.
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Mẹ Nam là cô giáo.,,,,,👩‍🏫,sentence,6,8,Nams Mutter ist Lehrerin.,Nam's mother is a teacher.
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nam có một em gái tên là Mai.,,,,,👧,sentence,6,8,Nam hat eine kleine Schwester namens Mai.,Nam has a little sister named Mai.
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Cả nhà rất yêu thương nhau.,,,,,👨‍👩‍👧‍👦❤️,sentence,6,8,Die ganze Familie hat sich sehr lieb.,The whole family loves each other very much.
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nhà Nam có mấy người?,,,bốn người|ba người|năm người,1,,question,6,8,Wie viele Personen hat Nams Familie?,How many people are in Nam's family?
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Mẹ Nam làm nghề gì?,,,cô giáo|bác sĩ|công nhân,1,,question,6,8,Was arbeitet Nams Mutter?,What is Nam's mother's job?
-Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Em gái của Nam tên là gì?,,,Mai|Lan|Hoa,1,,question,6,8,Wie heißt Nams Schwester?,What is Nam's sister's name?
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Sáng nào em cũng dậy sớm.,,read_quiz order_story fill_word listen_repeat,,,🧒⏰,sentence,6,8,Jeden Morgen stehe ich früh auf.,Every morning I get up early.
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Em đánh răng và rửa mặt.,,,,,🦷🧼,sentence,6,8,Ich putze mir die Zähne und wasche mein Gesicht.,I brush my teeth and wash my face.
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Mẹ nấu cho em bát phở nóng.,,,,,🍜,sentence,6,8,Mama kocht mir eine heiße Schüssel Phở.,Mum cooks me a hot bowl of phở.
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Ăn xong, em đeo cặp đi học.",,,,,🧒🎒,sentence,6,8,Nach dem Essen nehme ich meinen Schulranzen und gehe zur Schule.,"After eating, I put on my school bag and go to school."
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Trên đường, em gặp bạn Hà.",,,,,🧒👫,sentence,6,8,Unterwegs treffe ich meine Freundin Hà.,"On the way, I meet my friend Hà."
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Sáng nào em cũng dậy lúc nào?,,,sớm|muộn|trưa,1,,question,6,8,Wann steht das Kind jeden Morgen auf?,When does the child get up every morning?
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Mẹ nấu cho em món gì?,,,phở|cơm|bún,1,,question,6,8,Was kocht die Mutter für das Kind?,What does Mum cook for the child?
-Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Trên đường đi học, em gặp ai?",,,bạn Hà|cô giáo|bà,1,,question,6,8,Wen trifft das Kind auf dem Schulweg?,Who does the child meet on the way to school?
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Tết đến, cả nhà về quê thăm bà.",,read_quiz order_story fill_word listen_repeat,,,🏡,sentence,6,8,Zu Tết fährt die ganze Familie aufs Land zu Oma.,"At Tết, the whole family goes to the countryside to visit Grandma."
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Bà gói bánh chưng thật to.,,,,,👵🟩,sentence,6,8,Oma wickelt ein sehr großes Bánh chưng.,Grandma wraps a very big bánh chưng.
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Em được bà lì xì một phong bao đỏ.,,,,,🧧👵,sentence,6,8,Oma schenkt mir einen roten Glücksumschlag.,Grandma gives me a red lucky-money envelope.
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Buổi tối, cả nhà xem pháo hoa.",,,,,🌙🎆,sentence,6,8,Am Abend sieht die ganze Familie das Feuerwerk.,"In the evening, the whole family watches fireworks."
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Em ước năm mới ai cũng vui.,,,,,🌠😄,sentence,6,8,"Ich wünsche mir, dass im neuen Jahr alle froh sind.",I wish everyone to be happy in the new year.
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Tết đến, cả nhà về quê thăm ai?",,,bà|cô giáo|bạn,1,,question,6,8,Wen besucht die Familie zu Tết auf dem Land?,Whom does the family visit in the countryside at Tết?
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Bà gói món gì?,,,bánh chưng|bánh mì|bánh ngọt,1,,question,6,8,Was wickelt Oma?,What does Grandma wrap?
-Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Buổi tối, cả nhà làm gì?",,,xem pháo hoa|đi học|ngủ sớm,1,,question,6,8,Was macht die Familie am Abend?,What does the family do in the evening?
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,Hôm nay trời mưa to.,,read_quiz order_story fill_word listen_repeat,,,🌧️,sentence,6,8,Heute regnet es stark.,It is raining hard today.
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,Mưa rơi lộp bộp trên mái nhà.,,,,,🌧️🏠,sentence,6,8,Der Regen prasselt aufs Hausdach.,The rain patters on the roof.
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,Em ngồi bên cửa sổ ngắm mưa.,,,,,🧒🌧️,sentence,6,8,Ich sitze am Fenster und schaue dem Regen zu.,I sit by the window watching the rain.
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Ngoài vườn, mấy chú ếch kêu ộp ộp.",,,,,🐸🌿,sentence,6,8,Draußen im Garten quaken ein paar Frösche.,"Outside in the garden, some frogs croak."
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Một lúc sau, cầu vồng hiện ra.",,,,,🌈,sentence,6,8,Nach einer Weile erscheint ein Regenbogen.,"After a while, a rainbow appears."
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,Hôm nay thời tiết thế nào?,,,trời mưa to|trời nắng|trời có tuyết,1,,question,6,8,Wie ist heute das Wetter?,What is the weather like today?
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,Ai kêu ộp ộp ngoài vườn?,,,mấy chú ếch|chú chó|chú mèo,1,,question,6,8,Wer quakt draußen im Garten?,Who croaks in the garden?
-Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Sau cơn mưa, trên trời có gì?",,,cầu vồng|mặt trăng|ngôi sao,1,,question,6,8,Was ist nach dem Regen am Himmel?,What is in the sky after the rain?
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Em có một chú mèo tên là Mun.,,read_quiz order_story fill_word listen_repeat,,,🐱,sentence,6,8,Ich habe einen Kater namens Mun.,I have a cat named Mun.
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Bộ lông của Mun đen như than.,,,,,🐱⚫,sentence,6,8,Muns Fell ist schwarz wie Kohle.,Mun's fur is black as coal.
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Mun thích ngủ cạnh em.,,,,,🐱😴,sentence,6,8,Mun schläft gern neben mir.,Mun likes to sleep next to me.
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Sáng nào Mun cũng kêu meo meo đòi ăn.,,,,,🐱🍽️,sentence,6,8,Jeden Morgen miaut Mun und will fressen.,Every morning Mun meows for food.
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Em rất yêu chú mèo nhỏ.,,,,,💖,sentence,6,8,Ich habe den kleinen Kater sehr lieb.,I love my little cat very much.
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Chú mèo của em tên là gì?,,,Mun|Mít|Bông,1,,question,6,8,Wie heißt der Kater?,What is the cat's name?
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Bộ lông của Mun màu gì?,,,đen|trắng|vàng,1,,question,6,8,Welche Farbe hat Muns Fell?,What colour is Mun's fur?
-Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Mun kêu thế nào khi đòi ăn?,,,meo meo|gâu gâu|ụt ịt,1,,question,6,8,"Wie macht Mun, wenn er fressen will?",What sound does Mun make when it wants food?
-Đọc đoạn văn ngắn,📖,4,Ở trường,Trường của em rất đẹp.,,read_quiz order_story fill_word listen_repeat,,,🏫,sentence,6,8,Meine Schule ist sehr schön.,My school is very beautiful.
-Đọc đoạn văn ngắn,📖,4,Ở trường,Sân trường có nhiều cây xanh.,,,,,🏫🌳,sentence,6,8,Auf dem Schulhof stehen viele grüne Bäume.,The schoolyard has many green trees.
-Đọc đoạn văn ngắn,📖,4,Ở trường,"Giờ ra chơi, em nhảy dây cùng các bạn.",,,,,🤸🧒,sentence,6,8,In der Pause springe ich mit meinen Freunden Seil.,"At break, I skip rope with my friends."
-Đọc đoạn văn ngắn,📖,4,Ở trường,Cô giáo dạy em một bài hát mới.,,,,,👩‍🏫🎵,sentence,6,8,Die Lehrerin bringt mir ein neues Lied bei.,The teacher teaches me a new song.
-Đọc đoạn văn ngắn,📖,4,Ở trường,Em thích đi học mỗi ngày.,,,,,🧒🎒,sentence,6,8,Ich gehe jeden Tag gern zur Schule.,I like going to school every day.
-Đọc đoạn văn ngắn,📖,4,Ở trường,Sân trường có gì?,,,nhiều cây xanh|nhiều xe|nhiều nhà,1,,question,6,8,Was gibt es auf dem Schulhof?,What does the schoolyard have?
-Đọc đoạn văn ngắn,📖,4,Ở trường,"Giờ ra chơi, em chơi gì?",,,nhảy dây|đá bóng|xem tivi,1,,question,6,8,Was spielt das Kind in der Pause?,What does the child play at break?
-Đọc đoạn văn ngắn,📖,4,Ở trường,Cô giáo dạy em điều gì?,,,một bài hát mới|một trò chơi|một bài toán,1,,question,6,8,Was bringt die Lehrerin dem Kind bei?,What does the teacher teach the child?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Vua Hùng muốn chọn người nối ngôi.,,read_quiz order_story fill_word listen_repeat,,,🤴🤔,sentence,6,8,König Hùng wollte einen Thronfolger wählen.,King Hùng wanted to choose an heir.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Vua bảo các con đi tìm món ngon nhất để dâng cúng tổ tiên.,,,,,🤴🍲,sentence,6,8,"Der König trug seinen Söhnen auf, das köstlichste Gericht für die Ahnen zu suchen.",The king told his sons to find the most delicious dish to offer to the ancestors.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Các hoàng tử tìm khắp nơi những của ngon vật lạ.,,,,,🏃🍗,sentence,6,8,Die Prinzen suchten überall nach Leckerbissen und Seltenem.,The princes searched everywhere for delicacies and rare things.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),"Chỉ có Lang Liêu nghèo, chàng chẳng biết làm gì.",,,,,😟🌾,sentence,6,8,"Nur Lang Liêu war arm und wusste nicht, was er tun sollte.","Only Lang Liêu was poor, and he did not know what to do."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),"Một đêm, thần báo mộng dạy chàng lấy gạo làm bánh.",,,,,🌙🌾,sentence,6,8,"Eines Nachts riet ihm ein Gott im Traum, Kuchen aus Reis zu machen.","One night, a god told him in a dream to make cakes from rice."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Ai muốn chọn người nối ngôi?,,,Vua Hùng|Lang Liêu|thần,1,,question,6,8,Wer wollte einen Thronfolger wählen?,Who wanted to choose an heir?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Thần dạy Lang Liêu làm bánh bằng gì?,,,gạo|bột mì|khoai,1,,question,6,8,Woraus sollte Lang Liêu den Kuchen machen?,What did the god tell Lang Liêu to make the cakes from?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Lang Liêu làm bánh hình vuông, tượng trưng cho đất, gọi là bánh chưng.",,read_quiz order_story fill_word listen_repeat,,,🟩🌏,sentence,6,8,"Lang Liêu machte einen quadratischen Kuchen für die Erde, das Bánh chưng.","Lang Liêu made a square cake for the earth, called bánh chưng."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Chàng làm bánh hình tròn, tượng trưng cho trời, gọi là bánh giầy.",,,,,⭕☁️,sentence,6,8,"Er machte einen runden Kuchen für den Himmel, das Bánh giầy.","He made a round cake for the sky, called bánh giầy."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Vua Hùng nếm thử và rất khen ngon.,,,,,🤴😋,sentence,6,8,König Hùng probierte und lobte sie sehr.,King Hùng tasted them and praised them highly.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Vua chọn Lang Liêu nối ngôi.,,,,,🤴👑,sentence,6,8,Der König wählte Lang Liêu zum Nachfolger.,The king chose Lang Liêu as his heir.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Từ đó, ngày Tết nhà nào cũng có bánh chưng.",,,,,🎊🟩,sentence,6,8,Seitdem gibt es zu Tết in jedem Haus Bánh chưng.,"Since then, every home has bánh chưng at Tết."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Bánh chưng có hình gì?,,,hình vuông|hình tròn|hình tam giác,1,,question,6,8,Welche Form hat das Bánh chưng?,What shape is bánh chưng?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Ai được vua chọn nối ngôi?,,,Lang Liêu|một hoàng tử giàu|thần,1,,question,6,8,Wen wählte der König zum Nachfolger?,Whom did the king choose as heir?
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Ngày xưa, có một cậu bé lên ba tuổi mà chưa biết nói.",,read_quiz order_story fill_word listen_repeat,,,👶🤐,sentence,6,8,"Es war einmal ein dreijähriger Junge, der noch nicht sprechen konnte.","Long ago, there was a three-year-old boy who could not yet speak."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Một hôm, giặc Ân đến xâm chiếm nước ta.",,,,,⚔️🏹,sentence,6,8,Eines Tages fielen die Ân-Feinde in unser Land ein.,"One day, the Ân invaders attacked our country."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Nghe tiếng sứ giả của vua, cậu bé bỗng cất tiếng nói.",,,,,📢👶,sentence,6,8,"Als er den Boten des Königs hörte, fing der Junge plötzlich an zu sprechen.","Hearing the king's messenger, the boy suddenly began to speak."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Cậu xin vua rèn cho một con ngựa sắt và một cây roi sắt.,,,,,🐎🔨,sentence,6,8,"Er bat den König, ihm ein eisernes Pferd und eine eiserne Peitsche zu schmieden.",He asked the king to forge him an iron horse and an iron whip.
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Cả làng góp gạo nuôi cậu, cậu lớn nhanh như thổi.",,,,,🏘️🍚,sentence,6,8,"Das ganze Dorf gab Reis, um ihn zu ernähren, und er wuchs im Nu.","The whole village gave rice to feed him, and he grew up very fast."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Ai đến xâm chiếm nước ta?,,,giặc Ân|giặc Minh|thủy quái,1,,question,6,8,Wer fiel in unser Land ein?,Who invaded our country?
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Cậu bé xin vua rèn những gì?,,,ngựa sắt và roi sắt|kiếm vàng và khiên|cung và tên,1,,question,6,8,Was bat der Junge den König zu schmieden?,What did the boy ask the king to forge?
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),Cậu bé vươn vai thành một vị tướng khổng lồ.,,read_quiz order_story fill_word listen_repeat,,,🧒💪,sentence,6,8,Der Junge streckte sich zu einem riesigen General.,The boy stretched and became a giant general.
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Chàng mặc áo giáp sắt, cưỡi ngựa sắt ra trận.",,,,,🛡️🐴,sentence,6,8,Er zog eine eiserne Rüstung an und ritt auf dem eisernen Pferd in die Schlacht.,He put on iron armour and rode the iron horse into battle.
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Ngựa sắt phun lửa, chàng đánh tan quân giặc.",,,,,🐴🔥,sentence,6,8,"Das eiserne Pferd spie Feuer, und er schlug die Feinde in die Flucht.",The iron horse breathed fire and he crushed the enemy army.
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Roi sắt gãy, chàng nhổ những bụi tre bên đường làm vũ khí.",,,,,🎋⚔️,sentence,6,8,"Als die Peitsche brach, riss er Bambus am Wegrand als Waffe aus.","When the whip broke, he pulled up bamboo by the road as a weapon."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Thắng giặc, chàng cưỡi ngựa bay về trời.",,,,,🐴☁️,sentence,6,8,Nach dem Sieg ritt er auf dem Pferd in den Himmel.,"After the victory, he rode his horse up into the sky."
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Dân ta nhớ ơn, gọi chàng là Thánh Gióng.",,,,,🙏,sentence,6,8,Das Volk gedachte seiner in Dankbarkeit und nannte ihn Thánh Gióng.,Our people remembered him with gratitude and called him Thánh Gióng.
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Khi roi sắt gãy, chàng dùng gì để đánh giặc?",,,những bụi tre|một cây kiếm|đá,1,,question,6,8,"Was benutzte er, als die Peitsche brach?",What did he use when the whip broke?
-Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Thắng giặc xong, chàng đi đâu?",,,bay về trời|về nhà|đi biển,1,,question,6,8,Wohin ging er nach dem Sieg?,Where did he go after winning?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Ngày xưa, giặc Minh sang cướp nước ta.",,read_quiz order_story fill_word listen_repeat,,,⚔️🏹,sentence,6,8,Vor langer Zeit fielen die Ming-Feinde in unser Land ein.,"Long ago, the Ming invaders came to seize our country."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Lê Lợi nổi dậy đánh giặc.,,,,,🧑🚩,sentence,6,8,Lê Lợi erhob sich gegen die Feinde.,Lê Lợi rose up to fight the invaders.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Long Quân cho ông mượn một thanh gươm thần.,,,,,🐉🗡️,sentence,6,8,Der Drachenkönig lieh ihm ein Zauberschwert.,The Dragon King lent him a magic sword.
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Nhờ gươm thần, quân ta đánh thắng giặc.",,,,,🗡️🏆,sentence,6,8,Dank des Zauberschwerts besiegte unser Heer die Feinde.,"Thanks to the magic sword, our army defeated the invaders."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Sau chiến thắng, Rùa Vàng nổi lên đòi lại gươm.",,,,,🐢🌊,sentence,6,8,Nach dem Sieg tauchte die Goldene Schildkröte auf und verlangte das Schwert zurück.,"After the victory, the Golden Turtle surfaced and asked for the sword back."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Lê Lợi trả gươm, hồ được gọi là Hồ Gươm.",,,,,🏞️🗡️,sentence,6,8,"Lê Lợi gab das Schwert zurück, und der See heißt seitdem Hồ Gươm (Schwertsee).","Lê Lợi returned the sword, and the lake is called Hồ Gươm (Sword Lake)."
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Ai nổi dậy đánh giặc Minh?,,,Lê Lợi|Lang Liêu|Thánh Gióng,1,,question,6,8,Wer erhob sich gegen die Ming-Feinde?,Who rose up against the Ming invaders?
-Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Ai nổi lên đòi lại gươm?,,,Rùa Vàng|cá chép|rồng,1,,question,6,8,Wer verlangte das Schwert zurück?,Who asked for the sword back?
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Lạc Long Quân là rồng ở dưới biển.,,read_quiz order_story fill_word listen_repeat,,,🐉🌊,sentence,6,8,"Lạc Long Quân war ein Drache, der im Meer lebte.",Lạc Long Quân was a dragon who lived under the sea.
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Âu Cơ là tiên ở trên núi.,,,,,🧚⛰️,sentence,6,8,"Âu Cơ war eine Fee, die auf dem Berg lebte.",Âu Cơ was a fairy who lived in the mountains.
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Hai người gặp nhau và kết thành vợ chồng.,,,,,💑,sentence,6,8,Die beiden trafen sich und wurden ein Ehepaar.,The two met and became husband and wife.
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Âu Cơ sinh ra một bọc trăm trứng, nở ra một trăm người con.",,,,,🥚💯,sentence,6,8,"Âu Cơ gebar einen Beutel mit hundert Eiern, aus denen hundert Kinder schlüpften.","Âu Cơ gave birth to a sac of a hundred eggs, which hatched into a hundred children."
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Năm mươi người con theo cha xuống biển, năm mươi người con theo mẹ lên núi.",,,,,🌊⛰️,sentence,6,8,"Fünfzig Kinder folgten dem Vater ins Meer, fünfzig der Mutter auf den Berg.","Fifty children followed their father to the sea, fifty followed their mother to the mountains."
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Người con cả lên làm vua, gọi là Hùng Vương.",,,,,🤴👑,sentence,6,8,Das älteste Kind wurde König und hieß Hùng Vương.,"The eldest child became king, called Hùng Vương."
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Lạc Long Quân sống ở đâu?,,,dưới biển|trên núi|trong rừng,1,,question,6,8,Wo lebte Lạc Long Quân?,Where did Lạc Long Quân live?
-Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Có bao nhiêu người con theo mẹ lên núi?,,,năm mươi|mười|một trăm,1,,question,6,8,Wie viele Kinder folgten der Mutter auf den Berg?,How many children followed their mother to the mountains?
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Ngày xưa, có cô Tấm mồ côi cả cha lẫn mẹ.",,read_quiz order_story fill_word listen_repeat,,,👧😢,sentence,6,8,"Es war einmal ein Mädchen namens Tấm, das keine Eltern mehr hatte.","Long ago, there was a girl named Tấm who had lost both her parents."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Tấm sống với dì ghẻ và Cám, con của dì.",,,,,👧👩,sentence,6,8,"Tấm lebte bei ihrer Stiefmutter und Cám, deren Tochter.","Tấm lived with her stepmother and Cám, the stepmother's daughter."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Dì ghẻ bắt Tấm làm việc suốt ngày.,,,,,👧🧹,sentence,6,8,Die Stiefmutter ließ Tấm den ganzen Tag arbeiten.,The stepmother made Tấm work all day.
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Còn Cám thì được ăn ngon và chơi cả ngày.,,,,,👧🍰,sentence,6,8,Cám dagegen bekam gutes Essen und spielte den ganzen Tag.,"Cám, on the other hand, ate well and played all day."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Mỗi khi Tấm khóc, Bụt lại hiện lên giúp đỡ.",,,,,🧙✨,sentence,6,8,"Immer wenn Tấm weinte, erschien Bụt, um ihr zu helfen.","Whenever Tấm cried, Bụt appeared to help her."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Tấm sống với ai?,,,dì ghẻ và Cám|bố và mẹ|bà ngoại,1,,question,6,8,Bei wem lebte Tấm?,Who did Tấm live with?
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Ai hiện lên giúp đỡ Tấm?,,,Bụt|nhà vua|con cá,1,,question,6,8,"Wer erschien, um Tấm zu helfen?",Who appeared to help Tấm?
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Nhờ Bụt, Tấm có quần áo đẹp để đi xem hội.",,read_quiz order_story fill_word listen_repeat,,,👗✨,sentence,6,8,Dank Bụt bekam Tấm schöne Kleider für das Fest.,"Thanks to Bụt, Tấm had beautiful clothes to go to the festival."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Trên đường chạy về, Tấm đánh rơi một chiếc giày.",,,,,🏃👟,sentence,6,8,Auf dem Heimweg verlor Tấm einen Schuh.,"Running home, Tấm dropped one shoe."
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Nhà vua nhặt được giày và cho người đi tìm chủ nhân.,,,,,🤴🔍,sentence,6,8,Der König fand den Schuh und ließ die Besitzerin suchen.,The king found the shoe and had people search for its owner.
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Chiếc giày vừa vặn với chân Tấm.,,,,,🦶👟,sentence,6,8,Der Schuh passte genau an Tấms Fuß.,The shoe fitted Tấm's foot perfectly.
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Tấm trở thành hoàng hậu, sống hạnh phúc.",,,,,👸💖,sentence,6,8,Tấm wurde Königin und lebte glücklich.,Tấm became queen and lived happily.
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Tấm đánh rơi vật gì?,,,chiếc giày|chiếc nhẫn|chiếc mũ,1,,question,6,8,Was verlor Tấm?,What did Tấm drop?
-Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Ai nhặt được chiếc giày?,,,nhà vua|Cám|dì ghẻ,1,,question,6,8,Wer fand den Schuh?,Who found the shoe?
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vua Hùng có nàng công chúa Mị Nương rất xinh đẹp.,,read_quiz order_story fill_word listen_repeat,,,🤴👸,sentence,6,8,"König Hùng hatte eine sehr schöne Tochter, Prinzessin Mị Nương.","King Hùng had a very beautiful daughter, Princess Mị Nương."
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Sơn Tinh ở trên núi, Thủy Tinh ở dưới biển, cả hai đều đến cầu hôn.",,,,,⛰️🌊,sentence,6,8,Sơn Tinh vom Berg und Thủy Tinh vom Meer hielten beide um ihre Hand an.,Sơn Tinh of the mountains and Thủy Tinh of the sea both came to ask for her hand.
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vua hẹn ai mang lễ vật đến trước sẽ được cưới công chúa.,,,,,🎁🏃,sentence,6,8,"Der König versprach sie dem, der zuerst die Brautgeschenke brächte.",The king promised her to whoever brought the wedding gifts first.
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Sơn Tinh đến trước và cưới được Mị Nương.,,,,,⛰️💍,sentence,6,8,Sơn Tinh kam zuerst und heiratete Mị Nương.,Sơn Tinh arrived first and married Mị Nương.
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Thủy Tinh tức giận, dâng nước lên đánh Sơn Tinh.",,,,,🌊😠,sentence,6,8,Zornig ließ Thủy Tinh das Wasser steigen und griff Sơn Tinh an.,"Furious, Thủy Tinh raised the water to attack Sơn Tinh."
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Sơn Tinh làm núi cao lên, nước dâng đến đâu núi cao đến đó.",,,,,🏔️🌊,sentence,6,8,"Sơn Tinh ließ den Berg wachsen: So hoch das Wasser stieg, so hoch wuchs der Berg.","Sơn Tinh made the mountain grow: as high as the water rose, so high the mountain grew."
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Ai đến trước và cưới được công chúa?,,,Sơn Tinh|Thủy Tinh|Lang Liêu,1,,question,6,8,Wer kam zuerst und heiratete die Prinzessin?,Who arrived first and married the princess?
-Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vì sao Thủy Tinh dâng nước lên?,,,vì tức giận|vì vui|vì khát,1,,question,6,8,Warum ließ Thủy Tinh das Wasser steigen?,Why did Thủy Tinh raise the water?
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Uống nước nhớ nguồn.,,fill_word order_words write_check listen_repeat,,,💧,sentence,6,8,"Wer Wasser trinkt, denkt an die Quelle (sei dankbar).","When you drink water, remember its source (be grateful)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Ăn quả nhớ kẻ trồng cây.,,,,,🍎,sentence,6,8,"Wer Früchte isst, denkt an den, der den Baum pflanzte (sei dankbar).","When you eat fruit, remember who planted the tree (be grateful)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Anh em như thể tay chân.,,,,,🤝,sentence,6,8,Geschwister sind wie Hände und Füße (sie gehören zusammen).,Siblings are like hands and feet (they belong together).
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Chị ngã em nâng.,,,,,🤲,sentence,6,8,"Fällt die große Schwester, hebt die kleine sie auf (Geschwister helfen einander).","When big sister falls, little brother lifts her up (siblings help each other)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Kính trên nhường dưới.,,,,,👴,sentence,6,8,"Ältere achten, Jüngeren nachgeben (Respekt und Rücksicht).",Respect your elders and give way to the young.
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Lá lành đùm lá rách.,,,,,🍃,sentence,6,8,Ein heiles Blatt schützt ein zerrissenes (hilf denen in Not).,A whole leaf wraps a torn leaf (help those in need).
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Có công mài sắt, có ngày nên kim.",,fill_word order_words write_check listen_repeat,,,🔨,sentence,6,8,Mit Ausdauer wird aus Eisen eine Nadel (Übung macht den Meister).,"With effort, iron can be ground into a needle (perseverance pays off)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Đi một ngày đàng, học một sàng khôn.",,,,,🚶,sentence,6,8,Eine Tagesreise bringt einen Korb voll Weisheit.,A day's journey brings a basketful of wisdom.
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Học ăn, học nói, học gói, học mở.",,,,,📖,sentence,6,8,"Essen, sprechen, einpacken, öffnen: alles will gelernt sein (gutes Benehmen lernen).","Learn to eat, to speak, to wrap, to open (learn good manners)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Một cây làm chẳng nên non, ba cây chụm lại nên hòn núi cao.",,,,,🌳,sentence,6,8,"Ein Baum macht keinen Berg, drei Bäume zusammen einen hohen (Einigkeit macht stark).",One tree does not make a mountain; three together make a tall one (unity is strength).
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Gần mực thì đen, gần đèn thì rạng.",,,,,💡,sentence,6,8,"Nah bei der Tinte wird man schwarz, nah bei der Lampe hell (der Umgang prägt).","Near ink you turn black, near a lamp you shine (you are shaped by company)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,Có chí thì nên.,,,,,💪,sentence,6,8,"Wer Willen hat, schafft es.","Where there's a will, there's a way."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Bầu ơi thương lấy bí cùng, tuy rằng khác giống nhưng chung một giàn.",,fill_word order_words write_check listen_repeat,,,🥒,sentence,6,8,"Kürbis, hab die Gurke lieb: verschieden, doch am selben Gitter (Zusammenhalt).","Gourd, love the squash: different kinds, yet on the same trellis (solidarity)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Con cò bé bé, nó đậu cành tre.",,,,,🦢,sentence,6,8,Der kleine Storch sitzt auf dem Bambuszweig (Kinderreim).,The little stork perches on the bamboo branch (nursery rhyme).
-"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Lạy trời mưa xuống, lấy nước tôi uống, lấy ruộng tôi cày, lấy đầy bát cơm.",,,,,🌧️,sentence,6,8,"Lieber Himmel, lass es regnen: Wasser zum Trinken, Felder zum Pflügen, eine volle Reisschale.","Dear sky, let the rain fall: water to drink, fields to plough, a full bowl of rice."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Dung dăng dung dẻ, dắt trẻ đi chơi.",,,,,🧒,sentence,6,8,"Hüpf, hüpf, hüpf: wir führen die Kinder zum Spielen (Kinderreim).","Skip along, skip along, leading the children out to play (nursery rhyme)."
-"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Con gà cục tác lá chanh, con lợn ủn ỉn mua hành cho ta.",,,,,🐔,sentence,6,8,"Das Huhn gackert beim Zitronenblatt, das Schwein grunzt: kauf mir Zwiebeln (Kinderreim).","The hen clucks by the lime leaf, the pig grunts: buy me spring onions (nursery rhyme)."
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Hà Nội là thủ đô của Việt Nam.,,write_check fill_word order_words listen_repeat,,,🏛️,sentence,6,8,Hanoi ist die Hauptstadt von Vietnam.,Hanoi is the capital of Vietnam.
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Nam chơi bóng với Bình.,,,,,⚽,sentence,6,8,Nam spielt mit Bình Fußball.,Nam plays ball with Bình.
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Mai đọc sách ở thư viện.,,,,,📚,sentence,6,8,Mai liest in der Bibliothek ein Buch.,Mai reads a book in the library.
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Sông Hồng chảy qua Hà Nội.,,,,,🏞️,sentence,6,8,Der Rote Fluss fließt durch Hanoi.,The Red River flows through Hanoi.
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Bà kể chuyện cho Lan nghe.,,,,,👵,sentence,6,8,Oma erzählt Lan eine Geschichte.,Grandma tells Lan a story.
-Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Huế có nhiều cung điện cổ.,,,,,🏯,sentence,6,8,Huế hat viele alte Paläste.,Huế has many old palaces.
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Trời mưa rồi.,,write_check fill_word order_words listen_repeat,,,🌧️,sentence,6,8,Es regnet.,It is raining.
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Con đang làm gì?,,,,,🤔,sentence,6,8,Was machst du gerade?,What are you doing?
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than","Ôi, bông hoa đẹp quá!",,,,,🌸,sentence,6,8,"Oh, was für eine schöne Blume!","Oh, what a beautiful flower!"
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Bạn tên là gì?,,,,,🙋,sentence,6,8,Wie heißt du?,What is your name?
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Cẩn thận nhé!,,,,,⚠️,sentence,6,8,Pass auf!,Be careful!
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than","Mẹ mua cam, táo và chuối.",,,,,🍎,sentence,6,8,"Mama kauft Orangen, Äpfel und Bananen.","Mum buys oranges, apples and bananas."
-Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Con có khỏe không?,,,,,😊,sentence,6,8,Geht es dir gut?,Are you well?
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",cá,,spell_word trace read_pick listen_repeat,,,🐟,word,6,8,Fisch,fish
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",cờ,,,,,🚩,word,6,8,Fahne,flag
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",kẹo,,,,,🍬,word,6,8,Bonbon,"sweet, candy"
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",kính,,,,,👓,word,6,8,Brille,glasses
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",quả,,,,,🍎,word,6,8,Frucht,fruit
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",gà,,,,,🐔,word,6,8,Huhn,chicken
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",ghế,,,,,🪑,word,6,8,Stuhl,chair
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",ngô,,,,,🌽,word,6,8,Mais,corn
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",nghé,,,,,🐃,word,6,8,Büffelkalb,baby buffalo
-Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",nghe,,,,,👂,word,6,8,hören,"to listen, to hear"
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",chổi,,spell_word trace read_pick listen_repeat,,,🧹,word,6,8,Besen,broom
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",trứng,,,,,🥚,word,6,8,Ei,egg
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",trăng,,,,,🌙,word,6,8,Mond,moon
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",sữa,,,,,🥛,word,6,8,Milch,milk
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",xôi,,,,,🍙,word,6,8,Klebreis,sticky rice
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",sao,,,,,⭐,word,6,8,Stern,star
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",giày,,,,,👟,word,6,8,Schuhe,shoes
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",rùa,,,,,🐢,word,6,8,Schildkröte,turtle
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",rau,,,,,🥬,word,6,8,Gemüse,vegetables
-Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",dê,,,,,🐐,word,6,8,Ziege,goat
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,nhảy,,read_pick spell_word match listen_repeat,,,🤸,word,6,8,springen,to jump
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,bơi,,,,,🏊,word,6,8,schwimmen,to swim
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,viết,,,,,✍️,word,6,8,schreiben,to write
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,đọc,,,,,📖,word,6,8,lesen,to read
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,hát,,,,,🎤,word,6,8,singen,to sing
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,múa,,,,,💃,word,6,8,tanzen,to dance
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,cười,,,,,😄,word,6,8,lachen,to laugh
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,khóc,,,,,😢,word,6,8,weinen,to cry
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,to,,read_pick spell_word match listen_repeat,,,🐘,word,6,8,groß,big
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nhỏ,,,,,🐜,word,6,8,klein,small
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,cao,,,,,🦒,word,6,8,"hoch, groß",tall
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nhanh,,,,,🐆,word,6,8,schnell,fast
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,chậm,,,,,🐌,word,6,8,langsam,slow
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nóng,,,,,🥵,word,6,8,heiß,hot
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,lạnh,,,,,🥶,word,6,8,kalt,cold
-Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,sáng,,,,,☀️,word,6,8,hell,bright
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con báo chạy rất nhanh.,,fill_word order_words write_check listen_repeat,,,🐆,sentence,6,8,Der Leopard rennt sehr schnell.,The leopard runs very fast.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con ốc sên bò rất chậm.,,,,,🐌,sentence,6,8,Die Schnecke kriecht sehr langsam.,The snail crawls very slowly.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con voi rất to.,,,,,🐘⬆️,sentence,6,8,Der Elefant ist sehr groß.,The elephant is very big.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con kiến rất nhỏ.,,,,,🐜🔬,sentence,6,8,Die Ameise ist sehr klein.,The ant is very small.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Hôm nay trời nóng quá.,,,,,🥵,sentence,6,8,Heute ist es so heiß.,It is so hot today.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Mùa đông trời lạnh.,,,,,🥶,sentence,6,8,Im Winter ist es kalt.,In winter it is cold.
-Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con hươu cao cổ rất cao.,,,,,🦒,sentence,6,8,Die Giraffe ist sehr groß.,The giraffe is very tall.
-Kể chuyện theo tranh,🖼️,4,Em trồng cây,Em gieo một hạt giống xuống đất.,,order_story order_words read_pick listen_repeat,,,🌰,sentence,6,8,Ich säe ein Samenkorn in die Erde.,I plant a seed in the soil.
-Kể chuyện theo tranh,🖼️,4,Em trồng cây,Em tưới nước cho hạt mỗi ngày.,,,,,💧,sentence,6,8,Ich gieße den Samen jeden Tag.,I water the seed every day.
-Kể chuyện theo tranh,🖼️,4,Em trồng cây,"Vài ngày sau, hạt nảy mầm.",,,,,🌱,sentence,6,8,Nach ein paar Tagen keimt der Samen.,"A few days later, the seed sprouts."
-Kể chuyện theo tranh,🖼️,4,Em trồng cây,Cây lớn dần lên.,,,,,🌿,sentence,6,8,Die Pflanze wächst allmählich.,The plant grows bigger.
-Kể chuyện theo tranh,🖼️,4,Em trồng cây,"Cuối cùng, cây nở một bông hoa đẹp.",,,,,🌻,sentence,6,8,Schließlich blüht eine schöne Blume.,"Finally, the plant blooms a beautiful flower."
-Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,"Sáng chủ nhật, em đi chợ cùng mẹ.",,order_story order_words read_pick listen_repeat,,,🧺,sentence,6,8,Am Sonntagmorgen gehe ich mit Mama auf den Markt.,"On Sunday morning, I go to the market with Mum."
-Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Mẹ mua rau và cá.,,,,,🥬,sentence,6,8,Mama kauft Gemüse und Fisch.,Mum buys vegetables and fish.
-Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Em xách túi giúp mẹ.,,,,,👜,sentence,6,8,Ich trage Mama die Tasche.,I carry the bag for Mum.
-Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,"Về nhà, mẹ nấu canh cá.",,,,,🍲,sentence,6,8,Zu Hause kocht Mama Fischsuppe.,"At home, Mum cooks fish soup."
-Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Cả nhà ăn cơm thật ngon.,,,,,🍚,sentence,6,8,Die ganze Familie isst mit großem Appetit.,The whole family enjoys a delicious meal.
-Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Trời đang nắng thì mây đen kéo đến.,,order_story order_words read_pick listen_repeat,,,🌥️,sentence,6,8,"Eben schien noch die Sonne, da zogen dunkle Wolken auf.",It was sunny when dark clouds rolled in.
-Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Mưa rơi xuống ào ào.,,,,,🌧️,sentence,6,8,Der Regen prasselt herab.,The rain pours down.
-Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Nam mở ô che mưa.,,,,,☂️,sentence,6,8,Nam spannt den Regenschirm auf.,Nam opens an umbrella against the rain.
-Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,"Mưa tạnh, cầu vồng hiện ra.",,,,,🌈,sentence,6,8,"Der Regen hört auf, ein Regenbogen erscheint.",The rain stops and a rainbow appears.
-Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Nam reo lên vui sướng.,,,,,😄,sentence,6,8,Nam jubelt vor Freude.,Nam cheers with joy.
-Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Sáng nay Lan tròn sáu tuổi.,,order_story order_words read_pick listen_repeat,,,🎈,sentence,6,8,Heute Morgen wird Lan sechs Jahre alt.,This morning Lan turns six.
-Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Mẹ làm cho Lan một chiếc bánh kem.,,,,,🎂,sentence,6,8,Mama macht Lan eine Sahnetorte.,Mum makes Lan a cream cake.
-Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Bạn bè đến chúc mừng sinh nhật Lan.,,,,,🎁,sentence,6,8,Freunde kommen und gratulieren Lan zum Geburtstag.,Friends come to wish Lan a happy birthday.
-Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Lan thổi nến và ước một điều.,,,,,🕯️,sentence,6,8,Lan bläst die Kerzen aus und wünscht sich etwas.,Lan blows out the candles and makes a wish.
-Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Ai cũng vỗ tay và hát mừng.,,,,,👏,sentence,6,8,Alle klatschen und singen.,Everyone claps and sings.
+﻿unit,unit_emoji,level,lesson,vi,say,activities,choices,answer,emoji,type,min_age,max_age,de,en,pic
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nhà Nam có bốn người.,,read_quiz order_story fill_word listen_repeat,,,🏠4️⃣,sentence,6,8,Nams Familie hat vier Mitglieder.,Nam's family has four people.,decor
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Bố Nam là bác sĩ.,,,,,👨‍⚕️,sentence,6,8,Nams Vater ist Arzt.,Nam's father is a doctor.,decor
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Mẹ Nam là cô giáo.,,,,,👩‍🏫,sentence,6,8,Nams Mutter ist Lehrerin.,Nam's mother is a teacher.,decor
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nam có một em gái tên là Mai.,,,,,👧,sentence,6,8,Nam hat eine kleine Schwester namens Mai.,Nam has a little sister named Mai.,decor
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Cả nhà rất yêu thương nhau.,,,,,👨‍👩‍👧‍👦❤️,sentence,6,8,Die ganze Familie hat sich sehr lieb.,The whole family loves each other very much.,decor
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Nhà Nam có mấy người?,,,bốn người|ba người|năm người,1,,question,6,8,Wie viele Personen hat Nams Familie?,How many people are in Nam's family?,
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Mẹ Nam làm nghề gì?,,,cô giáo|bác sĩ|công nhân,1,,question,6,8,Was arbeitet Nams Mutter?,What is Nam's mother's job?,
+Đọc đoạn văn ngắn,📖,4,Gia đình của Nam,Em gái của Nam tên là gì?,,,Mai|Lan|Hoa,1,,question,6,8,Wie heißt Nams Schwester?,What is Nam's sister's name?,
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Sáng nào em cũng dậy sớm.,,read_quiz order_story fill_word listen_repeat,,,🧒⏰,sentence,6,8,Jeden Morgen stehe ich früh auf.,Every morning I get up early.,decor
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Em đánh răng và rửa mặt.,,,,,🦷🧼,sentence,6,8,Ich putze mir die Zähne und wasche mein Gesicht.,I brush my teeth and wash my face.,decor
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Mẹ nấu cho em bát phở nóng.,,,,,🍜,sentence,6,8,Mama kocht mir eine heiße Schüssel Phở.,Mum cooks me a hot bowl of phở.,decor
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Ăn xong, em đeo cặp đi học.",,,,,🧒🎒,sentence,6,8,Nach dem Essen nehme ich meinen Schulranzen und gehe zur Schule.,"After eating, I put on my school bag and go to school.",decor
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Trên đường, em gặp bạn Hà.",,,,,🧒👫,sentence,6,8,Unterwegs treffe ich meine Freundin Hà.,"On the way, I meet my friend Hà.",decor
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Sáng nào em cũng dậy lúc nào?,,,sớm|muộn|trưa,1,,question,6,8,Wann steht das Kind jeden Morgen auf?,When does the child get up every morning?,
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,Mẹ nấu cho em món gì?,,,phở|cơm|bún,1,,question,6,8,Was kocht die Mutter für das Kind?,What does Mum cook for the child?,
+Đọc đoạn văn ngắn,📖,4,Buổi sáng của em,"Trên đường đi học, em gặp ai?",,,bạn Hà|cô giáo|bà,1,,question,6,8,Wen trifft das Kind auf dem Schulweg?,Who does the child meet on the way to school?,
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Tết đến, cả nhà về quê thăm bà.",,read_quiz order_story fill_word listen_repeat,,,🏡,sentence,6,8,Zu Tết fährt die ganze Familie aufs Land zu Oma.,"At Tết, the whole family goes to the countryside to visit Grandma.",decor
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Bà gói bánh chưng thật to.,,,,,👵🟩,sentence,6,8,Oma wickelt ein sehr großes Bánh chưng.,Grandma wraps a very big bánh chưng.,decor
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Em được bà lì xì một phong bao đỏ.,,,,,🧧👵,sentence,6,8,Oma schenkt mir einen roten Glücksumschlag.,Grandma gives me a red lucky-money envelope.,decor
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Buổi tối, cả nhà xem pháo hoa.",,,,,🌙🎆,sentence,6,8,Am Abend sieht die ganze Familie das Feuerwerk.,"In the evening, the whole family watches fireworks.",decor
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Em ước năm mới ai cũng vui.,,,,,🌠😄,sentence,6,8,"Ich wünsche mir, dass im neuen Jahr alle froh sind.",I wish everyone to be happy in the new year.,decor
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Tết đến, cả nhà về quê thăm ai?",,,bà|cô giáo|bạn,1,,question,6,8,Wen besucht die Familie zu Tết auf dem Land?,Whom does the family visit in the countryside at Tết?,
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,Bà gói món gì?,,,bánh chưng|bánh mì|bánh ngọt,1,,question,6,8,Was wickelt Oma?,What does Grandma wrap?,
+Đọc đoạn văn ngắn,📖,4,Tết ở nhà bà,"Buổi tối, cả nhà làm gì?",,,xem pháo hoa|đi học|ngủ sớm,1,,question,6,8,Was macht die Familie am Abend?,What does the family do in the evening?,
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,Hôm nay trời mưa to.,,read_quiz order_story fill_word listen_repeat,,,🌧️,sentence,6,8,Heute regnet es stark.,It is raining hard today.,decor
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,Mưa rơi lộp bộp trên mái nhà.,,,,,🌧️🏠,sentence,6,8,Der Regen prasselt aufs Hausdach.,The rain patters on the roof.,decor
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,Em ngồi bên cửa sổ ngắm mưa.,,,,,🧒🌧️,sentence,6,8,Ich sitze am Fenster und schaue dem Regen zu.,I sit by the window watching the rain.,decor
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Ngoài vườn, mấy chú ếch kêu ộp ộp.",,,,,🐸🌿,sentence,6,8,Draußen im Garten quaken ein paar Frösche.,"Outside in the garden, some frogs croak.",decor
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Một lúc sau, cầu vồng hiện ra.",,,,,🌈,sentence,6,8,Nach einer Weile erscheint ein Regenbogen.,"After a while, a rainbow appears.",decor
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,Hôm nay thời tiết thế nào?,,,trời mưa to|trời nắng|trời có tuyết,1,,question,6,8,Wie ist heute das Wetter?,What is the weather like today?,
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,Ai kêu ộp ộp ngoài vườn?,,,mấy chú ếch|chú chó|chú mèo,1,,question,6,8,Wer quakt draußen im Garten?,Who croaks in the garden?,
+Đọc đoạn văn ngắn,📖,4,Ngày mưa,"Sau cơn mưa, trên trời có gì?",,,cầu vồng|mặt trăng|ngôi sao,1,,question,6,8,Was ist nach dem Regen am Himmel?,What is in the sky after the rain?,
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Em có một chú mèo tên là Mun.,,read_quiz order_story fill_word listen_repeat,,,🐱,sentence,6,8,Ich habe einen Kater namens Mun.,I have a cat named Mun.,decor
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Bộ lông của Mun đen như than.,,,,,🐱⚫,sentence,6,8,Muns Fell ist schwarz wie Kohle.,Mun's fur is black as coal.,decor
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Mun thích ngủ cạnh em.,,,,,🐱😴,sentence,6,8,Mun schläft gern neben mir.,Mun likes to sleep next to me.,decor
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Sáng nào Mun cũng kêu meo meo đòi ăn.,,,,,🐱🍽️,sentence,6,8,Jeden Morgen miaut Mun und will fressen.,Every morning Mun meows for food.,decor
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Em rất yêu chú mèo nhỏ.,,,,,💖,sentence,6,8,Ich habe den kleinen Kater sehr lieb.,I love my little cat very much.,decor
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Chú mèo của em tên là gì?,,,Mun|Mít|Bông,1,,question,6,8,Wie heißt der Kater?,What is the cat's name?,
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Bộ lông của Mun màu gì?,,,đen|trắng|vàng,1,,question,6,8,Welche Farbe hat Muns Fell?,What colour is Mun's fur?,
+Đọc đoạn văn ngắn,📖,4,Chú mèo của em,Mun kêu thế nào khi đòi ăn?,,,meo meo|gâu gâu|ụt ịt,1,,question,6,8,"Wie macht Mun, wenn er fressen will?",What sound does Mun make when it wants food?,
+Đọc đoạn văn ngắn,📖,4,Ở trường,Trường của em rất đẹp.,,read_quiz order_story fill_word listen_repeat,,,🏫,sentence,6,8,Meine Schule ist sehr schön.,My school is very beautiful.,decor
+Đọc đoạn văn ngắn,📖,4,Ở trường,Sân trường có nhiều cây xanh.,,,,,🏫🌳,sentence,6,8,Auf dem Schulhof stehen viele grüne Bäume.,The schoolyard has many green trees.,decor
+Đọc đoạn văn ngắn,📖,4,Ở trường,"Giờ ra chơi, em nhảy dây cùng các bạn.",,,,,🤸🧒,sentence,6,8,In der Pause springe ich mit meinen Freunden Seil.,"At break, I skip rope with my friends.",decor
+Đọc đoạn văn ngắn,📖,4,Ở trường,Cô giáo dạy em một bài hát mới.,,,,,👩‍🏫🎵,sentence,6,8,Die Lehrerin bringt mir ein neues Lied bei.,The teacher teaches me a new song.,decor
+Đọc đoạn văn ngắn,📖,4,Ở trường,Em thích đi học mỗi ngày.,,,,,🧒🎒,sentence,6,8,Ich gehe jeden Tag gern zur Schule.,I like going to school every day.,decor
+Đọc đoạn văn ngắn,📖,4,Ở trường,Sân trường có gì?,,,nhiều cây xanh|nhiều xe|nhiều nhà,1,,question,6,8,Was gibt es auf dem Schulhof?,What does the schoolyard have?,
+Đọc đoạn văn ngắn,📖,4,Ở trường,"Giờ ra chơi, em chơi gì?",,,nhảy dây|đá bóng|xem tivi,1,,question,6,8,Was spielt das Kind in der Pause?,What does the child play at break?,
+Đọc đoạn văn ngắn,📖,4,Ở trường,Cô giáo dạy em điều gì?,,,một bài hát mới|một trò chơi|một bài toán,1,,question,6,8,Was bringt die Lehrerin dem Kind bei?,What does the teacher teach the child?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Vua Hùng muốn chọn người nối ngôi.,,read_quiz order_story fill_word listen_repeat,,,🤴🤔,sentence,6,8,König Hùng wollte einen Thronfolger wählen.,King Hùng wanted to choose an heir.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Vua bảo các con đi tìm món ngon nhất để dâng cúng tổ tiên.,,,,,🤴🍲,sentence,6,8,"Der König trug seinen Söhnen auf, das köstlichste Gericht für die Ahnen zu suchen.",The king told his sons to find the most delicious dish to offer to the ancestors.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Các hoàng tử tìm khắp nơi những của ngon vật lạ.,,,,,🏃🍗,sentence,6,8,Die Prinzen suchten überall nach Leckerbissen und Seltenem.,The princes searched everywhere for delicacies and rare things.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),"Chỉ có Lang Liêu nghèo, chàng chẳng biết làm gì.",,,,,😟🌾,sentence,6,8,"Nur Lang Liêu war arm und wusste nicht, was er tun sollte.","Only Lang Liêu was poor, and he did not know what to do.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),"Một đêm, thần báo mộng dạy chàng lấy gạo làm bánh.",,,,,🌙🌾,sentence,6,8,"Eines Nachts riet ihm ein Gott im Traum, Kuchen aus Reis zu machen.","One night, a god told him in a dream to make cakes from rice.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Ai muốn chọn người nối ngôi?,,,Vua Hùng|Lang Liêu|thần,1,,question,6,8,Wer wollte einen Thronfolger wählen?,Who wanted to choose an heir?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (1),Thần dạy Lang Liêu làm bánh bằng gì?,,,gạo|bột mì|khoai,1,,question,6,8,Woraus sollte Lang Liêu den Kuchen machen?,What did the god tell Lang Liêu to make the cakes from?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Lang Liêu làm bánh hình vuông, tượng trưng cho đất, gọi là bánh chưng.",,read_quiz order_story fill_word listen_repeat,,,🟩🌏,sentence,6,8,"Lang Liêu machte einen quadratischen Kuchen für die Erde, das Bánh chưng.","Lang Liêu made a square cake for the earth, called bánh chưng.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Chàng làm bánh hình tròn, tượng trưng cho trời, gọi là bánh giầy.",,,,,⭕☁️,sentence,6,8,"Er machte einen runden Kuchen für den Himmel, das Bánh giầy.","He made a round cake for the sky, called bánh giầy.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Vua Hùng nếm thử và rất khen ngon.,,,,,🤴😋,sentence,6,8,König Hùng probierte und lobte sie sehr.,King Hùng tasted them and praised them highly.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Vua chọn Lang Liêu nối ngôi.,,,,,🤴👑,sentence,6,8,Der König wählte Lang Liêu zum Nachfolger.,The king chose Lang Liêu as his heir.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),"Từ đó, ngày Tết nhà nào cũng có bánh chưng.",,,,,🎊🟩,sentence,6,8,Seitdem gibt es zu Tết in jedem Haus Bánh chưng.,"Since then, every home has bánh chưng at Tết.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Bánh chưng có hình gì?,,,hình vuông|hình tròn|hình tam giác,1,,question,6,8,Welche Form hat das Bánh chưng?,What shape is bánh chưng?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích bánh chưng bánh giầy (2),Ai được vua chọn nối ngôi?,,,Lang Liêu|một hoàng tử giàu|thần,1,,question,6,8,Wen wählte der König zum Nachfolger?,Whom did the king choose as heir?,
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Ngày xưa, có một cậu bé lên ba tuổi mà chưa biết nói.",,read_quiz order_story fill_word listen_repeat,,,👶🤐,sentence,6,8,"Es war einmal ein dreijähriger Junge, der noch nicht sprechen konnte.","Long ago, there was a three-year-old boy who could not yet speak.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Một hôm, giặc Ân đến xâm chiếm nước ta.",,,,,⚔️🏹,sentence,6,8,Eines Tages fielen die Ân-Feinde in unser Land ein.,"One day, the Ân invaders attacked our country.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Nghe tiếng sứ giả của vua, cậu bé bỗng cất tiếng nói.",,,,,📢👶,sentence,6,8,"Als er den Boten des Königs hörte, fing der Junge plötzlich an zu sprechen.","Hearing the king's messenger, the boy suddenly began to speak.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Cậu xin vua rèn cho một con ngựa sắt và một cây roi sắt.,,,,,🐎🔨,sentence,6,8,"Er bat den König, ihm ein eisernes Pferd und eine eiserne Peitsche zu schmieden.",He asked the king to forge him an iron horse and an iron whip.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),"Cả làng góp gạo nuôi cậu, cậu lớn nhanh như thổi.",,,,,🏘️🍚,sentence,6,8,"Das ganze Dorf gab Reis, um ihn zu ernähren, und er wuchs im Nu.","The whole village gave rice to feed him, and he grew up very fast.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Ai đến xâm chiếm nước ta?,,,giặc Ân|giặc Minh|thủy quái,1,,question,6,8,Wer fiel in unser Land ein?,Who invaded our country?,
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (1),Cậu bé xin vua rèn những gì?,,,ngựa sắt và roi sắt|kiếm vàng và khiên|cung và tên,1,,question,6,8,Was bat der Junge den König zu schmieden?,What did the boy ask the king to forge?,
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),Cậu bé vươn vai thành một vị tướng khổng lồ.,,read_quiz order_story fill_word listen_repeat,,,🧒💪,sentence,6,8,Der Junge streckte sich zu einem riesigen General.,The boy stretched and became a giant general.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Chàng mặc áo giáp sắt, cưỡi ngựa sắt ra trận.",,,,,🛡️🐴,sentence,6,8,Er zog eine eiserne Rüstung an und ritt auf dem eisernen Pferd in die Schlacht.,He put on iron armour and rode the iron horse into battle.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Ngựa sắt phun lửa, chàng đánh tan quân giặc.",,,,,🐴🔥,sentence,6,8,"Das eiserne Pferd spie Feuer, und er schlug die Feinde in die Flucht.",The iron horse breathed fire and he crushed the enemy army.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Roi sắt gãy, chàng nhổ những bụi tre bên đường làm vũ khí.",,,,,🎋⚔️,sentence,6,8,"Als die Peitsche brach, riss er Bambus am Wegrand als Waffe aus.","When the whip broke, he pulled up bamboo by the road as a weapon.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Thắng giặc, chàng cưỡi ngựa bay về trời.",,,,,🐴☁️,sentence,6,8,Nach dem Sieg ritt er auf dem Pferd in den Himmel.,"After the victory, he rode his horse up into the sky.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Dân ta nhớ ơn, gọi chàng là Thánh Gióng.",,,,,🙏,sentence,6,8,Das Volk gedachte seiner in Dankbarkeit und nannte ihn Thánh Gióng.,Our people remembered him with gratitude and called him Thánh Gióng.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Khi roi sắt gãy, chàng dùng gì để đánh giặc?",,,những bụi tre|một cây kiếm|đá,1,,question,6,8,"Was benutzte er, als die Peitsche brach?",What did he use when the whip broke?,
+Truyện cổ tích và truyền thuyết,🐉,4,Thánh Gióng (2),"Thắng giặc xong, chàng đi đâu?",,,bay về trời|về nhà|đi biển,1,,question,6,8,Wohin ging er nach dem Sieg?,Where did he go after winning?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Ngày xưa, giặc Minh sang cướp nước ta.",,read_quiz order_story fill_word listen_repeat,,,⚔️🏹,sentence,6,8,Vor langer Zeit fielen die Ming-Feinde in unser Land ein.,"Long ago, the Ming invaders came to seize our country.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Lê Lợi nổi dậy đánh giặc.,,,,,🧑🚩,sentence,6,8,Lê Lợi erhob sich gegen die Feinde.,Lê Lợi rose up to fight the invaders.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Long Quân cho ông mượn một thanh gươm thần.,,,,,🐉🗡️,sentence,6,8,Der Drachenkönig lieh ihm ein Zauberschwert.,The Dragon King lent him a magic sword.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Nhờ gươm thần, quân ta đánh thắng giặc.",,,,,🗡️🏆,sentence,6,8,Dank des Zauberschwerts besiegte unser Heer die Feinde.,"Thanks to the magic sword, our army defeated the invaders.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Sau chiến thắng, Rùa Vàng nổi lên đòi lại gươm.",,,,,🐢🌊,sentence,6,8,Nach dem Sieg tauchte die Goldene Schildkröte auf und verlangte das Schwert zurück.,"After the victory, the Golden Turtle surfaced and asked for the sword back.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,"Lê Lợi trả gươm, hồ được gọi là Hồ Gươm.",,,,,🏞️🗡️,sentence,6,8,"Lê Lợi gab das Schwert zurück, und der See heißt seitdem Hồ Gươm (Schwertsee).","Lê Lợi returned the sword, and the lake is called Hồ Gươm (Sword Lake).",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Ai nổi dậy đánh giặc Minh?,,,Lê Lợi|Lang Liêu|Thánh Gióng,1,,question,6,8,Wer erhob sich gegen die Ming-Feinde?,Who rose up against the Ming invaders?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sự tích Hồ Gươm,Ai nổi lên đòi lại gươm?,,,Rùa Vàng|cá chép|rồng,1,,question,6,8,Wer verlangte das Schwert zurück?,Who asked for the sword back?,
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Lạc Long Quân là rồng ở dưới biển.,,read_quiz order_story fill_word listen_repeat,,,🐉🌊,sentence,6,8,"Lạc Long Quân war ein Drache, der im Meer lebte.",Lạc Long Quân was a dragon who lived under the sea.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Âu Cơ là tiên ở trên núi.,,,,,🧚⛰️,sentence,6,8,"Âu Cơ war eine Fee, die auf dem Berg lebte.",Âu Cơ was a fairy who lived in the mountains.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Hai người gặp nhau và kết thành vợ chồng.,,,,,💑,sentence,6,8,Die beiden trafen sich und wurden ein Ehepaar.,The two met and became husband and wife.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Âu Cơ sinh ra một bọc trăm trứng, nở ra một trăm người con.",,,,,🥚💯,sentence,6,8,"Âu Cơ gebar einen Beutel mit hundert Eiern, aus denen hundert Kinder schlüpften.","Âu Cơ gave birth to a sac of a hundred eggs, which hatched into a hundred children.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Năm mươi người con theo cha xuống biển, năm mươi người con theo mẹ lên núi.",,,,,🌊⛰️,sentence,6,8,"Fünfzig Kinder folgten dem Vater ins Meer, fünfzig der Mutter auf den Berg.","Fifty children followed their father to the sea, fifty followed their mother to the mountains.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,"Người con cả lên làm vua, gọi là Hùng Vương.",,,,,🤴👑,sentence,6,8,Das älteste Kind wurde König und hieß Hùng Vương.,"The eldest child became king, called Hùng Vương.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Lạc Long Quân sống ở đâu?,,,dưới biển|trên núi|trong rừng,1,,question,6,8,Wo lebte Lạc Long Quân?,Where did Lạc Long Quân live?,
+Truyện cổ tích và truyền thuyết,🐉,4,Con Rồng cháu Tiên,Có bao nhiêu người con theo mẹ lên núi?,,,năm mươi|mười|một trăm,1,,question,6,8,Wie viele Kinder folgten der Mutter auf den Berg?,How many children followed their mother to the mountains?,
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Ngày xưa, có cô Tấm mồ côi cả cha lẫn mẹ.",,read_quiz order_story fill_word listen_repeat,,,👧😢,sentence,6,8,"Es war einmal ein Mädchen namens Tấm, das keine Eltern mehr hatte.","Long ago, there was a girl named Tấm who had lost both her parents.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Tấm sống với dì ghẻ và Cám, con của dì.",,,,,👧👩,sentence,6,8,"Tấm lebte bei ihrer Stiefmutter und Cám, deren Tochter.","Tấm lived with her stepmother and Cám, the stepmother's daughter.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Dì ghẻ bắt Tấm làm việc suốt ngày.,,,,,👧🧹,sentence,6,8,Die Stiefmutter ließ Tấm den ganzen Tag arbeiten.,The stepmother made Tấm work all day.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Còn Cám thì được ăn ngon và chơi cả ngày.,,,,,👧🍰,sentence,6,8,Cám dagegen bekam gutes Essen und spielte den ganzen Tag.,"Cám, on the other hand, ate well and played all day.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),"Mỗi khi Tấm khóc, Bụt lại hiện lên giúp đỡ.",,,,,🧙✨,sentence,6,8,"Immer wenn Tấm weinte, erschien Bụt, um ihr zu helfen.","Whenever Tấm cried, Bụt appeared to help her.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Tấm sống với ai?,,,dì ghẻ và Cám|bố và mẹ|bà ngoại,1,,question,6,8,Bei wem lebte Tấm?,Who did Tấm live with?,
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (1),Ai hiện lên giúp đỡ Tấm?,,,Bụt|nhà vua|con cá,1,,question,6,8,"Wer erschien, um Tấm zu helfen?",Who appeared to help Tấm?,
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Nhờ Bụt, Tấm có quần áo đẹp để đi xem hội.",,read_quiz order_story fill_word listen_repeat,,,👗✨,sentence,6,8,Dank Bụt bekam Tấm schöne Kleider für das Fest.,"Thanks to Bụt, Tấm had beautiful clothes to go to the festival.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Trên đường chạy về, Tấm đánh rơi một chiếc giày.",,,,,🏃👟,sentence,6,8,Auf dem Heimweg verlor Tấm einen Schuh.,"Running home, Tấm dropped one shoe.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Nhà vua nhặt được giày và cho người đi tìm chủ nhân.,,,,,🤴🔍,sentence,6,8,Der König fand den Schuh und ließ die Besitzerin suchen.,The king found the shoe and had people search for its owner.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Chiếc giày vừa vặn với chân Tấm.,,,,,🦶👟,sentence,6,8,Der Schuh passte genau an Tấms Fuß.,The shoe fitted Tấm's foot perfectly.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),"Tấm trở thành hoàng hậu, sống hạnh phúc.",,,,,👸💖,sentence,6,8,Tấm wurde Königin und lebte glücklich.,Tấm became queen and lived happily.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Tấm đánh rơi vật gì?,,,chiếc giày|chiếc nhẫn|chiếc mũ,1,,question,6,8,Was verlor Tấm?,What did Tấm drop?,
+Truyện cổ tích và truyền thuyết,🐉,4,Tấm Cám (2),Ai nhặt được chiếc giày?,,,nhà vua|Cám|dì ghẻ,1,,question,6,8,Wer fand den Schuh?,Who found the shoe?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vua Hùng có nàng công chúa Mị Nương rất xinh đẹp.,,read_quiz order_story fill_word listen_repeat,,,🤴👸,sentence,6,8,"König Hùng hatte eine sehr schöne Tochter, Prinzessin Mị Nương.","King Hùng had a very beautiful daughter, Princess Mị Nương.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Sơn Tinh ở trên núi, Thủy Tinh ở dưới biển, cả hai đều đến cầu hôn.",,,,,⛰️🌊,sentence,6,8,Sơn Tinh vom Berg und Thủy Tinh vom Meer hielten beide um ihre Hand an.,Sơn Tinh of the mountains and Thủy Tinh of the sea both came to ask for her hand.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vua hẹn ai mang lễ vật đến trước sẽ được cưới công chúa.,,,,,🎁🏃,sentence,6,8,"Der König versprach sie dem, der zuerst die Brautgeschenke brächte.",The king promised her to whoever brought the wedding gifts first.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Sơn Tinh đến trước và cưới được Mị Nương.,,,,,⛰️💍,sentence,6,8,Sơn Tinh kam zuerst und heiratete Mị Nương.,Sơn Tinh arrived first and married Mị Nương.,decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Thủy Tinh tức giận, dâng nước lên đánh Sơn Tinh.",,,,,🌊😠,sentence,6,8,Zornig ließ Thủy Tinh das Wasser steigen und griff Sơn Tinh an.,"Furious, Thủy Tinh raised the water to attack Sơn Tinh.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,"Sơn Tinh làm núi cao lên, nước dâng đến đâu núi cao đến đó.",,,,,🏔️🌊,sentence,6,8,"Sơn Tinh ließ den Berg wachsen: So hoch das Wasser stieg, so hoch wuchs der Berg.","Sơn Tinh made the mountain grow: as high as the water rose, so high the mountain grew.",decor
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Ai đến trước và cưới được công chúa?,,,Sơn Tinh|Thủy Tinh|Lang Liêu,1,,question,6,8,Wer kam zuerst und heiratete die Prinzessin?,Who arrived first and married the princess?,
+Truyện cổ tích và truyền thuyết,🐉,4,Sơn Tinh và Thủy Tinh,Vì sao Thủy Tinh dâng nước lên?,,,vì tức giận|vì vui|vì khát,1,,question,6,8,Warum ließ Thủy Tinh das Wasser steigen?,Why did Thủy Tinh raise the water?,
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Uống nước nhớ nguồn.,,fill_word order_words write_check listen_repeat,,,💧,sentence,6,8,"Wer Wasser trinkt, denkt an die Quelle (sei dankbar).","When you drink water, remember its source (be grateful).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Ăn quả nhớ kẻ trồng cây.,,,,,🍎,sentence,6,8,"Wer Früchte isst, denkt an den, der den Baum pflanzte (sei dankbar).","When you eat fruit, remember who planted the tree (be grateful).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Anh em như thể tay chân.,,,,,🤝,sentence,6,8,Geschwister sind wie Hände und Füße (sie gehören zusammen).,Siblings are like hands and feet (they belong together).,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Chị ngã em nâng.,,,,,🤲,sentence,6,8,"Fällt die große Schwester, hebt die kleine sie auf (Geschwister helfen einander).","When big sister falls, little brother lifts her up (siblings help each other).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Kính trên nhường dưới.,,,,,👴,sentence,6,8,"Ältere achten, Jüngeren nachgeben (Respekt und Rücksicht).",Respect your elders and give way to the young.,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: biết ơn và gia đình,Lá lành đùm lá rách.,,,,,🍃,sentence,6,8,Ein heiles Blatt schützt ein zerrissenes (hilf denen in Not).,A whole leaf wraps a torn leaf (help those in need).,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Có công mài sắt, có ngày nên kim.",,fill_word order_words write_check listen_repeat,,,🔨,sentence,6,8,Mit Ausdauer wird aus Eisen eine Nadel (Übung macht den Meister).,"With effort, iron can be ground into a needle (perseverance pays off).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Đi một ngày đàng, học một sàng khôn.",,,,,🚶,sentence,6,8,Eine Tagesreise bringt einen Korb voll Weisheit.,A day's journey brings a basketful of wisdom.,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Học ăn, học nói, học gói, học mở.",,,,,📖,sentence,6,8,"Essen, sprechen, einpacken, öffnen: alles will gelernt sein (gutes Benehmen lernen).","Learn to eat, to speak, to wrap, to open (learn good manners).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Một cây làm chẳng nên non, ba cây chụm lại nên hòn núi cao.",,,,,🌳,sentence,6,8,"Ein Baum macht keinen Berg, drei Bäume zusammen einen hohen (Einigkeit macht stark).",One tree does not make a mountain; three together make a tall one (unity is strength).,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,"Gần mực thì đen, gần đèn thì rạng.",,,,,💡,sentence,6,8,"Nah bei der Tinte wird man schwarz, nah bei der Lampe hell (der Umgang prägt).","Near ink you turn black, near a lamp you shine (you are shaped by company).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Tục ngữ: học tập và đoàn kết,Có chí thì nên.,,,,,💪,sentence,6,8,"Wer Willen hat, schafft es.","Where there's a will, there's a way.",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Bầu ơi thương lấy bí cùng, tuy rằng khác giống nhưng chung một giàn.",,fill_word order_words write_check listen_repeat,,,🥒,sentence,6,8,"Kürbis, hab die Gurke lieb: verschieden, doch am selben Gitter (Zusammenhalt).","Gourd, love the squash: different kinds, yet on the same trellis (solidarity).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Con cò bé bé, nó đậu cành tre.",,,,,🦢,sentence,6,8,Der kleine Storch sitzt auf dem Bambuszweig (Kinderreim).,The little stork perches on the bamboo branch (nursery rhyme).,decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Lạy trời mưa xuống, lấy nước tôi uống, lấy ruộng tôi cày, lấy đầy bát cơm.",,,,,🌧️,sentence,6,8,"Lieber Himmel, lass es regnen: Wasser zum Trinken, Felder zum Pflügen, eine volle Reisschale.","Dear sky, let the rain fall: water to drink, fields to plough, a full bowl of rice.",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Dung dăng dung dẻ, dắt trẻ đi chơi.",,,,,🧒,sentence,6,8,"Hüpf, hüpf, hüpf: wir führen die Kinder zum Spielen (Kinderreim).","Skip along, skip along, leading the children out to play (nursery rhyme).",decor
+"Ca dao, tục ngữ và đồng dao",🎋,4,Ca dao và đồng dao,"Con gà cục tác lá chanh, con lợn ủn ỉn mua hành cho ta.",,,,,🐔,sentence,6,8,"Das Huhn gackert beim Zitronenblatt, das Schwein grunzt: kauf mir Zwiebeln (Kinderreim).","The hen clucks by the lime leaf, the pig grunts: buy me spring onions (nursery rhyme).",decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Hà Nội là thủ đô của Việt Nam.,,write_check fill_word order_words listen_repeat,,,🏛️,sentence,6,8,Hanoi ist die Hauptstadt von Vietnam.,Hanoi is the capital of Vietnam.,decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Nam chơi bóng với Bình.,,,,,⚽,sentence,6,8,Nam spielt mit Bình Fußball.,Nam plays ball with Bình.,decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Mai đọc sách ở thư viện.,,,,,📚,sentence,6,8,Mai liest in der Bibliothek ein Buch.,Mai reads a book in the library.,decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Sông Hồng chảy qua Hà Nội.,,,,,🏞️,sentence,6,8,Der Rote Fluss fließt durch Hanoi.,The Red River flows through Hanoi.,decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Bà kể chuyện cho Lan nghe.,,,,,👵,sentence,6,8,Oma erzählt Lan eine Geschichte.,Grandma tells Lan a story.,decor
+Viết đúng chính tả,✍️,4,Viết hoa đầu câu và tên riêng,Huế có nhiều cung điện cổ.,,,,,🏯,sentence,6,8,Huế hat viele alte Paläste.,Huế has many old palaces.,decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Trời mưa rồi.,,write_check fill_word order_words listen_repeat,,,🌧️,sentence,6,8,Es regnet.,It is raining.,decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Con đang làm gì?,,,,,🤔,sentence,6,8,Was machst du gerade?,What are you doing?,decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than","Ôi, bông hoa đẹp quá!",,,,,🌸,sentence,6,8,"Oh, was für eine schöne Blume!","Oh, what a beautiful flower!",decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Bạn tên là gì?,,,,,🙋,sentence,6,8,Wie heißt du?,What is your name?,decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Cẩn thận nhé!,,,,,⚠️,sentence,6,8,Pass auf!,Be careful!,decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than","Mẹ mua cam, táo và chuối.",,,,,🍎,sentence,6,8,"Mama kauft Orangen, Äpfel und Bananen.","Mum buys oranges, apples and bananas.",decor
+Viết đúng chính tả,✍️,4,"Dấu câu: chấm, chấm hỏi, chấm than",Con có khỏe không?,,,,,😊,sentence,6,8,Geht es dir gut?,Are you well?,decor
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",cá,,spell_word trace read_pick listen_repeat,,,🐟,word,6,8,Fisch,fish,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",cờ,,,,,🚩,word,6,8,Fahne,flag,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",kẹo,,,,,🍬,word,6,8,Bonbon,"sweet, candy",
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",kính,,,,,👓,word,6,8,Brille,glasses,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",quả,,,,,🍎,word,6,8,Frucht,fruit,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",gà,,,,,🐔,word,6,8,Huhn,chicken,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",ghế,,,,,🪑,word,6,8,Stuhl,chair,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",ngô,,,,,🌽,word,6,8,Mais,corn,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",nghé,,,,,🐃,word,6,8,Büffelkalb,baby buffalo,
+Viết đúng chính tả,✍️,4,"Chính tả: c, k, q, g, gh, ng, ngh",nghe,,,,,👂,word,6,8,hören,"to listen, to hear",
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",chổi,,spell_word trace read_pick listen_repeat,,,🧹,word,6,8,Besen,broom,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",trứng,,,,,🥚,word,6,8,Ei,egg,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",trăng,,,,,🌙,word,6,8,Mond,moon,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",sữa,,,,,🥛,word,6,8,Milch,milk,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",xôi,,,,,🍙,word,6,8,Klebreis,sticky rice,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",sao,,,,,⭐,word,6,8,Stern,star,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",giày,,,,,👟,word,6,8,Schuhe,shoes,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",rùa,,,,,🐢,word,6,8,Schildkröte,turtle,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",rau,,,,,🥬,word,6,8,Gemüse,vegetables,
+Viết đúng chính tả,✍️,4,"Chính tả: ch, tr, s, x, d, gi, r",dê,,,,,🐐,word,6,8,Ziege,goat,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,nhảy,,read_pick spell_word match listen_repeat,,,🤸,word,6,8,springen,to jump,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,bơi,,,,,🏊,word,6,8,schwimmen,to swim,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,viết,,,,,✍️,word,6,8,schreiben,to write,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,đọc,,,,,📖,word,6,8,lesen,to read,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,hát,,,,,🎤,word,6,8,singen,to sing,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,múa,,,,,💃,word,6,8,tanzen,to dance,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,cười,,,,,😄,word,6,8,lachen,to laugh,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ hoạt động,khóc,,,,,😢,word,6,8,weinen,to cry,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,to,,read_pick spell_word match listen_repeat,,,🐘,word,6,8,groß,big,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nhỏ,,,,,🐜,word,6,8,klein,small,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,cao,,,,,🦒,word,6,8,"hoch, groß",tall,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nhanh,,,,,🐆,word,6,8,schnell,fast,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,chậm,,,,,🐌,word,6,8,langsam,slow,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,nóng,,,,,🥵,word,6,8,heiß,hot,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,lạnh,,,,,🥶,word,6,8,kalt,cold,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Từ chỉ đặc điểm,sáng,,,,,☀️,word,6,8,hell,bright,
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con báo chạy rất nhanh.,,fill_word order_words write_check listen_repeat,,,🐆,sentence,6,8,Der Leopard rennt sehr schnell.,The leopard runs very fast.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con ốc sên bò rất chậm.,,,,,🐌,sentence,6,8,Die Schnecke kriecht sehr langsam.,The snail crawls very slowly.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con voi rất to.,,,,,🐘⬆️,sentence,6,8,Der Elefant ist sehr groß.,The elephant is very big.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con kiến rất nhỏ.,,,,,🐜🔬,sentence,6,8,Die Ameise ist sehr klein.,The ant is very small.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Hôm nay trời nóng quá.,,,,,🥵,sentence,6,8,Heute ist es so heiß.,It is so hot today.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Mùa đông trời lạnh.,,,,,🥶,sentence,6,8,Im Winter ist es kalt.,In winter it is cold.,decor
+Từ chỉ hoạt động và đặc điểm,🧠,4,Đặt câu với từ chỉ đặc điểm,Con hươu cao cổ rất cao.,,,,,🦒,sentence,6,8,Die Giraffe ist sehr groß.,The giraffe is very tall.,decor
+Kể chuyện theo tranh,🖼️,4,Em trồng cây,Em gieo một hạt giống xuống đất.,,order_story order_words read_pick listen_repeat,,,🌰,sentence,6,8,Ich säe ein Samenkorn in die Erde.,I plant a seed in the soil.,
+Kể chuyện theo tranh,🖼️,4,Em trồng cây,Em tưới nước cho hạt mỗi ngày.,,,,,💧,sentence,6,8,Ich gieße den Samen jeden Tag.,I water the seed every day.,
+Kể chuyện theo tranh,🖼️,4,Em trồng cây,"Vài ngày sau, hạt nảy mầm.",,,,,🌱,sentence,6,8,Nach ein paar Tagen keimt der Samen.,"A few days later, the seed sprouts.",
+Kể chuyện theo tranh,🖼️,4,Em trồng cây,Cây lớn dần lên.,,,,,🌿,sentence,6,8,Die Pflanze wächst allmählich.,The plant grows bigger.,
+Kể chuyện theo tranh,🖼️,4,Em trồng cây,"Cuối cùng, cây nở một bông hoa đẹp.",,,,,🌻,sentence,6,8,Schließlich blüht eine schöne Blume.,"Finally, the plant blooms a beautiful flower.",
+Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,"Sáng chủ nhật, em đi chợ cùng mẹ.",,order_story order_words read_pick listen_repeat,,,🧺,sentence,6,8,Am Sonntagmorgen gehe ich mit Mama auf den Markt.,"On Sunday morning, I go to the market with Mum.",
+Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Mẹ mua rau và cá.,,,,,🥬,sentence,6,8,Mama kauft Gemüse und Fisch.,Mum buys vegetables and fish.,
+Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Em xách túi giúp mẹ.,,,,,👜,sentence,6,8,Ich trage Mama die Tasche.,I carry the bag for Mum.,
+Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,"Về nhà, mẹ nấu canh cá.",,,,,🍲,sentence,6,8,Zu Hause kocht Mama Fischsuppe.,"At home, Mum cooks fish soup.",
+Kể chuyện theo tranh,🖼️,4,Đi chợ cùng mẹ,Cả nhà ăn cơm thật ngon.,,,,,🍚,sentence,6,8,Die ganze Familie isst mit großem Appetit.,The whole family enjoys a delicious meal.,
+Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Trời đang nắng thì mây đen kéo đến.,,order_story order_words read_pick listen_repeat,,,🌥️,sentence,6,8,"Eben schien noch die Sonne, da zogen dunkle Wolken auf.",It was sunny when dark clouds rolled in.,
+Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Mưa rơi xuống ào ào.,,,,,🌧️,sentence,6,8,Der Regen prasselt herab.,The rain pours down.,
+Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Nam mở ô che mưa.,,,,,☂️,sentence,6,8,Nam spannt den Regenschirm auf.,Nam opens an umbrella against the rain.,
+Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,"Mưa tạnh, cầu vồng hiện ra.",,,,,🌈,sentence,6,8,"Der Regen hört auf, ein Regenbogen erscheint.",The rain stops and a rainbow appears.,
+Kể chuyện theo tranh,🖼️,4,Cơn mưa và cầu vồng,Nam reo lên vui sướng.,,,,,😄,sentence,6,8,Nam jubelt vor Freude.,Nam cheers with joy.,
+Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Sáng nay Lan tròn sáu tuổi.,,order_story order_words read_pick listen_repeat,,,🎈,sentence,6,8,Heute Morgen wird Lan sechs Jahre alt.,This morning Lan turns six.,
+Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Mẹ làm cho Lan một chiếc bánh kem.,,,,,🎂,sentence,6,8,Mama macht Lan eine Sahnetorte.,Mum makes Lan a cream cake.,
+Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Bạn bè đến chúc mừng sinh nhật Lan.,,,,,🎁,sentence,6,8,Freunde kommen und gratulieren Lan zum Geburtstag.,Friends come to wish Lan a happy birthday.,
+Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Lan thổi nến và ước một điều.,,,,,🕯️,sentence,6,8,Lan bläst die Kerzen aus und wünscht sich etwas.,Lan blows out the candles and makes a wish.,
+Kể chuyện theo tranh,🖼️,4,Sinh nhật của Lan,Ai cũng vỗ tay và hát mừng.,,,,,👏,sentence,6,8,Alle klatschen und singen.,Everyone claps and sings.,

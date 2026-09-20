@@ -471,5 +471,25 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 4, "013: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 20. vai trò hình (migration 014) ----
+{
+  const m014 = readFileSync(new URL("../migrations/014_pic_role.sql", import.meta.url), "utf8");
+  await db.exec(m014);
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('PR', 1, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'PRL', 'approved') returning id", [u]))[0].id;
+  const ins = (pic) => fails("insert into public.content_items (lesson_id, item_type, text_vi, pic) values ($1, 'word', 'x', $2)", [l, pic]);
+  ok((await ins(null)) === null && (await ins("literal")) === null && (await ins("decor")) === null, "014: pic nhận null / literal / decor");
+  ok(/check/i.test((await ins("robot")) ?? ""), "014: pic lạ bị chặn");
+  await db.exec(m014);
+  ok((await q("select count(*)::int as n from public.content_items where lesson_id = $1", [l]))[0].n === 3, "014: chạy lại migration không mất dữ liệu");
+  const P = await uid("p14@x.com");
+  await db.query("update public.content_items set status = 'approved' where lesson_id = $1", [l]);
+  await as(P, async () => {
+    ok((await q("select pic from public.content_items where pic = 'decor'")).length === 1, "014: phụ huynh còn hạn đọc được pic");
+    ok((await db.query("update public.content_items set pic = 'literal' where pic = 'decor'")).affectedRows === 0, "014: phụ huynh KHÔNG sửa được pic");
+  });
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);
