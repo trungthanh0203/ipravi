@@ -2,7 +2,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
-import { say, voiceToggle, prefetchItems } from "./media.js";
+import { say, voiceToggle, prefetchItems, prefetchParts } from "./media.js";
 import { childAge } from "./util.js";
 import * as api from "./api.js";
 import * as intro from "./activities/intro.js";
@@ -11,6 +11,7 @@ import * as match from "./activities/match.js";
 import * as listenRepeat from "./activities/listen-repeat.js";
 import * as phonics from "./activities/phonics.js";
 import * as reading from "./activities/reading.js";
+import * as spell from "./activities/spell.js";
 
 // Thêm dạng hoạt động mới: viết file trong ./activities/ (export run(ctx) → {correct,total}) rồi thêm 1 dòng ở đây.
 const RUNNERS = {
@@ -28,9 +29,10 @@ const RUNNERS = {
   write_check: reading.runWriteCheck,
   spell_word: reading.runSpell,
   order_story: reading.runStory,
+  spell_along: spell.runSpellAlong,
 };
 const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ các dạng cần nhận mặt chữ
-const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story"]);
+const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story", "spell_along"]);
 
 export const starsFor = (score) => (score == null ? 0 : score >= 85 ? 3 : score >= 60 ? 2 : 1);
 
@@ -47,6 +49,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   }
   // Câu hỏi đọc hiểu (type question) chỉ dùng cho hoạt động read_quiz — không phải "từ mới" để học/chơi các hoạt động khác.
   prefetchItems(items); // (gồm cả câu hỏi) tải sẵn âm thanh của bài trong lúc bé đọc màn hình "Bắt đầu"
+  if (activities.some((a) => a.kind === "spell_along")) prefetchParts(items).catch(() => {}); // tải sẵn âm từng phần (nền)
   const questions = items.filter((i) => i.item_type === "question");
   items = items.filter((i) => i.item_type !== "question");
   if (items.length < 2) {

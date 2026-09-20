@@ -1,6 +1,6 @@
 # Kế hoạch nâng cấp: hình ảnh, chữ hoa, tô chữ, đánh vần từng phần, thu giọng người thật
 
-> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① đã làm xong (migration 010 + tab Thu âm).**
+> **Thứ tự đã chốt (2026-09-20):** ① Thu âm (giọng NAM của chủ dự án trước; nữ và trẻ em để sau) → ② Đánh vần theo phần (tạm dùng TTS) → ③ Tô chữ (mẫu chữ thảo) → ④ Nâng cấp hình ảnh. Chữ hoa: chưa xếp. **Tiến độ: ① Thu âm ✅ (migration 010 + tab Thu âm) · ② Đánh vần theo phần ✅ (migration 011) · ③ Tô chữ, ④ Hình ảnh: chưa làm · Chữ hoa: kế hoạch ở mục 4 (chờ bạn chốt).**
 >
 > Bản nháp để **bàn và chốt** (2026-09-20). Chưa code phần nào ngoài mục 1.1 (đã sửa nhanh hình ở Cấp 4). Mọi ước lượng tính theo
 > "phiên làm việc" (S ≈ 1 phiên ngắn, M ≈ 1–2 phiên, L ≈ 3+ phiên). Cuối file có **danh sách quyết định cần bạn chọn**.
@@ -87,12 +87,43 @@ Tôi rà 208 mục và thấy 4 loại lỗi; đã xử lý những gì làm đ�
 - **Điểm cần chốt:** *cách đánh vần khác nhau giữa các bộ sách* (có tranh cãi khi đổi chương trình 2018); nên chốt theo sách mà bé sẽ học — xem quyết định D3. Có thể đặt chuỗi là **tuỳ chỉnh được** ở tab Cài đặt.
 - Cỡ: **M**; phần lớn là giao diện + hàm tách/tra âm (có test).
 
-## 4. Chữ hoa
+## 4. Chữ hoa — kế hoạch chi tiết (chờ bạn chốt)
 
-- **Nội dung (CSV, cấp 3):** 29 chữ hoa chia 6 nhóm như chữ thường + 1 bài **chữ ghép** (Ch, Gh, Gi, Kh, Ng, Ngh, Nh, Ph, Qu, Th, Tr). Mỗi mục là **cặp "Aa"**, từ khoá là **tên riêng/địa danh** vì đó là nơi dùng chữ hoa (An, Bình, Cúc, Hà Nội, Huế…; với hình người dùng emoji người — *không* dùng cờ vì trên Windows cờ hiện thành chữ).
-- **Hoạt động mới `match_case`** (ghép chữ hoa ↔ chữ thường): tự tách "Aa" → "A" và "a", không cần dữ liệu thêm; kết hợp `listen_pick_text` (nghe → chọn chữ hoa/thường), `read_pick`, tô chữ.
-- **Quy tắc viết hoa** (đầu câu, tên riêng) đã có ở Cấp 4 (bài "Viết hoa đầu câu và tên riêng"; hoạt động `write_check`).
-- Cỡ: **S–M** (một CSV, một hoạt động, một dòng CHECK trong migration).
+**Mục tiêu bé làm được:** nhận ra 29 chữ hoa; **ghép mỗi chữ hoa với chữ thường**; biết **khi nào viết hoa** (đầu câu, tên riêng, địa danh); (sau này) tô chữ hoa.
+
+### 4.1 Nội dung (CSV, Cấp 3, một chủ đề mới "Chữ hoa")
+- **Mỗi mục là một cặp** `Aa` (`type=letter`, cột `say` = âm đọc, giống chữ thường) — bé thấy chữ hoa và chữ thường đi cùng nhau.
+- **Chia nhóm** đúng như chữ thường để bé thấy quen:  ① A O Ô Ơ · ② I E Ê U Ư · ③ B M N L · ④ T C K Q D Đ · ⑤ H G R S V X · ⑥ Ă Â Y P → **6 bài**; thêm **1–2 bài chữ ghép** ở đầu tên riêng: Ch, Gh, Gi, Kh, Ng, Ngh, Nh, Ph, Qu, Th, Tr (11 mục). Khoảng **7–8 bài, ~40 mục**.
+- **Từ khoá** = **tên riêng/địa danh**, vì đó là nơi dùng chữ hoa (bé học chữ hoa *để làm gì*). Gợi ý (người duyệt chốt): A **An** · Â **Âu Cơ** (đã gặp ở truyện Cấp 4) · B **Bình** · C **Cúc** · D **Dung** · Đ **Đà Nẵng** · E **Em**? · Ê **Êđê** · G **Gia Lai** · H **Hà Nội** · I **Ích**? · K **Kim** · L **Lan** · M **Mai** · N **Nam** · O **Oanh** · Ô — · P **Pleiku** · Q **Quang** · R **Rạng**? · S **Sơn** · T **Tâm** · U **Uyên** · V **Việt Nam** · X **Xuân** · Y **Yên Bái**. Chữ **Ă, Ơ, Ư** hiếm mở đầu tên riêng → dùng **từ đầu câu** ("**Ăn** cơm đi con.", "**Ơi**, mẹ ơi!", "**Ư**, đúng rồi!"). *Đây là danh sách của tôi — cần người Việt bản ngữ chốt tên nào tự nhiên.*
+- **Hình:** tên người dùng emoji người (👦 👧), địa danh dùng "cảnh" 2 emoji; **không dùng cờ** (Windows hiện thành chữ). Vì hình của tên riêng chỉ mang tính **trang trí**, các bài này **không dùng hoạt động "chọn hình"** (xem vai trò hình ở mục 1.3-A).
+
+### 4.2 Hoạt động (3 hoạt động mới, đều **không cần dữ liệu thêm**)
+| Hoạt động | Bé làm gì | Cách sinh |
+|---|---|---|
+| `match_case` ghép hoa ↔ thường | Ghép các thẻ chữ hoa với chữ thường (4–5 cặp) | Tách `Aa` → `A` và `a` |
+| `pick_case` chọn chữ tương ứng | Thấy `b` chọn `B` trong 3 chữ (và ngược lại); nhiễu là các chữ hoa dễ lẫn (B/D/P, Q/O, G/C) | Từ chính các cặp của bài |
+| `fix_capital` chạm từ cần viết hoa | Câu viết toàn chữ thường ("bà kể chuyện cho lan nghe"), bé chạm các từ phải viết hoa | Từ câu có sẵn: từ viết hoa **không đứng đầu câu** = tên riêng; đầu câu luôn hoa |
+Kèm `listen_pick_text` và `listen_repeat` sẵn có (nghe âm → chọn chữ; nói theo). Bài "Viết hoa đầu câu và tên riêng" của Cấp 4 (`write_check`) giữ nguyên làm bước tiếp theo.
+
+### 4.3 Việc kỹ thuật kèm theo
+- **Migration `012`**: thêm 3 loại hoạt động vào CHECK (+ test SQL); `ACTIVITY_DEFAULTS`, `RUNNERS`, chữ giao diện.
+- **Thứ tự chủ đề (nút ▲▼ ở tab Nội dung)** — *cần làm cùng*: chủ đề mới nhập được xếp **cuối** cấp, nên "Chữ hoa" sẽ nằm sau "Đọc từ và câu ngắn" thay vì ngay sau "Chữ cái". Thêm nút đổi thứ tự (hoán đổi `sort_order`) cũng giải quyết mục "đổi thứ tự chủ đề" còn tồn đọng. Cỡ S.
+- **Hàm thuần có test:** tách cặp `Aa`, sinh nhiễu chữ hoa, tìm từ cần viết hoa trong câu.
+- **Tô chữ (mục 5)** sau này thêm chữ hoa bằng chính các mục này (không cần dữ liệu mới).
+
+### 4.4 Ước lượng và rủi ro
+- Cỡ **M** (1–2 phiên): CSV ~40 mục + 3 hoạt động nhỏ + nút đổi thứ tự.
+- **Sư phạm:** trường ở Việt Nam thường dạy chữ hoa cùng/ngay sau chữ thường ở lớp 1; với trẻ gốc Việt ở nước ngoài dạy **sau khi bé đã đọc được chữ thường** là hợp lý — nhưng bạn có thể muốn xen vào từng nhóm (xem quyết định C1).
+- **Hình dạng chữ hoa khác nhau giữa kiểu in và kiểu thảo** (vd chữ hoa thảo của A, D, Q, G khác kiểu in): app hiện kiểu **in** (phông giao diện) ở bài nhận mặt chữ, kiểu **thảo** (Playwrite VN) khi tô chữ — cần báo cho phụ huynh để khỏi thắc mắc.
+- Tên riêng gắn với văn hoá/miền: chọn tên phổ biến, trung tính; tránh tên chỉ dùng một miền nếu bé học ở vùng khác.
+
+### 4.5 Quyết định cần bạn chọn
+| # | Câu hỏi | Đề xuất |
+|---|---|---|
+| C1 | Dạy chữ hoa **sau** toàn bộ chữ thường (chủ đề riêng) hay **xen** vào từng nhóm chữ? | Chủ đề riêng, đặt ngay sau "Chữ cái" (ít làm lại nội dung đã nhập) |
+| C2 | Từ khoá là **tên riêng/địa danh** (kèm từ đầu câu cho Ă, Ơ, Ư) — đồng ý? | Đồng ý; bạn hoặc người bản ngữ duyệt danh sách tên |
+| C3 | Làm luôn nút **đổi thứ tự chủ đề** ▲▼? | Có (cần để đặt đúng chỗ) |
+| C4 | Bài chữ ghép (Ch, Gh, Ngh…) có ở cả bản hoa không? | Có, 1 bài |
 
 ## 5. Tô chữ
 

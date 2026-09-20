@@ -21,6 +21,7 @@ export const ACTIVITY_DEFAULTS = {
   write_check: { rounds: 4 },
   spell_word: { rounds: 4 },
   order_story: {},
+  spell_along: { rounds: 3 },
 };
 export const STANDARD_ACTIVITIES = ["listen_pick", "match", "listen_pick_text", "listen_repeat"];
 export const activitiesFor = (kinds) => (kinds?.length ? kinds : STANDARD_ACTIVITIES).map((kind) => [kind, { ...ACTIVITY_DEFAULTS[kind] }]);

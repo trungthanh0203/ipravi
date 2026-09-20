@@ -27,6 +27,9 @@ export const TONE_NAMES = ["ngang", "sắc", "huyền", "hỏi", "ngã", "nặng
 
 export const BANK_UNIT = "Ngân hàng âm";
 
+// Chữ để ĐỌC khi 1 âm chưa có file (giọng trình duyệt đọc "ă" rất lạ): ă → á, â → ớ, y → i dài.
+export const sayOfPart = (text) => VOWELS.find((v) => v[0] === text)?.[1] ?? text;
+
 // Kế hoạch tạo ngân hàng: [{ lesson, items: [{ text, say? }] }]. Mỗi mục là 1 âm cần giọng thu.
 export function bankPlan() {
   const consonants = [...new Set(Object.values(INITIAL_SOUND))]; // bỏ trùng (k/q/c cùng "cờ")

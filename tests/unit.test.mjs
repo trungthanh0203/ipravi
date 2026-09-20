@@ -3,8 +3,8 @@ import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.j
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
-import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken } from "../public/js/viet.js";
-import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan } from "../public/js/sounds.js";
+import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts } from "../public/js/viet.js";
+import { INITIAL_SOUND, initialSound, VOWELS, VAN_GROUPS, TONE_NAMES, bankPlan, sayOfPart } from "../public/js/sounds.js";
 import { peakOf, rmsOf, trimSilence, normalizePeak, resample, encodeWav, processTake, durationMs } from "../public/js/admin/wav.js";
 import { guessGender } from "../public/js/voice-names.js";
 
@@ -109,6 +109,30 @@ eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken
   eq(inits.filter((i) => !initialSound(i)), [], "mọi âm đầu tiếng Việt đều có cách đọc");
   eq(VAN_GROUPS.flatMap((g) => g[1]).every((v) => /^[a-zăâêôơưiyeuo]+$/.test(v)), true, "vần: chỉ gồm chữ cái tiếng Việt");
   eq(VAN_GROUPS.flatMap((g) => g[1]).length >= 70, true, "vần: ≥ 70 vần");
+}
+
+// Đánh vần theo phần
+{
+  const flat = (w) => spellParts(w)?.map((p) => p.text).join("–");
+  eq(flat("bà"), "bờ–a–ba–huyền–bà", "đánh vần: bà = bờ–a–ba–huyền–bà");
+  eq(flat("ba"), "bờ–a–ba", "đánh vần: thanh ngang bỏ 'tiếng chưa dấu' và 'dấu'");
+  eq(flat("nghé"), "ngờ–e–nghe–sắc–nghé", "đánh vần: nghé (ngh → ngờ)");
+  eq(flat("quả"), "quờ–a–qua–hỏi–quả", "đánh vần: quả");
+  eq(flat("gì"), "gờ–i–gi–huyền–gì", "đánh vần: gì (g + ì)");
+  eq(flat("trứng"), "trờ–ưng–trưng–sắc–trứng", "đánh vần: trứng (vần ưng)");
+  eq(flat("kem"), "cờ–em–kem", "đánh vần: kem (k → cờ)");
+  eq(flat("bàn"), "bờ–an–ban–huyền–bàn", "đánh vần: bàn (vần an)");
+  eq(flat("ăn"), "ăn", "đánh vần: ăn (không âm đầu, thanh ngang) chỉ còn 1 phần");
+  eq(flat("ấm"), "âm–sắc–ấm", "đánh vần: ấm (không âm đầu) = vần – dấu – tiếng");
+  eq([spellParts("con mèo"), spellParts("")], [null, null], "đánh vần: không phải 1 tiếng → null");
+  eq(spellParts("bà").map((p) => p.role), ["initial", "van", "base", "tone", "whole"], "đánh vần: vai trò từng phần");
+  eq(spellParts("Bà").at(-1).text, "bà", "đánh vần: chữ hoa được chuẩn về chữ thường");
+  eq([sayOfPart("ă"), sayOfPart("â"), sayOfPart("b")], ["á", "ớ", "b"], "sayOfPart: ă → á, â → ớ, còn lại giữ nguyên");
+  // mọi phần của các từ dùng trong Cấp 3 có thể tra trong ngân hàng âm (phần chưa có sẽ rơi về TTS — chỉ đếm để biết mức phủ)
+  const bank = new Set(bankPlan().flatMap((p) => p.items.map((i) => i.text)));
+  const sample = ["bà", "cá", "nghé", "quả", "trứng", "kem", "bàn", "chuối", "mèo", "đèn"];
+  const missing = sample.flatMap((w) => spellParts(w).filter((p) => ["initial", "van", "tone"].includes(p.role) && !bank.has(p.text)).map((p) => w + ":" + p.text));
+  eq(missing.filter((m) => !/chuối:uôi|mèo:eo/.test(m)), [], "ngân hàng âm phủ âm đầu/vần/dấu của các từ mẫu");
 }
 
 // Xử lý âm thanh thu

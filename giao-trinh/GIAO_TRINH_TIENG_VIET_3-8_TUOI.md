@@ -87,6 +87,7 @@ Cầu nối sang **Tiếng Việt lớp 1** và sách **"Chào tiếng Việt" c
 |---|---|---|
 | `listen_pick_tone` nghe – chọn thanh | Nghe 1 tiếng, chọn ký hiệu đúng (➖ ↗️ ↘️ ❓ 〰️ ⬇️) | phân biệt 6 thanh bằng tai |
 | `listen_pick_text` nghe – chọn chữ | Nghe âm/tiếng, chọn đúng chữ | nối âm ↔ chữ |
+| `spell_along` đánh vần theo phần | Xem và nghe các phần lần lượt sáng lên (bờ – a – ba – huyền – bà), rồi tự chạm theo đúng thứ tự; âm từng phần lấy từ "ngân hàng âm" (giọng thu hoặc TTS) | cách đánh vần, quan hệ âm đầu – vần – dấu |
 | `build_syllable` ghép âm + vần | Nghe từ có hình, chọn âm đầu rồi phần vần | cấu tạo tiếng (âm đầu + vần + thanh) |
 | `fill_letter` điền chữ còn thiếu | Thấy `＿à` + hình, chọn âm đầu | nhận âm đầu, chính tả |
 | `read_pick` đọc – chạm hình | Thấy chữ, chọn hình đúng (không nghe trước) | đọc hiểu từ/câu |

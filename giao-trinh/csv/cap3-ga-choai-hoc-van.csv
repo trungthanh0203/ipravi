@@ -109,26 +109,26 @@ Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cân,,,⚖️,word,5,8,Waage,scale
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,cây,,,🌳,word,5,8,Baum,tree
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,mây,,,☁️,word,5,8,Wolke,cloud
 Chữ cái,🔤,3,Nhóm 6: từ có ă â y,tay,,,✋,word,5,8,Hand,hand
-Ghép âm với nguyên âm,🧩,3,Vần a,ba,,build_syllable fill_letter read_pick listen_repeat,3️⃣,word,5,8,drei,three
+Ghép âm với nguyên âm,🧩,3,Vần a,ba,,spell_along build_syllable read_pick listen_repeat,3️⃣,word,5,8,drei,three
 Ghép âm với nguyên âm,🧩,3,Vần a,bà,,,👵,word,5,8,Oma,grandmother
 Ghép âm với nguyên âm,🧩,3,Vần a,cá,,,🐟,word,5,8,Fisch,fish
 Ghép âm với nguyên âm,🧩,3,Vần a,gà,,,🐔,word,5,8,Huhn,chicken
 Ghép âm với nguyên âm,🧩,3,Vần a,lá,,,🍃,word,5,8,Blatt,leaf
 Ghép âm với nguyên âm,🧩,3,Vần a,nhà,,,🏠,word,5,8,Haus,house
-Ghép âm với nguyên âm,🧩,3,"Vần e, ê",xe,,build_syllable fill_letter read_pick listen_repeat,🚗,word,5,8,"Fahrzeug, Auto","vehicle, car"
+Ghép âm với nguyên âm,🧩,3,"Vần e, ê",xe,,spell_along build_syllable read_pick listen_repeat,🚗,word,5,8,"Fahrzeug, Auto","vehicle, car"
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",bé,,,👶,word,5,8,"Baby, klein","baby, small"
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",mẹ,,,👩,word,5,8,Mutter,mother
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",chè,,,🍵,word,5,8,Tee,tea
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",nghé,,,🐃,word,5,8,Büffelkalb,baby buffalo
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",dê,,,🐐,word,5,8,Ziege,goat
 Ghép âm với nguyên âm,🧩,3,"Vần e, ê",hè,,,☀️,word,5,8,Sommer,summer
-Ghép âm với nguyên âm,🧩,3,Vần i,bi,,build_syllable fill_letter read_pick listen_repeat,⚪,word,5,8,Murmel,marble
+Ghép âm với nguyên âm,🧩,3,Vần i,bi,,spell_along build_syllable read_pick listen_repeat,⚪,word,5,8,Murmel,marble
 Ghép âm với nguyên âm,🧩,3,Vần i,bí,,,🎃,word,5,8,Kürbis,pumpkin
 Ghép âm với nguyên âm,🧩,3,Vần i,mì,,,🍜,word,5,8,Nudeln,noodles
 Ghép âm với nguyên âm,🧩,3,Vần i,khỉ,,,🐒,word,5,8,Affe,monkey
 Ghép âm với nguyên âm,🧩,3,Vần i,chị,,,👧,word,5,8,ältere Schwester,older sister
 Ghép âm với nguyên âm,🧩,3,Vần i,đi,,,🚶,word,5,8,gehen,to go
-Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",bò,,build_syllable fill_letter read_pick listen_repeat,🐄,word,5,8,Kuh,cow
+Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",bò,,spell_along build_syllable read_pick listen_repeat,🐄,word,5,8,Kuh,cow
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cô,,,👩‍🏫,word,5,8,"Lehrerin, Tante","teacher, aunt"
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cờ,,,🚩,word,5,8,Fahne,flag
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",bơ,,,🥑,word,5,8,Avocado,avocado
@@ -136,34 +136,34 @@ Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",ô,,,☂️,word,5,8,Schirm
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",hồ,,,🏞️,word,5,8,See,lake
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",nơ,,,🎀,word,5,8,Schleife,bow
 Ghép âm với nguyên âm,🧩,3,"Vần o, ô, ơ",cỏ,,,🌿,word,5,8,Gras,grass
-Ghép âm với nguyên âm,🧩,3,"Vần u, ư",mũ,,build_syllable fill_letter read_pick listen_repeat,🎩,word,5,8,Hut,hat
+Ghép âm với nguyên âm,🧩,3,"Vần u, ư",mũ,,spell_along build_syllable read_pick listen_repeat,🎩,word,5,8,Hut,hat
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",thú,,,🐻,word,5,8,Tier,animal
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",củ,,,🥕,word,5,8,"Knolle, Rübe",root vegetable
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",chữ,,,🔤,word,5,8,"Buchstabe, Schrift","letter, writing"
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",thư,,,✉️,word,5,8,Brief,letter (mail)
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",tủ,,,🗄️,word,5,8,Schrank,cupboard
 Ghép âm với nguyên âm,🧩,3,"Vần u, ư",cú,,,🦉,word,5,8,Eule,owl
-Vần có âm cuối,🔗,3,"Vần an, ăn, ân",đàn,,build_syllable fill_letter read_pick listen_repeat,🎻,word,5,8,Instrument,musical instrument
+Vần có âm cuối,🔗,3,"Vần an, ăn, ân",đàn,,spell_along build_syllable read_pick listen_repeat,🎻,word,5,8,Instrument,musical instrument
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",bạn,,,👫,word,5,8,Freund,friend
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",lan,,,🌺,word,5,8,Orchidee,orchid
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",ăn,,,🍚,word,5,8,essen,to eat
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",cân,,,⚖️,word,5,8,Waage,scale
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",chân,,,🦶,word,5,8,"Fuß, Bein","foot, leg"
 Vần có âm cuối,🔗,3,"Vần an, ăn, ân",mận,,,🍑,word,5,8,Pflaume,plum
-Vần có âm cuối,🔗,3,"Vần am, ăm, âm",cam,,build_syllable fill_letter read_pick listen_repeat,🍊,word,5,8,Orange,orange
+Vần có âm cuối,🔗,3,"Vần am, ăm, âm",cam,,spell_along build_syllable read_pick listen_repeat,🍊,word,5,8,Orange,orange
 Vần có âm cuối,🔗,3,"Vần am, ăm, âm",tắm,,,🛁,word,5,8,baden,to bathe
 Vần có âm cuối,🔗,3,"Vần am, ăm, âm",ấm,,,☕,word,5,8,Teekanne,teapot
 Vần có âm cuối,🔗,3,"Vần am, ăm, âm",nấm,,,🍄,word,5,8,Pilz,mushroom
 Vần có âm cuối,🔗,3,"Vần am, ăm, âm",mâm,,,🍽️,word,5,8,Tablett,tray
 Vần có âm cuối,🔗,3,"Vần am, ăm, âm",nằm,,,🛌,word,5,8,liegen,to lie down
-Vần có âm cuối,🔗,3,"Vần at, ăt, ât",hát,,build_syllable fill_letter read_pick listen_repeat,🎤,word,5,8,singen,to sing
+Vần có âm cuối,🔗,3,"Vần at, ăt, ât",hát,,spell_along build_syllable read_pick listen_repeat,🎤,word,5,8,singen,to sing
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",cát,,,🏖️,word,5,8,Sand,sand
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",bát,,,🥣,word,5,8,Schüssel,bowl
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",mắt,,,👁️,word,5,8,Auge,eye
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",tất,,,🧦,word,5,8,Socken,socks
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",mật,,,🍯,word,5,8,Honig,honey
 Vần có âm cuối,🔗,3,"Vần at, ăt, ât",cắt,,,✂️,word,5,8,schneiden,to cut
-Vần có âm cuối,🔗,3,"Vần ang, anh",vàng,,build_syllable fill_letter read_pick listen_repeat,🥇,word,5,8,"Gold, gelb","gold, yellow"
+Vần có âm cuối,🔗,3,"Vần ang, anh",vàng,,spell_along build_syllable read_pick listen_repeat,🥇,word,5,8,"Gold, gelb","gold, yellow"
 Vần có âm cuối,🔗,3,"Vần ang, anh",tháng,,,📅,word,5,8,Monat,month
 Vần có âm cuối,🔗,3,"Vần ang, anh",trang,,,📄,word,5,8,Seite,page
 Vần có âm cuối,🔗,3,"Vần ang, anh",sáng,,,🌅,word,5,8,Morgen,morning
@@ -172,39 +172,39 @@ Vần có âm cuối,🔗,3,"Vần ang, anh",xanh,,,🍀,word,5,8,"grün, blau",
 Vần có âm cuối,🔗,3,"Vần ang, anh",canh,,,🍲,word,5,8,Suppe,soup
 Vần có âm cuối,🔗,3,"Vần ang, anh",tranh,,,🖼️,word,5,8,Bild,painting
 Vần có âm cuối,🔗,3,"Vần ang, anh",bánh,,,🥮,word,5,8,Kuchen,cake
-Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",sách,,build_syllable fill_letter read_pick listen_repeat,📚,word,5,8,Buch,book
+Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",sách,,spell_along build_syllable read_pick listen_repeat,📚,word,5,8,Buch,book
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",lạc,,,🥜,word,5,8,Erdnuss,peanut
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",nhạc,,,🎵,word,5,8,Musik,music
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",thác,,,🌊,word,5,8,Wasserfall,waterfall
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",gạch,,,🧱,word,5,8,Ziegelstein,brick
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",cúc,,,🌼,word,5,8,Chrysantheme,chrysanthemum
 Vần có âm cuối,🔗,3,"Vần ac, ach, uc, ưc",mực,,,🦑,word,5,8,"Tintenfisch, Tinte","squid, ink"
-Vần có âm cuối,🔗,3,"Vần en, ên, in, it",đèn,,build_syllable fill_letter read_pick listen_repeat,💡,word,5,8,Lampe,lamp
+Vần có âm cuối,🔗,3,"Vần en, ên, in, it",đèn,,spell_along build_syllable read_pick listen_repeat,💡,word,5,8,Lampe,lamp
 Vần có âm cuối,🔗,3,"Vần en, ên, in, it",nến,,,🕯️,word,5,8,Kerze,candle
 Vần có âm cuối,🔗,3,"Vần en, ên, in, it",nhện,,,🕷️,word,5,8,Spinne,spider
 Vần có âm cuối,🔗,3,"Vần en, ên, in, it",vịt,,,🦆,word,5,8,Ente,duck
 Vần có âm cuối,🔗,3,"Vần en, ên, in, it",thịt,,,🥩,word,5,8,Fleisch,meat
 Vần có âm cuối,🔗,3,"Vần en, ên, in, it",chín,,,9️⃣,word,5,8,"neun, reif","nine, ripe"
-Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",nón,,build_syllable fill_letter read_pick listen_repeat,👒,word,5,8,Kegelhut,conical hat
+Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",nón,,spell_along build_syllable read_pick listen_repeat,👒,word,5,8,Kegelhut,conical hat
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",tròn,,,⭕,word,5,8,rund,round
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",thơm,,,🍍,word,5,8,"Ananas, duftend","pineapple, fragrant"
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",tôm,,,🦐,word,5,8,Garnele,shrimp
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",cơm,,,🍚,word,5,8,Reis (gekocht),cooked rice
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",hộp,,,📦,word,5,8,Schachtel,box
 Vần có âm cuối,🔗,3,"Vần on, ôm, ơm, ôp, ơp",chớp,,,⚡,word,5,8,Blitz,lightning
-Vần có âm cuối,🔗,3,"Vần ai, ay, ây",hai,,build_syllable fill_letter read_pick listen_repeat,2️⃣,word,5,8,zwei,two
+Vần có âm cuối,🔗,3,"Vần ai, ay, ây",hai,,spell_along build_syllable read_pick listen_repeat,2️⃣,word,5,8,zwei,two
 Vần có âm cuối,🔗,3,"Vần ai, ay, ây",tay,,,✋,word,5,8,Hand,hand
 Vần có âm cuối,🔗,3,"Vần ai, ay, ây",cây,,,🌳,word,5,8,Baum,tree
 Vần có âm cuối,🔗,3,"Vần ai, ay, ây",bay,,,✈️,word,5,8,fliegen,to fly
 Vần có âm cuối,🔗,3,"Vần ai, ay, ây",chai,,,🍾,word,5,8,Flasche,bottle
 Vần có âm cuối,🔗,3,"Vần ai, ay, ây",mây,,,☁️,word,5,8,Wolke,cloud
-Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",voi,,build_syllable fill_letter read_pick listen_repeat,🐘,word,5,8,Elefant,elephant
+Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",voi,,spell_along build_syllable read_pick listen_repeat,🐘,word,5,8,Elefant,elephant
 Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",tôi,,,🙋,word,5,8,ich,I
 Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",xôi,,,🍙,word,5,8,Klebreis,sticky rice
 Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",núi,,,⛰️,word,5,8,Berg,mountain
 Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",túi,,,👜,word,5,8,Tasche,bag
 Vần có âm cuối,🔗,3,"Vần oi, ôi, ơi, ui",bơi,,,🏊,word,5,8,schwimmen,to swim
-Vần có âm cuối,🔗,3,"Vần ao, eo",sao,,build_syllable fill_letter read_pick listen_repeat,⭐,word,5,8,Stern,star
+Vần có âm cuối,🔗,3,"Vần ao, eo",sao,,spell_along build_syllable read_pick listen_repeat,⭐,word,5,8,Stern,star
 Vần có âm cuối,🔗,3,"Vần ao, eo",cao,,,🦒,word,5,8,"hoch, groß",tall
 Vần có âm cuối,🔗,3,"Vần ao, eo",gạo,,,🌾,word,5,8,Reis (roh),rice grain
 Vần có âm cuối,🔗,3,"Vần ao, eo",cáo,,,🦊,word,5,8,Fuchs,fox
@@ -212,7 +212,7 @@ Vần có âm cuối,🔗,3,"Vần ao, eo",báo,,,🐆,word,5,8,Leopard,leopard
 Vần có âm cuối,🔗,3,"Vần ao, eo",mèo,,,🐱,word,5,8,Katze,cat
 Vần có âm cuối,🔗,3,"Vần ao, eo",heo,,,🐷,word,5,8,Schwein,pig
 Vần có âm cuối,🔗,3,"Vần ao, eo",kéo,,,✂️,word,5,8,Schere,scissors
-Vần có âm cuối,🔗,3,"Vần au, âu, êu",rau,,build_syllable fill_letter read_pick listen_repeat,🥬,word,5,8,Gemüse,vegetables
+Vần có âm cuối,🔗,3,"Vần au, âu, êu",rau,,spell_along build_syllable read_pick listen_repeat,🥬,word,5,8,Gemüse,vegetables
 Vần có âm cuối,🔗,3,"Vần au, âu, êu",màu,,,🎨,word,5,8,Farbe,colour
 Vần có âm cuối,🔗,3,"Vần au, âu, êu",trâu,,,🐃,word,5,8,Wasserbüffel,water buffalo
 Vần có âm cuối,🔗,3,"Vần au, âu, êu",cầu,,,🌉,word,5,8,Brücke,bridge

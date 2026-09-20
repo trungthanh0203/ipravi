@@ -3,7 +3,9 @@ import { state } from "../state.js";
 import { CONFIG } from "../config.js";
 import { pickAudio, playUrl, stopAudio, prefetchAudio } from "../audio.js";
 import { el } from "../ui.js";
-import { spoken } from "../viet.js";
+import { spoken, spellParts } from "../viet.js";
+import { sayOfPart } from "../sounds.js";
+import { loadSoundBank } from "./api.js";
 
 const TTS_LANG = { vi: "vi-VN", de: "de-DE", en: "en-US" };
 
@@ -86,4 +88,22 @@ export function prefetchItems(items) {
     }
   }
   prefetchAudio(urls);
+}
+
+// Đánh vần theo phần: phát 1 âm nhỏ (bờ, a, huyền…) từ NGÂN HÀNG ÂM — giọng người thật/TTS nếu đã có file, không thì giọng trình duyệt.
+export async function playPart(text) {
+  const bank = await loadSoundBank();
+  const item = bank.get(text);
+  if (item) return playItem(item);
+  return speakFallback(sayOfPart(text), "vi");
+}
+
+export const loadPartAudio = () => loadSoundBank();
+
+// Tải trước âm thanh các phần mà các mục của bài sẽ dùng khi đánh vần.
+export async function prefetchParts(items) {
+  const bank = await loadSoundBank();
+  const found = new Set();
+  for (const it of items) for (const p of spellParts(it.text_vi) ?? []) { const b = bank.get(p.text); if (b) found.add(b); }
+  prefetchItems([...found]);
 }

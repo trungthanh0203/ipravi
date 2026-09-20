@@ -3,7 +3,7 @@ const R = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 // Kiểm tra CSV giáo trình bằng chính bộ kiểm tra của app + luật giáo trình (mỗi bài 5–10 mục, không trùng emoji trong 1 bài,
 // đủ nghĩa de/en, khớp dữ liệu mẫu đã chạy trên Supabase). Chạy: node tests/curriculum.test.mjs
 import { parseCsv, validateRows, keyOf } from "../public/js/admin/csv.js";
-import { splitSyllable, words, toneOf, TONES } from "../public/js/viet.js";
+import { splitSyllable, words, toneOf, TONES, spellParts } from "../public/js/viet.js";
 let bad = 0;
 for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.csv", 2]]) {
   const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
@@ -62,7 +62,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
     // mỗi hoạt động phải chơi được với dữ liệu của bài (nếu không sẽ tự bỏ qua — vô nghĩa)
     const single = items.filter((i) => splitSyllable(i.vi));
     const withInit = single.filter((i) => splitSyllable(i.vi).initial);
-    const need = { listen_pick_tone: single.length, build_syllable: withInit.length, fill_letter: withInit.length,
+    const need = { spell_along: items.filter((i) => (spellParts(i.vi)?.length ?? 0) >= 2).length, listen_pick_tone: single.length, build_syllable: withInit.length, fill_letter: withInit.length,
       read_pick: items.filter((i) => i.emoji).length, order_words: items.filter((i) => words(i.vi).length >= 3).length };
     for (const a of items[0].kinds) if (a in need && need[a] < 3) fail(`${k}: hoạt động ${a} cần ≥3 mục phù hợp, bài chỉ có ${need[a]}`);
     if (items[0].kinds.length < 2) fail(`${k}: chỉ ${items[0].kinds.length} hoạt động`);

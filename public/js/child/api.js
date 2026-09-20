@@ -6,6 +6,13 @@ import { clamp } from "./util.js";
 // Danh sách chủ đề/bài ít đổi → nhớ 1 phút trong bộ nhớ để bé bấm qua lại giữa các màn hình không phải chờ mạng mỗi lần.
 const TTL = 60_000;
 const memo = new Map();
+async function cachedFor(key, ttl, load) {
+  const hit = memo.get(key);
+  if (hit && Date.now() - hit.t < ttl) return hit.v;
+  const v = await load();
+  memo.set(key, { t: Date.now(), v });
+  return v;
+}
 async function cached(key, load) {
   const hit = memo.get(key);
   if (hit && Date.now() - hit.t < TTL) return hit.v;
@@ -14,6 +21,20 @@ async function cached(key, load) {
   return v;
 }
 export const clearCache = () => memo.clear();
+
+// Ngân hàng âm (chủ đề ẨN): Map chữ → mục (kèm âm thanh) để đánh vần theo phần. Chưa chạy migration 010 / chưa tạo ngân hàng → Map rỗng (dùng giọng trình duyệt).
+export const loadSoundBank = () => cachedFor("bank", 300_000, async () => {
+  try {
+    const units = (await sb.from("units").select("id").eq("hidden", true)).data ?? [];
+    if (!units.length) return new Map();
+    const lessons = (await sb.from("lessons").select("id").in("unit_id", units.map((u) => u.id))).data ?? [];
+    if (!lessons.length) return new Map();
+    const { data } = await sb.from("content_items").select("id, text_vi, say_vi, content_audio(*)").in("lesson_id", lessons.map((l) => l.id)).range(0, 999);
+    return new Map((data ?? []).map((i) => [i.text_vi, i]));
+  } catch {
+    return new Map();
+  }
+});
 
 export const loadUnits = () => cached("units", async () => {
   const { data, error } = await sb.from("units").select("*").order("sort_order");

@@ -429,5 +429,19 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.units"))[0].n === 2, "010: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 17. đánh vần theo phần (migration 011) ----
+{
+  const m011 = readFileSync(new URL("../migrations/011_spell_along.sql", import.meta.url), "utf8");
+  await db.exec(m011);
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('SA', 3, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'SAL', 'approved') returning id", [u]))[0].id;
+  ok((await fails("insert into public.activities (lesson_id, kind) values ($1, 'spell_along')", [l])) === null, "011: hoạt động 'spell_along' hợp lệ");
+  ok((await fails("insert into public.activities (lesson_id, kind) values ($1, 'order_story')", [l])) === null, "011: hoạt động cũ (order_story) vẫn hợp lệ");
+  ok(/check/i.test((await fails("insert into public.activities (lesson_id, kind) values ($1, 'hack')", [l])) ?? ""), "011: hoạt động lạ vẫn bị chặn");
+  await db.exec(m011);
+  ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 2, "011: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

@@ -45,3 +45,27 @@ export const bare = (w) => w.replace(/[.,!?;:"“”]/g, "");
 
 // Chữ để ĐỌC thành tiếng: chữ cái/vần đọc bằng tên âm ("b" → "bờ") nên có thể khác chữ hiển thị (cột `say` trong CSV).
 export const spoken = (item) => item?.say_vi || item?.text_vi || "";
+
+// ---- Đánh vần theo từng phần ----
+// "bà" → bờ (âm đầu) – a (vần) – ba (tiếng chưa dấu) – huyền (dấu) – bà (cả tiếng). Bỏ phần trùng/không cần: tiếng chưa dấu trùng cả tiếng (thanh ngang),
+// dấu (thanh ngang), vần trùng cả tiếng (tiếng không âm đầu). Trả về null nếu không phải 1 tiếng đơn. Mỗi phần: { role, text }.
+import { initialSound } from "./sounds.js";
+
+export function spellParts(word) {
+  const sp = splitSyllable(word);
+  if (!sp) return null;
+  const whole = String(word).normalize("NFC").trim().toLowerCase();
+  const van = stripTone(sp.rest);
+  const parts = [];
+  if (sp.initial) {
+    const snd = initialSound(sp.initial);
+    if (snd) parts.push({ role: "initial", text: snd });
+  }
+  if (van !== whole) parts.push({ role: "van", text: van });
+  const tone = toneOf(whole);
+  const base = sp.initial + van;
+  if (sp.initial && tone !== "ngang" && base !== whole) parts.push({ role: "base", text: base });
+  if (tone !== "ngang") parts.push({ role: "tone", text: TONES.find((t) => t.key === tone).name });
+  parts.push({ role: "whole", text: whole });
+  return parts;
+}

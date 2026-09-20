@@ -32,7 +32,7 @@ eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, less
   eq(run3("U,3,L,b,,hack,🐄,letter,x,y").errors.length, 1, "học vần: activities lạ bị từ chối");
   eq(run3("U,3,L,b,,,🐄,letter,x,y").errors.length, 0, "học vần: say/activities để trống hợp lệ");
   eq(run3(`U,3,L,b,${"x".repeat(201)},,🐄,letter,x,y`).errors.length, 1, "học vần: say quá dài bị từ chối");
-  eq(Object.keys(ACTIVITY_DEFAULTS).length, 14, "học vần + đọc hiểu: 14 loại hoạt động có cấu hình mặc định");
+  eq(Object.keys(ACTIVITY_DEFAULTS).length, 15, "học vần + đọc hiểu + đánh vần: 15 loại hoạt động có cấu hình mặc định");
   eq(activitiesFor([]).map((a) => a[0]), STANDARD_ACTIVITIES, "học vần: bài không ghi activities → 4 hoạt động chuẩn");
   eq(activitiesFor(["listen_pick_tone", "read_pick"]), [["listen_pick_tone", { rounds: 5, choices: 3 }], ["read_pick", { rounds: 4, choices: 3 }]], "học vần: bộ hoạt động theo CSV kèm cấu hình");
   const ex = { units: [], lessons: [], items: [] };
