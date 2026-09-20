@@ -6,7 +6,7 @@ import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
 import { guessGender } from "../voice-names.js";
-import { LEVELS, levelOf } from "../levels.js";
+import { LEVELS, levelOf, numberUnits } from "../levels.js";
 import { beginLoad } from "./view.js";
 import * as images from "./images.js";
 import { matchFiles } from "./image-util.js";
@@ -93,6 +93,7 @@ function render(box, units, lessons) {
     return box.replaceChildren(el("div", { class: "card" }, el("p", null, "Chưa có nội dung. Sang tab “Nhập CSV” để thêm chủ đề, bài và từ vựng.")));
   }
 
+  const nums = numberUnits(units.filter((u) => !u.hidden)); // số thứ tự trong cấp (chủ đề ẩn không có số)
   const unitCard = (u) => {
     const ls = lessons.filter((l) => l.unit_id === u.id);
     const open = openUnits.has(u.id);
@@ -101,7 +102,7 @@ function render(box, units, lessons) {
     return el("div", { class: "card" },
       // Tên chủ đề ở trên; DƯỚI nó là 1 hàng nút căn TRÁI: hình + ảnh riêng, ▲▼ đổi thứ tự, cấp, rồi Mở / Duyệt / Xoá.
       el("div", { class: "unit-head" },
-        el("h2", { style: "margin:0" }, `${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
+        el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
         el("div", { class: "row-btns unit-btns" },
           thumb(u, "tiny"), imageButtons("units", u, say, reload),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),

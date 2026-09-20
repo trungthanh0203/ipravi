@@ -7,7 +7,7 @@ import { stopAudio } from "../audio.js";
 import { visual, voiceToggle } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
-import { LEVELS, levelOf, levelProgress, recommendedLevel } from "../levels.js";
+import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
 import { emojiNodes } from "../emoji.js";
 import { loadStats, childStatsView } from "../stats.js";
 
@@ -70,13 +70,15 @@ function showStats(root, stats) {
 async function showUnits(root, level, all) {
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const units = (all ?? (await api.loadUnits())).filter((u) => levelOf(u) === level);
+    const visible = all ?? (await api.loadUnits());
+    const nums = numberUnits(visible); // cùng cách đánh số như khu quản trị (số trong cấp)
+    const units = visible.filter((u) => levelOf(u) === level);
     const L = LEVELS[level - 1];
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showLevels(root) }, "◀ " + T.back),
       el("h1", { style: "text-align:center" }, `${L.emoji} Cấp ${L.n} · ${L.name}`),
       el("div", { class: "unit-grid" }, units.map((u) =>
-        el("button", { class: "unit-card", onclick: () => showLessons(root, u) }, visual(u, "big"), el("span", null, u.title_vi)))));
+        el("button", { class: "unit-card", onclick: () => showLessons(root, u) }, visual(u, "big"), el("span", null, `${nums.get(u.id)}. ${u.title_vi}`)))));
   } catch {
     shell(root, msg("err", T.loadError));
   }
@@ -86,11 +88,12 @@ async function showLessons(root, unit) {
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
     const lessons = await api.loadLessons(unit.id);
+    const unitNo = numberUnits(await api.loadUnits()).get(unit.id); // số của chủ đề trong cấp (units đã được nhớ 1 phút)
     const scores = await api.loadLessonScores(child().id, lessons.map((l) => l.id));
     const nextId = lessons.find((l) => !scores.has(l.id))?.id;
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showUnits(root, levelOf(unit)) }, "◀ " + T.back),
-      el("h1", null, visual(unit), " ", unit.title_vi),
+      el("h1", null, visual(unit), " ", unitNo ? `${unitNo}. ` : "", unit.title_vi),
       el("div", { class: "lesson-list" }, lessons.map((l, i) => {
         // Không khoá bài: trẻ đã biết trước có thể vào thẳng bài khó. Chỉ GỢI Ý bài nên học tiếp (bài đầu tiên chưa làm).
         const n = starsFor(scores.get(l.id));

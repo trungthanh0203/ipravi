@@ -10,6 +10,18 @@ export const LEVELS = [
 export const PASS_RATIO = 0.8;
 
 export const levelOf = (unit) => Math.min(4, Math.max(1, Number(unit?.level) || 1));
+// Số thứ tự của chủ đề TRONG CẤP của nó (1, 2, 3…) theo sort_order (hoà thì theo id). Tính lúc hiển thị, KHÔNG lưu — đổi thứ tự ▲▼ là số tự đổi.
+// Truyền vào các chủ đề cần đánh số (bỏ chủ đề ẩn). Trả Map id → số. Khu bé chỉ thấy chủ đề đã duyệt nên số ở đó liền nhau, không bỏ cách.
+export function numberUnits(units) {
+  const per = new Map();
+  const out = new Map();
+  [...units].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id).forEach((u) => {
+    const lv = levelOf(u);
+    per.set(lv, (per.get(lv) ?? 0) + 1);
+    out.set(u.id, per.get(lv));
+  });
+  return out;
+}
 export const percent = (part, whole) => (whole > 0 ? Math.round((100 * part) / whole) : 0);
 
 // Ghép khung 4 cấp với kết quả RPC child_stats (stats.levels chỉ có cấp đã có nội dung được duyệt).

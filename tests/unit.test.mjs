@@ -2,7 +2,7 @@
 import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.js";
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
-import { LEVELS, levelOf, levelProgress, recommendedLevel, percent } from "../public/js/levels.js";
+import { LEVELS, levelOf, levelProgress, recommendedLevel, percent, numberUnits } from "../public/js/levels.js";
 import { TONES, toneOf, stripTone, splitSyllable, words, bare, spoken, spellParts, caseParts, lookalikes, capitalIndexes, hasProperName, traceTexts } from "../public/js/viet.js";
 import { dilate, labelParts, scoreTrace } from "../public/js/trace-score.js";
 import { twemojiName, graphemes, isEmojiGrapheme, emojiUrl } from "../public/js/emoji.js";
@@ -242,6 +242,16 @@ eq([spoken({ text_vi: "b", say_vi: "bờ" }), spoken({ text_vi: "bà" }), spoken
   eq(dv.getUint32(40, true), 10, "WAV: kích thước dữ liệu = 2 byte/mẫu");
   const take = processTake(cat(sil(24000), tone(24000, 0.05), sil(24000)), 48000);
   eq([take.ms > 400 && take.ms < 1000, take.wav.length > 44, Math.abs(rmsOf(Float32Array.from([1, -1, 1, -1])) - 1) < 1e-9, durationMs(sil(8000), 8000)], [true, true, true, 1000], "processTake: cắt lặng + 24 kHz + WAV (tiếng ~0,5 s + đệm)");
+}
+
+// Số thứ tự chủ đề trong cấp
+{
+  const us = [{ id: 5, level: 3, sort_order: 30 }, { id: 1, level: 1, sort_order: 10 }, { id: 2, level: 3, sort_order: 20 }, { id: 3, level: 3, sort_order: 20 }, { id: 4, level: 1, sort_order: 5 }, { id: 6, sort_order: 1 }];
+  const n = numberUnits(us);
+  eq([n.get(6), n.get(4), n.get(1)], [1, 2, 3], "số thứ tự: theo sort_order trong từng cấp (thiếu level = cấp 1)");
+  eq([n.get(2), n.get(3), n.get(5)], [1, 2, 3], "số thứ tự: cấp 3 — hoà sort_order thì theo id");
+  eq(numberUnits([]).size, 0, "số thứ tự: rỗng");
+  eq(numberUnits(us.filter((x) => x.id !== 2)).get(3), 1, "số thứ tự: bỏ chủ đề (chưa duyệt) thì số liền nhau, không bỏ cách");
 }
 
 // Worker
