@@ -296,3 +296,8 @@ img.visual.big { max-height: 200px; }
 .item-card { background: #fff; border-radius: 14px; padding: 12px; box-shadow: 0 2px 8px rgba(80, 40, 10, .08); display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .item-card.decor { opacity: .72; outline: 2px dashed #f4c9a5; }
 .item-pic { width: 100%; display: flex; justify-content: center; }
+
+/* Đầu thẻ chủ đề (admin): tên ở trên, hàng nút căn trái bên dưới */
+.unit-head { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.row-btns.unit-btns { justify-content: flex-start; align-items: center; margin: 0 0 4px; }
+.row-btns.unit-btns select { width: auto; min-width: 0; }

@@ -99,9 +99,10 @@ function render(box, units, lessons) {
     const levelSel = el("select", { title: "Cấp của chủ đề", "aria-label": "Cấp của chủ đề", onchange: act(() => ops.setUnitLevel(u.id, levelSel.value), "Đã đổi cấp của chủ đề.") },
       LEVELS.map((L) => el("option", { value: String(L.n), selected: L.n === levelOf(u) }, `${L.emoji} Cấp ${L.n}`)));
     return el("div", { class: "card" },
-      el("div", { class: "row" },
+      // Tên chủ đề ở trên; DƯỚI nó là 1 hàng nút căn TRÁI: hình + ảnh riêng, ▲▼ đổi thứ tự, cấp, rồi Mở / Duyệt / Xoá.
+      el("div", { class: "unit-head" },
         el("h2", { style: "margin:0" }, `${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
-        el("div", { class: "row-btns", style: "margin:0" },
+        el("div", { class: "row-btns unit-btns" },
           thumb(u, "tiny"), imageButtons("units", u, say, reload),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
