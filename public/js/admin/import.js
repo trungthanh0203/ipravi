@@ -2,7 +2,7 @@ import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { el, msg } from "../ui.js";
 import { A, CSV_HELP, aiPrompt } from "./text.js";
-import { parseCsv, validateRows, buildPlan, buildTemplate, keyOf, activitiesFor } from "./csv.js";
+import { parseCsv, validateRows, buildPlan, buildTemplate, keyOf, activitiesFor, summarizeChanges } from "./csv.js";
 import { dropAudio } from "./audio.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
@@ -181,6 +181,8 @@ export function mount(box, { onImported } = {}) {
         ? `${v.items.length} dòng hợp lệ: ${plan.counts.new} mới, ${plan.counts.update} cập nhật, ${plan.counts.same} không đổi` +
           ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài` + (plan.levelChanges?.length ? `, đổi cấp ${plan.levelChanges.length} chủ đề.` : ".")
         : "Chưa thể nhập — sửa các lỗi sau rồi kiểm tra lại."),
+      plan && plan.counts.update ? el("p", { class: "muted" }, "Sẽ đổi ở các mục đã có: " + summarizeChanges(plan).map(([k, n]) => `${k} (${n})`).join(" · ") + ".") : null,
+      plan ? el("p", { class: "muted" }, "Lưu ý: bài ĐÃ CÓ không bị đổi bộ hoạt động khi nhập lại (chỉ bài mới có hoạt động ghi trong cột activities). Không thấy thay đổi mong đợi? Tải lại trang (Ctrl+F5) để chắc chắn đang chạy bản app mới nhất, và kiểm tra file CSV có đúng cột (vd pic, say, activities).") : null,
       v.errors.length ? el("div", { class: "msg err" }, el("b", null, `${v.errors.length} lỗi (phải sửa):`),
         el("ul", null, v.errors.slice(0, 50).map((e) => el("li", null, `Dòng ${e.row}: ${e.msg}`))),
         v.errors.length > 50 && `…và ${v.errors.length - 50} lỗi nữa`) : null,

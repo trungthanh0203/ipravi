@@ -194,6 +194,17 @@ export function buildTemplate(langs) {
   return "﻿" + lines.map((r) => r.map(q).join(",")).join("\r\n") + "\r\n";
 }
 
+// Tóm tắt các TRƯỜNG sẽ đổi ở những mục đã có (để admin thấy nhập lại sẽ đổi gì): [[nhãn, số mục], …] giảm dần.
+const FIELD_LABEL = { emoji: "emoji", type: "kiểu mục", say: "chữ đọc", pic: "vai trò hình (đúng nghĩa/trang trí)", extra: "câu hỏi đọc hiểu", min_age: "tuổi", max_age: "tuổi" };
+export function summarizeChanges(plan) {
+  const count = new Map();
+  for (const r of plan.rows) {
+    if (r.status !== "update") continue;
+    for (const label of new Set(r.changed.map((c) => (c.startsWith("tr:") ? "nghĩa" : FIELD_LABEL[c] ?? c)))) count.set(label, (count.get(label) ?? 0) + 1);
+  }
+  return [...count].sort((a, b) => b[1] - a[1]);
+}
+
 // Lập kế hoạch nhập: so từng dòng CSV với dữ liệu đã có.
 // ex = { units:[{id,title_vi,sort_order}], lessons:[{id,unit_id,title_vi,sort_order}],
 //        items:[{id,lesson_id,text_vi,emoji,item_type,min_age,max_age,sort_order,tr:{lang:meaning}}] }

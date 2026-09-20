@@ -1,5 +1,5 @@
 // Kiểm thử phần lõi của công cụ admin: đọc/kiểm tra CSV và endpoint TTS của Worker. Chạy: node tests/admin.test.mjs
-import { parseCsv, validateRows, classify, buildTemplate, keyOf, buildPlan, activitiesFor, ACTIVITY_DEFAULTS, STANDARD_ACTIVITIES } from "../public/js/admin/csv.js";
+import { parseCsv, validateRows, classify, buildTemplate, keyOf, buildPlan, activitiesFor, ACTIVITY_DEFAULTS, STANDARD_ACTIVITIES, summarizeChanges } from "../public/js/admin/csv.js";
 import worker from "../worker.js";
 
 let fail = 0;
@@ -76,6 +76,14 @@ eq(v.items[0], { row: 2, unit: "Con vật", unitEmoji: "🐾", level: null, less
   eq(classify(p("decor"), { ...base, pic: null }).changed, ["pic"], "pic: đổi literal → decor = cập nhật");
   eq(classify(p("literal"), { ...base, pic: null }).status, "same", "pic: 'literal' khớp null (mặc định)");
   eq(classify(p(null), { ...base, pic: "decor" }).status, "same", "pic: CSV để trống không xoá vai trò đã đặt");
+}
+
+// Tóm tắt thay đổi khi nhập lại
+{
+  const mkRow = (changed, status = "update") => ({ status, changed });
+  const s = summarizeChanges({ rows: [mkRow(["pic"]), mkRow(["pic", "emoji"]), mkRow(["tr:de", "tr:en"]), mkRow([], "same"), mkRow([], "new")] });
+  eq(s, [["vai trò hình (đúng nghĩa/trang trí)", 2], ["emoji", 1], ["nghĩa", 1]], "tóm tắt thay đổi: đếm theo trường (nghĩa nhiều ngôn ngữ tính 1), bỏ mục mới/không đổi");
+  eq(summarizeChanges({ rows: [] }), [], "tóm tắt thay đổi: không có gì → rỗng");
 }
 
 // Cột level (cấp 1–4)
