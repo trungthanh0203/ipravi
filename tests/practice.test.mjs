@@ -1,6 +1,6 @@
 // Luyện tập theo kỹ năng: hàm thuần (vị từ lọc, kỹ năng, chọn phiên) + kiểm tra trên giáo trình thật. Chạy: node tests/practice.test.mjs
 import { readFileSync, readdirSync } from "node:fs";
-import { SKILLS, GROUPS, skillOf, skillById, kindAllowed, KIND_COST } from "../public/js/child/skills.js";
+import { SKILLS, GROUPS, BADGES, skillOf, skillById, kindAllowed, KIND_COST, badgeOf, badgeProgress, trendOf, skillMap, suggestSkills } from "../public/js/child/skills.js";
 import { POOLS, feasible, toneGroups, variants, meaningIn } from "../public/js/child/pools.js";
 import { familyOf, weightOf, weightedSample, scopeItems, weakCount, chooseFamily, planSession, planPractice, selectFor, skillPlayable, skillsForAge } from "../public/js/child/practice-core.js";
 import { spellingChoices } from "../public/js/viet.js";
@@ -155,6 +155,28 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   ok(new Set(sortSel.map((i) => i.unit_id)).size >= 2, "selectFor(sort_unit): có ≥ 2 chủ đề");
   const toneSel = selectFor("tone_pair", catalog.filter((i) => familyOf(i) === "letters"), { config: { rounds: 4 } }, new Map(), {}, seeded(2));
   ok(toneGroups(toneSel).size >= 1, "selectFor(tone_pair): có nhóm ≥ 3 thanh");
+}
+
+// ---- Huy hiệu + xu hướng + gợi ý (giai đoạn 2) ----
+{
+  eq([badgeOf(0), badgeOf(2)], [null, null], "badgeOf: dưới 3 phiên tốt chưa có huy hiệu");
+  eq([badgeOf(3).emoji, badgeOf(9).emoji, badgeOf(10).emoji, badgeOf(24).emoji, badgeOf(25).emoji, badgeOf(99).emoji], ["🥉", "🥉", "🥈", "🥈", "🥇", "🥇"], "badgeOf: 3 / 10 / 25 phiên");
+  eq(badgeProgress(1), { cur: null, next: BADGES[0], remaining: 2 }, "badgeProgress: còn 2 phiên để được 🥉");
+  eq(badgeProgress(10).remaining, 15, "badgeProgress: từ 🥈 còn 15 phiên để được 🥇");
+  eq(badgeProgress(30).next, null, "badgeProgress: đã cao nhất");
+  eq([trendOf(80, 70), trendOf(60, 70), trendOf(72, 70), trendOf(80, null), trendOf(null, 70)], ["up", "down", null, null, null], "trendOf: lệch từ 5 điểm; thiếu số liệu thì không kết luận");
+  const rows = [
+    { skill: "listen", activities_30: 10, avg_30: 90, good: 5, sessions: 6 },
+    { skill: "spell", activities_30: 5, avg_30: 55, good: 0, sessions: 2 },
+    { skill: "trace", activities_30: 3, avg_30: 40, good: 0, sessions: 1 },
+    { skill: "read", activities_30: 2, avg_30: 30, good: 0, sessions: 1 },   // ít hơn 3 lượt → chưa đủ kết luận
+    { skill: "story", activities_30: 9, avg_30: 20, good: 0, sessions: 0 },  // không thuộc 12 kỹ năng → bỏ
+  ];
+  eq(skillMap(rows).size, 4, "skillMap: bỏ dòng không thuộc 12 kỹ năng");
+  eq(suggestSkills(rows).map((x) => [x.skill, x.reason]), [["trace", "low"], ["spell", "low"]], "suggestSkills: kỹ năng điểm thấp nhất trước, tối đa 2");
+  eq(suggestSkills([{ skill: "listen", activities_30: 10, avg_30: 90 }], ["listen", "speak", "memory"]).map((x) => [x.skill, x.reason]), [["speak", "unused"], ["memory", "unused"]], "suggestSkills: điểm cao hết thì gợi ý kỹ năng chưa chơi");
+  eq(suggestSkills([], ["listen"]).map((x) => x.skill), ["listen"], "suggestSkills: bé chưa chơi gì → gợi ý kỹ năng phù hợp tuổi");
+  eq(suggestSkills(rows, ["listen"]), [], "suggestSkills: chỉ gợi ý kỹ năng phù hợp tuổi (đã chơi tốt thì không gợi ý)");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

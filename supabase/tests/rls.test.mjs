@@ -551,5 +551,40 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.activity_log"))[0].n === before, "016: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 23. thống kê theo kỹ năng (migration 017) ----
+{
+  const m017 = readFileSync(new URL("../migrations/017_skill_stats.sql", import.meta.url), "utf8");
+  await db.exec(m017);
+  const P = await uid("p23@x.com"), P2 = await uid("p23b@x.com");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé Kỹ năng','frog') returning id", [P]))[0].id;
+  const ins = (kind, skill, source, score, secs, ago) => db.query("insert into public.activity_log (child_id, kind, skill, source, score, duration_seconds, created_at) values ($1,$2,$3,$4,$5,$6, now() - $7::interval)", [kid, kind, skill, source, score, secs, ago]);
+  for (const sc of [90, 86, 70, 95]) await ins("practice", "listen", "practice", sc, 100, "1 day"); // 4 phiên luyện tập, 3 phiên đạt ≥ 85
+  await ins("listen_pick", "listen", "practice", 80, 120, "1 day");
+  await ins("listen_pick", "listen", "lesson", 90, 180, "2 days");      // trò của bài học cũng tính vào kỹ năng
+  await ins("match", null, "lesson", 60, 60, "3 days");                  // dòng cũ trước migration 016 (chưa có skill) → suy ra 'read'
+  await ins("listen_pick", "listen", "lesson", 50, 90, "40 days");       // 30–60 ngày trước → điểm kỳ trước
+  await ins("listen_pick", "listen", "lesson", 10, 90, "90 days");       // quá 60 ngày → không tính
+  await ins("lesson", null, "lesson", 100, 600, "1 day");                // dòng cả bài → không tính vào kỹ năng
+  await as(P, async () => {
+    const st = (await q("select public.child_skill_stats($1) as s", [kid]))[0].s;
+    const by = Object.fromEntries(st.skills.map((x) => [x.skill, x]));
+    ok(by.listen.sessions === 4 && by.listen.good === 3, "017: phiên luyện tập + số phiên đạt ≥ 85", JSON.stringify(by.listen));
+    ok(by.listen.activities_30 === 2 && by.listen.avg_30 === 85 && by.listen.minutes_30 === 5, "017: 30 ngày gần đây (2 lượt, TB 85, 5 phút — không đếm dòng phiên)", JSON.stringify(by.listen));
+    ok(by.listen.avg_prev === 50, "017: điểm kỳ trước (30–60 ngày); dòng > 60 ngày bị bỏ", JSON.stringify(by.listen));
+    ok(by.read && by.read.activities_30 === 1 && by.read.avg_30 === 60 && by.read.sessions === 0, "017: dòng cũ chưa có skill được suy ra từ kind (match → read)", JSON.stringify(by.read));
+    ok(!("lesson" in by) && !("practice" in by) && Object.keys(by).length === 2, "017: dòng cả bài/cả phiên không thành kỹ năng", Object.keys(by).join());
+  });
+  await as(P2, async () => {
+    const e = await fails("select public.child_skill_stats($1)", [kid]);
+    ok(e && /không có quyền/i.test(e), "017: phụ huynh khác KHÔNG xem được thống kê kỹ năng của bé", String(e));
+  });
+  await as(ADM, async () => ok((await q("select public.child_skill_stats($1) as s", [kid]))[0].s.skills.length === 2, "017: admin xem được"));
+  const P3 = await uid("p23c@x.com");
+  const empty = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé mới','frog') returning id", [P3]))[0].id;
+  await as(P3, async () => ok((await q("select public.child_skill_stats($1) as s", [empty]))[0].s.skills.length === 0, "017: bé chưa chơi → danh sách rỗng, không lỗi"));
+  await db.exec(m017);
+  ok((await q("select count(*)::int as n from public.activity_log where child_id = $1", [kid]))[0].n === 10, "017: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

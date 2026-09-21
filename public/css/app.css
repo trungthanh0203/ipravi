@@ -371,3 +371,44 @@ img.visual.big { max-height: 200px; }
 .mem-card.done { border-color: var(--ok); background: #ebfbee; }
 .opt-bucket { flex-direction: column; gap: 6px; border-color: #b9c7e6; background: #f2f6ff; }
 .opt-bucket .bucket-name { font-size: 16px; font-weight: 800; }
+
+/* ===== Huy hiệu 🥉🥈🥇 + thống kê theo kỹ năng ===== */
+.skill-card { position: relative; }
+.sk-badge { position: absolute; top: 6px; right: 8px; font-size: 26px; line-height: 1; }
+.sk-badge img { height: 1em; width: 1em; }
+.medals { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 6px; }
+.medal-row { display: flex; gap: 10px; }
+.medal { font-size: 30px; line-height: 1; opacity: .25; filter: grayscale(1); }
+.medal.on { opacity: 1; filter: none; }
+.medal img { height: 1em; width: 1em; }
+.badge-new { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fff8db; border: 3px solid #f2c94c; border-radius: 20px; padding: 10px 14px; margin: 10px 0; animation: pop .5s ease-out; }
+.badge-big { font-size: 64px; line-height: 1; }
+.badge-big img { height: 1em; width: 1em; }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+.syl-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 8px 0; }
+.syl { font: inherit; font-size: 22px; font-weight: 800; border-radius: 14px; padding: 8px 14px; border: 3px solid; background: #fff; color: var(--text); }
+.syl.ok { border-color: var(--ok); background: #ebfbee; }
+.syl.again { border-color: #f2b45a; background: #fff6e5; }
+
+.sk-rows { display: flex; flex-direction: column; gap: 12px; }
+.sk-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-left: 6px solid var(--c); background: #fff; border-radius: 12px; }
+.sk-head { display: flex; align-items: center; gap: 8px; }
+.sk-head b { color: var(--c); }
+.sk-medal { font-size: 20px; }
+.trend { font-weight: 800; font-size: 14px; }
+.trend.up { color: var(--ok); }
+.trend.down { color: var(--err); }
+.sk-sug { margin: 4px 0; padding-left: 20px; line-height: 1.6; }
+.pron-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.pill.lv-excellent, .pill.lv-good { background: #ebfbee; color: var(--ok); }
+.pill.lv-fair { background: #fff6e5; color: #8a5a00; }
+.pill.lv-practice { background: #fff0f0; color: var(--err); }
+.pron-bars { display: flex; flex-direction: column; gap: 6px; }
+.pron-bar { display: grid; grid-template-columns: 8.5em 1fr 3em; gap: 8px; align-items: center; font-size: 14px; }
+.pron-bar b { text-align: right; }
+.meter-fill.ok { background: var(--ok); }
+.meter-fill.tone { background: #f2994a; }
+.meter-fill.initial { background: #9b6cd6; }
+.meter-fill.close { background: #56a3d9; }
+.meter-fill.wrong, .meter-fill.missing { background: #9aa0a6; }
+.note-soft { background: #fff8db; border-radius: 12px; padding: 10px 14px; }

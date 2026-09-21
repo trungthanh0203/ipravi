@@ -13,6 +13,6 @@ export function makeCtx({ box, account, child, items, questions = [], progress, 
       onRecord?.(itemId, correct);
       api.saveAnswer(child.id, itemId, correct, progress.get(itemId)).then((row) => progress.set(itemId, row));
     },
-    savePron: (itemId, score, text) => api.savePronunciation(child.id, itemId, score, text),
+    savePron: (itemId, score, text, detail) => api.savePronunciation(child.id, itemId, score, text, detail),
   };
 }

@@ -43,3 +43,34 @@ export const KIND_COST = { match: 3, match_case: 3, memory_flip: 3, spell_along:
 export const KIND_CAP = { listen_repeat: 3, trace: 3, spell_along: 3, order_words: 3, fix_capital: 3, sort_unit: 6, match: 1, match_case: 1, memory_flip: 1 };
 // Trò dùng cấu hình `pairs` thay vì `rounds`.
 export const PAIR_KINDS = new Set(["match", "match_case", "memory_flip"]);
+
+// ---- Huy hiệu + gợi ý (giai đoạn 2) ----
+// Huy hiệu theo số PHIÊN luyện tập đạt từ GOOD_SCORE điểm trở lên của từng kỹ năng (đếm từ nhật ký, không có bảng riêng): 🥉 3 · 🥈 10 · 🥇 25.
+export const GOOD_SCORE = 85;
+export const BADGES = [
+  { n: 3, emoji: "🥉", name: "Đồng" },
+  { n: 10, emoji: "🥈", name: "Bạc" },
+  { n: 25, emoji: "🥇", name: "Vàng" },
+];
+export const badgeOf = (good) => [...BADGES].reverse().find((b) => good >= b.n) ?? null;
+// { cur: huy hiệu đang có | null, next: huy hiệu kế tiếp | null, remaining: số phiên tốt nữa để được huy hiệu kế tiếp }
+export function badgeProgress(good) {
+  const next = BADGES.find((b) => good < b.n) ?? null;
+  return { cur: badgeOf(good), next, remaining: next ? next.n - good : 0 };
+}
+
+// Xu hướng điểm: lệch từ 5 điểm trở lên mới tính (tránh nhấp nháy ▲▼ vì dao động nhỏ).
+export const trendOf = (cur, prev) => (cur == null || prev == null || Math.abs(cur - prev) < 5 ? null : cur > prev ? "up" : "down");
+
+// rows (RPC child_skill_stats.skills) → Map kỹ năng → dòng, bỏ dòng không thuộc 12 kỹ năng (order_story/read_quiz chỉ để thống kê tổng).
+export const skillMap = (rows = []) => new Map(rows.filter((r) => skillById(r.skill)).map((r) => [r.skill, r]));
+
+// Gợi ý cho phụ huynh: tối đa 2 kỹ năng — trước hết kỹ năng điểm thấp (< 70 điểm, ≥ 3 lượt trong 30 ngày, thấp nhất trước),
+// rồi kỹ năng chưa chơi lần nào trong 30 ngày. Chỉ gợi ý kỹ năng phù hợp tuổi của bé (allowed = danh sách id).
+export function suggestSkills(rows, allowed = SKILLS.map((s) => s.id)) {
+  const by = skillMap(rows);
+  const low = [...by.values()].filter((r) => allowed.includes(r.skill) && r.activities_30 >= 3 && r.avg_30 != null && r.avg_30 < 70)
+    .sort((a, b) => a.avg_30 - b.avg_30).map((r) => ({ skill: r.skill, reason: "low", avg: r.avg_30 }));
+  const unused = SKILLS.filter((s) => allowed.includes(s.id) && !(by.get(s.id)?.activities_30 > 0)).map((s) => ({ skill: s.id, reason: "unused" }));
+  return [...low, ...unused].slice(0, 2);
+}

@@ -10,9 +10,10 @@ import { LEVELS } from "../levels.js";
 import * as api from "./api.js";
 import { RUNNERS } from "./runners.js";
 import { makeCtx } from "./session.js";
-import { GROUPS, groupById } from "./skills.js";
+import { GROUPS, BADGES, GOOD_SCORE, groupById, badgeOf, badgeProgress, skillMap } from "./skills.js";
 import { skillsForAge, skillPlayable, planPractice, weakCount } from "./practice-core.js";
 import { starsFor } from "./lesson.js";
+import { loadSkillStats } from "../stats.js";
 
 // Luyện tập theo kỹ năng: 1 phần RIÊNG với Học — bé tự chọn kỹ năng và phạm vi, chơi trên MỌI nội dung đã duyệt (không cần đã học).
 // Luồng: lưới kỹ năng → (bé ≥ 5 tuổi) chọn phạm vi → phiên 6–8 lượt → kết quả. Kế hoạch: KE_HOACH_LUYEN_TAP_THEO_KY_NANG.md.
@@ -23,14 +24,25 @@ const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${
 const btnStyle = (skill) => `background:${groupById(skill.group).color}`;
 const icon = (emoji) => el("span", { class: "sk-emoji" }, ...emojiNodes(emoji));
 const ageOf = () => childAge(child());
+const goodOf = (data, id) => data.skills?.get(id)?.good ?? 0;
+// 3 huy hiệu 🥉🥈🥇: đã đạt thì sáng, chưa đạt thì mờ (bé chưa đọc giỏi vẫn hiểu); dòng chữ nhỏ cho bố mẹ.
+const medals = (data, id) => {
+  if (!data.skills) return null;
+  const good = goodOf(data, id);
+  const { next, remaining } = badgeProgress(good);
+  return el("div", { class: "medals" },
+    el("div", { class: "medal-row" }, BADGES.map((b) => el("span", { class: "medal" + (good >= b.n ? " on" : ""), title: `${b.name}: ${b.n} phiên từ ${GOOD_SCORE} điểm` }, ...emojiNodes(b.emoji)))),
+    next ? el("small", { class: "muted" }, T.practiceBadgeNext(next.name, remaining)) : null);
+};
 
 // shell(root, ...body): khung có tiêu đề bé + nút thoát (của child-home). home(): về màn hình chính.
 export async function showPractice({ root, shell, home }) {
   shell(root, el("p", { class: "boot" }, T.loading));
   let data;
   try {
-    const [catalog, progress] = await Promise.all([api.loadCatalog(), api.loadAllProgress(child().id)]);
-    data = { catalog, progress, byId: new Map(catalog.map((i) => [i.id, i])) };
+    // Huy hiệu là phần thêm: thiếu migration 017 / lỗi mạng thì skills = null và bỏ qua huy hiệu, vẫn chơi bình thường.
+    const [catalog, progress, skillRows] = await Promise.all([api.loadCatalog(), api.loadAllProgress(child().id), loadSkillStats(child().id).catch(() => null)]);
+    data = { catalog, progress, byId: new Map(catalog.map((i) => [i.id, i])), skills: skillRows ? skillMap(skillRows) : null };
   } catch {
     return shell(root, msg("err", T.loadError), el("button", { class: "btn ghost", onclick: home }, "◀ " + T.back));
   }
@@ -49,7 +61,8 @@ function skillsScreen(ctx, note = null) {
     return el("button", {
       class: "skill-card" + (ok ? "" : " off"), style: colorStyle(skill), "aria-disabled": ok ? null : "true",
       onclick: () => (ok ? (ageOf() != null && ageOf() < 5 ? start(ctx, skill, { type: "all" }) : scopeScreen(ctx, skill)) : (say(T.practiceNeedMore), skillsScreen(ctx, T.practiceNeedMore))),
-    }, icon(skill.emoji), el("b", null, skill.name), ageOf() == null || ageOf() >= 5 ? el("small", null, skill.desc) : null);
+    }, badgeOf(goodOf(data, skill.id)) ? el("span", { class: "sk-badge" }, ...emojiNodes(badgeOf(goodOf(data, skill.id)).emoji)) : null,
+    icon(skill.emoji), el("b", null, skill.name), ageOf() == null || ageOf() >= 5 ? el("small", null, skill.desc) : null);
   };
   shell(root,
     el("button", { class: "btn ghost small", onclick: home }, "◀ " + T.back),
@@ -79,7 +92,7 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
     : null;
   shell(root,
     el("button", { class: "btn ghost small", onclick: () => skillsScreen(ctx) }, "◀ " + T.back),
-    el("div", { class: "skill-hero", style: colorStyle(skill) }, icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc)),
+    el("div", { class: "skill-hero", style: colorStyle(skill) }, icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc), medals(data, skill.id)),
     el("h2", null, T.scopeTitle),
     el("div", { class: "scope-row" },
       chip("🌍 " + T.scopeAll, { type: "all" }),
@@ -172,19 +185,31 @@ async function runSession(ctx, skill, scope, planned) {
   const score = Math.round((correct / total) * 100);
   logs.push({ child_id: c.id, kind: "practice", skill: skill.id, source: "practice", score, duration_seconds: Math.round((Date.now() - t0) / 1000) });
   api.saveActivityLogs(logs);
-  resultScreen(ctx, skill, scope, score, [...outcome].filter(([, ok]) => !ok).map(([id]) => items.get(id)).filter(Boolean));
+  // Cập nhật huy hiệu ngay trong bộ nhớ (nhật ký đã lưu ở trên): phiên tính là "tốt" khi từ 85 điểm.
+  let gained = null;
+  if (data.skills) {
+    const row = data.skills.get(skill.id) ?? { skill: skill.id, sessions: 0, good: 0 };
+    const before = badgeOf(row.good);
+    row.sessions++;
+    if (score >= GOOD_SCORE) row.good++;
+    data.skills.set(skill.id, row);
+    const after = badgeOf(row.good);
+    if (after && after.n !== before?.n) gained = after;
+  }
+  resultScreen(ctx, skill, scope, score, [...outcome].filter(([, ok]) => !ok).map(([id]) => items.get(id)).filter(Boolean), gained);
 }
 
 // ---- 4) Kết quả: sao + lời khen + các từ nên luyện lại (không hiện điểm số cho bé) ----
-function resultScreen(ctx, skill, scope, score, missed) {
+function resultScreen(ctx, skill, scope, score, missed, gained = null) {
   const { root } = ctx;
   sfx.star();
-  say(T.practiceDone);
+  say(gained ? T.practiceNewBadge(gained.name, skill.name) : T.practiceDone);
   const n = starsFor(score);
   paint(root, el("div", { class: "card", style: "text-align:center" },
     el("div", { class: "mascot" }, ...emojiNodes("🐓")),
     el("h1", null, T.practiceDone),
     el("div", { class: "stars big" }, "⭐".repeat(n) + "☆".repeat(3 - n)),
+    gained ? el("div", { class: "badge-new" }, el("span", { class: "badge-big" }, ...emojiNodes(gained.emoji)), el("b", null, T.practiceNewBadge(gained.name, skill.name))) : medals(ctx.data, skill.id),
     missed.length ? el("div", null,
       el("h2", null, T.practiceWeakTitle),
       el("div", { class: "review" }, missed.slice(0, 6).map((it) => el("button", { class: "chip chip-btn2", onclick: () => playItem(it) }, "🔊 ", it.emoji ? it.emoji + " " : "", it.text_vi)))) : null,

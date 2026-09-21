@@ -6,7 +6,8 @@ import { T } from "../strings.js";
 import { avatarEmoji } from "../data.js";
 import { pronunciationSupported } from "../pronunciation.js";
 import { requestExtraChild, myPayments } from "../payments.js";
-import { loadStats, parentStatsView } from "../stats.js";
+import { loadStats, loadSkillStats, loadPronReport, parentStatsView } from "../stats.js";
+import { childAge } from "../child/util.js";
 
 // Giọng nghe mặc định cho các bé (bé nào tự đổi bằng nút 👩/👨 thì theo lựa chọn của bé đó).
 function voiceCard() {
@@ -103,8 +104,10 @@ function progressCard() {
     [...picker.children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
     body.replaceChildren(el("p", { class: "muted" }, T.loading));
     try {
-      const stats = await loadStats(id);
-      if (current === id) body.replaceChildren(parentStatsView(stats));
+      // Phần theo kỹ năng + đánh giá đọc tải song song; lỗi ở đó (vd chưa chạy migration 017) không làm mất thống kê chính.
+      const [stats, skills, pron] = await Promise.all([loadStats(id), loadSkillStats(id).catch(() => null), loadPronReport(id).catch(() => null)]);
+      const kid = state.children.find((c) => c.id === id);
+      if (current === id) body.replaceChildren(parentStatsView(stats, { skills, pron, pronEnabled: Boolean(state.account?.pronunciation_enabled), age: childAge(kid) }));
     } catch {
       if (current === id) body.replaceChildren(msg("err", T.statsError));
     }

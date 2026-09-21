@@ -154,7 +154,8 @@ export async function saveActivityLogs(rows) {
   if (error) console.warn("saveActivityLogs", error.message);
 }
 
-export async function savePronunciation(childId, itemId, score, transcript) {
-  const { error } = await sb.from("pronunciation_attempts").insert({ child_id: childId, item_id: itemId, score, transcript });
+// detail: kết quả từng tiếng (pronunciation.detailOf) — cột jsonb có từ migration 001, phụ huynh xem ở báo cáo "Đánh giá đọc".
+export async function savePronunciation(childId, itemId, score, transcript, detail = null) {
+  const { error } = await sb.from("pronunciation_attempts").insert({ child_id: childId, item_id: itemId, score, transcript, detail });
   if (error) console.warn("savePronunciation", error.message);
 }

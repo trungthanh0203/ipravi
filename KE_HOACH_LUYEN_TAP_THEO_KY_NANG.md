@@ -1,6 +1,6 @@
 # Kế hoạch: Luyện tập theo kỹ năng
 
-Trạng thái (2026-09-21): **GĐ 0 + 1 ĐÃ LÀM** (kèm cả 5 trò mới của GĐ 4 vì chủ dự án chốt làm đủ 12 kỹ năng). Chưa làm: GĐ 2 (huy hiệu + thống kê theo kỹ năng), GĐ 3 (tab admin), GĐ 5 (Kể chuyện/Đọc hiểu chọn bài, giới hạn phút/ngày, thử thách tổng hợp).
+Trạng thái (2026-09-21): **GĐ 0 + 1 + 2 ĐÃ LÀM** (GĐ 2 = huy hiệu + thống kê theo kỹ năng + đánh giá đọc to, migration 017) (kèm cả 5 trò mới của GĐ 4 vì chủ dự án chốt làm đủ 12 kỹ năng). Chưa làm: GĐ 3 (tab admin), GĐ 5 (Kể chuyện/Đọc hiểu chọn bài, giới hạn phút/ngày, thử thách tổng hợp).
 
 **Quyết định đã chốt (chủ dự án 2026-09-21):** D1 làm đủ 12 kỹ năng. D2 Luyện tập là phần RIÊNG với Học — bé tự chọn, chơi trên MỌI nội dung đã duyệt, không cần đã học bài (nên phạm vi "Bài đã học" bỏ; mặc định "Tất cả"). D3–D7 theo đề xuất: luyện tập có tăng `mastery`; huy hiệu 🥉🥈🥇 (GĐ 2); giới hạn phút/ngày làm riêng sau; bé không thấy điểm số; sửa lỗi phút học đếm đôi ngay trong migration 016.
 

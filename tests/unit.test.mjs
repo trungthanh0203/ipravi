@@ -1,5 +1,5 @@
 // Kiểm thử các hàm thuần của giao diện + Worker. Chạy: node tests/unit.test.mjs (không cần cài gì).
-import { scorePronunciation, tokenize, tier } from "../public/js/pronunciation.js";
+import { scorePronunciation, tokenize, tier, assessReading, compareSyllable, readingLevel, tipOf, detailOf, summarizePron } from "../public/js/pronunciation.js";
 import { pickAudio } from "../public/js/audio.js";
 import worker from "../worker.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, percent, numberUnits } from "../public/js/levels.js";
@@ -261,5 +261,42 @@ eq(cfg.languages, [{ code: "de", label: "Deutsch" }, { code: "en", label: "Engli
 eq(cfg.centerName, "Trung tâm A", "worker: tên trung tâm");
 eq(await (await worker.fetch(new Request("https://a.dev/index.html"), env)).text(), "asset", "worker: file tĩnh qua ASSETS");
 eq((await (await worker.fetch(new Request("https://a.dev/api/config"), { ASSETS: env.ASSETS })).json()).languages, [{ code: "de", label: "Deutsch" }], "worker: mặc định ngôn ngữ de");
+
+// ---- Đánh giá đọc từng tiếng (assessReading) ----
+{
+  const st = (r) => r.syllables.map((s) => `${s.text}:${s.status}`).join(" ");
+  const a1 = assessReading("chào bà ạ", "chào ba ạ");
+  eq([a1.score, a1.level, st(a1)], [83, "good", "chào:ok bà:tone ạ:ok"], "assess: sai dấu thanh 1/3 tiếng → 83, mức Tốt, nhận ra tiếng sai thanh");
+  eq(st(assessReading("chào bà ạ", "chào ạ")), "chào:ok bà:missing ạ:ok", "assess: bỏ sót tiếng ở giữa vẫn xếp đúng hàng");
+  const a2 = assessReading("chào bà ạ", "chào bà ạ ạ");
+  eq([a2.extras, st(a2)], [["ạ"], "chào:ok bà:ok ạ:ok"], "assess: tiếng thừa được ghi nhận, không làm mất tiếng đúng");
+  eq(a2.score < 100, true, "assess: nói thừa tiếng bị trừ nhẹ");
+  eq(compareSyllable("chó", "tró"), "initial", "compareSyllable: nhầm âm đầu ch/tr");
+  eq(compareSyllable("má", "mà"), "tone", "compareSyllable: sai thanh");
+  eq(compareSyllable("cá", "cạ"), "tone", "compareSyllable: sắc ↔ nặng là thanh");
+  eq(compareSyllable("mèo", "mẹo"), "tone", "compareSyllable: mèo ↔ mẹo");
+  eq(compareSyllable("gà", "vịt"), "wrong", "compareSyllable: tiếng khác hẳn");
+  eq(assessReading("mẹ", ["me", "mẹ"]).score, 100, "assess: lấy phương án nhận dạng GẦN mẫu nhất");
+  eq(assessReading("mẹ", ["me", "mẹ"]).heard, "mẹ", "assess: trả về phương án được chọn");
+  eq(assessReading("bờ", "").score, 0, "assess: không nghe thấy = 0");
+  eq(assessReading("bờ", []).syllables[0].status, "missing", "assess: danh sách phương án rỗng = thiếu tiếng");
+  eq(assessReading("", "abc").score, 0, "assess: mẫu rỗng = 0");
+  eq(readingLevel(90) + readingLevel(75) + readingLevel(55) + readingLevel(10), "excellentgoodfairpractice", "readingLevel: 4 mức");
+  eq(tipOf(assessReading("chào bà ạ", "chào ba ạ")), { kind: "tone", word: "bà" }, "tipOf: chỉ đúng tiếng sai thanh");
+  eq(tipOf(assessReading("con mèo đang ngủ", "mèo đang chạy")), { kind: "sound", word: "ngủ" }, "tipOf: tiếng nói khác");
+  eq(tipOf(assessReading("bà", "bà")), null, "tipOf: đọc đúng thì không nhắc");
+  eq(detailOf(a1), { v: 1, syl: [["chào", "ok"], ["bà", "tone"], ["ạ", "ok"]], level: "good", extras: 0 }, "detailOf: gọn, đủ để phụ huynh tổng hợp");
+  const rep = summarizePron([
+    { item_id: 1, score: 50, detail: { syl: [["bà", "tone"]] } }, { item_id: 1, score: 40, detail: { syl: [["bà", "tone"], ["mẹ", "ok"]] } },
+    { item_id: 2, score: 100, detail: { syl: [["mẹ", "ok"]] } }, { item_id: 3, score: 80 },
+  ], new Map([[1, "bà"], [2, "mẹ"]]));
+  eq([rep.count, rep.avg, rep.level, rep.percent.tone, rep.percent.ok, rep.weakWords.map((w) => w.text)], [4, 68, "fair", 50, 50, ["bà"]], "summarizePron: điểm TB, phân bố lỗi, từ hay sai (dòng cũ không detail vẫn tính điểm)");
+  eq(summarizePron([]).count, 0, "summarizePron: rỗng");
+  const many = Array.from({ length: 12 }, (_, i) => ({ item_id: i, score: 40, detail: { syl: [["bà", "tone"]] } }));
+  eq(summarizePron(many).mainIssue, "tone", "summarizePron: nhận ra lỗi chính (từ 8 tiếng được chấm)");
+  eq(summarizePron(many.slice(0, 3)).mainIssue, null, "summarizePron: chưa đủ dữ liệu thì chưa kết luận lỗi chính");
+  const up = [...Array.from({ length: 10 }, () => ({ item_id: 1, score: 90 })), ...Array.from({ length: 10 }, () => ({ item_id: 1, score: 60 }))];
+  eq(summarizePron(up).trend, "up", "summarizePron: xu hướng tăng (10 lượt mới vs 10 lượt trước)");
+}
 
 process.exit(fail);
