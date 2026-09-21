@@ -2,8 +2,7 @@ import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { el, msg } from "../ui.js";
 import { A, Q } from "./text.js";
-import { unitForm, lessonForm, renameForm, itemsForm, missingForm, resetLookup } from "./quickadd.js";
-import { aiEnabled, suggest as aiSuggest } from "./ai.js";
+import { unitForm, lessonForm, renameForm, itemsForm, resetLookup } from "./quickadd.js";
 import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
@@ -66,13 +65,8 @@ const trText = (row) => langs().map((l) => row.title_tr?.[l]).filter(Boolean).jo
 function titleTrButton(table, row, say, reload) {
   return btn("🌐 Tên dịch", async () => {
     const next = { ...(row.title_tr ?? {}) };
-    let ai = {};
-    if (aiEnabled() && CONFIG.languages.some((l) => !next[l.code]) && confirm(`Dùng AI điền sẵn tên "${row.title_vi}" cho các ngôn ngữ còn thiếu? (Bạn vẫn xem lại từng ngôn ngữ trước khi lưu.)`)) {
-      const { results, error } = await aiSuggest([{ vi: row.title_vi }], { context: { kind: table === "units" ? "unit" : "lesson" }, langs: CONFIG.languages.map((l) => l.code) });
-      if (error) say("err", error.message); else ai = results[0]?.tr ?? {};
-    }
     for (const l of CONFIG.languages) {
-      const v = prompt(`Tên "${row.title_vi}" bằng ${l.label} (để trống = xoá)${!next[l.code] && ai[l.code] ? " — AI gợi ý, hãy soát" : ""}:`, next[l.code] ?? ai[l.code] ?? "");
+      const v = prompt(`Tên "${row.title_vi}" bằng ${l.label} (để trống = xoá):`, next[l.code] ?? "");
       if (v === null) return;
       const t = v.trim();
       if (t.length > 60) return say("err", "Tên dịch dài quá 60 ký tự.");
@@ -86,19 +80,6 @@ function titleTrButton(table, row, say, reload) {
 // Khe chứa biểu mẫu "Thêm nhanh"/sửa: bấm nút lần 1 mở biểu mẫu, bấm lần nữa (hoặc Huỷ) thì đóng.
 function slotToggle(slot, make) {
   return () => { if (slot.childNodes.length) slot.replaceChildren(); else slot.replaceChildren(make(() => slot.replaceChildren())); };
-}
-
-// Mọi mục của các bài trong 1 chủ đề (kèm nghĩa + âm thanh) — cho "Dịch ô còn thiếu" cả chủ đề.
-async function loadUnitItems(ls) {
-  const out = [];
-  for (const l of ls) {
-    for (let from = 0; ; from += 1000) {
-      const rows = check(await sb.from("content_items").select("id, lesson_id, text_vi, item_type, translations(lang, meaning), content_audio(*)").eq("lesson_id", l.id).order("sort_order").range(from, from + 999));
-      out.push(...rows.map((i) => ({ ...i, lesson_title: l.title_vi })));
-      if (rows.length < 1000) break;
-    }
-  }
-  return out;
 }
 
 let pendingDone = null;
@@ -142,7 +123,6 @@ function render(box, units, lessons) {
     const ls = lessons.filter((l) => l.unit_id === u.id);
     const editSlot = el("div");
     const lessonSlot = el("div");
-    const aiSlot = el("div");
     const saved = (text, row) => { notice.set("ok", text); if (row) openUnits.add(row.unit_id ?? row.id); resetLookup(); reload(); };
     const open = openUnits.has(u.id);
     const levelSel = el("select", { title: "Cấp của chủ đề", "aria-label": "Cấp của chủ đề", onchange: act(() => ops.setUnitLevel(u.id, levelSel.value), "Đã đổi cấp của chủ đề.") },
@@ -158,18 +138,16 @@ function render(box, units, lessons) {
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
           levelSel,
-          aiEnabled() && ls.length ? btn(Q.aiMissing, slotToggle(aiSlot, (close) => missingForm({ getItems: () => loadUnitItems(ls), unitTitle: u.title_vi, level: levelOf(u), onCancel: close,
-            onSaved: ({ count, tts }) => saved(`Đã lưu ${count} ô nghĩa do AI dịch${tts?.ok ? ` và sinh ${tts.ok} âm thanh` : ""}. Nhớ đọc lại kỹ.`) })), "btn small ghost", "AI dịch các ô nghĩa còn trống của cả chủ đề (bạn xem lại trước khi lưu)") : null,
           btn(open ? "Thu gọn ▲" : "Mở ▼", () => { open ? openUnits.delete(u.id) : openUnits.add(u.id); reload(); }),
           u.status === "approved"
             ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
             : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
           btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
-      editSlot, aiSlot,
+      editSlot,
       open ? el("div", null,
         el("div", { class: "row-btns", style: "justify-content:flex-start" },
           btn(Q.addLesson, slotToggle(lessonSlot, (close) => lessonForm({ unit: u, level: levelOf(u), siblings: ls, onCancel: close, onSaved: (row) => saved(`Đã thêm bài "${row.title_vi}" (nháp).`, row) })), "btn small")),
-        lessonSlot, ls.map((l) => lessonBlock(l, reload, say, { siblings: ls, level: levelOf(u), unitTitle: u.title_vi }))) : null);
+        lessonSlot, ls.map((l) => lessonBlock(l, reload, say, { siblings: ls, level: levelOf(u) }))) : null);
   };
 
   // Nhóm theo cấp: tiêu đề mỗi cấp cho biết số chủ đề/bài/mục và bao nhiêu đã duyệt (cấp trống hiện "chưa có nội dung").
@@ -198,7 +176,7 @@ function render(box, units, lessons) {
   box.replaceChildren(flash, ...groups);
 }
 
-function lessonBlock(lesson, reload, say, { siblings = [], level = 1, unitTitle = "" } = {}) {
+function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
   const n = lesson.content_items?.[0]?.count ?? 0;
   const panel = el("div");
   const isOpen = openLesson === lesson.id;
@@ -219,7 +197,7 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1, unitTitle 
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
         : btn("Duyệt bài", () => approveLesson(lesson, reload, say), "btn small"),
       btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
-  if (isOpen) itemsPanel(panel, lesson, say, level, reload, unitTitle);
+  if (isOpen) itemsPanel(panel, lesson, say, level, reload);
   return el("div", { class: "lesson-block" }, head, renameSlot, panel);
 }
 
@@ -244,13 +222,13 @@ async function approveLesson(lesson, reload, say) {
   } catch (e) { say("err", e.message); }
 }
 
-async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}, unitTitle = "") {
+async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}) {
   const done = beginLoad(panel); // vùng đã có nội dung → giữ nguyên trong lúc tải lại (không nhảy trang)
   let items;
   try { items = await loadItems(lesson.id); } catch (e) { panel.replaceChildren(msg("err", A.loadError + e.message)); done(); return flushDone(); }
   const L = langs();
   const slots = audio.audioSlots(L, await audio.getVoices());
-  const refresh = () => itemsPanel(panel, lesson, say, level, reload, unitTitle);
+  const refresh = () => itemsPanel(panel, lesson, say, level, reload);
   const progress = el("span", { class: "muted" });
 
   const runGen = async (replaceTts) => {
@@ -303,18 +281,15 @@ async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}, unit
 
   const rows = cardView ? [] : items.map((item) => itemRow(item, L, slots, say, refresh, items));
   const addSlot = el("div");
-  const missSlot = el("div");
-  const missBtn = aiEnabled() ? btn(Q.aiMissing, slotToggle(missSlot, (close) => missingForm({ getItems: async () => items.map((i) => ({ ...i, lesson_title: lesson.title_vi })), unitTitle, level, onCancel: close,
-    onSaved: ({ count, tts }) => { notice.set("ok", `Đã lưu ${count} ô nghĩa do AI dịch${tts?.ok ? ` và sinh ${tts.ok} âm thanh` : ""}. Nhớ đọc lại kỹ.`); resetLookup(); reload(); } })), "btn small ghost", "AI dịch các ô nghĩa còn trống của bài này") : null;
-  const addBtn = btn(Q.addItems, slotToggle(addSlot, (close) => itemsForm({ lesson, level, unitTitle, existingKeys: new Set(items.map((i) => keyOf(i.text_vi))), onCancel: close,
+  const addBtn = btn(Q.addItems, slotToggle(addSlot, (close) => itemsForm({ lesson, level, existingKeys: new Set(items.map((i) => keyOf(i.text_vi))), onCancel: close,
     onSaved: ({ count, tts }) => {
       const t = tts ? (tts.failed?.length || tts.fatal ? " Một số âm thanh chưa sinh được — bấm “Sinh âm thanh còn thiếu”." : ` Đã sinh ${tts.ok} âm thanh.`) : "";
       notice.set(tts?.failed?.length || tts?.fatal ? "err" : "ok", `Đã thêm ${count} mục vào bài “${lesson.title_vi}”.${t}`);
       resetLookup(); reload(); // tải lại để số mục của bài cập nhật
     } })), "btn small");
   panel.replaceChildren(
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, addBtn, missBtn, genAll, regenAll, toggle, batchBtn, progress, batchInput),
-    addSlot, missSlot,
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, addBtn, genAll, regenAll, toggle, batchBtn, progress, batchInput),
+    addSlot,
     el("p", { class: "muted" }, cardView
       ? "Duyệt hình: xem cả bài dạng thẻ lớn để kiểm tra hình có đúng nghĩa/hợp lý không. Hình ✦ trang trí (thẻ mờ) không được dùng để chọn/ghép trong các trò chơi."
       : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 📷 Ảnh = tải ảnh riêng thay emoji (ngay cạnh hình)."),

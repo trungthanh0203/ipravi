@@ -11,10 +11,3 @@ BRAND_COLOR=#e8590c
 # TTS_KEY=...
 # TTS_REGION=westeurope
 # TTS_VOICES={"vi":{"female":"vi-VN-HoaiMyNeural","male":"vi-VN-NamMinhNeural"}}   (tuỳ chọn; giọng cũng chọn được ở tab Cài đặt của app)
-
-# Dịch tự động + gợi ý emoji cho công cụ admin (Gemini) — tuỳ chọn. Đặt AI_KEY dạng Secret khi deploy (KHÔNG ghi vào wrangler.jsonc).
-# Lấy khoá ở Google AI Studio. AI_MODEL không bắt buộc (mặc định gemini-2.5-flash) — đổi khi Google đổi tên/ngừng mô hình.
-# AI_KEY=...
-# AI_MODEL=gemini-2.5-flash
-# AI_FALLBACK_MODEL=gemini-2.5-flash   (không bắt buộc: mô hình dùng khi mô hình chính quá tải 503; nếu bỏ trống và AI_MODEL khác mặc định thì dùng gemini-2.5-flash)
-# AI_BASE_URL=https://gateway.ai.cloudflare.com/v1/<ACCOUNT_ID>/<GATEWAY>/google-ai-studio/v1beta   (không bắt buộc: đường dẫn gốc thay thế khi Gemini chặn theo vùng — xem CLAUDE.md)
