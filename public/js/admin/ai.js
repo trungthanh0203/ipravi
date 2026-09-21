@@ -20,25 +20,30 @@ async function call(entries, { context, langs, wantEmoji }) {
   let data = null;
   try { data = await res.json(); } catch { /* không phải JSON */ }
   if (!res.ok) throw new Error(data?.error || `AI lỗi ${res.status}`);
-  return data.items;
+  return data;
 }
 
 // entries: [{ vi, lesson? }] (hoặc chuỗi). Chia lô 40 mục, gọi lần lượt (tránh vượt hạn mức). Trả { results, error }:
-// results[i] = { emoji, tr:{lang:nghĩa} } hoặc undefined nếu lô đó lỗi; error = lỗi đầu tiên (đã dừng ở đó) hoặc null.
+// results[i] = { emoji, tr:{lang:nghĩa} } hoặc undefined nếu lô đó lỗi; error = lỗi đầu tiên (đã dừng ở đó) hoặc null; model/fellBack = mô hình đã trả lời.
+// (Lỗi tạm thời như 503 "high demand" đã được Worker tự thử lại + chuyển mô hình dự phòng trước khi báo lỗi.)
 export async function suggest(entries, { context = {}, langs, wantEmoji = false, onProgress = () => {} } = {}) {
   const results = new Array(entries.length);
   let done = 0;
+  let model = "";
+  let fellBack = false; // đã phải dùng mô hình dự phòng (mô hình chính quá tải)
   onProgress(0, entries.length);
   for (let from = 0; from < entries.length; from += BATCH) {
     const part = entries.slice(from, from + BATCH).map((e) => (typeof e === "string" ? { vi: e } : e));
     try {
-      const items = await call(part, { context, langs, wantEmoji });
-      items.forEach((it, k) => { results[from + k] = it; });
+      const data = await call(part, { context, langs, wantEmoji });
+      data.items.forEach((it, k) => { results[from + k] = it; });
+      model = data.model ?? model;
+      fellBack = fellBack || Boolean(data.fellBack);
     } catch (e) {
-      return { results, error: e };
+      return { results, error: e, model, fellBack };
     }
     done += part.length;
     onProgress(done, entries.length);
   }
-  return { results, error: null };
+  return { results, error: null, model, fellBack };
 }

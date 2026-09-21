@@ -16,3 +16,4 @@ BRAND_COLOR=#e8590c
 # Lấy khoá ở Google AI Studio. AI_MODEL không bắt buộc (mặc định gemini-2.5-flash) — đổi khi Google đổi tên/ngừng mô hình.
 # AI_KEY=...
 # AI_MODEL=gemini-2.5-flash
+# AI_FALLBACK_MODEL=gemini-2.5-flash   (không bắt buộc: mô hình dùng khi mô hình chính quá tải 503; nếu bỏ trống và AI_MODEL khác mặc định thì dùng gemini-2.5-flash)

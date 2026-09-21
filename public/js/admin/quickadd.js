@@ -151,14 +151,14 @@ export function itemsForm({ lesson, level, unitTitle = "", existingKeys, onSaved
     const todo = includedRows().filter((r) => needsAi(r.s, codes));
     if (!todo.length) { info.textContent = "Không còn ô nào trống để AI điền."; return; }
     aiBtn.disabled = true; err.replaceChildren();
-    const { results, error } = await aiSuggest(todo.map((r) => ({ vi: r.s.text_vi })), {
+    const { results, error, model, fellBack } = await aiSuggest(todo.map((r) => ({ vi: r.s.text_vi })), {
       context: { kind: "item", unit: unitTitle, lesson: lesson.title_vi, level }, wantEmoji: true,
       langs: codes.filter((c) => todo.some((r) => !String(r.s.tr[c] ?? "").trim())).length ? codes.filter((c) => todo.some((r) => !String(r.s.tr[c] ?? "").trim())) : codes, // chỉ hỏi ngôn ngữ còn thiếu (đỡ tốn, khỏi đổi nghĩa đã có)
       onProgress: (d, n) => { info.textContent = `AI đang dịch ${d}/${n}…`; } });
     const filled = todo.reduce((a, r, k) => a + applyAi(r.s, results[k], codes), 0);
     aiBtn.disabled = false;
     render();
-    info.textContent = filled ? `AI đã điền ${filled} ô (màu tím) — hãy đọc lại kỹ trước khi lưu.` : "AI không điền được ô nào.";
+    info.textContent = (filled ? `AI đã điền ${filled} ô (màu tím) — hãy đọc lại kỹ trước khi lưu.` : "AI không điền được ô nào.") + (fellBack ? ` (mô hình chính đang quá tải — đã dùng mô hình dự phòng ${model})` : "");
     if (error) fail(err, error);
   }, "btn small") : null;
   const includedRows = () => [...rows.values()].filter((r) => r.include);
@@ -271,7 +271,7 @@ export function missingForm({ getItems, unitTitle = "", level = 1, onSaved, onCa
       const todo = all.filter((i) => codes.some((c) => !i.translations?.some((t) => t.lang === c && t.meaning)));
       if (!todo.length) { info.textContent = "Mọi mục đều đã đủ nghĩa ở các ngôn ngữ của trung tâm."; return; }
       const part = todo.slice(0, MAX_MISSING);
-      const { results, error } = await aiSuggest(part.map((i) => ({ vi: i.text_vi, lesson: i.lesson_title })), {
+      const { results, error, model, fellBack } = await aiSuggest(part.map((i) => ({ vi: i.text_vi, lesson: i.lesson_title })), {
         context: { kind: "item", unit: unitTitle, level }, wantEmoji: false,
         langs: codes.filter((c) => part.some((i) => !i.translations?.some((t) => t.lang === c && t.meaning))), onProgress: (d, n) => { info.textContent = `AI đang dịch ${d}/${n}…`; } });
       rows = part.map((item, k) => {
@@ -279,7 +279,7 @@ export function missingForm({ getItems, unitTitle = "", level = 1, onSaved, onCa
         const vals = Object.fromEntries(codes.map((c) => [c, need.includes(c) ? results[k]?.tr?.[c] ?? "" : ""]));
         return { item, inc: true, need, vals, ai: Object.fromEntries(codes.map((c) => [c, Boolean(vals[c])])) };
       });
-      info.textContent = `${part.length} mục thiếu nghĩa${todo.length > part.length ? ` (còn ${todo.length - part.length} mục nữa — lưu xong bấm lại để làm tiếp)` : ""}. Ô tím do AI điền: ${Q.aiNote}`;
+      info.textContent = `${part.length} mục thiếu nghĩa${todo.length > part.length ? ` (còn ${todo.length - part.length} mục nữa — lưu xong bấm lại để làm tiếp)` : ""}${fellBack ? `; mô hình chính đang quá tải nên đã dùng mô hình dự phòng ${model}` : ""}. Ô tím do AI điền: ${Q.aiNote}`;
       if (error) fail(err, error);
       render();
     } catch (e) { fail(err, e); info.textContent = ""; }

@@ -1,7 +1,7 @@
 // /api/suggest (Gemini): kiểm quyền admin, kiểm tra đầu vào, dựng yêu cầu, làm sạch kết quả, ánh xạ lỗi — dùng fetch GIẢ (không gọi Gemini thật).
 // Chạy: node tests/suggest.test.mjs
 import worker from "../worker.js";
-import { buildGeminiRequest, sanitize, MAX_ENTRIES } from "../suggest.js";
+import { buildGeminiRequest, sanitize, modelChain, MAX_ENTRIES } from "../suggest.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -18,7 +18,7 @@ globalThis.fetch = async (url, init) => {
   throw new Error("fetch bất ngờ: " + url);
 };
 
-const env = (o = {}) => ({ SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "anon", LANGUAGES: "de:Deutsch,en:English,ko:한국어,ja:日本語", AI_KEY: "secret-key", ASSETS: { fetch: async () => new Response("asset") }, ...o });
+const env = (o = {}) => ({ SUPABASE_URL: "https://x.supabase.co", SUPABASE_ANON_KEY: "anon", LANGUAGES: "de:Deutsch,en:English,ko:한국어,ja:日本語", AI_KEY: "secret-key", AI_RETRY_MS: "0", ASSETS: { fetch: async () => new Response("asset") }, ...o });
 const post = (body, e = env(), headers = { authorization: "Bearer tok" }) =>
   worker.fetch(new Request("https://a.dev/api/suggest", { method: "POST", headers: { "content-type": "application/json", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) }), e);
 const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify({ items }) }] }, finishReason: "STOP" }] }), { status: 200 });
@@ -94,6 +94,53 @@ const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content
   await four.text();
 }
 
+// ---- Thử lại + mô hình dự phòng (503 "high demand") ----
+{
+  const overloaded = () => new Response(JSON.stringify({ error: { code: 503, message: "This model is currently experiencing high demand." } }), { status: 503 });
+  const good = () => geminiOk([{ i: 0, emoji: "", tr: { de: "Hund", en: "dog" } }]);
+  const run = async (e = env()) => { const r = await post({ entries: ["con chó"], langs: ["de", "en"] }, e); return { status: r.status, body: await r.json() }; };
+
+  let n = 0;
+  gemini = () => (++n < 3 ? overloaded() : good());
+  calls.length = 0;
+  let r = await run();
+  eq([r.status, r.body.items[0].tr.de, r.body.fellBack, r.body.attempts, calls.length], [200, "Hund", false, 3, 3], "retry: 503 hai lần rồi thành công ở lần 3 (cùng mô hình)");
+
+  calls.length = 0;
+  gemini = (url) => (url.includes("gemini-x-preview") ? overloaded() : good());
+  r = await run(env({ AI_MODEL: "gemini-x-preview" }));
+  eq([r.status, r.body.model, r.body.fellBack, calls.map((c) => c.url.match(/models\/([^:]+):/)[1])], [200, "gemini-2.5-flash", true, ["gemini-x-preview", "gemini-x-preview", "gemini-x-preview", "gemini-2.5-flash"]], "retry: mô hình chính quá tải 3 lần → tự chuyển sang mô hình dự phòng (mặc định) và báo fellBack");
+
+  calls.length = 0;
+  r = await run(env({ AI_MODEL: "gemini-x-preview", AI_FALLBACK_MODEL: "gemini-y-stable" }));
+  eq([r.body.model, calls.at(-1).url.includes("gemini-y-stable")], ["gemini-y-stable", true], "retry: AI_FALLBACK_MODEL chọn được mô hình dự phòng riêng");
+
+  calls.length = 0;
+  gemini = overloaded;
+  r = await run(env({ AI_MODEL: "gemini-x-preview" }));
+  ok(r.status === 503 && /quá tải/.test(r.body.error) && /dự phòng/.test(r.body.error) && calls.length === 5, "retry: cả hai mô hình đều quá tải → 503 nói rõ đã thử 5 lần", `${r.status} ${r.body.error} ${calls.length}`);
+
+  calls.length = 0;
+  gemini = () => new Response(JSON.stringify({ error: { message: "API key not valid" } }), { status: 400 });
+  r = await run(env({ AI_MODEL: "gemini-x-preview" }));
+  eq([r.status, calls.length], [502, 1], "retry: lỗi thật (khoá sai) KHÔNG thử lại, không đổi mô hình");
+
+  calls.length = 0;
+  gemini = () => new Response("{}", { status: 404 });
+  r = await run();
+  eq([r.status, calls.length], [502, 1], "retry: sai tên mô hình (404) không thử lại");
+
+  calls.length = 0;
+  n = 0;
+  gemini = () => { if (++n < 2) throw new TypeError("network down"); return good(); };
+  r = await run();
+  eq([r.status, calls.length], [200, 2], "retry: mất mạng thoáng qua cũng được thử lại");
+
+  eq((await post({ entries: ["a"] }, env({ AI_FALLBACK_MODEL: "../x" }))).status, 500, "AI_FALLBACK_MODEL chứa ký tự lạ bị chặn");
+  eq(JSON.stringify(modelChain(env())) + JSON.stringify(modelChain(env({ AI_MODEL: "gemini-2.5-flash" }))) + JSON.stringify(modelChain(env({ AI_MODEL: "m-1", AI_FALLBACK_MODEL: "m-1" }))), '["gemini-2.5-flash"]["gemini-2.5-flash"]["m-1"]', "modelChain: không trùng, không dự phòng khi đã là mô hình mặc định");
+  calls.length = 0;
+}
+
 // ---- Làm sạch kết quả ----
 {
   const langs = [{ code: "de", name: "German" }, { code: "en", name: "English" }];
@@ -125,12 +172,12 @@ const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content
   await err(() => new Response("{}", { status: 429 }), 429, /hạn mức/, "vượt hạn mức → 429");
   await err(() => new Response("{}", { status: 404 }), 502, /"gemini-2\.5-flash".*AI_MODEL/, "sai tên mô hình → nêu đúng tên mô hình + nhắc AI_MODEL / Kiểm tra AI");
   await err(() => new Response("{}", { status: 403 }), 502, /quyền/, "khoá không có quyền → 502");
-  await err(() => new Response("boom", { status: 500 }), 502, /Gemini lỗi 500/, "lỗi máy chủ Gemini → 502");
+  await err(() => new Response("boom", { status: 500 }), 503, /quá tải/, "lỗi máy chủ Gemini (tạm thời) → thử lại hết lượt rồi báo 503 quá tải");
   await err(() => new Response(JSON.stringify({ promptFeedback: { blockReason: "SAFETY" } }), { status: 200 }), 422, /SAFETY/, "bị chặn nội dung → 422");
   await err(() => new Response(JSON.stringify({ candidates: [{ finishReason: "MAX_TOKENS" }] }), { status: 200 }), 502, /MAX_TOKENS/, "không có kết quả → 502 kèm lý do");
   await err(() => new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: "{không phải json" }] } }] }), { status: 200 }), 502, /JSON hỏng/, "JSON hỏng → 502");
   await err(() => { throw new TypeError("network down"); }, 502, /Không gọi được Gemini/, "mất mạng → 502");
-  gemini = () => new Response(JSON.stringify({ error: { message: "x".repeat(500) } }), { status: 500 });
+  gemini = () => new Response(JSON.stringify({ error: { message: "x".repeat(500) } }), { status: 400 });
   const long = await (await post({ entries: ["con chó"] })).json();
   ok(long.error.length < 260, "lỗi: thông điệp của Gemini bị cắt còn ≤ 200 ký tự", String(long.error.length));
 }
