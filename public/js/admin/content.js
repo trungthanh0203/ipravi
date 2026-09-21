@@ -39,7 +39,7 @@ function imageButtons(table, row, say, after) {
     } catch (e) { say("err", e.message); }
   });
   return el("span", { class: "img-btns" },
-    btn("🖼", () => file.click(), "btn tiny", row.image_path ? "Thay ảnh riêng" : "Tải ảnh riêng (thay emoji)"),
+    btn(row.image_path ? "📷 Đổi ảnh" : "📷 Ảnh", () => file.click(), "btn tiny img-up", row.image_path ? "Thay ảnh riêng (đang dùng ảnh riêng thay emoji)" : "Tải ảnh riêng lên (thay emoji)"),
     row.image_path ? btn("✕", async () => {
       if (!confirm("Gỡ ảnh riêng? Bé sẽ thấy lại emoji.")) return;
       try { await images.clearImage(table, row); say("ok", "Đã gỡ ảnh."); after(); } catch (e) { say("err", e.message); }
@@ -55,6 +55,23 @@ function picRole(item, say) {
   } },
   el("option", { value: "", selected: item.pic !== "decor" }, "✓ Đúng nghĩa"), el("option", { value: "decor", selected: item.pic === "decor" }, "✦ Trang trí"));
   return s;
+}
+
+// Tên chủ đề/bài bằng ngôn ngữ gốc (title_tr = {de:"…"}): để khu bé có nút 🔊 đọc tên. Hỏi từng ngôn ngữ; để trống = xoá; Huỷ = không đổi gì.
+const trText = (row) => langs().map((l) => row.title_tr?.[l]).filter(Boolean).join(" · ");
+function titleTrButton(table, row, say, reload) {
+  return btn("🌐 Tên dịch", async () => {
+    const next = { ...(row.title_tr ?? {}) };
+    for (const l of CONFIG.languages) {
+      const v = prompt(`Tên "${row.title_vi}" bằng ${l.label} (để trống = xoá):`, next[l.code] ?? "");
+      if (v === null) return;
+      const t = v.trim();
+      if (t.length > 60) return say("err", "Tên dịch dài quá 60 ký tự.");
+      if (t) next[l.code] = t; else delete next[l.code];
+    }
+    try { check(await sb.from(table).update({ title_tr: next }).eq("id", row.id)); notice.set("ok", "Đã lưu tên dịch."); await reload(); }
+    catch (e) { say("err", e.message); }
+  }, "btn small ghost", "Sửa tên bằng ngôn ngữ gốc (bé bấm 🔊 để nghe)");
 }
 
 let pendingDone = null;
@@ -102,9 +119,9 @@ function render(box, units, lessons) {
     return el("div", { class: "card" },
       // Tên chủ đề ở trên; DƯỚI nó là 1 hàng nút căn TRÁI: hình + ảnh riêng, ▲▼ đổi thứ tự, cấp, rồi Mở / Duyệt / Xoá.
       el("div", { class: "unit-head" },
-        el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
+        el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`), trText(u) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(u)}`) : null),
         el("div", { class: "row-btns unit-btns" },
-          thumb(u, "tiny"), imageButtons("units", u, say, reload),
+          thumb(u, "tiny"), imageButtons("units", u, say, reload), titleTrButton("units", u, say, reload),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
           levelSel,
@@ -148,8 +165,9 @@ function lessonBlock(lesson, reload, say) {
     try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
   };
   const head = el("div", { class: "row lesson-row" },
-    el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${n} mục`)),
+    el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${n} mục`), trText(lesson) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(lesson)}`) : null),
     el("div", { class: "row-btns", style: "margin:0" },
+      titleTrButton("lessons", lesson, say, reload),
       btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
       lesson.status === "approved"
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
@@ -242,7 +260,7 @@ async function itemsPanel(panel, lesson, say) {
     el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, toggle, batchBtn, progress, batchInput),
     el("p", { class: "muted" }, cardView
       ? "Duyệt hình: xem cả bài dạng thẻ lớn để kiểm tra hình có đúng nghĩa/hợp lý không. Hình ✦ trang trí (thẻ mờ) không được dùng để chọn/ghép trong các trò chơi."
-      : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 🖼 tải ảnh riêng thay emoji."),
+      : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 📷 Ảnh = tải ảnh riêng thay emoji (ngay cạnh hình)."),
     cardView
       ? el("div", { class: "item-grid" }, items.map(cardOf))
       : el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
@@ -296,7 +314,7 @@ function itemRow(item, L, slots, say, refresh) {
 
   const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
   return el("tr", null,
-    el("td", null, emoji), el("td", { class: "pic-cell" }, thumb(item), picRole(item, say), imageButtons("content_items", item, say, refresh)), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
+    el("td", null, emoji), el("td", { class: "pic-cell" }, el("div", { class: "pic-top" }, thumb(item), imageButtons("content_items", item, say, refresh)), picRole(item, say)), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
       item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
     el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
     el("td", { class: "nowrap" }, save, " ",

@@ -84,7 +84,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   }
   if (errors.length) return { items, errors, warnings };
 
-  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "say", "activities", "choices", "answer", "pic", "emoji", "type", "min_age", "max_age", ...langs]);
+  const known = new Set(["unit", "unit_emoji", "level", "lesson", "vi", "say", "activities", "choices", "answer", "pic", "emoji", "type", "min_age", "max_age", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
   for (const l of langs) if (col(l) < 0) warnings.push({ row: 1, msg: `Không có cột nghĩa "${l}" — các mục sẽ thiếu nghĩa ${l}` });
 
@@ -149,6 +149,16 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     seen.set(dupKey, n);
 
     if (!emoji && type !== "question") warnings.push({ row: n, msg: `"${vi}": chưa có emoji (sẽ hiện dấu ❓ cho trẻ)` });
+    // Tên chủ đề/bài bằng ngôn ngữ gốc (cột unit_de, lesson_de…) — tuỳ chọn; chỉ để nút 🔊 của bé đọc tên
+    const unitTr = {}, lessonTr = {};
+    for (const l of langs) {
+      for (const [name, into, label] of [[`unit_${l}`, unitTr, "chủ đề"], [`lesson_${l}`, lessonTr, "bài"]]) {
+        if (col(name) < 0) continue;
+        const v = get(name);
+        if (v.length > 60) errors.push({ row: n, msg: `tên ${label} (${name}) dài quá 60 ký tự` });
+        else if (v) into[l] = v;
+      }
+    }
     const tr = {};
     for (const l of langs) {
       if (col(l) < 0) continue;
@@ -156,7 +166,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       if (v) tr[l] = v;
       else warnings.push({ row: n, msg: `"${vi}": thiếu nghĩa "${l}"` });
     }
-    items.push({ row: n, unit, unitEmoji, level, lesson, vi, say, kinds, choices, answer, pic, emoji, type, minAge, maxAge, tr });
+    items.push({ row: n, unit, unitEmoji, unitTr, lessonTr, level, lesson, vi, say, kinds, choices, answer, pic, emoji, type, minAge, maxAge, tr });
   });
 
   if (items.length === 0 && errors.length === 0) errors.push({ row: 1, msg: "File không có dòng dữ liệu nào" });
@@ -219,32 +229,45 @@ export function buildPlan(items, ex) {
   const seenU = new Set();
   const seenL = new Set();
   const counts = { new: 0, update: 0, same: 0 };
+  // Tên dịch của chủ đề/bài ĐÃ CÓ: chỉ ghi ngôn ngữ mà CSV có giá trị khác (ô trống không xoá tên cũ)
+  const titleChanges = [];
+  const titleSeen = new Map();
+  const noteTitle = (table, row, tr) => {
+    const merged = titleSeen.get(`${table}${row.id}`) ?? { table, id: row.id, title_tr: { ...(row.title_tr ?? {}) }, changed: false };
+    for (const [lang, v] of Object.entries(tr ?? {})) if (merged.title_tr[lang] !== v) { merged.title_tr[lang] = v; merged.changed = true; }
+    if (!titleSeen.has(`${table}${row.id}`)) titleSeen.set(`${table}${row.id}`, merged);
+    if (merged.changed && !titleChanges.includes(merged)) titleChanges.push(merged);
+  };
 
   const rows = items.map((it) => {
     const u = unitByKey.get(keyOf(it.unit));
     if (!u && !seenU.has(keyOf(it.unit))) {
       seenU.add(keyOf(it.unit));
-      newUnits.push({ title: it.unit, emoji: it.unitEmoji || "📚", ...(it.level ? { level: it.level } : {}) });
+      newUnits.push({ title: it.unit, emoji: it.unitEmoji || "📚", tr: { ...it.unitTr }, ...(it.level ? { level: it.level } : {}) });
     } else if (!u) {
       const nu = newUnits.find((x) => keyOf(x.title) === keyOf(it.unit));
       if (nu && !nu.level && it.level) nu.level = it.level; // dòng đầu chưa ghi cấp thì lấy cấp của dòng sau
+      if (nu) nu.tr = { ...it.unitTr, ...nu.tr };
     } else if (it.level && it.level !== (u.level ?? 1) && !seenLevel.has(u.id)) {
       seenLevel.add(u.id);
       levelChanges.push({ id: u.id, title: u.title_vi, level: it.level });
     }
+    if (u) noteTitle("units", u, it.unitTr);
     const l = u ? lessonByKey.get(`${u.id}|${keyOf(it.lesson)}`) : undefined;
     const lk = `${keyOf(it.unit)}|${keyOf(it.lesson)}`;
     if (!l && !seenL.has(lk)) {
       seenL.add(lk);
-      newLessons.push({ unit: it.unit, title: it.lesson, kinds: it.kinds ?? [] });
+      newLessons.push({ unit: it.unit, title: it.lesson, kinds: it.kinds ?? [], tr: { ...it.lessonTr } });
     } else if (!l) {
       const nl = newLessons.find((x) => keyOf(x.unit) === keyOf(it.unit) && keyOf(x.title) === keyOf(it.lesson));
       if (nl && !nl.kinds.length && it.kinds?.length) nl.kinds = it.kinds; // dòng đầu chưa ghi hoạt động thì lấy của dòng sau
+      if (nl) nl.tr = { ...it.lessonTr, ...nl.tr };
     }
+    if (l) noteTitle("lessons", l, it.lessonTr);
     const existing = l ? itemByKey.get(`${l.id}|${keyOf(it.vi)}`) : undefined;
     const c = classify(it, existing);
     counts[c.status]++;
     return { item: it, existing, ...c };
   });
-  return { rows, newUnits, newLessons, levelChanges, counts };
+  return { rows, newUnits, newLessons, levelChanges, titleChanges, counts };
 }

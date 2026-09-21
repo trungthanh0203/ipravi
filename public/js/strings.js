@@ -84,6 +84,8 @@ export const T = {
   prev: "Trước",
   playNow: "Bắt đầu chơi",
   listenVi: "Nghe",
+  titleListenVi: "Nghe tên bằng tiếng Việt",
+  titleListenNative: (label) => "Nghe tên bằng " + label,
   listenSlow: "Nghe chậm",
   iSaidIt: "Con nói xong rồi",
   instrPick: "Con nghe rồi chạm vào hình đúng nhé!",

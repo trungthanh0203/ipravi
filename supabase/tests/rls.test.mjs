@@ -491,5 +491,22 @@ await as(A, async () => {
   });
 }
 
+// ---- 21. tên dịch chủ đề/bài (migration 015) ----
+{
+  const m015 = readFileSync(new URL("../migrations/015_title_tr.sql", import.meta.url), "utf8");
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status, title_tr) values ('TT', 1, 'approved', '{\"de\":\"Gruss\"}') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'TTL', 'approved') returning id", [u]))[0].id;
+  ok(Object.keys((await q("select title_tr from public.lessons where id = $1", [l]))[0].title_tr).length === 0, "015: bài mới có title_tr rỗng");
+  ok(/check/i.test((await fails("update public.lessons set title_tr = '[1]' where id = $1", [l])) ?? ""), "015: title_tr phải là object");
+  await db.exec(m015);
+  ok((await q("select title_tr->>'de' as de from public.units where id = $1", [u]))[0].de === "Gruss", "015: chạy lại migration không mất tên dịch");
+  const P = await uid("p15@x.com");
+  await as(P, async () => {
+    ok((await q("select title_tr->>'de' as de from public.units where id = $1", [u]))[0].de === "Gruss", "015: phụ huynh còn hạn đọc được tên dịch");
+    ok((await db.query("update public.units set title_tr = '{}' where id = $1", [u])).affectedRows === 0, "015: phụ huynh KHÔNG sửa được tên dịch");
+  });
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

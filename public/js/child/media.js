@@ -3,6 +3,7 @@ import { state } from "../state.js";
 import { CONFIG } from "../config.js";
 import { pickAudio, playUrl, stopAudio, prefetchAudio } from "../audio.js";
 import { el } from "../ui.js";
+import { T } from "../strings.js";
 import { spoken, spellParts } from "../viet.js";
 import { sayOfPart } from "../sounds.js";
 import { loadSoundBank } from "./api.js";
@@ -36,6 +37,22 @@ export function speakFallback(text, lang = "vi", slow = false) {
     speechSynthesis.speak(u);
     setTimeout(resolve, 8000); // an toàn: một số trình duyệt không bắn sự kiện kết thúc
   });
+}
+
+// Tên chủ đề/bài: tiếng Việt (title_vi) hoặc bản dịch ngôn ngữ gốc (title_tr[lang], có thể chưa có).
+export const titleIn = (thing, lang) => (lang === "vi" ? thing.title_vi : thing.title_tr?.[lang] ?? "");
+
+// 2 nút 🔊 cạnh tên chủ đề/bài: Tiếng Việt + ngôn ngữ gốc của phụ huynh (nút gốc chỉ hiện khi đã có tên dịch).
+// Đọc bằng giọng trình duyệt (tên chủ đề/bài chưa có file âm thanh). Chạm nút không làm mở bài.
+export function titleSpeakers(thing) {
+  const native = nativeLang();
+  const one = (lang, tag, label) => el("button", {
+    class: "speak-btn", type: "button", title: label, "aria-label": label,
+    onclick: (e) => { e.stopPropagation(); speakFallback(titleIn(thing, lang), lang); },
+  }, "🔊 ", el("small", null, tag));
+  return el("span", { class: "speak-pair" },
+    one("vi", "VI", T.titleListenVi),
+    native !== "vi" && titleIn(thing, native) ? one(native, native.toUpperCase(), T.titleListenNative(nativeLabel())) : null);
 }
 
 // Giọng nghe của bé: bé tự chọn (child_profiles.voice_gender) > mặc định của phụ huynh (accounts.voice_pref.gender) > nữ.

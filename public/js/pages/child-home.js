@@ -4,7 +4,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { avatarEmoji } from "../data.js";
 import { stopAudio } from "../audio.js";
-import { visual, voiceToggle } from "../child/media.js";
+import { visual, voiceToggle, titleSpeakers, titleIn, nativeLang } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
@@ -94,17 +94,22 @@ async function showLessons(root, unit) {
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showUnits(root, levelOf(unit)) }, "◀ " + T.back),
       el("h1", null, visual(unit), " ", unitNo ? `${unitNo}. ` : "", unit.title_vi),
+      el("div", { class: "title-line" }, titleSpeakers(unit), titleIn(unit, nativeLang()) ? el("span", { class: "title-native" }, titleIn(unit, nativeLang())) : null),
       el("div", { class: "lesson-list" }, lessons.map((l, i) => {
         // Không khoá bài: trẻ đã biết trước có thể vào thẳng bài khó. Chỉ GỢI Ý bài nên học tiếp (bài đầu tiên chưa làm).
         const n = starsFor(scores.get(l.id));
         const next = l.id === nextId;
-        return el("button", {
-          class: "lesson-btn" + (next ? " next" : ""),
-          onclick: () => playLesson({ root, lesson: l, child: child(), account: state.account, onExit: () => showLessons(root, unit) }),
-        },
+        // Hàng bài = nút vào học + 2 nút 🔊 nghe tên (nút không lồng trong nút)
+        const native = titleIn(l, nativeLang());
+        return el("div", { class: "lesson-item" },
+          el("button", {
+            class: "lesson-btn" + (next ? " next" : ""),
+            onclick: () => playLesson({ root, lesson: l, child: child(), account: state.account, onExit: () => showLessons(root, unit) }),
+          },
           el("span", { class: "num" }, scores.has(l.id) ? "✓" : String(i + 1)),
-          el("span", { class: "title" }, l.title_vi, next ? el("span", { class: "lv-tag" }, T.lessonNext) : null),
-          el("span", { class: "stars" }, scores.has(l.id) ? "⭐".repeat(n) + "☆".repeat(3 - n) : ""));
+          el("span", { class: "title" }, l.title_vi, next ? el("span", { class: "lv-tag" }, T.lessonNext) : null, native ? el("small", { class: "title-native" }, native) : null),
+          el("span", { class: "stars" }, scores.has(l.id) ? "⭐".repeat(n) + "☆".repeat(3 - n) : "")),
+          titleSpeakers(l));
       })));
   } catch {
     shell(root, msg("err", T.loadError));

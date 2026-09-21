@@ -94,6 +94,16 @@ img.visual.big { max-height: 200px; }
   display: flex; align-items: center; gap: 14px; background: #fff; border: 3px solid transparent; border-radius: 20px;
   padding: 14px 16px; font-size: 20px; text-align: left; box-shadow: 0 2px 10px rgba(80, 40, 10, .1); color: var(--text);
 }
+.lesson-item { display: flex; align-items: stretch; gap: 8px; }
+.lesson-item .lesson-btn { flex: 1; min-width: 0; }
+.speak-pair { display: inline-flex; gap: 6px; align-items: center; flex: none; }
+.lesson-item .speak-pair { flex-direction: column; justify-content: center; }
+.speak-btn { min-height: 44px; min-width: 64px; padding: 4px 10px; border: 2px solid var(--brand); border-radius: 14px; background: #fff; color: var(--text); font-size: 20px; }
+.speak-btn small { font-size: 13px; font-weight: 700; }
+.speak-btn:active { background: var(--brand-light); }
+.title-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 0; }
+.title-native { display: block; font-weight: 400; font-size: 15px; color: #7a5a48; }
+.title-line .title-native { font-size: 18px; }
 .lesson-btn:disabled { opacity: .5; }
 .lesson-btn .num { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; }
 .lesson-btn .title { flex: 1; font-weight: 700; }
@@ -289,9 +299,12 @@ img.visual.big { max-height: 200px; }
 .thumb.emoji { font-size: 34px; display: inline-flex; align-items: center; height: 44px; }
 .thumb.tiny { height: 32px; font-size: 26px; }
 .thumb.big { height: 120px; max-width: 100%; font-size: 84px; }
-.pic-cell { min-width: 150px; }
+.pic-cell { min-width: 190px; }
 .pic-cell .cell { max-width: 130px; margin: 0 6px; }
-.img-btns { display: inline-flex; gap: 4px; }
+.img-btns { display: inline-flex; gap: 4px; align-items: center; }
+.img-up { white-space: nowrap; }
+.pic-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.pic-cell .pic-top .btn.tiny { margin: 0; }
 .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-top: 10px; }
 .item-card { background: #fff; border-radius: 14px; padding: 12px; box-shadow: 0 2px 8px rgba(80, 40, 10, .08); display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .item-card.decor { opacity: .72; outline: 2px dashed #f4c9a5; }

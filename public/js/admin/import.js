@@ -12,7 +12,7 @@ const check = ({ error, data }) => { if (error) throw error; return data; };
 // Đọc dữ liệu ĐÃ CÓ liên quan tới file (chỉ các bài có trong file — không tải cả bảng, tránh trần 1000 dòng).
 async function loadExisting(items) {
   const units = check(await sb.from("units").select("*"));
-  const lessons = check(await sb.from("lessons").select("id, unit_id, title_vi, sort_order"));
+  const lessons = check(await sb.from("lessons").select("*"));
   const unitByKey = new Map(units.map((u) => [keyOf(u.title_vi), u]));
   const wanted = new Set();
   for (const it of items) {
@@ -41,13 +41,15 @@ async function execute(plan, ex, onProgress) {
   if (plan.newUnits.length) {
     let order = Math.max(0, ...ex.units.map((u) => u.sort_order ?? 0));
     const rows = check(await sb.from("units")
-      .insert(plan.newUnits.map((u) => ({ title_vi: u.title, emoji: u.emoji, level: u.level ?? 1, sort_order: ++order, status: "draft" })))
+      .insert(plan.newUnits.map((u) => ({ title_vi: u.title, emoji: u.emoji, level: u.level ?? 1, sort_order: ++order, status: "draft", ...(Object.keys(u.tr ?? {}).length ? { title_tr: u.tr } : {}) })))
       .select("id, title_vi"));
     rows.forEach((u) => { unitId.set(keyOf(u.title_vi), u.id); });
     counts.units = rows.length;
   }
 
   for (const c of plan.levelChanges ?? []) check(await sb.from("units").update({ level: c.level }).eq("id", c.id));
+
+  for (const c of plan.titleChanges ?? []) check(await sb.from(c.table).update({ title_tr: c.title_tr }).eq("id", c.id));
 
   onProgress("Tạo bài học", 0, 1);
   if (plan.newLessons.length) {
@@ -56,7 +58,7 @@ async function execute(plan, ex, onProgress) {
     const payload = plan.newLessons.map((l) => {
       const uid = unitId.get(keyOf(l.unit));
       nextOrder.set(uid, (nextOrder.get(uid) ?? 0) + 1);
-      return { unit_id: uid, title_vi: l.title, sort_order: nextOrder.get(uid), status: "draft" };
+      return { unit_id: uid, title_vi: l.title, sort_order: nextOrder.get(uid), status: "draft", ...(Object.keys(l.tr ?? {}).length ? { title_tr: l.tr } : {}) };
     });
     const rows = check(await sb.from("lessons").insert(payload).select("id, unit_id, title_vi"));
     const titleOfUnit = new Map([...unitId].map(([k, v]) => [v, k]));
@@ -179,7 +181,7 @@ export function mount(box, { onImported } = {}) {
     preview.replaceChildren(
       el("p", null, plan
         ? `${v.items.length} dòng hợp lệ: ${plan.counts.new} mới, ${plan.counts.update} cập nhật, ${plan.counts.same} không đổi` +
-          ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài` + (plan.levelChanges?.length ? `, đổi cấp ${plan.levelChanges.length} chủ đề.` : ".")
+          ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài` + (plan.levelChanges?.length ? `, đổi cấp ${plan.levelChanges.length} chủ đề` : "") + (plan.titleChanges?.length ? `, cập nhật tên dịch ${plan.titleChanges.length} chủ đề/bài` : "") + "."
         : "Chưa thể nhập — sửa các lỗi sau rồi kiểm tra lại."),
       plan && plan.counts.update ? el("p", { class: "muted" }, "Sẽ đổi ở các mục đã có: " + summarizeChanges(plan).map(([k, n]) => `${k} (${n})`).join(" · ") + ".") : null,
       plan ? el("p", { class: "muted" }, "Lưu ý: bài ĐÃ CÓ không bị đổi bộ hoạt động khi nhập lại (chỉ bài mới có hoạt động ghi trong cột activities). Không thấy thay đổi mong đợi? Tải lại trang (Ctrl+F5) để chắc chắn đang chạy bản app mới nhất, và kiểm tra file CSV có đúng cột (vd pic, say, activities).") : null,
