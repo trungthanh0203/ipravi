@@ -27,12 +27,12 @@ ok(await count("content_items") === 21 && await count("units") === 2, "chạy se
   for (const f of readdirSync(csvDir).filter((n) => n.endsWith(".csv"))) {
     const { headers, rows } = parseCsv(readFileSync(csvDir + f, "utf8"));
     const u = headers.indexOf("unit"), l = headers.indexOf("lesson");
-    for (const r of rows) if (r[u]) { units.add(r[u].trim()); lessons.add(r[u].trim() + "" + r[l].trim()); }
+    for (const r of rows) if (r[u]) { units.add(r[u].trim()); lessons.add(r[u].trim() + "|||" + r[l].trim()); }
   }
   await db.exec("delete from public.units where title_vi not in ('Con vật', 'Màu sắc')");
   for (const t of units) await db.query("insert into public.units (title_vi, status) select $1, 'draft' where not exists (select 1 from public.units where title_vi = $1)", [t]);
   for (const k of lessons) {
-    const [ut, lt] = k.split("");
+    const [ut, lt] = k.split("|||");
     await db.query("insert into public.lessons (unit_id, title_vi) select u.id, $2 from public.units u where u.title_vi = $1 and not exists (select 1 from public.lessons l where l.unit_id = u.id and l.title_vi = $2)", [ut, lt]);
   }
   await db.query("update public.units set title_tr = '{\"de\": \"Meine Wahl\"}' where title_vi = 'Gia đình'"); // admin đã sửa tay

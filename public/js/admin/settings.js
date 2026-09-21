@@ -31,7 +31,7 @@ export async function mount(box) {
   const { data: s, error } = await sb.from("settings").select("*").eq("id", 1).single();
   if (error) return box.replaceChildren(msg("err", A.loadError + error.message));
 
-  box.replaceChildren(generalCard(s), await voiceCard(s), diagnosticCard());
+  box.replaceChildren(generalCard(s), await voiceCard(s), aiCard(), diagnosticCard());
 }
 
 function generalCard(s) {
@@ -176,4 +176,36 @@ function diagnosticCard() {
   });
   return el("div", { class: "card" }, el("h2", null, "Kiểm tra giọng đã sinh"),
     el("p", { class: "muted" }, "Xem mỗi ngôn ngữ/giới đang dùng giọng nào và bao nhiêu file. Giọng nữ phải là HoaiMy…, giọng nam là NamMinh…"), run, out);
+}
+
+// Kiểm tra cấu hình Gemini (GET /api/suggest): khoá có dùng được không, AI_MODEL có tồn tại không, và danh sách mô hình hợp lệ để chọn.
+function aiCard() {
+  const out = el("div");
+  const run = el("button", { class: "btn ghost", type: "button" }, "Kiểm tra AI (Gemini)");
+  run.addEventListener("click", async () => {
+    run.disabled = true;
+    out.replaceChildren(el("p", { class: "muted" }, A.loading));
+    try {
+      if (!CONFIG.aiEnabled) {
+        return out.replaceChildren(msg("err", "Worker chưa có biến bí mật AI_KEY. Đặt ở Cloudflare Dashboard → Worker → Settings → Variables and Secrets (loại Secret), rồi deploy lại. File .dev.vars chỉ dùng khi chạy ở máy bạn."));
+      }
+      const { data } = await sb.auth.getSession();
+      const res = await fetch("/api/suggest", { headers: { authorization: `Bearer ${data.session?.access_token}` } });
+      let j = null;
+      try { j = await res.json(); } catch { /* không phải JSON */ }
+      if (!res.ok) return out.replaceChildren(msg("err", j?.error || `Lỗi ${res.status}`));
+      out.replaceChildren(
+        j.modelUsable
+          ? msg("ok", `Khoá dùng được. Mô hình đang dùng: ${j.model}${j.usingDefault ? " (mặc định — chưa đặt AI_MODEL)" : ""}.`)
+          : msg("err", `Khoá dùng được nhưng mô hình “${j.model}” KHÔNG có trong danh sách dùng được của khoá này. Sửa biến AI_MODEL (Cloudflare Dashboard → Variables) thành một tên trong danh sách dưới đây rồi deploy lại.`),
+        el("p", { class: "muted" }, "Mô hình Gemini dùng được: " + (j.available.length ? j.available.join(", ") : "(không có)")),
+        el("p", { class: "muted" }, "Ngôn ngữ dịch (biến LANGUAGES): " + j.languages.join(", ")));
+    } catch (e) {
+      out.replaceChildren(msg("err", e.message));
+    } finally {
+      run.disabled = false;
+    }
+  });
+  return el("div", { class: "card" }, el("h2", null, "Dịch bằng AI (Gemini)"),
+    el("p", { class: "muted" }, "Khoá AI_KEY và tên mô hình AI_MODEL đặt ở biến môi trường của Worker (không nhập ở đây). Bấm để kiểm tra khoá có dùng được không và AI_MODEL có đúng tên không."), run, out);
 }

@@ -28,13 +28,36 @@ const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content
   const cfg = await (await worker.fetch(new Request("https://a.dev/api/config"), env())).json();
   eq([cfg.aiEnabled, JSON.stringify(cfg).includes("secret-key")], [true, false], "config: aiEnabled = true và KHÔNG lộ khoá");
   eq((await (await worker.fetch(new Request("https://a.dev/api/config"), env({ AI_KEY: "" }))).json()).aiEnabled, false, "config: chưa có AI_KEY → aiEnabled = false");
-  eq((await worker.fetch(new Request("https://a.dev/api/suggest"), env())).status, 405, "suggest: GET bị từ chối (405)");
+  eq((await worker.fetch(new Request("https://a.dev/api/suggest", { method: "PUT" }), env())).status, 405, "suggest: PUT bị từ chối (405)");
   admin = false;
   eq((await post({ entries: ["a"] })).status, 403, "suggest: không phải admin → 403");
   admin = true;
   const r = await post({ entries: ["con chó"] }, env({ AI_KEY: "" }));
   eq([r.status, (await r.json()).error.includes("AI_KEY")], [501, true], "suggest: chưa cấu hình AI_KEY → 501 kèm hướng dẫn");
   eq((await post({ entries: ["con chó"] }, env({ AI_MODEL: "../../evil" }))).status, 500, "suggest: AI_MODEL chứa ký tự lạ bị chặn");
+}
+
+// ---- Kiểm tra cấu hình (GET) ----
+{
+  const get = (e = env(), h = { authorization: "Bearer tok" }) => worker.fetch(new Request("https://a.dev/api/suggest", { headers: h }), e);
+  admin = false;
+  eq((await get()).status, 403, "check: không phải admin → 403");
+  admin = true;
+  eq((await get(env({ AI_KEY: "" }))).status, 501, "check: chưa có AI_KEY → 501");
+  gemini = () => new Response(JSON.stringify({ models: [
+    { name: "models/gemini-2.5-flash", supportedGenerationMethods: ["generateContent", "countTokens"] },
+    { name: "models/gemini-2.5-pro", supportedGenerationMethods: ["generateContent"] },
+    { name: "models/embedding-001", supportedGenerationMethods: ["embedContent"] },
+  ] }), { status: 200 });
+  const ok1 = await (await get()).json();
+  eq([ok1.ok, ok1.model, ok1.modelUsable, ok1.usingDefault, ok1.available], [true, "gemini-2.5-flash", true, true, ["gemini-2.5-flash", "gemini-2.5-pro"]], "check: mô hình mặc định dùng được; chỉ liệt kê gemini có generateContent");
+  const bad = await (await get(env({ AI_MODEL: "gemini-3.6-flash" }))).json();
+  eq([bad.model, bad.modelUsable, bad.usingDefault, bad.available.length], ["gemini-3.6-flash", false, false, 2], "check: AI_MODEL không có trong danh sách → modelUsable=false kèm danh sách để chọn");
+  eq(calls.at(-1).init.headers["x-goog-api-key"], "secret-key", "check: khoá đi trong header");
+  gemini = () => new Response(JSON.stringify({ error: { message: "API key not valid" } }), { status: 400 });
+  const r400 = await get();
+  eq([r400.status, (await r400.json()).error.includes("AI_KEY")], [502, true], "check: khoá sai → 502 nói rõ AI_KEY");
+  calls.length = 0;
 }
 
 // ---- Kiểm tra đầu vào ----
@@ -100,7 +123,7 @@ const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content
   };
   await err(() => new Response(JSON.stringify({ error: { message: "API key not valid. Please pass a valid API key." } }), { status: 400 }), 502, /khoá API/, "khoá sai → 502 nói rõ AI_KEY");
   await err(() => new Response("{}", { status: 429 }), 429, /hạn mức/, "vượt hạn mức → 429");
-  await err(() => new Response("{}", { status: 404 }), 502, /AI_MODEL/, "sai tên mô hình → nhắc AI_MODEL");
+  await err(() => new Response("{}", { status: 404 }), 502, /"gemini-2\.5-flash".*AI_MODEL/, "sai tên mô hình → nêu đúng tên mô hình + nhắc AI_MODEL / Kiểm tra AI");
   await err(() => new Response("{}", { status: 403 }), 502, /quyền/, "khoá không có quyền → 502");
   await err(() => new Response("boom", { status: 500 }), 502, /Gemini lỗi 500/, "lỗi máy chủ Gemini → 502");
   await err(() => new Response(JSON.stringify({ promptFeedback: { blockReason: "SAFETY" } }), { status: 200 }), 422, /SAFETY/, "bị chặn nội dung → 422");
