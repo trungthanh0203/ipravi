@@ -4,6 +4,7 @@ import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { TONES, toneOf, splitSyllable, words, bare } from "../../viet.js";
+import { POOLS, withInitial as withInitialOf } from "../pools.js";
 
 // Hoạt động học vần (Cấp 3). Cách chơi chung: đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
 // Mỗi hoạt động tự bỏ qua (total 0) nếu bài không có đủ mục phù hợp — vd bài toàn chữ cái không chơi được "ghép âm + vần".
@@ -11,7 +12,8 @@ export const SKIP = { correct: 0, total: 0 };
 const others = (arr, keep, n) => sample(arr.filter((x) => x !== keep), n);
 
 // 1 lượt chọn: options = [{ key, node, cls }]; trả về Promise<boolean> (true nếu không sai lần nào).
-export function pick({ ctx, instr, top, options, correct, target, intro, reveal, wide = false }) {
+// quiet: KHÔNG phát âm đáp án lúc bắt đầu và khi chọn sai lần đầu (đáp án chính là âm thanh) — chỉ phát khi đã chọn đúng/hết lượt.
+export function pick({ ctx, instr, top, options, correct, target, intro, reveal, wide = false, quiet = false }) {
   return new Promise((resolve) => {
     let mistakes = 0;
     let done = false;
@@ -38,13 +40,13 @@ export function pick({ ctx, instr, top, options, correct, target, intro, reveal,
           buttons[options.findIndex((x) => x.key === correct)].classList.add("right");
           if (target) playItem(target);
           finish(false, 1600);
-        } else if (target) setTimeout(() => playItem(target), 500);
+        } else if (target && !quiet) setTimeout(() => playItem(target), 500);
       }
     }
     ctx.box.replaceChildren(el("p", { class: "instr" }, instr), ...top, grid);
     (async () => {
       if (intro) await say(instr);
-      if (!done && target) playItem(target);
+      if (!done && target && !quiet) playItem(target);
     })();
   });
 }
@@ -66,7 +68,7 @@ export async function rounds(ctx, pool, play) {
 
 // 1) Nghe – chọn thanh: nghe 1 tiếng rồi chọn ký hiệu đúng của thanh (➖ ↗️ ↘️ ❓ 〰️ ⬇️).
 export async function runTone(ctx) {
-  const pool = ctx.items.filter((i) => splitSyllable(i.text_vi));
+  const pool = POOLS.listen_pick_tone(ctx.items);
   const inLesson = [...new Set(pool.map((i) => toneOf(i.text_vi)))];
   const n = Math.min(ctx.config.choices ?? 3, TONES.length);
   return rounds(ctx, pool, (target, first) => {
@@ -85,7 +87,7 @@ export async function runTone(ctx) {
 const slotBox = (text, on) => el("span", { class: "slot-box" + (on ? " on" : "") }, text);
 const INITIAL_FALLBACK = ["b", "m", "c", "t", "n", "l", "h", "d", "x"];
 const REST_FALLBACK = ["a", "o", "e", "i", "u", "ô", "ơ", "ư"];
-const withInitial = (ctx) => ctx.items.filter((i) => splitSyllable(i.text_vi)?.initial);
+const withInitial = (ctx) => withInitialOf(ctx.items);
 // 3 lựa chọn gồm đáp án đúng + nhiễu lấy từ các mục trong bài (thiếu thì lấy dự phòng)
 const choicesOf = (right, pool, fallback, n) => shuffle([right, ...others([...new Set([...pool, ...fallback])].filter((x) => x !== right), right, n - 1)]);
 const asOpts = (list) => list.map((k) => ({ key: k, cls: "opt-text", node: k }));
@@ -118,7 +120,7 @@ export async function runFill(ctx) {
 
 // 4) Đọc – chạm hình: thấy chữ (từ/câu) rồi chọn đúng hình. Không phát âm trước — bé tự đọc; chọn đúng mới nghe đáp án.
 export async function runRead(ctx) {
-  const pool = ctx.items.filter(isLiteral); // chỉ dùng mục có hình ĐÚNG NGHĨA (pic ≠ decor)
+  const pool = POOLS.read_pick(ctx.items); // chỉ dùng mục có hình ĐÚNG NGHĨA (pic ≠ decor)
   const n = Math.min(ctx.config.choices ?? 3, pool.length);
   return rounds(ctx, pool, (target, first) => {
     const options = shuffle([target, ...others(pool, target, n - 1)]).map((o) => ({ key: o.id, node: visual(o) }));
@@ -128,7 +130,7 @@ export async function runRead(ctx) {
 
 // 5) Sắp xếp từ thành câu: nghe câu có hình rồi chạm các từ theo đúng thứ tự.
 export async function runOrder(ctx) {
-  const pool = ctx.items.filter((i) => words(i.text_vi).length >= 3);
+  const pool = POOLS.order_words(ctx.items);
   return rounds(ctx, pool, (target, first) => new Promise((resolve) => {
     const expected = words(target.text_vi);
     const same = (a, b) => bare(a).toLowerCase() === bare(b).toLowerCase();

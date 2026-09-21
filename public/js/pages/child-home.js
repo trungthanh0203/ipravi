@@ -10,10 +10,11 @@ import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
 import { emojiNodes } from "../emoji.js";
 import { loadStats, childStatsView } from "../stats.js";
+import { showPractice } from "../child/practice.js";
 
 // Khu học của trẻ: chủ đề → bài học (mở TẤT CẢ, bé chọn bài nào cũng được) → chơi. Chỉ tải dữ liệu của màn hình đang xem.
 export function mount(root) {
-  showLevels(root);
+  showHome(root);
 }
 
 const child = () => state.children.find((c) => c.id === state.activeChildId);
@@ -28,7 +29,16 @@ function shell(root, ...body) {
     ...body));
 }
 
-// Màn hình chính của bé: 4 chặng (cấp) + vài số liệu vui. Không khoá cấp — chỉ gợi ý "Con đang ở đây".
+// Màn hình chính của bé: 2 nút lớn — 📖 Học (4 chặng, từng bài) và 🎮 Luyện tập (theo kỹ năng, chơi trên mọi nội dung đã duyệt). Hai phần độc lập nhau.
+function showHome(root) {
+  shell(root,
+    el("h1", { style: "text-align:center" }, T.homeTitle),
+    el("div", { class: "home-cards" },
+      el("button", { class: "home-card learn", onclick: () => showLevels(root) }, el("span", { class: "hc-emoji" }, ...emojiNodes("📖")), el("b", null, T.homeLearn), el("small", null, T.homeLearnSub)),
+      el("button", { class: "home-card practice", onclick: () => showPractice({ root, shell, home: () => showHome(root) }) }, el("span", { class: "hc-emoji" }, ...emojiNodes("🎮")), el("b", null, T.homePractice), el("small", null, T.homePracticeSub))));
+}
+
+// Màn hình Học: 4 chặng (cấp) + vài số liệu vui. Không khoá cấp — chỉ gợi ý "Con đang ở đây".
 async function showLevels(root) {
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
@@ -40,6 +50,7 @@ async function showLevels(root) {
     // Chưa có số liệu (stats lỗi) vẫn dựng được thẻ cấp từ danh sách chủ đề
     const totalWords = progress.reduce((a, p) => a + p.items_mastered, 0);
     shell(root,
+      el("button", { class: "btn ghost small", onclick: () => showHome(root) }, "◀ " + T.back),
       el("h1", { style: "text-align:center" }, T.levelsTitle),
       stats ? el("div", { class: "mini-stats" }, el("span", null, "⭐ ", stats.stars), el("span", null, "🔥 ", stats.streak), el("span", null, "📚 ", totalWords)) : null,
       el("div", { class: "level-grid" }, LEVELS.map((L) => {

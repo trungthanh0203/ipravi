@@ -508,5 +508,48 @@ await as(A, async () => {
   });
 }
 
+// ---- 22. luyện tập theo kỹ năng (migration 016) ----
+{
+  const m016 = readFileSync(new URL("../migrations/016_practice.sql", import.meta.url), "utf8");
+  await db.exec(m016); // mục 15–16 có thể đã chạy lại 009/010 (thay child_stats) — chạy lại 016 đúng thứ tự, đồng thời kiểm chạy lại không lỗi
+  const { SKILLS, skillOf } = await import("../../public/js/child/skills.js");
+  const kinds = [...SKILLS.flatMap((s) => s.kinds), "order_story", "read_quiz"];
+  const wrong = [];
+  for (const k of kinds) { const r = (await q("select public.skill_of($1) as s", [k]))[0].s; if (r !== skillOf(k)) wrong.push(`${k}: SQL=${r} JS=${skillOf(k)}`); }
+  ok(wrong.length === 0, `016: skill_of() khớp skills.js (${kinds.length} loại trò)`, wrong.join("; "));
+  ok((await q("select public.skill_of('khong-co') as s"))[0].s === null, "016: skill_of(trò lạ) = null");
+
+  const P = await uid("p22@x.com"), P2 = await uid("p22b@x.com");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé Luyện','frog') returning id", [P]))[0].id;
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('L-Cấp1', 1, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'LB', 'approved') returning id", [u]))[0].id;
+  await db.query("insert into public.content_items (lesson_id, text_vi, status) values ($1, 'a', 'approved')", [l]);
+
+  await as(P, async () => {
+    // Bài học: 1 dòng cả bài (600 s) + 2 dòng từng trò (250 s mỗi dòng) — như app ghi
+    await db.query("insert into public.activity_log (child_id, lesson_id, kind, skill, source, score, duration_seconds) values ($1,$2,'listen_pick','listen','lesson',90,250), ($1,$2,'match','read','lesson',90,250), ($1,$2,'lesson',null,'lesson',90,600)", [kid, l]);
+    // Luyện tập: 1 dòng phiên (300 s, không lesson_id) + 1 dòng trò (280 s)
+    await db.query("insert into public.activity_log (child_id, kind, skill, source, score, duration_seconds) values ($1,'trace','trace','practice',80,280), ($1,'practice','trace','practice',80,300)", [kid]);
+    const st = (await q("select public.child_stats($1, 'UTC') as s", [kid]))[0].s;
+    ok(st.week.minutes === 15, "016: phút học chỉ cộng dòng phiên (10 phút bài + 5 phút luyện tập = 15, không đếm đôi)", JSON.stringify(st.week));
+    ok(st.stars === 3 && st.week.lessons === 1, "016: phiên luyện tập KHÔNG tính là xong bài / không thêm sao bài học", JSON.stringify({ stars: st.stars, week: st.week }));
+    ok(st.streak === 1, "016: luyện tập tính vào chuỗi ngày", String(st.streak));
+    // Ghi kiểu cũ (không có skill/source) vẫn chạy và mặc định là bài học
+    await db.query("insert into public.activity_log (child_id, lesson_id, kind, score, duration_seconds) values ($1,$2,'lesson',50,60)", [kid, l]);
+    ok((await q("select source from public.activity_log where duration_seconds = 60"))[0].source === "lesson", "016: ghi kiểu cũ (không có cột mới) mặc định source='lesson'");
+    const e = await fails("insert into public.activity_log (child_id, kind, source, duration_seconds) values ($1,'practice','hack',1)", [kid]);
+    ok(e && /check/i.test(e), "016: source lạ bị chặn", String(e));
+  });
+  await as(P2, async () => {
+    const e = await fails("insert into public.activity_log (child_id, kind, skill, source, duration_seconds) values ($1,'practice','listen','practice',1)", [kid]);
+    ok(e && /row-level security/i.test(e), "016: phụ huynh khác KHÔNG ghi được nhật ký luyện tập cho bé của người khác", String(e));
+    ok((await q("select id from public.activity_log where child_id = $1", [kid])).length === 0, "016: phụ huynh khác không đọc được nhật ký của bé");
+  });
+  const before = (await q("select count(*)::int as n from public.activity_log"))[0].n;
+  await db.exec(m016);
+  ok((await q("select count(*)::int as n from public.activity_log"))[0].n === before, "016: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

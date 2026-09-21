@@ -3,6 +3,7 @@ import { T } from "../../strings.js";
 import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
+import { POOLS } from "../pools.js";
 
 // Nghe – chạm: nghe từ tiếng Việt rồi chọn đúng hình (mode "picture") hoặc đúng chữ (mode "text").
 // Đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
@@ -58,7 +59,7 @@ function round(ctx, pool, target, mode, withIntro) {
 
 async function play(ctx, mode) {
   // Chọn theo HÌNH chỉ dùng mục có hình đúng nghĩa (pic ≠ decor); chọn theo chữ dùng mọi mục
-  const pool = mode === "picture" ? ctx.items.filter(isLiteral) : ctx.items;
+  const pool = mode === "picture" ? POOLS.listen_pick(ctx.items) : POOLS.listen_pick_text(ctx.items);
   if (pool.length < 2) return { correct: 0, total: 0 };
   const rounds = Math.min(ctx.config.rounds ?? 5, pool.length);
   const targets = sample(pool, rounds);

@@ -6,6 +6,7 @@ import { stopAudio } from "../../audio.js";
 import { spellParts } from "../../viet.js";
 import { arrange } from "./reading.js";
 import { SKIP } from "./phonics.js";
+import { POOLS } from "../pools.js";
 
 // Đánh vần theo từng phần: bờ – a – ba – huyền – bà. Mỗi vòng 2 bước:
 //  ① Nghe – nhìn: các phần lần lượt sáng lên khi được đọc (chạm phần nào nghe phần đó);
@@ -14,7 +15,7 @@ import { SKIP } from "./phonics.js";
 const ROLE_LABEL = { initial: "âm đầu", van: "vần", base: "tiếng", tone: "dấu", whole: "cả tiếng" };
 
 export async function runSpellAlong(ctx) {
-  const pool = ctx.items.filter((i) => (spellParts(i.text_vi)?.length ?? 0) >= 2);
+  const pool = POOLS.spell_along(ctx.items);
   if (pool.length < 2) return SKIP;
   await loadPartAudio(); // tải sẵn ngân hàng âm (lỗi thì bỏ qua → dùng giọng trình duyệt)
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 3, pool.length));

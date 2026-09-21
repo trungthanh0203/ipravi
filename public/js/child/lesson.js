@@ -7,39 +7,9 @@ import { childAge } from "./util.js";
 import { emojiNodes, prefetchEmoji } from "../emoji.js";
 import * as api from "./api.js";
 import * as intro from "./activities/intro.js";
-import * as listenPick from "./activities/listen-pick.js";
-import * as match from "./activities/match.js";
-import * as listenRepeat from "./activities/listen-repeat.js";
-import * as phonics from "./activities/phonics.js";
-import * as reading from "./activities/reading.js";
-import * as spell from "./activities/spell.js";
-import * as casing from "./activities/casing.js";
-import * as trace from "./activities/trace.js";
-
-// Thêm dạng hoạt động mới: viết file trong ./activities/ (export run(ctx) → {correct,total}) rồi thêm 1 dòng ở đây.
-const RUNNERS = {
-  listen_pick: listenPick.run,
-  listen_pick_text: listenPick.runText,
-  match: match.run,
-  listen_repeat: listenRepeat.run,
-  listen_pick_tone: phonics.runTone,
-  build_syllable: phonics.runBuild,
-  fill_letter: phonics.runFill,
-  read_pick: phonics.runRead,
-  order_words: phonics.runOrder,
-  read_quiz: reading.runQuiz,
-  fill_word: reading.runFillWord,
-  write_check: reading.runWriteCheck,
-  spell_word: reading.runSpell,
-  order_story: reading.runStory,
-  spell_along: spell.runSpellAlong,
-  match_case: casing.runMatchCase,
-  pick_case: casing.runPickCase,
-  fix_capital: casing.runFixCapital,
-  trace: trace.runTrace,
-};
-const MIN_AGE_FOR_TEXT = 5; // trẻ nhỏ hơn thì bỏ các dạng cần nhận mặt chữ
-const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story", "spell_along", "match_case", "pick_case", "fix_capital", "trace"]);
+import { RUNNERS } from "./runners.js";
+import { makeCtx } from "./session.js";
+import { kindAllowed, skillOf } from "./skills.js";
 
 export const starsFor = (score) => (score == null ? 0 : score >= 85 ? 3 : score >= 60 ? 2 : 1);
 
@@ -73,7 +43,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
       el("button", { class: "btn ghost small", onclick: onExit }, T.back))));
 
   const age = childAge(child);
-  const plan = activities.filter((a) => RUNNERS[a.kind] && !(TEXT_KINDS.has(a.kind) && age != null && age < MIN_AGE_FOR_TEXT));
+  const plan = activities.filter((a) => RUNNERS[a.kind] && kindAllowed(a.kind, age));
 
   let aborted = false;
   let abort;
@@ -88,15 +58,10 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
 
   let step = 0;
   const totalSteps = plan.length + 1; // +1 cho phần học từ mới
-  const ctx = {
-    box, account, child, items, questions,
-    config: {},
+  const ctx = makeCtx({
+    box, account, child, items, questions, progress,
     setProgress: (i, n) => { bar.style.width = `${((step + i / Math.max(n, 1)) / totalSteps) * 100}%`; },
-    record: (itemId, correct) => {
-      api.saveAnswer(child.id, itemId, correct, progress.get(itemId)).then((row) => progress.set(itemId, row));
-    },
-    savePron: (itemId, score, text) => api.savePronunciation(child.id, itemId, score, text),
-  };
+  });
 
   const started = Date.now();
   const logs = [];
@@ -114,7 +79,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
     correct += res.correct;
     total += res.total;
     logs.push({
-      child_id: child.id, activity_id: act.id, lesson_id: lesson.id, kind: act.kind,
+      child_id: child.id, activity_id: act.id, lesson_id: lesson.id, kind: act.kind, skill: skillOf(act.kind), source: "lesson",
       score: res.total ? Math.round((res.correct / res.total) * 100) : null,
       duration_seconds: Math.round((Date.now() - t0) / 1000),
     });

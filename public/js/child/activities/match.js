@@ -3,11 +3,12 @@ import { T } from "../../strings.js";
 import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
+import { POOLS } from "../pools.js";
 
 // Ghép cặp: nối hình (cột trái) với chữ Việt (cột phải). Chạm 1 chữ là nghe đọc chữ đó,
 // nên trẻ chưa biết đọc vẫn ghép được nhờ âm thanh.
 export async function run(ctx) {
-  const pool = ctx.items.filter(isLiteral); // ghép hình ↔ chữ: chỉ mục có hình đúng nghĩa
+  const pool = POOLS.match(ctx.items); // ghép hình ↔ chữ: chỉ mục có hình đúng nghĩa
   if (pool.length < 2) return { correct: 0, total: 0 };
   const n = Math.min(ctx.config.pairs ?? 4, pool.length);
   const chosen = sample(pool, n);

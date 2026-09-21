@@ -5,9 +5,10 @@ import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { caseParts, lookalikes, capitalIndexes, hasProperName, words, bare } from "../../viet.js";
 import { pick, listenBtn, rounds, SKIP } from "./phonics.js";
+import { POOLS } from "../pools.js";
 
 // Chữ hoa. Mục chữ hoa có dạng "A a" (chữ hoa + chữ thường). Cả 3 hoạt động tự sinh từ dữ liệu có sẵn, không cần cột mới.
-const pairsOf = (ctx) => ctx.items.filter((i) => caseParts(i.text_vi));
+const pairsOf = (ctx) => POOLS.match_case(ctx.items);
 
 // 1) Ghép chữ hoa ↔ chữ thường. Chạm chữ nào nghe âm của chữ đó (bé chưa đọc giỏi vẫn ghép được nhờ hình dạng + âm).
 export async function runMatchCase(ctx) {
@@ -78,7 +79,7 @@ export async function runPickCase(ctx) {
 
 // 3) Chạm từ cần viết hoa: câu hiện TOÀN CHỮ THƯỜNG; bé chạm các từ phải viết hoa (từ đầu câu + tên riêng), bấm "Xong". Được sửa lại 1 lần.
 export async function runFixCapital(ctx) {
-  const pool = ctx.items.filter((i) => words(i.text_vi).length >= 3 && hasProperName(i.text_vi));
+  const pool = POOLS.fix_capital(ctx.items);
   return rounds(ctx, pool, (target, first) => new Promise((resolve) => {
     const ws = words(target.text_vi);
     const need = new Set(capitalIndexes(target.text_vi));

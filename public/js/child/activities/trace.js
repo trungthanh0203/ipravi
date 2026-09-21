@@ -6,6 +6,7 @@ import { sfx } from "../sfx.js";
 import { traceTexts } from "../../viet.js";
 import { scoreTrace } from "../../trace-score.js";
 import { SKIP } from "./phonics.js";
+import { POOLS } from "../pools.js";
 
 // Tô chữ theo MẪU CHỮ THẢO tiểu học Việt Nam (phông Playwrite VN, tự lưu trong app). Bé dùng ngón tay/bút cảm ứng tô lên chữ mẫu mờ.
 // Chấm bằng trace-score.js: độ phủ + nét thừa + TỪNG MẢNH (thân chữ, dấu thanh, dấu mũ…) — bỏ dấu thanh là chưa đạt. Không hiện "sai", được sửa lại 1 lần.
@@ -139,7 +140,7 @@ export function createTracer(text, availWidth) {
 }
 
 export async function runTrace(ctx) {
-  const pool = ctx.items.filter((i) => traceTexts(i.text_vi));
+  const pool = POOLS.trace(ctx.items);
   if (pool.length < 2) return SKIP;
   if (!(await fontReady(pool.map((i) => i.text_vi).join("")))) return SKIP; // không nạp được phông mẫu → bỏ qua, không làm bé kẹt
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 3, pool.length));

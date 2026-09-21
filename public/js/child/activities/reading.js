@@ -6,6 +6,7 @@ import { sfx } from "../sfx.js";
 import { stopAudio } from "../../audio.js";
 import { words, bare } from "../../viet.js";
 import { pick, listenBtn, rounds, SKIP } from "./phonics.js";
+import { POOLS, variants } from "../pools.js";
 
 // Hoạt động Cấp 4 (đọc hiểu, chính tả, viết). Cùng luật chung: đúng ngay lần đầu = đúng; sai 2–3 lần thì hiện đáp án rồi sang câu kế (không phạt).
 const same = (a, b) => bare(String(a)).toLowerCase() === bare(String(b)).toLowerCase();
@@ -86,7 +87,7 @@ export async function runQuiz(ctx) {
 
 // 2) Điền từ vào chỗ trống: bỏ 1 từ trong câu, chọn từ đúng trong 3 từ (nhiễu lấy từ các câu khác của bài).
 export async function runFillWord(ctx) {
-  const pool = ctx.items.filter((i) => words(i.text_vi).length >= 4);
+  const pool = POOLS.fill_word(ctx.items);
   const vocab = [...new Set(pool.flatMap((i) => words(i.text_vi).map((w) => bare(w).toLowerCase())).filter((w) => w.length >= 2))];
   if (vocab.length < 4) return SKIP;
   return rounds(ctx, pool, (target, first) => {
@@ -105,19 +106,8 @@ export async function runFillWord(ctx) {
 }
 
 // 3) Chọn câu viết đúng: 1 câu đúng (viết hoa đầu câu + dấu câu) và các bản sai (quên viết hoa, thiếu/sai dấu câu).
-const END = [".", "?", "!"];
-function variants(text) {
-  const out = [];
-  const first = text[0], last = text.at(-1);
-  if (first.toLowerCase() !== first) out.push(first.toLowerCase() + text.slice(1)); // quên viết hoa
-  if (END.includes(last)) {
-    out.push(text.slice(0, -1)); // thiếu dấu câu
-    out.push(text.slice(0, -1) + sample(END.filter((e) => e !== last), 1)[0]); // sai dấu câu
-  }
-  return [...new Set(out)];
-}
 export async function runWriteCheck(ctx) {
-  const pool = ctx.items.filter((i) => words(i.text_vi).length >= 2 && END.includes(i.text_vi.at(-1)) && variants(i.text_vi).length >= 2);
+  const pool = POOLS.write_check(ctx.items);
   return rounds(ctx, pool, (target, first) => {
     const options = shuffle([target.text_vi, ...sample(variants(target.text_vi), 2)]).map((k) => ({ key: k, cls: "opt-text", node: k }));
     return pick({ ctx, instr: T.instrWriteCheck, top: [visual(target, "big"), listenBtn(target)], options, correct: target.text_vi, target, intro: first, wide: true });
@@ -126,8 +116,7 @@ export async function runWriteCheck(ctx) {
 
 // 4) Chính tả: nghe + xem hình rồi xếp các chữ cái thành từ (có 2 chữ nhiễu).
 export async function runSpell(ctx) {
-  const ok = (i) => isLiteral(i) && !/\s/.test(i.text_vi) && [...i.text_vi.normalize("NFC")].length >= 2 && [...i.text_vi.normalize("NFC")].length <= 8;
-  const pool = ctx.items.filter(ok);
+  const pool = POOLS.spell_word(ctx.items);
   const alphabet = [...new Set(pool.flatMap((i) => [...i.text_vi.normalize("NFC").toLowerCase()]))];
   return rounds(ctx, pool, (target, first) => {
     const chars = [...target.text_vi.normalize("NFC").toLowerCase()];

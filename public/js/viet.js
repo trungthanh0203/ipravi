@@ -103,3 +103,32 @@ export function traceTexts(text) {
   if (!t || /\s/.test(t) || [...t].length > 8) return null;
   return [t];
 }
+
+// ---- Chính tả: âm đầu hay viết nhầm ----
+// Mỗi âm đầu → các âm hay nhầm với nó (ch/tr, s/x, d/gi/r, l/n) và các cặp theo luật chính tả (c/k, g/gh, ng/ngh — k, gh, ngh chỉ đứng trước i, e, ê).
+// Cách viết SAI này chỉ dùng làm đáp án nhiễu; đáp án đúng luôn là chữ của mục (hình + âm thanh cho biết từ nào).
+const CONFUSE = { ch: ["tr"], tr: ["ch"], s: ["x"], x: ["s"], d: ["gi", "r"], gi: ["d", "r"], r: ["d", "gi"], l: ["n"], n: ["l"], c: ["k"], k: ["c"], g: ["gh"], gh: ["g"], ng: ["ngh"], ngh: ["ng"] };
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+// Với 1 từ/cụm từ (tối đa 3 tiếng): { right, wrongs: [1–2 bản viết sai] } hoặc null nếu không có âm đầu nào dễ nhầm.
+// "chó" → wrongs ["tró"] ; "dì" → ["gì", "rì"] (bỏ "gì"/"gi" vì là từ có thật đứng độc lập).
+export function spellingChoices(text, rng = Math.random) {
+  const t = String(text ?? "").normalize("NFC").trim();
+  const syl = t.split(/\s+/);
+  if (!t || syl.length > 3) return null;
+  const cands = [];
+  syl.forEach((s, idx) => {
+    const sp = splitSyllable(s);
+    if (!sp || !CONFUSE[sp.initial] || /^gi?$|^gì$/i.test(s)) return;
+    const up = s[0] !== s[0].toLowerCase();
+    // "gi" + vần bắt đầu bằng i thì chỉ viết "g" (dì → gì): đó là từ có thật, không dùng làm đáp án nhiễu
+    const wrongs = CONFUSE[sp.initial].filter((ini) => !(ini === "gi" && /^[iìíỉĩị]/.test(sp.rest))).map((ini) => {
+      const w = ini + sp.rest;
+      return syl.map((x, k) => (k === idx ? (up ? cap(w) : w) : x)).join(" ");
+    });
+    if (wrongs.length) cands.push(wrongs);
+  });
+  if (!cands.length) return null;
+  const wrongs = cands[Math.floor(rng() * cands.length)];
+  return { right: t, wrongs: wrongs.slice(0, 2) };
+}

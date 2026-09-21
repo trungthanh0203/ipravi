@@ -314,3 +314,60 @@ img.visual.big { max-height: 200px; }
 .unit-head { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
 .row-btns.unit-btns { justify-content: flex-start; align-items: center; margin: 0 0 4px; }
 .row-btns.unit-btns select { width: auto; min-width: 0; }
+
+/* ===== Màn hình chính của bé: Học | Luyện tập ===== */
+.home-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 18px; }
+@media (min-width: 520px) { .home-cards { grid-template-columns: 1fr 1fr; } }
+.home-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 28px 16px; border: 4px solid; border-radius: 28px; color: var(--text); box-shadow: 0 4px 14px rgba(80, 40, 10, .12); }
+.home-card b { font-size: 30px; }
+.home-card small { font-size: 16px; color: var(--text-2); }
+.home-card .hc-emoji { font-size: 80px; line-height: 1; }
+.home-card .hc-emoji img { height: 1em; width: 1em; }
+.home-card.learn { background: var(--brand-light); border-color: var(--brand); }
+.home-card.practice { background: #e7f0ff; border-color: #3b82f6; }
+.home-card:active { transform: scale(.98); }
+
+/* ===== Luyện tập: lưới kỹ năng ===== */
+.skill-group h2 { color: var(--c); margin: 22px 0 8px; }
+.skill-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 560px) { .skill-grid { grid-template-columns: repeat(3, 1fr); } }
+.skill-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 132px; padding: 12px 8px; border: 3px solid var(--c); border-radius: 22px; background: var(--soft); color: var(--text); text-align: center; box-shadow: 0 2px 8px rgba(80, 40, 10, .1); }
+.skill-card b { font-size: 20px; }
+.skill-card small { font-size: 13px; color: var(--text-2); line-height: 1.25; }
+.skill-card:active { transform: scale(.97); }
+.skill-card.off { opacity: .5; border-style: dashed; filter: grayscale(.5); }
+.sk-emoji { font-size: 52px; line-height: 1; display: inline-flex; }
+.sk-emoji img { height: 1em; width: 1em; }
+.note { background: #fff8db; border-radius: 12px; padding: 10px 14px; text-align: center; font-weight: 600; }
+.skill-hero { text-align: center; background: var(--soft); border: 3px solid var(--c); border-radius: 24px; padding: 14px; margin: 10px 0; }
+.skill-hero h1 { margin: 4px 0; color: var(--c); }
+.skill-hero .sk-emoji { font-size: 64px; }
+.scope-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+.chip-btn { border: 3px solid #d9c9bb; background: #fff; border-radius: 999px; padding: 10px 16px; font-weight: 700; color: var(--text); min-height: 48px; }
+.chip-btn.on { border-color: var(--brand); background: var(--brand-light); }
+.chip-btn:disabled { opacity: .45; }
+.chip-btn2 { font: inherit; cursor: pointer; }
+
+/* ===== Trong phiên luyện tập: dải màu + chấm tiến độ ===== */
+.ribbon { flex: none; display: flex; align-items: center; gap: 8px; background: var(--soft); border: 3px solid var(--c); border-radius: 999px; padding: 4px 14px; min-width: 0; }
+.ribbon .sk-emoji { font-size: 28px; }
+.ribbon b { color: var(--c); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dots-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 10px; margin: -4px 0 12px; }
+.dots-row .sk-name { color: var(--c); font-size: 20px; }
+.dots-row .tag { font-size: 12px; font-weight: 700; color: #fff; background: var(--c); border-radius: 999px; padding: 2px 10px; }
+.dots { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--c); }
+.dot.on { background: var(--c); }
+
+/* ===== Trò mới: lật thẻ, phân loại ===== */
+.mem-grid { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 10px; margin-top: 14px; }
+.mem-card { position: relative; aspect-ratio: 1; border: 3px solid var(--brand); border-radius: 18px; background: var(--brand-light); padding: 4px; overflow: hidden; }
+.mem-card .mem-back, .mem-card .mem-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.mem-card .mem-back { font-size: 44px; background: repeating-linear-gradient(45deg, #ffd8b8, #ffd8b8 10px, #ffe6d2 10px, #ffe6d2 20px); }
+.mem-card .mem-face { background: #fff; opacity: 0; transform: scale(.85); transition: opacity .2s, transform .2s; font-size: 40px; }
+.mem-card .mem-face img.visual { max-height: 80%; }
+.mem-card .mem-word { font-size: 20px; font-weight: 800; padding: 4px; text-align: center; word-break: break-word; }
+.mem-card.open .mem-face, .mem-card.done .mem-face { opacity: 1; transform: scale(1); }
+.mem-card.done { border-color: var(--ok); background: #ebfbee; }
+.opt-bucket { flex-direction: column; gap: 6px; border-color: #b9c7e6; background: #f2f6ff; }
+.opt-bucket .bucket-name { font-size: 16px; font-weight: 800; }
