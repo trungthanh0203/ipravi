@@ -327,13 +327,16 @@ function itemRow(item, L, slots, say, refresh, items = []) {
     el("td", null, emoji), el("td", { class: "pic-cell" }, el("div", { class: "pic-top" }, thumb(item), imageButtons("content_items", item, say, refresh)), picRole(item, say)), el("td", null, vi, el("div", { class: "qa-mini" }, typeSel ?? el("small", { class: "muted" }, "câu hỏi đọc hiểu"), sayIn),
       item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
     el("td", { class: "nowrap" }, ageIn), audioCell,
-    el("td", { class: "nowrap act-cell" }, save, " ",
-      btn("▲", async () => { try { await ops.moveIn("content_items", items, item, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa lên trước (thứ tự mục quan trọng với trò xếp câu thành chuyện)"),
-      btn("▼", async () => { try { await ops.moveIn("content_items", items, item, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa xuống sau"),
-      btn("✕", async () => {
+    // Cột nút xếp dọc từ trên xuống: ▲▼ đổi thứ tự → 💾 Lưu → ✕ Xoá
+    el("td", { class: "act-cell" }, el("div", { class: "act-stack" },
+      el("div", { class: "act-move" },
+        btn("▲", async () => { try { await ops.moveIn("content_items", items, item, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa lên trước (thứ tự mục quan trọng với trò xếp câu thành chuyện)"),
+        btn("▼", async () => { try { await ops.moveIn("content_items", items, item, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa xuống sau")),
+      save,
+      btn("✕ Xoá", async () => {
         if (!confirm(`Xoá "${item.text_vi}"?`)) return;
         try { await ops.deleteItem(item.id); refresh(); } catch (e) { say("err", e.message); }
-      }, "btn small ghost danger", "Xoá mục này")));
+      }, "btn small ghost danger", "Xoá mục này"))));
   return tr;
 }
 
