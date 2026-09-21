@@ -142,6 +142,25 @@ export function suggestLesson(title, { level = 1, lookup = new Map(), langs = ["
   return { title_vi: t, kinds: defaultKinds(level), title_tr: Object.fromEntries(langs.map((l) => [l, hit?.tr?.[l] ?? ""])) };
 }
 
+// ---- Kết quả AI (Gemini) ----
+// Mục nào đáng gửi AI: chưa đủ nghĩa ở mọi ngôn ngữ, hoặc thiếu emoji (từ/cụm từ). Chữ cái đã có nghĩa mẫu theo luật nên không gửi.
+export function needsAi(s, codes) {
+  if (s.item_type === "letter") return false;
+  return codes.some((c) => !String(s.tr[c] ?? "").trim()) || (!s.emoji && (s.item_type === "word" || s.item_type === "phrase"));
+}
+
+// Điền kết quả AI vào CHỖ TRỐNG của gợi ý (nghĩa/emoji đã có từ CSDL, từ điển hoặc admin sửa tay không bị ghi đè); ghi nguồn "ai" để giao diện nhắc soát lại.
+// Trả số ô đã điền.
+export function applyAi(s, ai, codes) {
+  if (!ai) return 0;
+  let n = 0;
+  for (const c of codes) {
+    if (!String(s.tr[c] ?? "").trim() && ai.tr?.[c]) { s.tr[c] = ai.tr[c]; s.src.tr[c] = "ai"; n++; }
+  }
+  if (!s.emoji && ai.emoji && s.item_type !== "letter") { s.emoji = ai.emoji; s.src.emoji = "ai"; n++; }
+  return n;
+}
+
 // ---- Kiểm tra dữ liệu (giống luật nhập CSV) ----
 export const checkTitle = (t, what = "Tên") => (!clean(t) ? `${what} không được để trống` : clean(t).length > 60 ? `${what} dài quá 60 ký tự` : null);
 export const checkText = (t) => (!clean(t) ? "Chữ tiếng Việt không được để trống" : clean(t).length > 200 ? "Dài quá 200 ký tự" : null);

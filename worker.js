@@ -4,6 +4,7 @@
 // của Supabase (bảo mật nằm ở RLS) — KHÔNG đưa service_role key vào đây.
 
 import { handleTts, effectiveVoices } from "./tts.js";
+import { handleSuggest } from "./suggest.js";
 
 function parseLanguages(raw) {
   // "de:Deutsch,en:English" -> [{code:"de",label:"Deutsch"},{code:"en",label:"English"}]
@@ -26,6 +27,7 @@ function configResponse(env) {
     languages: parseLanguages(env.LANGUAGES),
     ttsProvider: String(env.TTS_PROVIDER || "").toLowerCase(), // chỉ tên nhà cung cấp (không bí mật) — để tab Cài đặt gợi ý giọng
     ttsVoices: effectiveVoices(env), // {lang:{female,male}} giọng có hiệu lực — app biết ngôn ngữ nào có TTS (không bí mật)
+    aiEnabled: Boolean(env.AI_KEY), // chỉ cho biết đã cấu hình AI hay chưa (KHÔNG lộ khoá) — admin mới thấy nút "Dịch bằng AI"
   };
   return new Response(JSON.stringify(body), {
     headers: {
@@ -40,6 +42,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/api/config") return configResponse(env);
     if (url.pathname === "/api/tts") return handleTts(request, env);
+    if (url.pathname === "/api/suggest") return handleSuggest(request, env);
     return env.ASSETS.fetch(request);
   },
 };

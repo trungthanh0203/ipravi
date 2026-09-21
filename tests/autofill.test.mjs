@@ -1,6 +1,6 @@
 // "Thêm nhanh" (admin): điền sẵn từ chữ Việt bằng luật + tra CSDL/từ điển. Chạy: node tests/autofill.test.mjs
 import { readFileSync, readdirSync } from "node:fs";
-import { makeLookup, guessType, sayOf, ageRange, defaultKinds, suggestItem, suggestUnit, suggestLesson, checkTitle, checkText, parseLines, QUICK_TYPES } from "../public/js/admin/autofill.js";
+import { makeLookup, guessType, sayOf, ageRange, defaultKinds, suggestItem, suggestUnit, suggestLesson, checkTitle, checkText, parseLines, QUICK_TYPES, needsAi, applyAi } from "../public/js/admin/autofill.js";
 import { DICT } from "../public/js/admin/dict.js";
 import { parseCsv, validateRows, keyOf, ACTIVITY_DEFAULTS } from "../public/js/admin/csv.js";
 import { isEmojiGrapheme, graphemes } from "../public/js/emoji.js";
@@ -104,6 +104,23 @@ const lookup = makeLookup(existing);
   // Hai từ khác emoji có chủ ý: trong bài về thanh điệu giáo trình dùng ký hiệu thanh làm hình (lá ↗️, vẽ 〰️)
   const bad3 = [...new Set(conflicts.map((r) => r.vi.toLowerCase()))].filter((w) => !["lá", "vẽ"].includes(w));
   ok(bad3.length === 0, "từ điển khởi đầu thống nhất emoji với giáo trình (trừ ký hiệu thanh điệu)", bad3.join());
+}
+
+// ---- Kết quả AI ----
+{
+  const codes = ["de", "en", "ko"];
+  const s = suggestItem("cái quạt trần", { level: 1, lookup, langs: codes });
+  ok(needsAi(s, codes), "needsAi: từ lạ chưa có nghĩa → gửi AI");
+  ok(!needsAi(suggestItem("b", { level: 3, lookup, langs: codes }), codes), "needsAi: chữ cái đã có nghĩa mẫu → không gửi");
+  const dog = suggestItem("con chó", { lookup, langs: codes });
+  ok(needsAi(dog, codes), "needsAi: thiếu nghĩa tiếng Hàn → gửi AI");
+  const n = applyAi(dog, { emoji: "🐕", tr: { de: "KHÔNG ĐƯỢC GHI ĐÈ", en: "x", ko: "개" } }, codes);
+  eq([n, dog.tr.de, dog.tr.en, dog.tr.ko, dog.src.tr.ko, dog.src.tr.de, dog.emoji], [1, "Hund (CSDL)", "dog", "개", "ai", "db", "🐕"], "applyAi: chỉ điền ô TRỐNG (nghĩa từ CSDL/từ điển không bị ghi đè), ghi nguồn ai");
+  const q = suggestItem("cái quạt trần", { lookup, langs: codes });
+  eq([applyAi(q, { emoji: "🪭", tr: { de: "Deckenventilator", en: "ceiling fan", ko: "" } }, codes), q.emoji, q.src.emoji, q.tr.ko, q.src.tr.ko], [3, "🪭", "ai", "", ""], "applyAi: điền cả emoji trống; ô AI trả rỗng vẫn để trống");
+  eq(applyAi(q, null, codes), 0, "applyAi: không có kết quả → không làm gì");
+  ok(!needsAi(q, ["de", "en"]) && !needsAi({ ...q, item_type: "sentence", emoji: "" }, ["de", "en"]), "needsAi: đủ nghĩa thì thôi; câu không cần emoji");
+  eq(applyAi(suggestItem("b", { level: 3, lookup, langs: codes }), { emoji: "🐝", tr: { ko: "비" } }, codes), 1, "applyAi: chữ cái không nhận emoji từ AI (chỉ điền nghĩa còn trống)");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

@@ -60,6 +60,11 @@ export const Q = {
   autoNote: "Điền sẵn bằng luật + dữ liệu đã có (KHÔNG dùng AI/dịch máy). Ô để trống là chưa có nguồn — bạn điền tay hoặc để trống.",
   srcDb: "từ mục đã có", srcDict: "từ điển", srcRule: "theo luật", srcGuess: (w) => `gợi ý từ “${w}”`,
   missing: "chưa có",
+  srcAi: "AI — hãy soát",
+  aiFill: "✨ Điền ô trống bằng AI",
+  aiTitle: "✨ Dịch tên bằng AI",
+  aiMissing: "✨ Dịch ô còn thiếu",
+  aiNote: "AI (Gemini) chỉ điền các ô còn TRỐNG và chỉ là gợi ý — đọc lại kỹ trước khi lưu, nhất là tiếng Hàn/Nhật. Chỉ chữ Việt + tên chủ đề/bài được gửi đi.",
   saveDraft: "Lưu (nháp)",
   ttsAfter: "Sinh âm thanh (TTS) sau khi lưu",
 };
