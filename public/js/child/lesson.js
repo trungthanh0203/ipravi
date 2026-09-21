@@ -51,6 +51,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   const bar = el("div", { class: "bar-fill" });
   const box = el("div", { class: "lesson-box" });
   paint(root, el("div", null,
+    el("div", { class: "lesson-title" }, lesson.title_vi), // luôn thấy đang học bài nào
     el("div", { class: "row lesson-head" },
       el("div", { class: "bar" }, bar), voiceToggle(),
       el("button", { class: "btn ghost small", onclick: () => { aborted = true; stopAudio(); abort(); onExit(); } }, "✕ " + T.quit)),

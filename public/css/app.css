@@ -412,3 +412,8 @@ img.visual.big { max-height: 200px; }
 .meter-fill.close { background: #56a3d9; }
 .meter-fill.wrong, .meter-fill.missing { background: #9aa0a6; }
 .note-soft { background: #fff8db; border-radius: 12px; padding: 10px 14px; }
+
+/* ===== Tên bài trên đầu khi đang học + nút đọc thử ở thẻ từ mới ===== */
+.lesson-title { text-align: center; font-weight: 800; font-size: 20px; color: var(--brand-dark); margin: 0 0 8px; }
+.mic.sm { width: 72px; height: 72px; font-size: 34px; margin: 10px auto 4px; }
+.flash .pron-feedback { min-height: 0; text-align: center; }

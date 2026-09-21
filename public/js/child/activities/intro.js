@@ -1,8 +1,9 @@
 import { el } from "../../ui.js";
 import { T } from "../../strings.js";
 import { playItem, visual, nativeLang, nativeLabel, say } from "../media.js";
+import { readAloudBox } from "../pron-ui.js";
 
-// Học từ mới: thẻ từng mục — hình + chữ Việt + nút nghe tiếng Việt / nghe chậm / nghe tiếng bản ngữ.
+// Học từ mới: thẻ từng mục — hình + chữ Việt + nút nghe tiếng Việt / nghe chậm / nghe tiếng bản ngữ + nút 🎤 để bé đọc thử (có chấm điểm khi phụ huynh đã bật).
 export function run(ctx) {
   return new Promise((resolve) => {
     let i = 0;
@@ -20,6 +21,7 @@ export function run(ctx) {
             el("button", { class: "btn small", onclick: () => playItem(item) }, "🔊 " + T.listenVi),
             el("button", { class: "btn small ghost", onclick: () => playItem(item, { slow: true }) }, "🐢 " + T.listenSlow),
             el("button", { class: "btn small ghost", onclick: () => playItem(item, { lang: nativeLang() }) }, "🔊 " + nativeLabel())),
+          ...readAloudBox(ctx, item), // 🎤 bé đọc từ đang học → chấm điểm từng tiếng
           el("div", { class: "row" },
             el("button", { class: "btn ghost small", disabled: i === 0, onclick: () => { i--; show(); } }, "◀ " + T.prev),
             el("span", { class: "muted" }, `${i + 1}/${ctx.items.length}`),

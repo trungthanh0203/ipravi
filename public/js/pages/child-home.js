@@ -118,7 +118,7 @@ async function showLessons(root, unit) {
             onclick: () => playLesson({ root, lesson: l, child: child(), account: state.account, onExit: () => showLessons(root, unit) }),
           },
           el("span", { class: "num" }, scores.has(l.id) ? "✓" : String(i + 1)),
-          el("span", { class: "title" }, l.title_vi, next ? el("span", { class: "lv-tag" }, T.lessonNext) : null, native ? el("small", { class: "title-native" }, native) : null),
+          el("span", { class: "title" }, l.title_vi, next ? el("span", { class: "lv-tag" }, "➜ " + T.lessonNext) : null, native ? el("small", { class: "title-native" }, native) : null),
           el("span", { class: "stars" }, scores.has(l.id) ? "⭐".repeat(n) + "☆".repeat(3 - n) : "")),
           titleSpeakers(l));
       })));
