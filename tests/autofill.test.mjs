@@ -1,6 +1,6 @@
 // "Thêm nhanh" (admin): điền sẵn từ chữ Việt bằng luật + tra CSDL/từ điển. Chạy: node tests/autofill.test.mjs
 import { readFileSync, readdirSync } from "node:fs";
-import { makeLookup, guessType, sayOf, ageRange, defaultKinds, suggestItem, suggestUnit, suggestLesson, checkTitle, checkText, parseLines, QUICK_TYPES } from "../public/js/admin/autofill.js";
+import { makeLookup, guessType, sayOf, ageRange, defaultKinds, suggestItem, suggestUnit, suggestLesson, checkTitle, checkText, parseLines, QUICK_TYPES, formatAge, parseAge } from "../public/js/admin/autofill.js";
 import { DICT } from "../public/js/admin/dict.js";
 import { parseCsv, validateRows, keyOf, ACTIVITY_DEFAULTS } from "../public/js/admin/csv.js";
 import { isEmojiGrapheme, graphemes } from "../public/js/emoji.js";
@@ -104,6 +104,15 @@ const lookup = makeLookup(existing);
   // Hai từ khác emoji có chủ ý: trong bài về thanh điệu giáo trình dùng ký hiệu thanh làm hình (lá ↗️, vẽ 〰️)
   const bad3 = [...new Set(conflicts.map((r) => r.vi.toLowerCase()))].filter((w) => !["lá", "vẽ"].includes(w));
   ok(bad3.length === 0, "từ điển khởi đầu thống nhất emoji với giáo trình (trừ ký hiệu thanh điệu)", bad3.join());
+}
+
+// ---- Độ tuổi gọn "3-8" ----
+{
+  eq([formatAge(null, null), formatAge(3, 8), formatAge(5, 5), formatAge(3, null), formatAge(null, 8), formatAge(0, 12)], ["", "3-8", "5", "3-", "-8", "0-12"], "formatAge: 3-8 / 5 / 3- / -8");
+  eq(["", "3-8", " 3 - 8 ", "3–8", "5", "3-", "-8", "0-12"].map((t) => JSON.stringify(parseAge(t))), [
+    '{"min":null,"max":null}', '{"min":3,"max":8}', '{"min":3,"max":8}', '{"min":3,"max":8}', '{"min":5,"max":5}', '{"min":3,"max":null}', '{"min":null,"max":8}', '{"min":0,"max":12}'], "parseAge: các dạng hợp lệ (cả dấu – và khoảng trắng)");
+  eq(["8-3", "3-13", "13", "abc", "-", "3 8", "3-8-9"].map((t) => Boolean(parseAge(t).error)), [true, true, true, true, true, true, true], "parseAge: sai dạng / ngoài 0–12 / min > max → báo lỗi");
+  eq(["", "3-8", "5", "3-", "-8"].every((t) => { const a = parseAge(t); return formatAge(a.min, a.max) === t; }), true, "parseAge ↔ formatAge khứ hồi");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

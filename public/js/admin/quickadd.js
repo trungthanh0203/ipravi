@@ -100,16 +100,22 @@ export function lessonForm({ unit, level, siblings, onSaved, onCancel }) {
     el("p", { class: "muted" }, Q.autoNote), footer(save, onCancel, err));
 }
 
-// ---- Sửa tên (bài) hoặc tên + emoji (chủ đề) ----
-export function renameForm({ title, emoji, withEmoji = false, onSave, onCancel }) {
+// ---- Sửa chủ đề (tên + emoji + tên dịch) hoặc bài (tên + tên dịch): cùng bố cục với lúc thêm mới ----
+// titleTr: title_tr hiện có {lang:tên}; onSave nhận { title_vi, emoji?, title_tr:{lang:tên} } (ô trống = xoá tên dịch của ngôn ngữ đó).
+export function renameForm({ title, emoji, withEmoji = false, titleTr = {}, onSave, onCancel }) {
   const err = el("div");
   const t = el("input", { type: "text", value: title, maxlength: "60", class: "cell" });
   const e = el("input", { type: "text", value: emoji ?? "", maxlength: "16", class: "cell cell-sm" });
+  const tr = Object.fromEntries(langs().map((l) => [l.code, el("input", { type: "text", value: titleTr?.[l.code] ?? "", maxlength: "60", class: "cell", placeholder: Q.missing })]));
   const save = btn(A.save, async () => {
     save.disabled = true;
-    try { await onSave({ title_vi: t.value, ...(withEmoji ? { emoji: e.value } : {}) }); } catch (x) { save.disabled = false; fail(err, x); }
+    try {
+      await onSave({ title_vi: t.value, ...(withEmoji ? { emoji: e.value } : {}), title_tr: Object.fromEntries(langs().map((l) => [l.code, tr[l.code].value])) });
+    } catch (x) { save.disabled = false; fail(err, x); }
   }, "btn small");
-  return el("div", { class: "qa-box" }, el("div", { class: "qa-grid" }, labeled("Tên (tiếng Việt)", t), withEmoji ? labeled("Emoji", e) : null), footer(save, onCancel, err));
+  return el("div", { class: "qa-box" },
+    el("div", { class: "qa-grid" }, labeled("Tên (tiếng Việt)", t), withEmoji ? labeled("Emoji", e) : null, langs().map((l) => labeled(`Tên bằng ${l.label}`, tr[l.code]))),
+    el("p", { class: "muted" }, "Tên dịch để bé bấm 🔊 nghe tên bằng ngôn ngữ của nhà; để trống ô nào thì xoá tên dịch của ngôn ngữ đó."), footer(save, onCancel, err));
 }
 
 // ---- Thêm từ / câu: gõ nhiều dòng, xem trước bảng đã điền sẵn, sửa nhanh rồi lưu ----

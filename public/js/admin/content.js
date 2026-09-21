@@ -10,9 +10,8 @@ import { guessGender } from "../voice-names.js";
 import { LEVELS, levelOf, numberUnits } from "../levels.js";
 import { beginLoad } from "./view.js";
 import * as images from "./images.js";
-import { matchFiles } from "./image-util.js";
 import { keyOf } from "./csv.js";
-import { QUICK_TYPES } from "./autofill.js";
+import { QUICK_TYPES, formatAge, parseAge } from "./autofill.js";
 import { emojiNodes } from "../emoji.js";
 import { contentUrl } from "../supabase.js";
 
@@ -60,22 +59,8 @@ function picRole(item, say) {
   return s;
 }
 
-// Tên chủ đề/bài bằng ngôn ngữ gốc (title_tr = {de:"…"}): để khu bé có nút 🔊 đọc tên. Hỏi từng ngôn ngữ; để trống = xoá; Huỷ = không đổi gì.
+// Tên chủ đề/bài bằng ngôn ngữ gốc (title_tr = {de:"…"}): để khu bé có nút 🔊 đọc tên. Nhập/sửa trong biểu mẫu ✎ Sửa (cùng chỗ với tên tiếng Việt).
 const trText = (row) => langs().map((l) => row.title_tr?.[l]).filter(Boolean).join(" · ");
-function titleTrButton(table, row, say, reload) {
-  return btn("🌐 Tên dịch", async () => {
-    const next = { ...(row.title_tr ?? {}) };
-    for (const l of CONFIG.languages) {
-      const v = prompt(`Tên "${row.title_vi}" bằng ${l.label} (để trống = xoá):`, next[l.code] ?? "");
-      if (v === null) return;
-      const t = v.trim();
-      if (t.length > 60) return say("err", "Tên dịch dài quá 60 ký tự.");
-      if (t) next[l.code] = t; else delete next[l.code];
-    }
-    try { check(await sb.from(table).update({ title_tr: next }).eq("id", row.id)); notice.set("ok", "Đã lưu tên dịch."); await reload(); }
-    catch (e) { say("err", e.message); }
-  }, "btn small ghost", "Sửa tên bằng ngôn ngữ gốc (bé bấm 🔊 để nghe)");
-}
 
 // Khe chứa biểu mẫu "Thêm nhanh"/sửa: bấm nút lần 1 mở biểu mẫu, bấm lần nữa (hoặc Huỷ) thì đóng.
 function slotToggle(slot, make) {
@@ -132,9 +117,9 @@ function render(box, units, lessons) {
       el("div", { class: "unit-head" },
         el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`), trText(u) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(u)}`) : null),
         el("div", { class: "row-btns unit-btns" },
-          thumb(u, "tiny"), imageButtons("units", u, say, reload), titleTrButton("units", u, say, reload),
-          btn(Q.edit, slotToggle(editSlot, (close) => renameForm({ title: u.title_vi, emoji: u.emoji, withEmoji: true, onCancel: close,
-            onSave: async (v) => { await ops.updateUnit(u, v, units); saved("Đã lưu chủ đề."); } })), "btn small ghost", "Sửa tên và emoji của chủ đề"),
+          thumb(u, "tiny"), imageButtons("units", u, say, reload),
+          btn(Q.edit, slotToggle(editSlot, (close) => renameForm({ title: u.title_vi, emoji: u.emoji, withEmoji: true, titleTr: u.title_tr, onCancel: close,
+            onSave: async (v) => { await ops.updateUnit(u, v, units); saved("Đã lưu chủ đề."); } })), "btn small ghost", "Sửa tên, emoji và tên dịch của chủ đề"),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
           levelSel,
@@ -189,9 +174,8 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
     el("div", { class: "row-btns", style: "margin:0" },
       btn("▲", act(() => ops.moveIn("lessons", siblings, lesson, -1)), "btn small ghost", "Đưa bài lên trước"),
       btn("▼", act(() => ops.moveIn("lessons", siblings, lesson, 1)), "btn small ghost", "Đưa bài xuống sau"),
-      btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, onCancel: () => renameSlot.replaceChildren(),
-        onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên bài"),
-      titleTrButton("lessons", lesson, say, reload),
+      btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, titleTr: lesson.title_tr, onCancel: () => renameSlot.replaceChildren(),
+        onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên và tên dịch của bài"),
       btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
       lesson.status === "approved"
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
@@ -247,23 +231,7 @@ async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}) {
     if (confirm("Sinh lại TOÀN BỘ âm thanh TTS của bài này bằng giọng đang chọn ở tab Cài đặt? (Âm thanh giọng người thật được giữ nguyên. Việc này tốn thêm ký tự TTS.)")) runGen(true);
   }, "btn small ghost");
 
-  // Tải nhiều ảnh: tên file = chữ của mục ("bánh chưng.png"; không dấu "banh-chung.png" cũng được nếu không mơ hồ)
-  const batchInput = el("input", { type: "file", multiple: true, accept: "image/png,image/jpeg,image/webp", style: "display:none" });
-  batchInput.addEventListener("change", async () => {
-    const { matched, unmatched, ambiguous } = matchFiles([...batchInput.files], items);
-    let ok = 0;
-    const failed = [];
-    for (const [k, m] of matched.entries()) {
-      progress.textContent = ` Đang tải ảnh ${k + 1}/${matched.length}…`;
-      try { await images.setImage("content_items", m.item, m.file); ok++; } catch (e) { failed.push(`${m.file.name} (${e.message})`); }
-    }
-    progress.textContent = "";
-    const bad = [...unmatched.map((n) => n + " (không khớp mục nào)"), ...ambiguous.map((n) => n + " (mơ hồ: hãy đặt tên đúng chữ có dấu)"), ...failed];
-    say(bad.length ? "err" : "ok", `Đã tải ${ok}/${batchInput.files.length} ảnh.${bad.length ? " Không tải được: " + bad.slice(0, 6).join("; ") + (bad.length > 6 ? "…" : "") : ""}`);
-    refresh();
-  });
   const toggle = btn(cardView ? "📋 Xem dạng bảng" : "🖼 Xem dạng thẻ (duyệt hình)", () => { cardView = !cardView; refresh(); }, "btn small ghost");
-  const batchBtn = btn("🖼 Tải nhiều ảnh", () => batchInput.click(), "btn small ghost", "Chọn nhiều file ảnh; tên file = chữ của mục, vd bánh chưng.png");
 
   const cardOf = (item) => {
     const emoji = el("input", { type: "text", value: item.emoji ?? "", class: "cell cell-sm", maxlength: "16", title: "Emoji (dùng khi chưa có ảnh riêng)" });
@@ -288,11 +256,11 @@ async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}) {
       resetLookup(); reload(); // tải lại để số mục của bài cập nhật
     } })), "btn small");
   panel.replaceChildren(
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, addBtn, genAll, regenAll, toggle, batchBtn, progress, batchInput),
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, addBtn, genAll, regenAll, toggle, progress),
     addSlot,
     el("p", { class: "muted" }, cardView
       ? "Duyệt hình: xem cả bài dạng thẻ lớn để kiểm tra hình có đúng nghĩa/hợp lý không. Hình ✦ trang trí (thẻ mờ) không được dùng để chọn/ghép trong các trò chơi."
-      : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 📷 Ảnh = tải ảnh riêng thay emoji (ngay cạnh hình)."),
+      : "Sửa chữ, nghĩa, emoji, tuổi (vd 3-8)… trực tiếp trong dòng rồi bấm 💾 Lưu ở cuối dòng (nút sáng lên khi có thay đổi; Enter cũng lưu). Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 📷 Ảnh = tải ảnh riêng thay emoji (ngay cạnh hình)."),
     cardView
       ? el("div", { class: "item-grid" }, items.map(cardOf))
       : el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
@@ -309,25 +277,25 @@ function itemRow(item, L, slots, say, refresh, items = []) {
   const emoji = inp(item.emoji, "cell-sm");
   const vi = inp(item.text_vi);
   const trs = L.map((l) => inp(audio.textFor(item, l)));
-  const minA = inp(item.min_age, "cell-xs", { inputmode: "numeric" });
-  const maxA = inp(item.max_age, "cell-xs", { inputmode: "numeric" });
+  const ageIn = inp(formatAge(item.min_age, item.max_age), "cell-age", { placeholder: "3-8", title: "Độ tuổi: 3-8 (từ 3 đến 8), 5 (đúng 5 tuổi), 3- (từ 3 trở lên), -8 (đến 8); để trống = mọi tuổi" });
   const isQuestion = item.item_type === "question"; // câu hỏi đọc hiểu chỉ sửa được bằng nhập CSV (có đáp án)
   const typeSel = isQuestion ? null : el("select", { class: "cell cell-sel", title: "Loại mục" }, QUICK_TYPES.map((t) => el("option", { value: t, selected: t === item.item_type }, TYPE_LABEL[t] ?? t)));
   const sayIn = inp(item.say_vi, "cell-sm", { placeholder: "đọc", title: "Cách đọc thành tiếng nếu khác chữ hiển thị (vd chữ b đọc là bờ)" });
-  const save = btn("Lưu", null, "btn small");
-  save.style.display = "none";
-  const dirty = () => { save.style.display = ""; };
-  [emoji, vi, ...trs, minA, maxA, sayIn].forEach((i) => i.addEventListener("input", dirty));
+  // Nút Lưu luôn hiện trên dòng: mờ khi chưa sửa gì, sáng lên (và dòng đổi màu) khi có thay đổi. Nhấn Enter trong ô cũng lưu.
+  const save = btn("💾 Lưu", null, "btn small ghost item-save", "Chưa có thay đổi");
+  save.disabled = true;
+  const tr = el("tr", null);
+  const dirty = () => { save.disabled = false; save.classList.remove("ghost"); save.title = "Lưu các thay đổi của dòng này"; tr.classList.add("row-dirty"); };
+  [emoji, vi, ...trs, ageIn, sayIn].forEach((i) => { i.addEventListener("input", dirty); i.addEventListener("keydown", (e) => { if (e.key === "Enter" && !save.disabled) { e.preventDefault(); save.click(); } }); });
   typeSel?.addEventListener("change", dirty);
 
   save.addEventListener("click", async () => {
     try {
       save.disabled = true;
       const patch = {};
-      const num = (v) => (v.trim() === "" ? null : Number(v));
-      const min = num(minA.value), max = num(maxA.value);
-      if ([min, max].some((v) => v != null && (!Number.isInteger(v) || v < 0 || v > 12))) throw new Error("Tuổi phải là số nguyên 0–12");
-      if (min != null && max != null && min > max) throw new Error("Tuổi nhỏ nhất lớn hơn tuổi lớn nhất");
+      const age = parseAge(ageIn.value);
+      if (age.error) throw new Error(age.error);
+      const { min, max } = age;
       if (!vi.value.trim()) throw new Error("Tiếng Việt không được để trống");
       if (vi.value.trim().length > 200) throw new Error("Tiếng Việt dài quá 200 ký tự");
       if (items.some((x) => x.id !== item.id && keyOf(x.text_vi) === keyOf(vi.value))) throw new Error("Bài đã có mục cùng chữ này");
@@ -355,17 +323,18 @@ function itemRow(item, L, slots, say, refresh, items = []) {
   });
 
   const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
-  return el("tr", null,
+  tr.append(
     el("td", null, emoji), el("td", { class: "pic-cell" }, el("div", { class: "pic-top" }, thumb(item), imageButtons("content_items", item, say, refresh)), picRole(item, say)), el("td", null, vi, el("div", { class: "qa-mini" }, typeSel ?? el("small", { class: "muted" }, "câu hỏi đọc hiểu"), sayIn),
       item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
-    el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
-    el("td", { class: "nowrap" }, save, " ",
+    el("td", { class: "nowrap" }, ageIn), audioCell,
+    el("td", { class: "nowrap act-cell" }, save, " ",
       btn("▲", async () => { try { await ops.moveIn("content_items", items, item, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa lên trước (thứ tự mục quan trọng với trò xếp câu thành chuyện)"),
       btn("▼", async () => { try { await ops.moveIn("content_items", items, item, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa xuống sau"),
       btn("✕", async () => {
         if (!confirm(`Xoá "${item.text_vi}"?`)) return;
         try { await ops.deleteItem(item.id); refresh(); } catch (e) { say("err", e.message); }
       }, "btn small ghost danger", "Xoá mục này")));
+  return tr;
 }
 
 function slotCell(item, slot, say, refresh) {

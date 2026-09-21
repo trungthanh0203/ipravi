@@ -130,10 +130,24 @@ export async function createUnit({ title_vi, emoji, level, title_tr }, units) {
   return data;
 }
 
-export async function updateUnit(unit, { title_vi, emoji }, units) {
+// Gộp tên dịch mới vào title_tr hiện có: ngôn ngữ nào có trong `next` thì đặt/xoá (rỗng = xoá), ngôn ngữ không nhắc tới giữ nguyên. Trả về đối tượng mới nếu có đổi, không thì null.
+function mergeTitleTr(old, next) {
+  if (next == null) return null;
+  const out = { ...(old ?? {}) };
+  for (const [lang, v] of Object.entries(next)) {
+    const t = clean(v);
+    if (t.length > 60) throw new Error(`Tên dịch (${lang}) dài quá 60 ký tự`);
+    if (t) out[lang] = t; else delete out[lang];
+  }
+  return JSON.stringify(out) === JSON.stringify(old ?? {}) ? null : out;
+}
+
+export async function updateUnit(unit, { title_vi, emoji, title_tr }, units) {
   const patch = {};
   if (title_vi != null && clean(title_vi) !== unit.title_vi) { need(checkTitle(title_vi, "Tên chủ đề")); uniqueUnit(units, clean(title_vi), unit.id); patch.title_vi = clean(title_vi); }
   if (emoji != null && clean(emoji) !== (unit.emoji ?? "")) { need(clean(emoji).length > 16 ? "Emoji quá dài" : null); patch.emoji = clean(emoji) || "📚"; }
+  const tr = mergeTitleTr(unit.title_tr, title_tr);
+  if (tr) patch.title_tr = tr;
   if (Object.keys(patch).length) check(await sb.from("units").update(patch).eq("id", unit.id));
   return patch;
 }
@@ -151,13 +165,18 @@ export async function createLesson(unitId, { title_vi, kinds, title_tr }, siblin
   return data;
 }
 
-export async function updateLesson(lesson, { title_vi }, siblings) {
-  const title = clean(title_vi);
-  if (title === lesson.title_vi) return {};
-  need(checkTitle(title, "Tên bài"));
-  if (siblings.some((l) => l.id !== lesson.id && keyOf(l.title_vi) === keyOf(title))) throw new Error(`Chủ đề này đã có bài "${title}".`);
-  check(await sb.from("lessons").update({ title_vi: title }).eq("id", lesson.id));
-  return { title_vi: title };
+export async function updateLesson(lesson, { title_vi, title_tr }, siblings) {
+  const patch = {};
+  if (title_vi != null && clean(title_vi) !== lesson.title_vi) {
+    const title = clean(title_vi);
+    need(checkTitle(title, "Tên bài"));
+    if (siblings.some((l) => l.id !== lesson.id && keyOf(l.title_vi) === keyOf(title))) throw new Error(`Chủ đề này đã có bài "${title}".`);
+    patch.title_vi = title;
+  }
+  const tr = mergeTitleTr(lesson.title_tr, title_tr);
+  if (tr) patch.title_tr = tr;
+  if (Object.keys(patch).length) check(await sb.from("lessons").update(patch).eq("id", lesson.id));
+  return patch;
 }
 
 // Thêm nhiều mục vào 1 bài. rows: [{ text_vi, item_type, say_vi, emoji, pic, min_age, max_age, tr:{lang:nghĩa} }].

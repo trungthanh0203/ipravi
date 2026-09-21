@@ -142,6 +142,29 @@ export function suggestLesson(title, { level = 1, lookup = new Map(), langs = ["
   return { title_vi: t, kinds: defaultKinds(level), title_tr: Object.fromEntries(langs.map((l) => [l, hit?.tr?.[l] ?? ""])) };
 }
 
+// ---- Độ tuổi gọn: 1 ô "3-8" thay cho hai ô ----
+// "" = mọi tuổi; "5" = đúng 5 tuổi; "3-8" = từ 3 đến 8; "3-" = từ 3 trở lên; "-8" = đến 8. Số nguyên 0–12.
+export function formatAge(min, max) {
+  const a = min == null ? null : Number(min), b = max == null ? null : Number(max);
+  if (a == null && b == null) return "";
+  if (a != null && b != null) return a === b ? String(a) : `${a}-${b}`;
+  return a != null ? `${a}-` : `-${b}`;
+}
+// Trả { min, max } hoặc { error }. Chấp nhận dấu - hoặc – và khoảng trắng.
+export function parseAge(text) {
+  const t = String(text ?? "").trim();
+  if (!t) return { min: null, max: null };
+  const m = t.match(/^(\d{1,2})?\s*([-–])?\s*(\d{1,2})?$/);
+  if (!m || (m[1] == null && m[3] == null)) return { error: "Tuổi nhập dạng 3-8 (hoặc 5, 3-, -8)" };
+  const dash = Boolean(m[2]);
+  if (!dash && m[3] != null) return { error: "Tuổi nhập dạng 3-8 (hoặc 5, 3-, -8)" };
+  const min = m[1] != null ? Number(m[1]) : null;
+  const max = dash ? (m[3] != null ? Number(m[3]) : null) : min;
+  if ([min, max].some((v) => v != null && v > 12)) return { error: "Tuổi phải từ 0 đến 12" };
+  if (min != null && max != null && min > max) return { error: "Tuổi nhỏ nhất lớn hơn tuổi lớn nhất" };
+  return { min, max };
+}
+
 // ---- Kiểm tra dữ liệu (giống luật nhập CSV) ----
 export const checkTitle = (t, what = "Tên") => (!clean(t) ? `${what} không được để trống` : clean(t).length > 60 ? `${what} dài quá 60 ký tự` : null);
 export const checkText = (t) => (!clean(t) ? "Chữ tiếng Việt không được để trống" : clean(t).length > 200 ? "Dài quá 200 ký tự" : null);
