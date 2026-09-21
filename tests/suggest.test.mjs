@@ -14,7 +14,7 @@ const calls = [];
 globalThis.fetch = async (url, init) => {
   url = String(url);
   if (url.includes("/rest/v1/rpc/is_admin")) return new Response(JSON.stringify(admin), { status: 200 });
-  if (url.includes("generativelanguage.googleapis.com")) { calls.push({ url, init }); return gemini(url, init); }
+  if (url.includes("generativelanguage.googleapis.com") || url.includes("gateway.ai.cloudflare.com")) { calls.push({ url, init }); return gemini(url, init); }
   throw new Error("fetch bất ngờ: " + url);
 };
 
@@ -138,6 +138,30 @@ const geminiOk = (items) => new Response(JSON.stringify({ candidates: [{ content
 
   eq((await post({ entries: ["a"] }, env({ AI_FALLBACK_MODEL: "../x" }))).status, 500, "AI_FALLBACK_MODEL chứa ký tự lạ bị chặn");
   eq(JSON.stringify(modelChain(env())) + JSON.stringify(modelChain(env({ AI_MODEL: "gemini-2.5-flash" }))) + JSON.stringify(modelChain(env({ AI_MODEL: "m-1", AI_FALLBACK_MODEL: "m-1" }))), '["gemini-2.5-flash"]["gemini-2.5-flash"]["m-1"]', "modelChain: không trùng, không dự phòng khi đã là mô hình mặc định");
+  calls.length = 0;
+}
+
+// ---- Lỗi vùng (User location is not supported) + AI_BASE_URL ----
+{
+  const loc = () => new Response(JSON.stringify({ error: { code: 400, message: "User location is not supported for the API use.", status: "FAILED_PRECONDITION" } }), { status: 400 });
+  calls.length = 0;
+  gemini = loc;
+  let r = await post({ entries: ["con chó"] }, env({ AI_MODEL: "gemini-x-preview" }));
+  let j = await r.json();
+  ok(r.status === 502 && /placement/.test(j.error) && /wrangler\.jsonc/.test(j.error) && /Hồng Kông/.test(j.error), "vùng: 400 'location is not supported' → hướng dẫn thêm placement vào wrangler.jsonc", `${r.status} ${j.error}`);
+  eq(calls.length, 1, "vùng: lỗi vùng không thử lại, không đổi mô hình (đổi mô hình không giúp được)");
+  r = await worker.fetch(new Request("https://a.dev/api/suggest", { headers: { authorization: "Bearer tok" } }), env());
+  j = await r.json();
+  ok(r.status === 502 && /placement/.test(j.error), "vùng: 'Kiểm tra AI' cũng báo đúng nguyên nhân + cách sửa");
+
+  calls.length = 0;
+  gemini = () => geminiOk([{ i: 0, emoji: "", tr: { de: "Hund" } }]);
+  r = await post({ entries: ["con chó"], langs: ["de"] }, env({ AI_BASE_URL: "https://gateway.ai.cloudflare.com/v1/ACC/GW/google-ai-studio/v1beta/" }));
+  eq([r.status, calls[0].url], [200, "https://gateway.ai.cloudflare.com/v1/ACC/GW/google-ai-studio/v1beta/models/gemini-2.5-flash:generateContent"], "AI_BASE_URL: đổi đường dẫn gốc (bỏ dấu / cuối), vẫn kèm khoá trong header");
+  eq(calls[0].init.headers["x-goog-api-key"], "secret-key", "AI_BASE_URL: khoá vẫn nằm trong header");
+  for (const bad of ["http://insecure.example.com", "https://a b.com", "javascript:alert(1)"]) {
+    eq((await post({ entries: ["a"] }, env({ AI_BASE_URL: bad }))).status, 500, `AI_BASE_URL không hợp lệ bị chặn: ${bad}`);
+  }
   calls.length = 0;
 }
 

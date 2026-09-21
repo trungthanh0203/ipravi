@@ -17,3 +17,4 @@ BRAND_COLOR=#e8590c
 # AI_KEY=...
 # AI_MODEL=gemini-2.5-flash
 # AI_FALLBACK_MODEL=gemini-2.5-flash   (không bắt buộc: mô hình dùng khi mô hình chính quá tải 503; nếu bỏ trống và AI_MODEL khác mặc định thì dùng gemini-2.5-flash)
+# AI_BASE_URL=https://gateway.ai.cloudflare.com/v1/<ACCOUNT_ID>/<GATEWAY>/google-ai-studio/v1beta   (không bắt buộc: đường dẫn gốc thay thế khi Gemini chặn theo vùng — xem CLAUDE.md)

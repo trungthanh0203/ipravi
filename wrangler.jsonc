@@ -10,6 +10,10 @@
   "main": "worker.js",
   "compatibility_date": "2026-09-01",
   "keep_vars": true,
+  // Gemini (dịch bằng AI) từ chối theo VỊ TRÍ máy gọi; Worker mặc định chạy ở trung tâm dữ liệu gần người dùng (vd Hồng Kông với người dùng ở Việt Nam)
+  // nên bị báo "User location is not supported". Gợi ý vị trí này làm Worker chạy gần vùng AWS us-east-1 (được Gemini hỗ trợ). Chỉ áp cho các
+  // đường /api/* (file tĩnh vẫn phục vụ gần người dùng). Không cần AI thì có thể bỏ khối này. Ảnh hưởng: /api/config chậm hơn một chút với người dùng ở xa.
+  "placement": { "region": "aws:us-east-1" },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"

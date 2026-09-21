@@ -10,6 +10,13 @@ export const MAX_TEXT = 200;
 const DEFAULT_MODEL = "gemini-2.5-flash";
 const TIMEOUT_MS = 25_000; // tối đa cho MỖI lần gọi Gemini
 const TOTAL_MS = 50_000; // tổng thời gian thử lại (kể cả mô hình dự phòng) rồi bỏ cuộc
+const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta";
+// AI_BASE_URL (tuỳ chọn): đường dẫn gốc thay thế — vd Cloudflare AI Gateway hoặc proxy của bạn đặt ở vùng được hỗ trợ. Chỉ nhận https, không khoảng trắng.
+export const baseUrl = (env) => (env.AI_BASE_URL ? String(env.AI_BASE_URL).trim().replace(/\/+$/, "") : GEMINI_BASE);
+const BASE_RE = /^https:\/\/[^\s?#]+$/i;
+// Gemini từ chối theo VÙNG của máy gọi (Worker chạy ở colo nào thì Google thấy IP ở đó — vd Hồng Kông không được hỗ trợ).
+const LOCATION_RE = /location is not supported/i;
+export const LOCATION_HELP = 'Gemini từ chối vì Worker đang chạy ở vùng không được hỗ trợ (Google chặn theo vị trí máy chủ gọi, ví dụ Hồng Kông). Cách sửa: thêm "placement": { "region": "aws:us-east-1" } vào wrangler.jsonc rồi deploy lại (hoặc đặt biến AI_BASE_URL trỏ tới Cloudflare AI Gateway/proxy ở vùng được hỗ trợ).';
 const RETRYABLE = new Set([500, 502, 503, 504]); // lỗi phía Gemini thường chỉ tạm thời ("high demand") → thử lại được
 
 // Tên tiếng Anh của ngôn ngữ (đưa vào prompt cho rõ). Mã lạ → dùng nhãn trong LANGUAGES hoặc chính mã.
@@ -63,7 +70,7 @@ export function buildGeminiRequest(env, { languages, context, entries, wantEmoji
     },
   };
   return {
-    url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    url: `${baseUrl(env)}/models/${model}:generateContent`,
     init: { method: "POST", headers: { "content-type": "application/json", "x-goog-api-key": env.AI_KEY }, body: JSON.stringify(body) },
     model,
   };
@@ -109,6 +116,7 @@ export async function parseGeminiResponse(res, entries, languages, model = "") {
   try { data = await res.json(); } catch { /* không phải JSON */ }
   if (!res.ok) {
     const m = String(data?.error?.message ?? "").slice(0, 200);
+    if (LOCATION_RE.test(m)) throw fail(502, LOCATION_HELP);
     if (res.status === 429) throw fail(429, "Đã vượt hạn mức Gemini (quá nhiều yêu cầu). Chờ một lúc rồi thử lại.");
     if (res.status === 400 && /api key/i.test(m)) throw fail(502, "Gemini từ chối khoá API (AI_KEY sai hoặc chưa bật). Kiểm tra lại khoá.");
     if (res.status === 403 || res.status === 401) throw fail(502, "Gemini từ chối quyền truy cập (khoá không có quyền hoặc bị hạn chế).");
@@ -130,7 +138,7 @@ async function handleCheck(env) {
   const model = String(env.AI_MODEL || DEFAULT_MODEL);
   let res;
   try {
-    res = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": env.AI_KEY } });
+    res = await fetch(`${baseUrl(env)}/models?pageSize=200`, { headers: { "x-goog-api-key": env.AI_KEY } });
   } catch (e) {
     return json({ error: `Không gọi được Gemini: ${String(e?.message ?? e).slice(0, 120)}` }, 502);
   }
@@ -138,6 +146,7 @@ async function handleCheck(env) {
   try { data = await res.json(); } catch { /* không phải JSON */ }
   if (!res.ok) {
     const m = String(data?.error?.message ?? "").slice(0, 200);
+    if (LOCATION_RE.test(m)) return json({ error: LOCATION_HELP }, 502);
     if (res.status === 429) return json({ error: "Đã vượt hạn mức Gemini. Chờ một lúc rồi thử lại." }, 429);
     if (res.status === 400 || res.status === 401 || res.status === 403) return json({ error: `Gemini từ chối khoá API (AI_KEY sai, chưa bật hoặc bị hạn chế)${m ? ": " + m : ""}` }, 502);
     return json({ error: `Gemini lỗi ${res.status}${m ? ": " + m : ""}` }, 502);
@@ -154,6 +163,7 @@ export async function handleSuggest(request, env) {
   for (const name of ["AI_MODEL", "AI_FALLBACK_MODEL"]) {
     if (env[name] && !MODEL_RE.test(env[name])) return json({ error: `${name} không hợp lệ (chỉ chữ, số, dấu chấm, gạch ngang; vd gemini-2.5-flash)` }, 500);
   }
+  if (env.AI_BASE_URL && !BASE_RE.test(String(env.AI_BASE_URL).trim())) return json({ error: "AI_BASE_URL không hợp lệ (phải bắt đầu bằng https://, không có khoảng trắng)" }, 500);
   if (request.method === "GET") return handleCheck(env);
 
   let body;
