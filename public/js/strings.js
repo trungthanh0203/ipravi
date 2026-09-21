@@ -116,7 +116,7 @@ export const T = {
   scopeAll: "Tất cả",
   scopeWeak: (n) => "Từ hay sai (" + n + ")",
   scopeLevel: (n) => "Cấp " + n,
-  scopeUnit: "Một chủ đề",
+  scopeUnit: "Chọn chủ đề",
   scopeUnitPick: "Chọn chủ đề",
   practicePlay: "Chơi nào!",
   practiceNoWeak: "Con chưa có từ nào hay sai. Giỏi quá!",

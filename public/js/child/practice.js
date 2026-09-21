@@ -96,8 +96,8 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
     el("h2", null, T.scopeTitle),
     el("div", { class: "scope-row" },
       chip("🌍 " + T.scopeAll, { type: "all" }),
-      chip("🎯 " + T.scopeWeak(weak), { type: "weak" }, weak === 0),
       levels.map((L) => chip(`${L.emoji} ${T.scopeLevel(L.n)}`, { type: "level", level: L.n })),
+      chip("🎯 " + T.scopeWeak(weak), { type: "weak" }, weak === 0),
       chip("🗺️ " + T.scopeUnit, { type: "unit", unitId: scope.type === "unit" ? scope.unitId : undefined })),
     unitSel,
     el("div", { style: "text-align:center" }, el("button", { class: "btn big", style: btnStyle(skill), disabled: scope.type === "unit" && scope.unitId == null, onclick: () => start(ctx, skill, scope) }, "▶ " + T.practicePlay)));
