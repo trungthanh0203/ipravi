@@ -1,7 +1,8 @@
 import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
 import { el, msg } from "../ui.js";
-import { A } from "./text.js";
+import { A, Q } from "./text.js";
+import { unitForm, lessonForm, renameForm, itemsForm, resetLookup } from "./quickadd.js";
 import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
@@ -10,6 +11,8 @@ import { LEVELS, levelOf, numberUnits } from "../levels.js";
 import { beginLoad } from "./view.js";
 import * as images from "./images.js";
 import { matchFiles } from "./image-util.js";
+import { keyOf } from "./csv.js";
+import { QUICK_TYPES } from "./autofill.js";
 import { emojiNodes } from "../emoji.js";
 import { contentUrl } from "../supabase.js";
 
@@ -74,6 +77,11 @@ function titleTrButton(table, row, say, reload) {
   }, "btn small ghost", "Sửa tên bằng ngôn ngữ gốc (bé bấm 🔊 để nghe)");
 }
 
+// Khe chứa biểu mẫu "Thêm nhanh"/sửa: bấm nút lần 1 mở biểu mẫu, bấm lần nữa (hoặc Huỷ) thì đóng.
+function slotToggle(slot, make) {
+  return () => { if (slot.childNodes.length) slot.replaceChildren(); else slot.replaceChildren(make(() => slot.replaceChildren())); };
+}
+
 let pendingDone = null;
 let cardView = false; // duyệt hình theo thẻ lớn
 const flushDone = () => { const d = pendingDone; pendingDone = null; d?.(); };
@@ -113,6 +121,9 @@ function render(box, units, lessons) {
   const nums = numberUnits(units.filter((u) => !u.hidden)); // số thứ tự trong cấp (chủ đề ẩn không có số)
   const unitCard = (u) => {
     const ls = lessons.filter((l) => l.unit_id === u.id);
+    const editSlot = el("div");
+    const lessonSlot = el("div");
+    const saved = (text, row) => { notice.set("ok", text); if (row) openUnits.add(row.unit_id ?? row.id); resetLookup(); reload(); };
     const open = openUnits.has(u.id);
     const levelSel = el("select", { title: "Cấp của chủ đề", "aria-label": "Cấp của chủ đề", onchange: act(() => ops.setUnitLevel(u.id, levelSel.value), "Đã đổi cấp của chủ đề.") },
       LEVELS.map((L) => el("option", { value: String(L.n), selected: L.n === levelOf(u) }, `${L.emoji} Cấp ${L.n}`)));
@@ -122,6 +133,8 @@ function render(box, units, lessons) {
         el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`), trText(u) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(u)}`) : null),
         el("div", { class: "row-btns unit-btns" },
           thumb(u, "tiny"), imageButtons("units", u, say, reload), titleTrButton("units", u, say, reload),
+          btn(Q.edit, slotToggle(editSlot, (close) => renameForm({ title: u.title_vi, emoji: u.emoji, withEmoji: true, onCancel: close,
+            onSave: async (v) => { await ops.updateUnit(u, v, units); saved("Đã lưu chủ đề."); } })), "btn small ghost", "Sửa tên và emoji của chủ đề"),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
           levelSel,
@@ -130,7 +143,11 @@ function render(box, units, lessons) {
             ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
             : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
           btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
-      open ? el("div", null, ls.map((l) => lessonBlock(l, reload, say))) : null);
+      editSlot,
+      open ? el("div", null,
+        el("div", { class: "row-btns", style: "justify-content:flex-start" },
+          btn(Q.addLesson, slotToggle(lessonSlot, (close) => lessonForm({ unit: u, level: levelOf(u), siblings: ls, onCancel: close, onSaved: (row) => saved(`Đã thêm bài "${row.title_vi}" (nháp).`, row) })), "btn small")),
+        lessonSlot, ls.map((l) => lessonBlock(l, reload, say, { siblings: ls, level: levelOf(u) }))) : null);
   };
 
   // Nhóm theo cấp: tiêu đề mỗi cấp cho biết số chủ đề/bài/mục và bao nhiêu đã duyệt (cấp trống hiện "chưa có nội dung").
@@ -139,13 +156,15 @@ function render(box, units, lessons) {
     const ls = lessons.filter((l) => us.some((u) => u.id === l.unit_id));
     const items = ls.reduce((a, l) => a + (l.content_items?.[0]?.count ?? 0), 0);
     const approved = us.filter((u) => u.status === "approved").length;
+    const addSlot = el("div");
     return el("section", { class: "level-group" },
       el("div", { class: "level-head" },
         el("h2", null, `${L.emoji} Cấp ${L.n} · ${L.name}`),
+        btn(Q.addUnit, slotToggle(addSlot, (close) => unitForm({ level: L.n, units, onCancel: close, onSaved: (row) => { notice.set("ok", `Đã thêm chủ đề "${row.title_vi}" (nháp). Mở chủ đề để thêm bài.`); openUnits.add(row.id); resetLookup(); reload(); } })), "btn small", "Chỉ cần gõ tên chủ đề"),
         el("span", { class: "muted" }, us.length
           ? `${us.length} chủ đề (${approved} đã duyệt) · ${ls.length} bài · ${items} mục · ${L.focus}`
           : `Chưa có nội dung — ${L.focus}`)),
-      us.map(unitCard));
+      addSlot, us.map(unitCard));
   });
   // Chủ đề ẨN (ngân hàng âm): bé không thấy; ở đây để sinh TTS / xem — thu giọng người thật ở tab "Thu âm".
   const hidden = units.filter((u) => u.hidden);
@@ -157,24 +176,29 @@ function render(box, units, lessons) {
   box.replaceChildren(flash, ...groups);
 }
 
-function lessonBlock(lesson, reload, say) {
+function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
   const n = lesson.content_items?.[0]?.count ?? 0;
   const panel = el("div");
   const isOpen = openLesson === lesson.id;
   const act = (fn, okText) => async () => {
     try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
   };
+  const renameSlot = el("div");
   const head = el("div", { class: "row lesson-row" },
     el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${n} mục`), trText(lesson) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(lesson)}`) : null),
     el("div", { class: "row-btns", style: "margin:0" },
+      btn("▲", act(() => ops.moveIn("lessons", siblings, lesson, -1)), "btn small ghost", "Đưa bài lên trước"),
+      btn("▼", act(() => ops.moveIn("lessons", siblings, lesson, 1)), "btn small ghost", "Đưa bài xuống sau"),
+      btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, onCancel: () => renameSlot.replaceChildren(),
+        onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên bài"),
       titleTrButton("lessons", lesson, say, reload),
       btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
       lesson.status === "approved"
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
         : btn("Duyệt bài", () => approveLesson(lesson, reload, say), "btn small"),
       btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
-  if (isOpen) itemsPanel(panel, lesson, say);
-  return el("div", { class: "lesson-block" }, head, panel);
+  if (isOpen) itemsPanel(panel, lesson, say, level, reload);
+  return el("div", { class: "lesson-block" }, head, renameSlot, panel);
 }
 
 async function loadItems(lessonId) {
@@ -198,13 +222,13 @@ async function approveLesson(lesson, reload, say) {
   } catch (e) { say("err", e.message); }
 }
 
-async function itemsPanel(panel, lesson, say) {
+async function itemsPanel(panel, lesson, say, level = 1, reload = () => {}) {
   const done = beginLoad(panel); // vùng đã có nội dung → giữ nguyên trong lúc tải lại (không nhảy trang)
   let items;
   try { items = await loadItems(lesson.id); } catch (e) { panel.replaceChildren(msg("err", A.loadError + e.message)); done(); return flushDone(); }
   const L = langs();
   const slots = audio.audioSlots(L, await audio.getVoices());
-  const refresh = () => itemsPanel(panel, lesson, say);
+  const refresh = () => itemsPanel(panel, lesson, say, level, reload);
   const progress = el("span", { class: "muted" });
 
   const runGen = async (replaceTts) => {
@@ -255,9 +279,17 @@ async function itemsPanel(panel, lesson, say) {
       el("div", { class: "row-btns", style: "margin:0;justify-content:flex-start" }, emoji, imageButtons("content_items", item, say, refresh)));
   };
 
-  const rows = cardView ? [] : items.map((item) => itemRow(item, L, slots, say, refresh));
+  const rows = cardView ? [] : items.map((item) => itemRow(item, L, slots, say, refresh, items));
+  const addSlot = el("div");
+  const addBtn = btn(Q.addItems, slotToggle(addSlot, (close) => itemsForm({ lesson, level, existingKeys: new Set(items.map((i) => keyOf(i.text_vi))), onCancel: close,
+    onSaved: ({ count, tts }) => {
+      const t = tts ? (tts.failed?.length || tts.fatal ? " Một số âm thanh chưa sinh được — bấm “Sinh âm thanh còn thiếu”." : ` Đã sinh ${tts.ok} âm thanh.`) : "";
+      notice.set(tts?.failed?.length || tts?.fatal ? "err" : "ok", `Đã thêm ${count} mục vào bài “${lesson.title_vi}”.${t}`);
+      resetLookup(); reload(); // tải lại để số mục của bài cập nhật
+    } })), "btn small");
   panel.replaceChildren(
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, genAll, regenAll, toggle, batchBtn, progress, batchInput),
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, addBtn, genAll, regenAll, toggle, batchBtn, progress, batchInput),
+    addSlot,
     el("p", { class: "muted" }, cardView
       ? "Duyệt hình: xem cả bài dạng thẻ lớn để kiểm tra hình có đúng nghĩa/hợp lý không. Hình ✦ trang trí (thẻ mờ) không được dùng để chọn/ghép trong các trò chơi."
       : "Ô âm thanh: ♀ giọng nữ · ♂ giọng nam · 🐢 đọc chậm. Ngôn ngữ không có ô nào = dùng giọng trình duyệt của thiết bị. Cột Hình: ✓ đúng nghĩa (dùng để chọn/ghép) hoặc ✦ trang trí; 📷 Ảnh = tải ảnh riêng thay emoji (ngay cạnh hình)."),
@@ -270,17 +302,23 @@ async function itemsPanel(panel, lesson, say) {
   flushDone();
 }
 
-function itemRow(item, L, slots, say, refresh) {
+const TYPE_LABEL = { word: "từ", phrase: "cụm từ", sentence: "câu", story: "truyện", song: "bài hát", letter: "chữ cái", syllable: "vần/tiếng" };
+
+function itemRow(item, L, slots, say, refresh, items = []) {
   const inp = (value, cls = "", attrs = {}) => el("input", { type: "text", value: value ?? "", class: `cell ${cls}`, ...attrs });
   const emoji = inp(item.emoji, "cell-sm");
   const vi = inp(item.text_vi);
   const trs = L.map((l) => inp(audio.textFor(item, l)));
   const minA = inp(item.min_age, "cell-xs", { inputmode: "numeric" });
   const maxA = inp(item.max_age, "cell-xs", { inputmode: "numeric" });
+  const isQuestion = item.item_type === "question"; // câu hỏi đọc hiểu chỉ sửa được bằng nhập CSV (có đáp án)
+  const typeSel = isQuestion ? null : el("select", { class: "cell cell-sel", title: "Loại mục" }, QUICK_TYPES.map((t) => el("option", { value: t, selected: t === item.item_type }, TYPE_LABEL[t] ?? t)));
+  const sayIn = inp(item.say_vi, "cell-sm", { placeholder: "đọc", title: "Cách đọc thành tiếng nếu khác chữ hiển thị (vd chữ b đọc là bờ)" });
   const save = btn("Lưu", null, "btn small");
   save.style.display = "none";
   const dirty = () => { save.style.display = ""; };
-  [emoji, vi, ...trs, minA, maxA].forEach((i) => i.addEventListener("input", dirty));
+  [emoji, vi, ...trs, minA, maxA, sayIn].forEach((i) => i.addEventListener("input", dirty));
+  typeSel?.addEventListener("change", dirty);
 
   save.addEventListener("click", async () => {
     try {
@@ -291,9 +329,13 @@ function itemRow(item, L, slots, say, refresh) {
       if ([min, max].some((v) => v != null && (!Number.isInteger(v) || v < 0 || v > 12))) throw new Error("Tuổi phải là số nguyên 0–12");
       if (min != null && max != null && min > max) throw new Error("Tuổi nhỏ nhất lớn hơn tuổi lớn nhất");
       if (!vi.value.trim()) throw new Error("Tiếng Việt không được để trống");
+      if (vi.value.trim().length > 200) throw new Error("Tiếng Việt dài quá 200 ký tự");
+      if (items.some((x) => x.id !== item.id && keyOf(x.text_vi) === keyOf(vi.value))) throw new Error("Bài đã có mục cùng chữ này");
       if (emoji.value.trim() !== (item.emoji ?? "")) patch.emoji = emoji.value.trim() || null;
       if (min !== item.min_age) patch.min_age = min;
       if (max !== item.max_age) patch.max_age = max;
+      if (typeSel && typeSel.value !== item.item_type) patch.item_type = typeSel.value;
+      if ((sayIn.value.trim() || null) !== (item.say_vi ?? null)) { patch.say_vi = sayIn.value.trim() || null; await audio.dropAudio(item.id, "vi"); } // đổi cách đọc → âm thanh cũ không còn đúng
       if (vi.value.trim() !== item.text_vi) { patch.text_vi = vi.value.trim(); await audio.dropAudio(item.id, "vi"); } // âm thanh cũ không còn đúng chữ
       if (Object.keys(patch).length) check(await sb.from("content_items").update(patch).eq("id", item.id));
       for (const [i, l] of L.entries()) {
@@ -314,10 +356,12 @@ function itemRow(item, L, slots, say, refresh) {
 
   const audioCell = el("td", { class: "audio-cell" }, slots.map((slot) => slotCell(item, slot, say, refresh)));
   return el("tr", null,
-    el("td", null, emoji), el("td", { class: "pic-cell" }, el("div", { class: "pic-top" }, thumb(item), imageButtons("content_items", item, say, refresh)), picRole(item, say)), el("td", null, vi, item.say_vi ? el("div", { class: "muted", title: "Chữ đọc thành tiếng (cột say trong CSV)" }, "đọc: " + item.say_vi) : null,
+    el("td", null, emoji), el("td", { class: "pic-cell" }, el("div", { class: "pic-top" }, thumb(item), imageButtons("content_items", item, say, refresh)), picRole(item, say)), el("td", null, vi, el("div", { class: "qa-mini" }, typeSel ?? el("small", { class: "muted" }, "câu hỏi đọc hiểu"), sayIn),
       item.item_type === "question" && item.extra?.choices ? el("div", { class: "muted", title: "Câu hỏi đọc hiểu — đáp án đúng có dấu ✓" }, item.extra.choices.map((c, i) => (i + 1 === item.extra.answer ? "✓ " : "") + c).join(" · ")) : null), ...trs.map((t) => el("td", null, t)),
     el("td", { class: "nowrap" }, minA, "–", maxA), audioCell,
     el("td", { class: "nowrap" }, save, " ",
+      btn("▲", async () => { try { await ops.moveIn("content_items", items, item, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa lên trước (thứ tự mục quan trọng với trò xếp câu thành chuyện)"),
+      btn("▼", async () => { try { await ops.moveIn("content_items", items, item, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost", "Đưa xuống sau"),
       btn("✕", async () => {
         if (!confirm(`Xoá "${item.text_vi}"?`)) return;
         try { await ops.deleteItem(item.id); refresh(); } catch (e) { say("err", e.message); }

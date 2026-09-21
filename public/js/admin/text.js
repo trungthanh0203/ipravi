@@ -39,3 +39,27 @@ Quy tắc:
 - Với từ có khác biệt vùng miền (Bắc/Nam), chọn cách nói phổ biến nhất và không thêm chú thích trong ô.
 - Ô có dấu phẩy phải đặt trong dấu ngoặc kép. Không thêm lời giải thích ngoài file CSV.`;
 }
+
+// Tên các loại hoạt động (khi chọn bộ hoạt động cho bài mới).
+export const KIND_LABEL = {
+  listen_pick: "Nghe – chọn hình", listen_pick_text: "Nghe – chọn chữ", match: "Nối hình với chữ", listen_repeat: "Nghe – nói theo", listen_pick_tone: "Nghe – chọn dấu thanh",
+  build_syllable: "Ghép âm + vần", fill_letter: "Điền chữ còn thiếu", read_pick: "Đọc – chạm hình", order_words: "Xếp từ thành câu", read_quiz: "Đọc đoạn – trả lời câu hỏi",
+  fill_word: "Điền từ vào câu", write_check: "Chọn câu viết đúng", spell_word: "Xếp chữ cái thành từ", order_story: "Xếp câu thành chuyện", spell_along: "Đánh vần theo phần",
+  match_case: "Ghép chữ hoa – thường", pick_case: "Chọn chữ hoa/thường", fix_capital: "Chạm chữ cần viết hoa", trace: "Tô chữ",
+};
+
+// "Thêm nhanh": chỉ gõ chữ Việt, phần còn lại được điền sẵn bằng luật rồi admin xem lại.
+export const Q = {
+  addUnit: "➕ Thêm chủ đề",
+  addLesson: "➕ Thêm bài",
+  addItems: "➕ Thêm từ / câu",
+  edit: "✎ Sửa",
+  unitTitle: "Tên chủ đề (tiếng Việt)",
+  lessonTitle: "Tên bài (tiếng Việt)",
+  itemsHelp: "Gõ chữ tiếng Việt, mỗi dòng một từ hoặc một câu. Các thông tin còn lại (loại, emoji, nghĩa, cách đọc, độ tuổi) được điền sẵn — xem lại rồi bấm Lưu.",
+  autoNote: "Điền sẵn bằng luật + dữ liệu đã có (KHÔNG dùng AI/dịch máy). Ô để trống là chưa có nguồn — bạn điền tay hoặc để trống.",
+  srcDb: "từ mục đã có", srcDict: "từ điển", srcRule: "theo luật", srcGuess: (w) => `gợi ý từ “${w}”`,
+  missing: "chưa có",
+  saveDraft: "Lưu (nháp)",
+  ttsAfter: "Sinh âm thanh (TTS) sau khi lưu",
+};
