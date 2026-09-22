@@ -1,8 +1,8 @@
 // 4 cấp của chú gà (khung giáo trình: giao-trinh/GIAO_TRINH_TIENG_VIET_3-8_TUOI.md). Hàm thuần — có test trong tests/unit.test.mjs.
 export const LEVELS = [
-  { n: 1, emoji: "🥚", name: "Trứng", age: "3–4 tuổi", focus: "Nghe – nhận biết – nói từ" },
-  { n: 2, emoji: "🐣", name: "Gà con", age: "4–6 tuổi", focus: "Nói câu ngắn, lễ phép, đồng dao" },
-  { n: 3, emoji: "🐥", name: "Gà choai", age: "5–7 tuổi", focus: "Học vần: thanh điệu, chữ cái, đọc" },
+  { n: 1, emoji: "🥚", name: "Trứng", age: "3–4 tuổi", focus: "Học vần: thanh điệu, chữ cái, đọc" },
+  { n: 2, emoji: "🐣", name: "Gà con", age: "4–6 tuổi", focus: "Nghe – nhận biết – nói từ" },
+  { n: 3, emoji: "🐥", name: "Gà choai", age: "5–7 tuổi", focus: "Nói câu ngắn, lễ phép, đồng dao" },
   { n: 4, emoji: "🐓", name: "Gà trống", age: "6–8 tuổi", focus: "Đọc hiểu, viết câu, kể chuyện" },
 ];
 
