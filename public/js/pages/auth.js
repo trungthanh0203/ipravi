@@ -61,7 +61,20 @@ function view(root) {
     el("div", { class: "mascot" }, ...emojiNodes("🐓")),
     el("h1", { style: "text-align:center" }, CONFIG.centerName),
     el("div", { class: "card" }, el("div", { class: "tabs" }, tabBtn("login", T.login), tabBtn("register", T.register)), form),
+    legalNote(),
     installBox()
+  );
+}
+
+// Dòng nhắc điều khoản/bảo mật dưới nút đăng nhập — 2 link mở trang riêng (tab mới).
+function legalNote() {
+  return el(
+    "p", { class: "muted legal-note" },
+    T.legal.before,
+    el("a", { href: "/dieu-khoan.html", target: "_blank", rel: "noopener" }, T.legal.terms),
+    T.legal.and,
+    el("a", { href: "/chinh-sach-bao-mat.html", target: "_blank", rel: "noopener" }, T.legal.privacy),
+    T.legal.after
   );
 }
 

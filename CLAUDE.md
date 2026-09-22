@@ -49,7 +49,12 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   cho app thì đặt trong `js/`/`css/` ở gốc (dùng chung cho cả 2 trang) hoặc `app/` nếu chỉ app cần;
   ĐỪNG thêm đường dẫn tương đối kiểu `href="css/..."` vào `app/index.html` — phải tuyệt đối
   (`/css/...`). Hướng dẫn "Cài app về máy" (3 thiết bị + liên hệ) hiện dưới nút đăng nhập/đăng ký ở
-  `pages/auth.js`, chữ lấy từ `T.install` trong `strings.js`.
+  `pages/auth.js`, chữ lấy từ `T.install` trong `strings.js`. Cùng chỗ có dòng nhắc đồng ý
+  `T.legal` liên kết tới 2 trang tĩnh gốc `public/`: `dieu-khoan.html`, `chinh-sach-bao-mat.html`
+  (bản nháp do AI viết theo hành vi thật của app — **cần luật sư rà lại** trước khi công khai,
+  nhất là đoạn nói về giọng nói trẻ đi qua Web Speech API/Google/Apple). Landing page (`index.html`)
+  cũng link 2 trang này ở footer. Hình gà trống trên landing dùng chung 1 emoji 🐓, lật ngang bằng
+  class `.rooster` (đầu quay sang phải) — thêm chỗ dùng gà trống mới thì bọc span class này.
 - Trẻ KHÔNG đăng nhập; app chạy bằng phiên phụ huynh. Màn hình chọn avatar hiện TẤT CẢ avatar
   (không chỉ của các con) — avatar đóng vai mật khẩu bằng hình. Vào khu phụ huynh: nút nhỏ + PIN 4
   số (`askPin()`); PIN chỉ dùng cho việc này, khoá tạm 5 phút sau 5 lần sai (lưu ở thiết bị).

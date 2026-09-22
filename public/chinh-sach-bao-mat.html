@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chính sách bảo mật — Tôi luyện tiếng Việt</title>
+<meta name="theme-color" content="#e8590c">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+  :root { --brand: #e8590c; --brand-dark: #c2410c; --brand-light: #fff1e6; --bg: #fff7f0; --text: #2b1d14; --text-2: #6b5646; --radius: 20px; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+  a { color: var(--brand-dark); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 60px; }
+  header { border-bottom: 1px solid #f0ddc9; margin-bottom: 30px; }
+  .nav { display: flex; align-items: center; gap: 10px; padding: 14px 0; max-width: 760px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; text-decoration: none; color: var(--text); }
+  .logo .badge { width: 34px; height: 34px; border-radius: 10px; background: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 19px; flex: none; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  h2 { font-size: 19px; margin: 30px 0 8px; }
+  .updated { color: var(--text-2); font-size: 14px; margin: 0 0 26px; }
+  .card { background: #fff; border-radius: var(--radius); padding: 22px 24px; box-shadow: 0 4px 16px rgba(80, 40, 10, .08); }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 6px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #f0ddc9; vertical-align: top; }
+  th { color: var(--text-2); font-size: 13px; font-weight: 700; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  .muted { color: var(--text-2); }
+  .note { background: var(--brand-light); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="/"><span class="badge">🐓</span> Tôi luyện tiếng Việt</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Chính sách bảo mật</h1>
+  <p class="updated">Cập nhật lần cuối: 22/09/2026</p>
+
+  <div class="card">
+    <p><strong>Tôi luyện tiếng Việt</strong> được xây dựng cho trẻ nhỏ, nên chúng tôi thu thập ít dữ liệu nhất có thể — chỉ những
+    gì cần để việc học hoạt động và để phụ huynh theo dõi tiến độ của con. Trang này giải thích dữ liệu nào được thu thập, dùng
+    để làm gì, ai xử lý và bạn có những quyền gì.</p>
+
+    <h2>1. Dữ liệu chúng tôi thu thập</h2>
+    <table>
+      <tr><th>Loại dữ liệu</th><th>Ví dụ</th></tr>
+      <tr><td>Tài khoản phụ huynh</td><td>Email, mật khẩu (mã hoá), ngôn ngữ của gia đình</td></tr>
+      <tr><td>Hồ sơ của con</td><td>Tên/biệt danh, hình đại diện đã chọn, năm sinh (không bắt buộc)</td></tr>
+      <tr><td>Kết quả học tập</td><td>Bài đã học, sao đạt được, chuỗi ngày học, kết quả từng trò chơi</td></tr>
+      <tr><td>Kết quả chấm phát âm</td><td>Từng tiếng đọc đúng/sai theo dạng chữ (KHÔNG lưu file ghi âm giọng của con)</td></tr>
+      <tr><td>Giao dịch học phí</td><td>Trạng thái đã/chưa thanh toán, mức phí đã chọn (không lưu số thẻ/tài khoản ngân hàng)</td></tr>
+    </table>
+    <p class="muted">Trẻ không tự đăng nhập nên không có dữ liệu định danh nào của trẻ được thu thập ngoài những gì phụ huynh tự nhập ở trên.</p>
+
+    <h2>2. Dùng dữ liệu để làm gì</h2>
+    <ul>
+      <li>Vận hành ứng dụng: đăng nhập, hiển thị đúng bài học theo cấp độ của con, lưu tiến độ.</li>
+      <li>Cho phụ huynh xem báo cáo tiến độ, gợi ý bài/kỹ năng nên luyện thêm.</li>
+      <li>Xác nhận học phí và duy trì quyền truy cập nội dung.</li>
+      <li>Chúng tôi <strong>không</strong> dùng dữ liệu để quảng cáo, không bán hay chia sẻ cho bên thứ ba ngoài mục đích vận
+      hành nêu ở mục 3.</li>
+    </ul>
+
+    <h2>3. Chia sẻ với bên thứ ba</h2>
+    <p>Một vài nhà cung cấp kỹ thuật xử lý dữ liệu thay chúng tôi để ứng dụng hoạt động:</p>
+    <ul>
+      <li><strong>Supabase</strong> — lưu trữ cơ sở dữ liệu, xác thực tài khoản, lưu file (hình/âm thanh).</li>
+      <li><strong>Cloudflare</strong> — máy chủ phục vụ ứng dụng.</li>
+      <li><strong>Dịch vụ giọng đọc (TTS)</strong> — sinh sẵn file âm thanh đọc từ/câu cho giáo trình (không liên quan tới giọng nói của con).</li>
+    </ul>
+    <div class="note">
+      <strong>Về tính năng chấm phát âm:</strong> khi bé đọc thử, trình duyệt/thiết bị dùng công cụ nhận dạng giọng nói có sẵn
+      của hệ điều hành (ví dụ Google trên Android/Chrome, Apple trên iOS/Safari) để chuyển giọng nói thành chữ ngay trên máy —
+      quá trình này có thể được nhà cung cấp thiết bị xử lý theo chính sách riêng của họ. Ứng dụng của chúng tôi không lưu lại
+      file ghi âm, chỉ lưu kết quả so khớp theo chữ. Tính năng này có thể tắt trong khu phụ huynh nếu bạn không muốn dùng.
+    </div>
+
+    <h2>4. Thời gian lưu trữ</h2>
+    <p>Dữ liệu được giữ trong thời gian tài khoản còn hoạt động, để phụ huynh xem lại tiến độ của con qua các giai đoạn học.
+    Khi bạn yêu cầu đóng tài khoản, chúng tôi sẽ xoá hoặc ẩn dữ liệu cá nhân theo yêu cầu (xem mục 6).</p>
+
+    <h2>5. Trẻ em & sự đồng ý của phụ huynh</h2>
+    <p>Ứng dụng dành cho trẻ 3–8 tuổi và luôn hoạt động dưới tài khoản của phụ huynh. Khi đăng ký, phụ huynh xác nhận đồng ý
+    cho người phụ trách (admin/giáo viên của trung tâm) xem tiến độ học của con mình nhằm mục đích hỗ trợ học tập.</p>
+
+    <h2>6. Quyền của bạn</h2>
+    <p>Bạn có thể liên hệ chúng tôi bất cứ lúc nào để:</p>
+    <ul>
+      <li>Xem hoặc xuất dữ liệu học tập của con.</li>
+      <li>Sửa thông tin hồ sơ chưa đúng.</li>
+      <li>Yêu cầu xoá tài khoản và dữ liệu liên quan.</li>
+      <li>Tắt tính năng chấm phát âm bằng giọng nói.</li>
+    </ul>
+
+    <h2>7. Bảo mật</h2>
+    <p>Khu quản lý của phụ huynh được bảo vệ bằng mã PIN riêng, tách biệt với khu học của bé. Mật khẩu tài khoản được mã hoá,
+    không ai (kể cả chúng tôi) nhìn thấy mật khẩu gốc của bạn.</p>
+
+    <h2>8. Thay đổi chính sách</h2>
+    <p>Chính sách có thể được cập nhật theo thời gian; ngày cập nhật mới nhất hiển thị ở đầu trang.</p>
+
+    <h2>9. Liên hệ</h2>
+    <p class="muted">Mọi câu hỏi về quyền riêng tư và dữ liệu của con, vui lòng liên hệ Mr.Thành - 0989.099.454 (Zalo).</p>
+  </div>
+
+  <p style="margin-top:20px"><a href="/">← Về trang chủ</a></p>
+</main>
+
+</body>
+</html>

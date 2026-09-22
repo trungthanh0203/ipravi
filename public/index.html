@@ -97,6 +97,9 @@
 
   .icon-box { width: 52px; height: 52px; border-radius: 14px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; }
 
+  /* Hình gà trống dùng chung: lật ngang cho đầu quay sang phải (giống hướng chữ đọc) */
+  .rooster { display: inline-block; transform: scaleX(-1); }
+
   /* Lộ trình cấp độ */
   .level-card { text-align: center; position: relative; }
   .level-card .emoji { font-size: 44px; }
@@ -151,7 +154,7 @@
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="#top"><span class="badge">🐓</span> Tôi luyện tiếng Việt</a>
+    <a class="logo" href="#top"><span class="badge"><span class="rooster">🐓</span></span> Tôi luyện tiếng Việt</a>
     <ul class="nav-links">
       <li><a href="#tinh-nang">Tính năng</a></li>
       <li><a href="#cap-do">Lộ trình học</a></li>
@@ -187,7 +190,7 @@
         <div class="floaty f2">🐣 <small>Gà con</small></div>
         <div class="floaty f3">🐥 <small>Gà choai</small></div>
         <div class="floaty f4">⭐⭐⭐</div>
-        <div class="mascot-circle">🐓</div>
+        <div class="mascot-circle"><span class="rooster">🐓</span></div>
       </div>
     </div>
   </section>
@@ -234,7 +237,7 @@
       <div class="grid cols-3">
         <div class="card"><div class="icon-box">📖</div><h3>Học từ vựng bằng hình</h3><p class="muted">Mỗi từ có hình minh hoạ, âm thanh và câu ví dụ — bé chạm để nghe, ghép và ghi nhớ.</p></div>
         <div class="card"><div class="icon-box">🎤</div><h3>Chấm phát âm thông minh</h3><p class="muted">Bé đọc thử từng câu, app so sánh từng tiếng và gợi ý luyện lại — chỉ mang tính tham khảo, không thay giáo viên.</p></div>
-        <div class="card"><div class="icon-box">🐥</div><h3>4 cấp độ rõ ràng</h3><p class="muted">🥚 Trứng → 🐣 Gà con → 🐥 Gà choai → 🐓 Gà trống — lộ trình từ làm quen chữ cái tới đọc hiểu, không hề bị khoá cấp.</p></div>
+        <div class="card"><div class="icon-box">🐥</div><h3>4 cấp độ rõ ràng</h3><p class="muted">🥚 Trứng → 🐣 Gà con → 🐥 Gà choai → <span class="rooster">🐓</span> Gà trống — lộ trình từ làm quen chữ cái tới đọc hiểu, không hề bị khoá cấp.</p></div>
         <div class="card"><div class="icon-box">✍️</div><h3>Học vần & tập viết</h3><p class="muted">Đánh vần từng phần, phân biệt chữ hoa – thường, tô chữ theo mẫu chữ thảo chuẩn tiểu học.</p></div>
         <div class="card"><div class="icon-box">🏅</div><h3>Luyện tập theo kỹ năng</h3><p class="muted">12 kỹ năng từ nghe – nói tới trí nhớ – chính tả, mỗi lượt chơi ngắn khoảng 5 phút, có huy hiệu khích lệ.</p></div>
         <div class="card"><div class="icon-box">🌍</div><h3>Song ngữ thân thiện</h3><p class="muted">Nghĩa của từ được giải thích thêm bằng ngôn ngữ ở nhà, giúp bé hiểu nhanh hơn khi vốn tiếng Việt còn ít.</p></div>
@@ -259,7 +262,7 @@
         <span class="level-arrow">➜</span>
         <div class="card level-card"><div class="emoji">🐥</div><h3>Gà choai</h3><p class="muted">Học vần, nhận mặt chữ, ghép câu và tập viết.</p><span class="age">5–7 tuổi</span></div>
         <span class="level-arrow">➜</span>
-        <div class="card level-card"><div class="emoji">🐓</div><h3>Gà trống</h3><p class="muted">Đọc hiểu câu chuyện, trả lời câu hỏi, luyện chính tả.</p><span class="age">6–8 tuổi</span></div>
+        <div class="card level-card"><div class="emoji"><span class="rooster">🐓</span></div><h3>Gà trống</h3><p class="muted">Đọc hiểu câu chuyện, trả lời câu hỏi, luyện chính tả.</p><span class="age">6–8 tuổi</span></div>
       </div>
     </div>
   </section>
@@ -335,7 +338,7 @@
         <h2>Sẵn sàng cùng con giữ gìn tiếng Việt?</h2>
         <p>Chỉ mất vài phút để tạo hồ sơ đầu tiên cho bé.</p>
         <div class="btn-row" style="justify-content:center">
-          <a class="btn" href="/app/">🐓 Vào học ngay</a>
+          <a class="btn" href="/app/"><span class="rooster">🐓</span> Vào học ngay</a>
         </div>
       </div>
     </div>
@@ -346,7 +349,11 @@
 <footer>
   <div class="wrap foot-grid">
     <span>© <span id="y"></span> Tôi luyện tiếng Việt</span>
-    <span><a href="/app/">Vào ứng dụng</a></span>
+    <span style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="/dieu-khoan.html">Điều khoản dịch vụ</a>
+      <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+      <a href="/app/">Vào ứng dụng</a>
+    </span>
   </div>
   <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
 </footer>

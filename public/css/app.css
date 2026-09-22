@@ -446,6 +446,9 @@ img.visual.big { max-height: 200px; }
 .act-move .btn { flex: 1; margin: 0; }
 .act-stack > .btn { margin: 0; width: 100%; }
 
+.legal-note { text-align: center; font-size: 13px; margin: 12px 0 0; }
+.legal-note a { color: var(--brand-dark); }
+
 /* Hướng dẫn cài app về máy (dưới nút đăng nhập/đăng ký) */
 .install-box { margin-top: 26px; }
 .install-title { text-align: center; font-size: 20px; }

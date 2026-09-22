@@ -250,6 +250,15 @@ export const T = {
   adminTitle: "Quản trị",
   soon: "Phần này sẽ làm ở bước sau.",
 
+  // Dòng nhắc điều khoản/bảo mật dưới nút đăng nhập/đăng ký (ghép với 2 link trong pages/auth.js)
+  legal: {
+    before: "Tiếp tục nghĩa là bạn đồng ý với ",
+    terms: "Điều khoản dịch vụ",
+    and: " và ",
+    privacy: "Chính sách bảo mật",
+    after: " của ứng dụng.",
+  },
+
   // Hướng dẫn cài app về máy (hiện dưới nút đăng nhập/đăng ký)
   install: {
     title: "📲 Cài app về máy để dùng tiện hơn",
