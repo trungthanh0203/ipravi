@@ -45,7 +45,11 @@ from (values
   ('Viết đúng chính tả', '{"de": "Richtig schreiben", "en": "Spelling Correctly"}'::jsonb),
   ('Từ chỉ hoạt động và đặc điểm', '{"de": "Tätigkeits- und Eigenschaftswörter", "en": "Action and Descriptive Words"}'::jsonb),
   ('Kể chuyện theo tranh', '{"de": "Geschichten nach Bildern erzählen", "en": "Telling Stories from Pictures"}'::jsonb),
-  ('Hội thoại hằng ngày', '{"de": "Alltagsgespräche", "en": "Everyday Conversations"}'::jsonb)
+  ('Hội thoại hằng ngày', '{"de": "Alltagsgespräche", "en": "Everyday Conversations"}'::jsonb),
+  ('Giờ giấc', '{"de": "Uhrzeit", "en": "Time of Day"}'::jsonb),
+  ('Thứ trong tuần', '{"de": "Wochentage", "en": "Days of the Week"}'::jsonb),
+  ('Vị trí', '{"de": "Position", "en": "Position"}'::jsonb),
+  ('Việc đã làm, đang làm, sẽ làm', '{"de": "Vergangenheit, Gegenwart, Zukunft", "en": "Past, Present, Future"}'::jsonb)
 ) as v(title_vi, tr)
 where u.title_vi = v.title_vi and not u.hidden;
 
@@ -181,7 +185,14 @@ from (values
   ('Kể chuyện theo tranh', 'Cơn mưa và cầu vồng', '{"de": "Der Regen und der Regenbogen", "en": "The Rain and the Rainbow"}'::jsonb),
   ('Kể chuyện theo tranh', 'Sinh nhật của Lan', '{"de": "Lans Geburtstag", "en": "Lan''s Birthday"}'::jsonb),
   ('Hội thoại hằng ngày', 'Làm quen', '{"de": "Sich kennenlernen", "en": "Getting to Know Each Other"}'::jsonb),
-  ('Hội thoại hằng ngày', 'Lễ phép', '{"de": "Höflichkeit", "en": "Politeness"}'::jsonb)
+  ('Hội thoại hằng ngày', 'Lễ phép', '{"de": "Höflichkeit", "en": "Politeness"}'::jsonb),
+  ('Giờ giấc', 'Buổi trong ngày', '{"de": "Tageszeiten", "en": "Times of Day"}'::jsonb),
+  ('Giờ giấc', 'Xem đồng hồ', '{"de": "Die Uhr lesen", "en": "Reading the Clock"}'::jsonb),
+  ('Thứ trong tuần', 'Bảy ngày trong tuần', '{"de": "Die sieben Wochentage", "en": "The Seven Days of the Week"}'::jsonb),
+  ('Thứ trong tuần', 'Hôm qua, hôm nay, ngày mai', '{"de": "Gestern, heute, morgen", "en": "Yesterday, Today, Tomorrow"}'::jsonb),
+  ('Vị trí', 'Trên dưới trong ngoài', '{"de": "Oben, unten, drinnen, draußen", "en": "Above, Below, Inside, Outside"}'::jsonb),
+  ('Việc đã làm, đang làm, sẽ làm', 'Con đang làm gì', '{"de": "Was ich gerade mache", "en": "What I Am Doing"}'::jsonb),
+  ('Việc đã làm, đang làm, sẽ làm', 'Con đã làm, con sẽ làm', '{"de": "Was ich getan habe und tun werde", "en": "What I Have Done and Will Do"}'::jsonb)
 ) as v(unit_title, title_vi, tr)
 join public.units un on un.title_vi = v.unit_title
 where l.unit_id = un.id and l.title_vi = v.title_vi;

@@ -159,7 +159,7 @@ học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng ch�
 - Chấm phát âm bỏ từ loại đầu ("con", "màu", "quả"...) khi so khớp — nếu không, nói sai cả con vật vẫn ~50 điểm.
 
 **Giọng TTS:** tab Cài đặt chọn giọng nữ + nam theo ngôn ngữ (nghe thử trước), tab Nội dung có ô ♀/♂ và "Sinh lại TTS bằng giọng hiện tại" (giữ giọng người thật); bé/phụ huynh chọn giọng nghe (migration 005).
-**Giáo trình:** đã có khung + **383 mục học vần + chữ hoa (Cấp 1, 62 bài)**, 176 từ (Cấp 2), 64 câu (Cấp 3), **208 mục đọc hiểu/chính tả/viết (Cấp 4, 29 bài)** (số cấp đã đảo 2026-09, xem mục "Cấp học"), **16 mục bài giao tiếp mẫu (Cấp 3, 2 bài)**; đánh vần từng phần, tô chữ/viết tay, đọc to cả đoạn có chấm điểm chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
+**Giáo trình:** đã có khung + **383 mục học vần + chữ hoa (Cấp 1, 62 bài)**, 207 từ (Cấp 2, gồm Giờ giấc/Thứ trong tuần/Vị trí mới), 80 câu (Cấp 3, gồm Việc đã làm-đang làm-sẽ làm mới), **208 mục đọc hiểu/chính tả/viết (Cấp 4, 29 bài)** (số cấp đã đảo 2026-09, xem mục "Cấp học"), **16 mục bài giao tiếp mẫu (Cấp 3, 2 bài)**; đánh vần từng phần, tô chữ/viết tay, đọc to cả đoạn có chấm điểm chưa làm — xem `giao-trinh/…md` mục 7. **Lưu ý kiểm cú pháp:** dùng `node --input-type=module --check < file.js` (`node --check file.js` bỏ sót lỗi trong file ES module).
 
 **Chưa làm:** hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
 trong tab Phụ huynh, giới hạn thời gian/ngày, thu âm giọng người thật ngay trong app, vai trò giáo viên hỗ trợ, xuất/xoá dữ liệu con,

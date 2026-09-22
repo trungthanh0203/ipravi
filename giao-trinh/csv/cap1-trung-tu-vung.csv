@@ -175,3 +175,34 @@ Tết và Việt Nam,🎊,2,Việt Nam,con trâu,🐃,phrase,3,8,Wasserbüffel,w
 Tết và Việt Nam,🎊,2,Việt Nam,cánh đồng lúa,🌾,phrase,3,8,Reisfeld,rice field
 Tết và Việt Nam,🎊,2,Việt Nam,cây tre,🎋,phrase,3,8,Bambus,bamboo
 Tết và Việt Nam,🎊,2,Việt Nam,bánh Trung thu,🥮,phrase,3,8,Mondkuchen,mooncake
+Giờ giấc,🕐,2,Buổi trong ngày,sáng,☀️,word,3,8,Morgen,morning
+Giờ giấc,🕐,2,Buổi trong ngày,trưa,🌞,word,3,8,Mittag,noon
+Giờ giấc,🕐,2,Buổi trong ngày,chiều,🌇,word,3,8,Nachmittag,afternoon
+Giờ giấc,🕐,2,Buổi trong ngày,tối,🌙,word,3,8,Abend,evening
+Giờ giấc,🕐,2,Buổi trong ngày,đêm,🌃,word,3,8,Nacht,night
+Giờ giấc,🕐,2,Buổi trong ngày,hôm nay,📅,phrase,3,8,heute,today
+Giờ giấc,🕐,2,Xem đồng hồ,đồng hồ,⏰,word,3,8,Uhr,clock
+Giờ giấc,🕐,2,Xem đồng hồ,giờ,🕐,word,3,8,Stunde,hour
+Giờ giấc,🕐,2,Xem đồng hồ,phút,⏱️,word,3,8,Minute,minute
+Giờ giấc,🕐,2,Xem đồng hồ,giây,⏲️,word,3,8,Sekunde,second
+Giờ giấc,🕐,2,Xem đồng hồ,rưỡi,🕧,word,3,8,halb,half past
+Giờ giấc,🕐,2,Xem đồng hồ,kim đồng hồ,🕰️,phrase,3,8,Uhrzeiger,clock hand
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Hai,1️⃣,phrase,3,8,Montag,Monday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Ba,2️⃣,phrase,3,8,Dienstag,Tuesday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Tư,3️⃣,phrase,3,8,Mittwoch,Wednesday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Năm,4️⃣,phrase,3,8,Donnerstag,Thursday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Sáu,5️⃣,phrase,3,8,Freitag,Friday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Bảy,6️⃣,phrase,3,8,Samstag,Saturday
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,Chủ Nhật,7️⃣,phrase,3,8,Sonntag,Sunday
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm qua,⏮️,phrase,3,8,gestern,yesterday
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm nay,📅,phrase,3,8,heute,today
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",ngày mai,⏭️,phrase,3,8,morgen,tomorrow
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tuần,🗓️,word,3,8,Woche,week
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tháng,📆,word,3,8,Monat,month
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",năm,🎆,word,3,8,Jahr,year
+Vị trí,📍,2,Trên dưới trong ngoài,trên,⬆️,word,3,8,oben,above
+Vị trí,📍,2,Trên dưới trong ngoài,dưới,⬇️,word,3,8,unten,below
+Vị trí,📍,2,Trên dưới trong ngoài,trong,📦,word,3,8,drinnen,inside
+Vị trí,📍,2,Trên dưới trong ngoài,ngoài,🌳,word,3,8,draußen,outside
+Vị trí,📍,2,Trên dưới trong ngoài,cạnh,↔️,word,3,8,neben,next to
+Vị trí,📍,2,Trên dưới trong ngoài,giữa,🎯,word,3,8,in der Mitte,in the middle

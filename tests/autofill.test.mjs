@@ -101,9 +101,10 @@ const lookup = makeLookup(existing);
   ok(miss.length === 0, "giáo trình: tra lại chính từ đã có luôn ra nghĩa (và emoji của một mục cùng chữ)", miss.slice(0, 3).map((r) => r.vi).join());
   // Từ điển khởi đầu không mâu thuẫn với giáo trình: cùng chữ thì cùng emoji
   const conflicts = rows.filter((r) => DICT[r.vi.toLowerCase()] && r.emoji && DICT[r.vi.toLowerCase()][0] !== r.emoji);
-  // Hai từ khác emoji có chủ ý: trong bài về thanh điệu giáo trình dùng ký hiệu thanh làm hình (lá ↗️, vẽ 〰️)
-  const bad3 = [...new Set(conflicts.map((r) => r.vi.toLowerCase()))].filter((w) => !["lá", "vẽ"].includes(w));
-  ok(bad3.length === 0, "từ điển khởi đầu thống nhất emoji với giáo trình (trừ ký hiệu thanh điệu)", bad3.join());
+  // Hai từ khác emoji có chủ ý: trong bài về thanh điệu giáo trình dùng ký hiệu thanh làm hình (lá ↗️, vẽ 〰️);
+  // "năm" đồng âm — dict.js có nghĩa "5" (số đếm, 5️⃣, đã dùng trong giáo trình), chủ đề "Thứ trong tuần" dùng nghĩa "year" (🎆).
+  const bad3 = [...new Set(conflicts.map((r) => r.vi.toLowerCase()))].filter((w) => !["lá", "vẽ", "năm"].includes(w));
+  ok(bad3.length === 0, "từ điển khởi đầu thống nhất emoji với giáo trình (trừ ký hiệu thanh điệu + từ đồng âm)", bad3.join());
 }
 
 // ---- Độ tuổi gọn "3-8" ----
