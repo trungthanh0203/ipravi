@@ -3,7 +3,6 @@ import { T } from "../../strings.js";
 import { shuffle, sample, isLiteral, childAge } from "../util.js";
 import { playItem, say, visual, nativeLabel } from "../media.js";
 import { sfx } from "../sfx.js";
-import { emojiNodes } from "../../emoji.js";
 import { spellingChoices } from "../../viet.js";
 import { pick, listenBtn, rounds, SKIP } from "./phonics.js";
 import { POOLS, meaningIn, sortGroups, toneGroups } from "../pools.js";
@@ -97,7 +96,7 @@ export async function runMemory(ctx) {
   await new Promise((resolve) => {
     const buttons = cards.map((c) => {
       const b = el("button", { class: "mem-card", "aria-label": T.memoryCard, onclick: () => flip(c, b) },
-        el("span", { class: "mem-back" }, el("span", { class: "rooster" }, ...emojiNodes("🐓"))),
+        el("span", { class: "mem-back" }, el("img", { class: "mem-mascot", src: "/vendor/mascot/rooster.png", alt: "" })),
         el("span", { class: "mem-face" }, c.word ? el("span", { class: "mem-word" }, c.item.text_vi) : visual(c.item)));
       faces.set(c, b);
       return b;

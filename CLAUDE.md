@@ -14,6 +14,8 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
     (`/css/...`, `/js/...`) vì trang nằm trong thư mục con còn CSS/JS/vendor vẫn ở gốc `public/`. `manifest.json`, `sw.js` (mạng-trước;
     cache-trước cho `/vendor/` và media Storage; đổi `VERSION` khi tải lại vendor HOẶC đổi cấu trúc route), `css/app.css`
   - `vendor/supabase/` — supabase-js **tải về sẵn** (chạy `node scripts/vendor-supabase.mjs [phiên bản]`, rồi tăng `VERSION` trong sw.js): cùng nguồn với app nên khởi động nhanh, không gọi CDN bên thứ ba (GDPR). Đừng import từ CDN.
+  - `vendor/mascot/rooster.png` — hình linh vật gà trống THẬT (ảnh do chủ dự án cung cấp, không phải emoji) dùng làm
+    logo/mascot ở mọi nơi thống nhất; xem quy tắc dùng ở mục "Quy tắc dễ sai" (dòng nói về `mascotHero()`).
   - `js/` ES modules thuần, không build step, không `package.json`:
     `main.js` (boot) · `flow.js` (`decideScreen()` = luồng vào app) · `state.js` · `config.js`
     · `supabase.js` · `strings.js` (MỌI chữ giao diện, chỉ tiếng Việt) · `pin.js` · `audio.js`
@@ -53,13 +55,22 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   `T.legal` liên kết tới 2 trang tĩnh gốc `public/`: `dieu-khoan.html`, `chinh-sach-bao-mat.html`
   (bản nháp do AI viết theo hành vi thật của app — **cần luật sư rà lại** trước khi công khai,
   nhất là đoạn nói về giọng nói trẻ đi qua Web Speech API/Google/Apple). Landing page (`index.html`)
-  cũng link 2 trang này ở footer. Hình gà trống trên landing dùng chung 1 emoji 🐓, lật ngang bằng
-  class `.rooster` (đầu quay sang phải) — thêm chỗ dùng gà trống mới thì bọc span class này. Trong app, MỌI nơi có "chú
-  gà trống đứng một mình" (bắt đầu bài, đăng nhập, kết quả bài/Luyện tập, "Con là ai nào?"...) ĐỀU dùng `emoji.js`
-  `mascotHero()` (khung tròn màu thương hiệu + `.rooster` lật ngang, CSS ở `.mascot-hero`/`.rooster` trong app.css) —
-  thêm màn hình mascot mới thì gọi hàm này, ĐỪNG tự dựng `el("div",{class:"mascot"},...emojiNodes("🐓"))` (kiểu cũ, đầu
-  quay sai hướng, không đồng nhất — lỗi đã sửa 2026-09). Icon nhỏ lặp lại (mặt sau thẻ Trí nhớ, `activities/games.js`)
-  chỉ bọc `span.rooster` (không có khung tròn, để giữ đúng kích thước icon nhỏ).
+  cũng link 2 trang này ở footer. **Linh vật gà trống = hình thật** (`public/vendor/mascot/rooster.png`, PNG nền
+  trong suốt, ảnh do chủ dự án cung cấp — KHÔNG phải emoji 🐓/Twemoji: Twemoji 🐓 trông nhạt màu, giống gà mái, đã bị
+  thay hoàn toàn ở mọi chỗ dùng làm logo/linh vật, 2026-09). `emoji.js` export `MASCOT_URL` + `mascotIcon(className)`
+  (1 thẻ `<img>`) + `mascotHero()` (bọc `mascotIcon()` trong `.mascot-hero`, dùng ở MỌI nơi có "chú gà trống đứng một
+  mình": bắt đầu bài, đăng nhập, kết quả bài/Luyện tập, "Con là ai nào?"...) — thêm màn hình mascot mới thì gọi
+  `mascotHero()`, ĐỪNG tự dựng bằng `emojiNodes("🐓")`. Ảnh đã quay đầu sang phải sẵn trong file nên KHÔNG cần lật —
+  class `.rooster` (`transform: scaleX(-1)`) chỉ còn dùng khi thật sự cần lật một emoji khác, đừng bọc quanh
+  `mascotIcon()`. Icon nhỏ lặp lại dùng thẳng `mascotIcon("<tên class cỡ riêng>")`: mặt sau thẻ Trí nhớ
+  (`activities/games.js`, `.mem-mascot`), biểu tượng Cấp 4 "Gà trống" ở lưới cấp độ trong app (`pages/child-home.js`,
+  `.lv-mascot`/`.lv-mascot-inline` — chỉ cấp 4 dùng ảnh thật, cấp 1–3 vẫn Twemoji 🥚🐣🐥 để giữ cùng 1 bộ icon), và
+  logo/hero/nút CTA/thẻ cấp độ ở landing page (`index.html`, dùng thẳng `<img src="/vendor/mascot/rooster.png">` vì
+  trang này không load `emoji.js`). Favicon + icon PWA (`public/icons/icon.svg`, tham chiếu ở `manifest.json` và mọi
+  trang HTML) = nền vuông bo góc màu thương hiệu + tấm nền trắng bo góc + `rooster.png` nhúng base64 (`<image>`,
+  để icon vẫn là 1 file SVG độc lập, không cần tải thêm) — đổi ảnh gà trống thì phải build lại icon.svg này (nhúng
+  base64 bằng tay hoặc script nhỏ), không chỉ đổi rooster.png. Thêm/đổi ảnh mascot → tăng `VERSION` ở sw.js
+  (rooster.png nằm dưới `/vendor/` nên được cache-trước).
 - Trẻ KHÔNG đăng nhập; app chạy bằng phiên phụ huynh. Màn hình chọn avatar hiện TẤT CẢ avatar
   (không chỉ của các con) — avatar đóng vai mật khẩu bằng hình. Vào khu phụ huynh: nút nhỏ + PIN 4
   số (`askPin()`); PIN chỉ dùng cho việc này, khoá tạm 5 phút sau 5 lần sai (lưu ở thiết bị).
@@ -172,7 +183,8 @@ học phí, cấp thêm con, khoá/mở), *Học phí & thanh toán* (hàng ch�
 
 **Chưa làm:** hoạt động phân loại (`sort`, cần nhóm/thể loại cho mục từ), dashboard phụ huynh (tiến độ, chế độ cùng học), chi tiết từng bé
 trong tab Phụ huynh, giới hạn thời gian/ngày, thu âm giọng người thật ngay trong app, vai trò giáo viên hỗ trợ, xuất/xoá dữ liệu con,
-icon PNG (iOS cần `apple-touch-icon`), hình linh vật/avatar thật, thông báo nhắc học.
+icon PNG (iOS cần `apple-touch-icon`; hiện chỉ có `icons/icon.svg` "any", chưa có bản PNG riêng), avatar thật cho bé
+(hình linh vật gà trống thì ĐÃ có — `vendor/mascot/rooster.png`, xem mục "Cấu trúc"), thông báo nhắc học.
 **Chưa thử với Supabase/Storage/TTS thật:** đăng ký/đăng nhập/xác nhận email, đọc nội dung qua RLS với phiên thật, tải file lên Storage,
 gọi Azure/Google TTS thật, nhúng bảng của PostgREST (`select('*, a(b)')`).
 

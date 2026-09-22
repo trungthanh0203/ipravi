@@ -69,12 +69,9 @@ button { font: inherit; cursor: pointer; }
   background: rgba(0, 0, 0, .06); color: var(--text-2); font-size: 18px; opacity: .6;
 }
 .mascot { text-align: center; font-size: 72px; margin: 6px 0; }
-/* Gà trống kiểu trang giới thiệu: khung tròn màu thương hiệu + lật ngang cho đầu quay sang phải */
+/* Gà trống lớn (public/vendor/mascot/rooster.png) — hình linh vật thật, đã quay đầu sang phải sẵn */
 .mascot-hero { display: flex; justify-content: center; margin: 10px 0 6px; }
-.mascot-hero .circle {
-  width: 128px; height: 128px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffb877, var(--brand));
-  display: flex; align-items: center; justify-content: center; font-size: 68px; box-shadow: 0 10px 26px rgba(232, 89, 12, .32);
-}
+.mascot-hero .mascot-img { width: 148px; height: 148px; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(232, 89, 12, .28)); }
 .rooster { display: inline-block; transform: scaleX(-1); }
 .rooster img { height: 1em; width: 1em; }
 
@@ -197,6 +194,8 @@ img.visual.big { max-height: 200px; }
 .level-card.rec { border-color: var(--brand); background: var(--brand-light); }
 .level-card:disabled { opacity: .55; cursor: default; }
 .level-card .lv-emoji { font-size: 44px; flex: none; }
+.level-card .lv-emoji img.lv-mascot { height: 44px; width: 44px; object-fit: contain; }
+h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; vertical-align: -0.12em; }
 .level-card .lv-body { flex: 1; min-width: 0; }
 .level-card .lv-name { font-weight: 800; font-size: 20px; }
 .level-card .lv-tag { display: inline-block; background: var(--brand); color: #fff; font-size: 13px; padding: 2px 10px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
@@ -380,6 +379,7 @@ img.visual.big { max-height: 200px; }
 .mem-card { position: relative; aspect-ratio: 1; border: 3px solid var(--brand); border-radius: 18px; background: var(--brand-light); padding: 4px; overflow: hidden; }
 .mem-card .mem-back, .mem-card .mem-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .mem-card .mem-back { font-size: 44px; background: repeating-linear-gradient(45deg, #ffd8b8, #ffd8b8 10px, #ffe6d2 10px, #ffe6d2 20px); }
+.mem-card .mem-back img.mem-mascot { width: 62%; height: 62%; object-fit: contain; }
 .mem-card .mem-face { background: #fff; opacity: 0; transform: scale(.85); transition: opacity .2s, transform .2s; font-size: 40px; }
 .mem-card .mem-face img.visual { max-height: 80%; }
 .mem-card .mem-word { font-size: 20px; font-weight: 800; padding: 4px; text-align: center; word-break: break-word; }

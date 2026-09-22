@@ -35,18 +35,23 @@ export function emojiNodes(text) {
   });
 }
 
-// Gà trống lớn trong khung tròn màu thương hiệu — DÙNG CHUNG mọi màn hình có "chú gà trống" đứng một mình (bắt đầu bài,
-// đăng nhập, kết quả Luyện tập, "Con là ai nào?"...) để hình luôn đồng nhất, đầu quay sang phải (`.rooster` lật ngang, app.css).
+// Hình linh vật gà trống thật (không phụ thuộc phông emoji của máy, đã quay đầu sang phải sẵn trong file) —
+// DÙNG CHUNG mọi chỗ hiện "chú gà trống" làm logo/biểu tượng, thay vì emoji 🐓 (Twemoji trông nhạt, giống gà mái).
+export const MASCOT_URL = new URL("../vendor/mascot/rooster.png", import.meta.url).pathname;
+export function mascotIcon(className) {
+  const img = document.createElement("img");
+  img.className = className ?? "mascot-icon";
+  img.src = MASCOT_URL;
+  img.alt = "";
+  img.draggable = false;
+  img.decoding = "async";
+  return img;
+}
+// Gà trống lớn đứng một mình — bắt đầu bài, đăng nhập, kết quả Luyện tập, "Con là ai nào?"...
 export function mascotHero() {
   const hero = document.createElement("div");
   hero.className = "mascot-hero";
-  const circle = document.createElement("div");
-  circle.className = "circle";
-  const rooster = document.createElement("span");
-  rooster.className = "rooster";
-  rooster.append(...emojiNodes("🐓"));
-  circle.append(rooster);
-  hero.append(circle);
+  hero.append(mascotIcon("mascot-img"));
   return hero;
 }
 

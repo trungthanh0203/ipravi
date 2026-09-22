@@ -8,7 +8,7 @@ import { visual, voiceToggle, titleSpeakers, titleIn, nativeLang } from "../chil
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
-import { emojiNodes } from "../emoji.js";
+import { emojiNodes, mascotIcon } from "../emoji.js";
 import { loadStats, childStatsView } from "../stats.js";
 import { showPractice } from "../child/practice.js";
 
@@ -57,7 +57,7 @@ async function showLevels(root) {
         const us = unitsOf(L.n), p = progress[L.n - 1];
         const usable = us.length > 0;
         return el("button", { class: "level-card" + (L.n === rec ? " rec" : ""), disabled: !usable, onclick: () => showUnits(root, L.n, units) },
-          el("span", { class: "lv-emoji" }, ...emojiNodes(L.emoji)),
+          el("span", { class: "lv-emoji" }, L.n === 4 ? mascotIcon("lv-mascot") : emojiNodes(L.emoji)),
           el("span", { class: "lv-body" },
             el("div", { class: "lv-name" }, `Cấp ${L.n} · ${L.name}`, L.n === rec ? el("span", { class: "lv-tag" }, T.levelHere) : null),
             el("div", { class: "muted" }, usable ? `${L.focus}` : T.levelSoon + " · " + L.focus),
@@ -87,7 +87,7 @@ async function showUnits(root, level, all) {
     const L = LEVELS[level - 1];
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showLevels(root) }, "◀ " + T.back),
-      el("h1", { style: "text-align:center" }, `${L.emoji} Cấp ${L.n} · ${L.name}`),
+      el("h1", { style: "text-align:center" }, L.n === 4 ? mascotIcon("lv-mascot-inline") : L.emoji, ` Cấp ${L.n} · ${L.name}`),
       el("div", { class: "unit-grid" }, units.map((u) =>
         el("button", { class: "unit-card", onclick: () => showLessons(root, u) }, visual(u, "big"), el("span", null, `${nums.get(u.id)}. ${u.title_vi}`)))));
   } catch {
