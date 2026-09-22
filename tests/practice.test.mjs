@@ -121,6 +121,7 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   const catalog = [];
   const unitId = new Map();
   const storyGroups = new Map(); // khoá `chủ đề|bài` -> {itemIds, questionIds, unitId, level} — mô phỏng api.loadStoryLessons() nhóm theo lesson_id
+  const dialogueGroups = new Map(); // khoá `chủ đề|bài` -> {itemIds, questionIds:[], unitId, level} — mô phỏng api.loadDialogueLessons() (bài có activities=dialogue)
   let id = 1;
   for (const f of readdirSync(dir).filter((n) => n.endsWith(".csv"))) {
     const v = validateRows(parseCsv(readFileSync(new URL(f, dir), "utf8")), { langs: ["de", "en"] });
@@ -140,18 +141,22 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
         unit: { id: uid, title_vi: r.unit, emoji: r.unitEmoji }, translations: Object.entries(r.tr).map(([lang, meaning]) => ({ lang, meaning })) });
       // Đoạn văn = MỌI mục còn lại của cùng bài (không riêng item_type 'story') — giống lesson.js/runQuiz thật.
       storyGroups.get(groupKey).itemIds.push(curId);
+      if (r.kinds?.includes("dialogue")) {
+        if (!dialogueGroups.has(groupKey)) dialogueGroups.set(groupKey, { itemIds: [], questionIds: [], unitId: uid, level: lvl.get(r.unit) ?? 1 });
+        dialogueGroups.get(groupKey).itemIds.push(curId);
+      }
     }
   }
   const storyLessons = [...storyGroups.values()].filter((g) => g.itemIds.length >= 3 && g.questionIds.length >= 1);
+  const dialogueLessons = [...dialogueGroups.values()].filter((g) => g.itemIds.length >= 4);
   ok(catalog.length > 700, `catalog từ CSV: ${catalog.length} mục`);
   ok(storyLessons.length > 0, `giáo trình: ${storyLessons.length} bài dùng được cho Đọc nhớ/Nghe nhớ`);
-  // "Giao tiếp" (converse) cần admin bật hoạt động 'dialogue' cho 1 bài (bảng activities) — giáo trình CSV hiện chưa có bài
-  // nào như vậy nên bỏ qua khỏi 2 kiểm tra dưới (đúng thực tế: thẻ tự mờ tới khi có bài); cơ chế riêng kiểm bằng dữ liệu giả cuối khối này.
+  ok(dialogueLessons.length > 0, `giáo trình: ${dialogueLessons.length} bài giao tiếp dùng được cho Luyện tập`);
   const playableFor = (s, age) => {
-    if (s.id === "converse") return null;
+    if (s.id === "converse") return storySkillPlayable(s, dialogueLessons, { age, lang: "de" });
     return s.story ? storySkillPlayable(s, storyLessons, { age, lang: "de" }) : skillPlayable(s, catalog, { age, lang: "de" });
   };
-  for (const s of SKILLS) { const p = playableFor(s, 6); if (p !== null) ok(p, `giáo trình: kỹ năng ${s.name} chơi được (bé 6 tuổi, bản ngữ de)`); }
+  for (const s of SKILLS) ok(playableFor(s, 6), `giáo trình: kỹ năng ${s.name} chơi được (bé 6 tuổi, bản ngữ de)`);
   const young = SKILLS.filter((s) => playableFor(s, 4)).map((s) => s.id);
   console.log("     (bé 4 tuổi chơi được:", young.join(", "), ")");
   ok(["listen", "speak", "memory", "sort"].every((k) => young.includes(k)), "giáo trình: bé 4 tuổi chơi được ít nhất nghe, nói, trí nhớ, phân loại", young.join());
@@ -186,14 +191,16 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   const byLevel4 = scopeStoryLessons(storyLessons, { type: "level", level: 4 }, new Map());
   ok(byLevel4.every((g) => g.level === 4) && byLevel4.length > 0, "scopeStoryLessons: lọc theo cấp");
 
-  // "Giao tiếp" (converse): giáo trình thật chưa có bài nào (admin tự soạn qua hoạt động 'dialogue') — kiểm cơ chế bằng 1 bài giả.
+  // "Giao tiếp" (converse) trên dữ liệu thật (giao-trinh/csv/hoi-thoai-giao-tiep.csv, migration 019).
   const converseSkill = skillById("converse");
-  const fakeDialogue = [{ lessonId: 1, unitId: 1, level: 2, itemIds: [901, 902, 903, 904, 905, 906], questionIds: [] }];
-  ok(storySkillPlayable(converseSkill, [], { age: 6 }) === false, "storySkillPlayable(converse): chưa có bài giao tiếp nào → chưa chơi được");
-  ok(storySkillPlayable(converseSkill, fakeDialogue, { age: 6 }), "storySkillPlayable(converse): có ≥ 1 bài giao tiếp → chơi được");
-  const cp = planStoryPractice(converseSkill, fakeDialogue, { type: "all" }, new Map(), { age: 6, rng: seeded(1) });
-  eq(cp.ok && cp.plan[0].kind, "dialogue", "planStoryPractice(converse): dựng được phiên, đúng trò 'dialogue'");
-  eq(cp.plan[0].items.map((i) => i.id), fakeDialogue[0].itemIds, "planStoryPractice(converse): lấy NGUYÊN thứ tự các dòng của bài (không xáo — vai trò suy theo vị trí)");
+  ok(storySkillPlayable(converseSkill, [], { age: 6 }) === false, "storySkillPlayable(converse): danh sách rỗng → chưa chơi được");
+  ok(storySkillPlayable(converseSkill, dialogueLessons, { age: 6 }), "storySkillPlayable(converse): giáo trình thật có bài giao tiếp → chơi được");
+  const cp = planStoryPractice(converseSkill, dialogueLessons, { type: "all" }, new Map(), { age: 6, rng: seeded(1) });
+  ok(cp.ok && cp.plan[0].kind === "dialogue" && cp.plan[0].items.length % 2 === 0 && cp.plan[0].items.length >= 4,
+    "planStoryPractice(converse): dựng được 1 bài giao tiếp thật, đủ cặp hỏi-đáp");
+  const chosenD = dialogueLessons.find((g) => g.itemIds.length === cp.plan[0].items.length && g.itemIds.every((id) => cp.plan[0].items.some((i) => i.id === id)));
+  ok(Boolean(chosenD), "planStoryPractice(converse): lấy NGUYÊN thứ tự các dòng của 1 bài trong dialogueLessons (không cắt/trộn)");
+  ok(planStoryPractice(converseSkill, dialogueLessons, { type: "all" }, new Map(), { age: 4 }).ok === false, "planStoryPractice(converse): bé 4 tuổi không chơi Giao tiếp (cần đọc chữ)");
 }
 
 // ---- Huy hiệu + xu hướng + gợi ý (giai đoạn 2) ----

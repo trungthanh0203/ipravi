@@ -94,9 +94,10 @@ function render(box, units, lessons) {
   const say = (kind, text) => flash.replaceChildren(msg(kind, text));
   const carried = notice.take();
   if (carried) say(carried.kind, carried.text);
-  // Bọc thao tác: báo lỗi thân thiện + tải lại (thông báo thành công giữ qua lần tải lại)
+  // Bọc thao tác: báo lỗi thân thiện + tải lại (thông báo thành công giữ qua lần tải lại).
+  // fn trả về false (vd bấm Huỷ ở confirm()) → coi như CHƯA làm gì, không hiện "Đã..." (lỗi cũ: huỷ confirm vẫn báo thành công).
   const act = (fn, okText) => async () => {
-    try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
+    try { const r = await fn(); if (r === false) return; if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
   };
 
   if (units.length === 0) {
@@ -126,8 +127,8 @@ function render(box, units, lessons) {
           btn(open ? "Thu gọn ▲" : "Mở ▼", () => { open ? openUnits.delete(u.id) : openUnits.add(u.id); reload(); }),
           u.status === "approved"
             ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
-            : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
-          btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
+            : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return false; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
+          btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return false; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
       editSlot,
       open ? el("div", null,
         el("div", { class: "row-btns", style: "justify-content:flex-start" },
@@ -166,7 +167,7 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
   const panel = el("div");
   const isOpen = openLesson === lesson.id;
   const act = (fn, okText) => async () => {
-    try { await fn(); if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
+    try { const r = await fn(); if (r === false) return; if (okText) notice.set("ok", okText); await reload(); } catch (e) { say("err", e.message); }
   };
   const renameSlot = el("div");
   const head = el("div", { class: "row lesson-row" },
@@ -180,7 +181,7 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
       lesson.status === "approved"
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
         : btn("Duyệt bài", () => approveLesson(lesson, reload, say), "btn small"),
-      btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
+      btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return false; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
   if (isOpen) itemsPanel(panel, lesson, say, level, reload);
   return el("div", { class: "lesson-block" }, head, renameSlot, panel);
 }

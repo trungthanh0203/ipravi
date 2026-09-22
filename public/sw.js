@@ -1,7 +1,7 @@
 // Service worker: mạng trước (luôn lấy bản mới của trang/JS), rơi về cache khi mất mạng;
 // hình + âm thanh nội dung (Supabase Storage bucket "content") cache trước để phát tức thì.
 // Đổi VERSION để xoá cache cũ.
-const VERSION = "v5"; // đổi khi tải lại public/vendor/ (vendor được cache-trước); v5: app chuyển sang /app/, trang chủ "/" đổi thành trang giới thiệu
+const VERSION = "v6"; // đổi khi tải lại public/vendor/ (vendor được cache-trước); v6: thêm emoji Twemoji cho bài giao tiếp mẫu
 const SHELL = `shell-${VERSION}`;
 const MEDIA = `media-${VERSION}`;
 

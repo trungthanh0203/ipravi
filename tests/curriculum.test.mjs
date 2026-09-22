@@ -142,11 +142,34 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
   for (const [k] of lessons) perUnit.set(k.split(" › ")[0], (perUnit.get(k.split(" › ")[0]) ?? 0) + 1);
   console.log(`  ${perUnit.size} chủ đề, ${lessons.size} bài:`, [...perUnit].map(([u, n]) => `${u}(${n})`).join(" · "));
 }
+// ---- Bài giao tiếp mẫu (kỹ năng Giao tiếp / Luyện tập, migration 019): luật riêng ----
+{
+  const f = "hoi-thoai-giao-tiep.csv";
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
+  for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
+  for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
+  const fail = (m) => { console.log("  GIAO TIẾP:", m); bad = 1; };
+  const lessons = new Map();
+  for (const it of v.items) {
+    if (it.level !== 3) fail(`dòng ${it.row} không ghi level=3`);
+    const k = `${it.unit} › ${it.lesson}`;
+    (lessons.get(k) ?? lessons.set(k, []).get(k)).push(it);
+  }
+  for (const [k, items] of lessons) {
+    // dòng lẻ (1,3,5…) = hệ thống hỏi, dòng chẵn = bé đọc — cần số dòng CHẴN và ≥ 4 (≥ 2 lượt) để runDialogue không tự bỏ qua.
+    if (items.length % 2 !== 0) fail(`${k}: ${items.length} dòng (lẻ) — hệ thống hỏi/bé đáp phải xen kẽ đúng cặp`);
+    if (items.length < 4) fail(`${k}: chỉ ${items.length} dòng (cần ≥4, tức ≥2 lượt hỏi-đáp)`);
+    if (!items[0].kinds.includes("dialogue")) fail(`${k}: chưa ghi activities=dialogue`);
+    if (items.some((i) => !i.tr.de || !i.tr.en)) fail(`${k}: thiếu nghĩa de/en`);
+  }
+  console.log(`  ${new Set([...lessons.keys()].map((k) => k.split(" › ")[0])).size} chủ đề, ${lessons.size} bài giao tiếp`);
+}
 // ---- Mọi emoji trong CSV giáo trình phải có file Twemoji (nếu thiếu: node scripts/vendor-twemoji.mjs rồi tăng VERSION ở public/sw.js) ----
 {
   const { graphemes, isEmojiGrapheme, emojiUrl } = await import("../public/js/emoji.js");
   const missing = new Set();
-  for (const f of ["cap1-trung-tu-vung.csv", "cap2-ga-con-cau-ngan.csv", "cap3-ga-choai-hoc-van.csv", "cap4-ga-trong-doc-hieu.csv"]) {
+  for (const f of ["cap1-trung-tu-vung.csv", "cap2-ga-con-cau-ngan.csv", "cap3-ga-choai-hoc-van.csv", "cap4-ga-trong-doc-hieu.csv", "hoi-thoai-giao-tiep.csv"]) {
     const { headers, rows } = parseCsv(R("giao-trinh/csv/" + f));
     for (const col of ["emoji", "unit_emoji"]) {
       const i = headers.indexOf(col);
