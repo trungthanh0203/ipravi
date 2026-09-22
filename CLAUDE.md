@@ -8,7 +8,11 @@ chỉ mượn mẫu thiết kế. **Chủ dự án tự chạy git** — đừng
 ## Cấu trúc
 
 - `public/` — phần được deploy (static assets). **Không đặt docs/migration/CSV vào đây.**
-  - `index.html` (preload cấu hình + modulepreload), `manifest.json`, `sw.js` (mạng-trước; cache-trước cho `/vendor/` và media Storage; đổi `VERSION` khi tải lại vendor), `css/app.css`
+  - `index.html` = **trang giới thiệu** (landing page tĩnh, không phụ thuộc JS module của app) cho khách chưa vào app; nút "Vào học"
+    trỏ `/app/`. `app/index.html` = **app thật** (preload cấu hình + modulepreload) — `manifest.json` có `start_url`/`scope` = `/app/`
+    nên mở từ icon đã cài (PWA) vào thẳng app, bỏ qua trang giới thiệu; mọi đường dẫn trong `app/index.html` viết TUYỆT ĐỐI
+    (`/css/...`, `/js/...`) vì trang nằm trong thư mục con còn CSS/JS/vendor vẫn ở gốc `public/`. `manifest.json`, `sw.js` (mạng-trước;
+    cache-trước cho `/vendor/` và media Storage; đổi `VERSION` khi tải lại vendor HOẶC đổi cấu trúc route), `css/app.css`
   - `vendor/supabase/` — supabase-js **tải về sẵn** (chạy `node scripts/vendor-supabase.mjs [phiên bản]`, rồi tăng `VERSION` trong sw.js): cùng nguồn với app nên khởi động nhanh, không gọi CDN bên thứ ba (GDPR). Đừng import từ CDN.
   - `js/` ES modules thuần, không build step, không `package.json`:
     `main.js` (boot) · `flow.js` (`decideScreen()` = luồng vào app) · `state.js` · `config.js`
@@ -41,6 +45,11 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 
 - **Thứ tự điều kiện trong `decideScreen()` là luật của luồng vào app** — thêm màn hình mới phải
   chèn đúng chỗ, đừng append cuối (bài học từ iLapra: thứ tự tab lệch làm mở nhầm màn hình nặng).
+- **`/` (root) là trang giới thiệu, app thật ở `/app/`** (xem mục Cấu trúc). Thêm file HTML/JS mới
+  cho app thì đặt trong `js/`/`css/` ở gốc (dùng chung cho cả 2 trang) hoặc `app/` nếu chỉ app cần;
+  ĐỪNG thêm đường dẫn tương đối kiểu `href="css/..."` vào `app/index.html` — phải tuyệt đối
+  (`/css/...`). Hướng dẫn "Cài app về máy" (3 thiết bị + liên hệ) hiện dưới nút đăng nhập/đăng ký ở
+  `pages/auth.js`, chữ lấy từ `T.install` trong `strings.js`.
 - Trẻ KHÔNG đăng nhập; app chạy bằng phiên phụ huynh. Màn hình chọn avatar hiện TẤT CẢ avatar
   (không chỉ của các con) — avatar đóng vai mật khẩu bằng hình. Vào khu phụ huynh: nút nhỏ + PIN 4
   số (`askPin()`); PIN chỉ dùng cho việc này, khoá tạm 5 phút sau 5 lần sai (lưu ở thiết bị).

@@ -60,6 +60,28 @@ function view(root) {
     "div", null,
     el("div", { class: "mascot" }, ...emojiNodes("🐓")),
     el("h1", { style: "text-align:center" }, CONFIG.centerName),
-    el("div", { class: "card" }, el("div", { class: "tabs" }, tabBtn("login", T.login), tabBtn("register", T.register)), form)
+    el("div", { class: "card" }, el("div", { class: "tabs" }, tabBtn("login", T.login), tabBtn("register", T.register)), form),
+    installBox()
+  );
+}
+
+// Hướng dẫn cài app về máy (PWA) theo từng nền tảng — chữ lấy từ T.install.
+function installBox() {
+  return el(
+    "div", { class: "install-box" },
+    el("h2", { class: "install-title" }, T.install.title),
+    el("p", { class: "muted install-contact" }, T.install.contact),
+    el(
+      "div", { class: "install-grid" },
+      T.install.platforms.map((p) =>
+        el(
+          "div", { class: "install-card" },
+          el("div", { class: "install-icon" }, p.icon),
+          el("h3", null, p.name),
+          el("ol", null, p.steps.map((s) => el("li", null, s))),
+          el("p", { class: "muted install-note" }, p.note)
+        )
+      )
+    )
   );
 }

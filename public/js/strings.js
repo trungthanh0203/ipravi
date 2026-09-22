@@ -249,4 +249,42 @@ export const T = {
 
   adminTitle: "Quản trị",
   soon: "Phần này sẽ làm ở bước sau.",
+
+  // Hướng dẫn cài app về máy (hiện dưới nút đăng nhập/đăng ký)
+  install: {
+    title: "📲 Cài app về máy để dùng tiện hơn",
+    contact: "Liên hệ Mr.Thành - 0989.099.454 (Zalo)",
+    platforms: [
+      {
+        icon: "💻",
+        name: "Máy tính (Chrome / Edge)",
+        steps: [
+          "Mở trang web này bằng Chrome hoặc Edge.",
+          "Ở cuối thanh địa chỉ, bấm vào biểu tượng “Cài đặt” (hình máy tính có mũi tên).",
+          "Bấm “Cài đặt” trong hộp thoại hiện ra.",
+        ],
+        note: "→ App sẽ có icon riêng trên màn hình/Dock, mở lên không cần trình duyệt.",
+      },
+      {
+        icon: "🤖",
+        name: "Điện thoại Android (Chrome)",
+        steps: [
+          "Mở trang web này bằng Chrome.",
+          "Chờ vài giây, banner “Thêm vào Màn hình chính” sẽ tự hiện — bấm vào đó. Nếu không thấy, bấm menu 3 chấm ở góc trên → chọn “Cài đặt ứng dụng”.",
+          "Bấm “Cài đặt” hoặc “Thêm”.",
+        ],
+        note: "→ Icon app xuất hiện ngay ở màn hình chính điện thoại.",
+      },
+      {
+        icon: "🍎",
+        name: "iPhone / iPad (Safari)",
+        steps: [
+          "Mở trang web này bằng Safari (bắt buộc — Chrome trên iPhone không cài được).",
+          "Bấm nút Chia sẻ (hình vuông có mũi tên đi lên) ở thanh dưới cùng.",
+          "Kéo xuống, chọn “Thêm vào MH chính” (Add to Home Screen) → bấm “Thêm”.",
+        ],
+        note: "→ App có icon riêng, mở toàn màn hình như ứng dụng thật.",
+      },
+    ],
+  },
 };

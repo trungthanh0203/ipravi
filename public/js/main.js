@@ -13,7 +13,8 @@ function fatal(message) {
 }
 
 async function boot() {
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  // Đường dẫn tuyệt đối: main.js được nạp cả từ "/app/" (khu học) lẫn nơi khác, sw.js luôn nằm ở gốc.
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
 
   try {
     await loadConfig();

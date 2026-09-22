@@ -2,7 +2,7 @@
 // Cấu hình đọc từ biến môi trường (giống Cloudflare); thiếu thì dùng giá trị GIẢ để xem giao diện
 // (đăng ký/đăng nhập sẽ không chạy được nếu chưa có SUPABASE_URL/SUPABASE_ANON_KEY thật).
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,12 +36,18 @@ const env = {
   ...readDevVars(),
   ...process.env,
   ASSETS: {
+    // Mô phỏng "html_handling: auto-trailing-slash" mặc định của Cloudflare Static Assets:
+    // thư mục có index.html thì /duong-dan (không có "/") chuyển hướng sang /duong-dan/.
     async fetch(req) {
       let p = decodeURIComponent(new URL(req.url).pathname);
-      if (p.endsWith("/")) p += "index.html";
-      const file = normalize(join(root, p));
+      let file = normalize(join(root, p));
       if (!file.startsWith(root)) return new Response("Forbidden", { status: 403 });
       try {
+        const st = await stat(file);
+        if (st.isDirectory()) {
+          if (!p.endsWith("/")) return new Response(null, { status: 308, headers: { location: p + "/" } });
+          file = join(file, "index.html");
+        }
         return new Response(await readFile(file), { headers: { "content-type": TYPES[extname(file)] || "application/octet-stream" } });
       } catch {
         return new Response("Not found", { status: 404 });

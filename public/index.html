@@ -1,32 +1,355 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Tôi luyện tiếng Việt</title>
-  <meta name="theme-color" content="#e8590c">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/app.css">
-  <link rel="preload" href="/api/config" as="fetch" crossorigin="anonymous">
-  <link rel="modulepreload" href="js/config.js">
-  <link rel="modulepreload" href="js/supabase.js">
-  <link rel="modulepreload" href="js/state.js">
-  <link rel="modulepreload" href="js/flow.js">
-  <link rel="modulepreload" href="js/ui.js">
-  <link rel="modulepreload" href="js/strings.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-supabase-js.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-auth-js.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-functions-js.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-postgrest-js.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-realtime-js.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-storage-js.js">
-  <link rel="modulepreload" href="vendor/supabase/tslib.js">
-  <link rel="modulepreload" href="vendor/supabase/supabase-phoenix.js">
-  <link rel="modulepreload" href="vendor/supabase/iceberg-js.js">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tôi luyện tiếng Việt — Học tiếng Việt vui mỗi ngày cho bé gốc Việt</title>
+<meta name="description" content="Ứng dụng học tiếng Việt cho trẻ gốc Việt 3–8 tuổi: học từ vựng, học vần, tập viết, chấm phát âm và luyện tập qua trò chơi — cùng chú gà trống nhỏ.">
+<meta name="theme-color" content="#e8590c">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --brand: #e8590c;
+    --brand-dark: #c2410c;
+    --brand-light: #fff1e6;
+    --bg: #fff7f0;
+    --text: #2b1d14;
+    --text-2: #6b5646;
+    --ok: #2f9e44;
+    --radius: 20px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; -webkit-tap-highlight-color: transparent;
+  }
+  a { color: var(--brand-dark); }
+  img, svg { max-width: 100%; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  h1, h2, h3 { line-height: 1.25; margin: 0 0 10px; }
+  h2 { font-size: 28px; }
+  h3 { font-size: 19px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--text-2); }
+  .center { text-align: center; }
+  section { padding: 56px 0; }
+
+  /* Nút */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--brand); color: #fff;
+    border: 0; border-radius: 14px; padding: 15px 26px; font-weight: 700; font-size: 17px;
+    text-decoration: none; box-shadow: 0 6px 18px rgba(232, 89, 12, .28); cursor: pointer;
+  }
+  .btn:active { background: var(--brand-dark); }
+  .btn.ghost { background: #fff; color: var(--brand-dark); border: 2px solid var(--brand); box-shadow: none; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .center .btn-row { justify-content: center; }
+
+  /* Thanh đầu trang */
+  header { position: sticky; top: 0; z-index: 20; background: rgba(255, 247, 240, .92); backdrop-filter: blur(6px); border-bottom: 1px solid #f0ddc9; }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; text-decoration: none; color: var(--text); }
+  .logo .badge { width: 38px; height: 38px; border-radius: 12px; background: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 22px; flex: none; }
+  .nav-links { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
+  .nav-links a { color: var(--text-2); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .nav-links a:hover { color: var(--brand-dark); }
+  .nav .btn { padding: 10px 18px; font-size: 15px; white-space: nowrap; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+  @media (max-width: 420px) {
+    .logo { font-size: 16px; }
+    .logo .badge { width: 32px; height: 32px; font-size: 18px; }
+    .nav .btn { padding: 9px 14px; font-size: 14px; }
+  }
+
+  /* Hero */
+  .hero { padding: 52px 0 40px; overflow: hidden; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
+  .eyebrow { display: inline-block; background: var(--brand-light); color: var(--brand-dark); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 14px; }
+  .hero h1 { font-size: 40px; }
+  @media (max-width: 480px) { .hero h1 { font-size: 32px; } }
+  .hero p.lead { font-size: 18px; color: var(--text-2); max-width: 46ch; }
+  .trust-row { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 26px; font-size: 14px; color: var(--text-2); }
+  .trust-row span { display: flex; align-items: center; gap: 6px; }
+
+  .hero-art { position: relative; display: flex; align-items: center; justify-content: center; min-height: 320px; }
+  .mascot-circle {
+    width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffb877, var(--brand));
+    display: flex; align-items: center; justify-content: center; font-size: 120px; box-shadow: 0 20px 40px rgba(232, 89, 12, .35);
+  }
+  .floaty { position: absolute; background: #fff; border-radius: 18px; box-shadow: 0 10px 24px rgba(80, 40, 10, .14); padding: 10px 14px; font-size: 22px; display: flex; align-items: center; gap: 6px; }
+  .floaty small { font-size: 12px; font-weight: 700; color: var(--text-2); }
+  .f1 { top: 4%; left: 2%; }
+  .f2 { bottom: 10%; left: -2%; }
+  .f3 { top: 8%; right: 0%; }
+  .f4 { bottom: 2%; right: 6%; }
+  @media (max-width: 480px) { .floaty { display: none; } }
+
+  /* Card chung */
+  .card { background: #fff; border-radius: var(--radius); padding: 22px; box-shadow: 0 4px 16px rgba(80, 40, 10, .08); }
+  .grid { display: grid; gap: 18px; }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 860px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; } }
+
+  .icon-box { width: 52px; height: 52px; border-radius: 14px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; }
+
+  /* Lộ trình cấp độ */
+  .level-card { text-align: center; position: relative; }
+  .level-card .emoji { font-size: 44px; }
+  .level-card .age { display: inline-block; margin-top: 8px; background: var(--brand-light); color: var(--brand-dark); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .level-arrow { display: none; }
+  @media (min-width: 561px) {
+    .level-row { display: flex; align-items: center; gap: 6px; }
+    .level-row .level-card { flex: 1; }
+    .level-row .level-arrow { display: block; color: var(--brand); font-size: 22px; }
+  }
+
+  /* Khu phụ huynh */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .check-list li { display: flex; gap: 10px; align-items: flex-start; }
+  .check-list .dot { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* Mô phỏng màn hình app */
+  .phone { width: 220px; background: #1f1410; border-radius: 34px; padding: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, .22); }
+  .phone .screen { background: var(--bg); border-radius: 22px; padding: 16px 14px; min-height: 360px; }
+  .phone .dot-bar { width: 44px; height: 5px; border-radius: 999px; background: #4a352a; margin: 0 auto 10px; }
+  .phone-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .mock-title { font-weight: 800; font-size: 14px; margin-bottom: 10px; }
+  .mock-chip { background: #fff; border-radius: 12px; padding: 8px 10px; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(80, 40, 10, .1); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .mock-star { color: #f5a623; }
+  .mock-progress { height: 10px; border-radius: 999px; background: #f0ddc9; overflow: hidden; margin: 6px 0 14px; }
+  .mock-progress i { display: block; height: 100%; background: var(--brand); }
+  .mock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .mock-tile { aspect-ratio: 1; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 2px 6px rgba(80, 40, 10, .1); }
+
+  /* Hỏi đáp */
+  details { background: #fff; border-radius: 16px; padding: 16px 18px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(80, 40, 10, .06); }
+  summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--brand); font-size: 22px; font-weight: 800; flex: none; }
+  details[open] summary::after { content: "–"; }
+  details p { margin-top: 10px; color: var(--text-2); }
+
+  /* Banner CTA cuối */
+  .cta-banner { background: linear-gradient(135deg, var(--brand), #ff8a3d); border-radius: 28px; padding: 46px 30px; color: #fff; text-align: center; }
+  .cta-banner h2 { color: #fff; }
+  .cta-banner p { color: rgba(255, 255, 255, .9); }
+  .cta-banner .btn { background: #fff; color: var(--brand-dark); }
+
+  footer { padding: 30px 0 40px; color: var(--text-2); font-size: 14px; }
+  .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: center; }
+  footer a { color: var(--text-2); }
+</style>
 </head>
 <body>
-  <div id="app"><p class="boot">Đang tải…</p></div>
-  <script type="module" src="js/main.js"></script>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top"><span class="badge">🐓</span> Tôi luyện tiếng Việt</a>
+    <ul class="nav-links">
+      <li><a href="#tinh-nang">Tính năng</a></li>
+      <li><a href="#cap-do">Lộ trình học</a></li>
+      <li><a href="#phu-huynh">Phụ huynh</a></li>
+      <li><a href="#hoi-dap">Hỏi đáp</a></li>
+    </ul>
+    <a class="btn" href="/app/">Vào học ngay</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">🐣 Dành cho trẻ gốc Việt 3–8 tuổi</span>
+        <h1>Cùng chú gà trống nhỏ,<br>giữ tiếng Việt trong lòng con</h1>
+        <p class="lead">Ứng dụng học tiếng Việt vui nhộn qua trò chơi: nghe, nói, đọc, viết — được thiết kế riêng cho các bạn nhỏ lớn lên xa quê, không cần biết chữ trước khi bắt đầu.</p>
+        <div class="btn-row">
+          <a class="btn" href="/app/">🚀 Bắt đầu miễn phí</a>
+          <a class="btn ghost" href="#tinh-nang">Xem tính năng</a>
+        </div>
+        <div class="trust-row">
+          <span>🔒 Không quảng cáo bên thứ ba</span>
+          <span>🌍 Giải thích thêm bằng ngôn ngữ ở nhà</span>
+          <span>📶 Học được cả khi mạng yếu</span>
+          <span>👨‍👩‍👧 Phụ huynh luôn theo dõi được</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="floaty f1">🥚 <small>Trứng</small></div>
+        <div class="floaty f2">🐣 <small>Gà con</small></div>
+        <div class="floaty f3">🐥 <small>Gà choai</small></div>
+        <div class="floaty f4">⭐⭐⭐</div>
+        <div class="mascot-circle">🐓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vì sao chọn -->
+  <section>
+    <div class="wrap">
+      <div class="center" style="margin-bottom:30px">
+        <h2>Vì sao ba mẹ chọn "Tôi luyện tiếng Việt"?</h2>
+        <p class="muted">Không phải học thuộc lòng — là chơi mỗi ngày một chút, để tiếng Việt trở thành thói quen tự nhiên của con.</p>
+      </div>
+      <div class="grid cols-4">
+        <div class="card">
+          <div class="icon-box">🎯</div>
+          <h3>Đúng theo lứa tuổi</h3>
+          <p class="muted">Nội dung chia theo độ tuổi, đối chiếu chương trình tiếng Việt trong nước — không quá sức, không quá dễ.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box">🎮</div>
+          <h3>Học qua chơi</h3>
+          <p class="muted">Mỗi bài là chuỗi trò chơi nghe – nhìn – chạm ngắn gọn, giữ bé hứng thú mà không thấy như "phải học".</p>
+        </div>
+        <div class="card">
+          <div class="icon-box">🎙️</div>
+          <h3>Sửa phát âm tại chỗ</h3>
+          <p class="muted">Bé đọc thử, app lắng nghe và gợi ý tiếng nào cần luyện lại — luôn động viên, không bao giờ chê "sai".</p>
+        </div>
+        <div class="card">
+          <div class="icon-box">👨‍👩‍👧</div>
+          <h3>Phụ huynh an tâm</h3>
+          <p class="muted">Khu quản lý riêng có PIN bảo vệ, theo dõi tiến độ học của từng con mà không xáo trộn lúc bé đang học.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tính năng -->
+  <section id="tinh-nang" style="background:#fff">
+    <div class="wrap">
+      <div class="center" style="margin-bottom:30px">
+        <h2>Mọi kỹ năng tiếng Việt, trong một ứng dụng</h2>
+        <p class="muted">Từ những từ đầu tiên đến đọc hiểu cả câu chuyện.</p>
+      </div>
+      <div class="grid cols-3">
+        <div class="card"><div class="icon-box">📖</div><h3>Học từ vựng bằng hình</h3><p class="muted">Mỗi từ có hình minh hoạ, âm thanh và câu ví dụ — bé chạm để nghe, ghép và ghi nhớ.</p></div>
+        <div class="card"><div class="icon-box">🎤</div><h3>Chấm phát âm thông minh</h3><p class="muted">Bé đọc thử từng câu, app so sánh từng tiếng và gợi ý luyện lại — chỉ mang tính tham khảo, không thay giáo viên.</p></div>
+        <div class="card"><div class="icon-box">🐥</div><h3>4 cấp độ rõ ràng</h3><p class="muted">🥚 Trứng → 🐣 Gà con → 🐥 Gà choai → 🐓 Gà trống — lộ trình từ làm quen chữ cái tới đọc hiểu, không hề bị khoá cấp.</p></div>
+        <div class="card"><div class="icon-box">✍️</div><h3>Học vần & tập viết</h3><p class="muted">Đánh vần từng phần, phân biệt chữ hoa – thường, tô chữ theo mẫu chữ thảo chuẩn tiểu học.</p></div>
+        <div class="card"><div class="icon-box">🏅</div><h3>Luyện tập theo kỹ năng</h3><p class="muted">12 kỹ năng từ nghe – nói tới trí nhớ – chính tả, mỗi lượt chơi ngắn khoảng 5 phút, có huy hiệu khích lệ.</p></div>
+        <div class="card"><div class="icon-box">🌍</div><h3>Song ngữ thân thiện</h3><p class="muted">Nghĩa của từ được giải thích thêm bằng ngôn ngữ ở nhà, giúp bé hiểu nhanh hơn khi vốn tiếng Việt còn ít.</p></div>
+        <div class="card"><div class="icon-box">🔐</div><h3>Khu phụ huynh riêng</h3><p class="muted">Có PIN bảo vệ, tách biệt hoàn toàn với khu học của bé; quản lý hồ sơ cho nhiều con.</p></div>
+        <div class="card"><div class="icon-box">📱</div><h3>Cài như một ứng dụng</h3><p class="muted">Thêm vào màn hình chính điện thoại/máy tính bảng, mở nhanh, không cần tải lại mỗi lần.</p></div>
+        <div class="card"><div class="icon-box">🚫</div><h3>Không quảng cáo</h3><p class="muted">Không quảng cáo bên thứ ba, không nội dung ngoài chương trình học — an toàn cho trẻ nhỏ.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lộ trình cấp độ -->
+  <section id="cap-do">
+    <div class="wrap">
+      <div class="center" style="margin-bottom:30px">
+        <h2>Lộ trình 4 cấp độ cùng chú gà trống nhỏ</h2>
+        <p class="muted">Bé có thể chọn học bất kỳ chủ đề nào — app chỉ nhẹ nhàng gợi ý "Con đang ở đây".</p>
+      </div>
+      <div class="level-row">
+        <div class="card level-card"><div class="emoji">🥚</div><h3>Trứng</h3><p class="muted">Làm quen: nghe – nhìn – chạm với những từ đầu tiên.</p><span class="age">3–4 tuổi</span></div>
+        <span class="level-arrow">➜</span>
+        <div class="card level-card"><div class="emoji">🐣</div><h3>Gà con</h3><p class="muted">Mở rộng vốn từ theo từng chủ đề quen thuộc quanh bé.</p><span class="age">4–6 tuổi</span></div>
+        <span class="level-arrow">➜</span>
+        <div class="card level-card"><div class="emoji">🐥</div><h3>Gà choai</h3><p class="muted">Học vần, nhận mặt chữ, ghép câu và tập viết.</p><span class="age">5–7 tuổi</span></div>
+        <span class="level-arrow">➜</span>
+        <div class="card level-card"><div class="emoji">🐓</div><h3>Gà trống</h3><p class="muted">Đọc hiểu câu chuyện, trả lời câu hỏi, luyện chính tả.</p><span class="age">6–8 tuổi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Khu phụ huynh -->
+  <section id="phu-huynh" style="background:#fff">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Dành cho phụ huynh</span>
+        <h2>Con học vui, ba mẹ vẫn nắm rõ mọi thứ</h2>
+        <p class="muted">Khu phụ huynh tách biệt hoàn toàn khỏi khu học của bé, mở bằng PIN riêng.</p>
+        <ul class="check-list">
+          <li><span class="dot">🔐</span><span>PIN 4 số riêng để vào khu quản lý — bé không tự ý vào được.</span></li>
+          <li><span class="dot">📊</span><span>Theo dõi sao, chuỗi ngày học, 14 ngày gần nhất và các kỹ năng cần luyện thêm.</span></li>
+          <li><span class="dot">🎧</span><span>Đánh giá đọc to định kỳ: mức độ, lỗi hay gặp, gợi ý luyện tập tiếp theo.</span></li>
+          <li><span class="dot">👶</span><span>Quản lý hồ sơ cho nhiều con, mỗi bé một avatar riêng của mình.</span></li>
+          <li><span class="dot">🚫</span><span>Không quảng cáo, không thu thập dữ liệu ngoài mục đích học tập.</span></li>
+        </ul>
+      </div>
+      <div class="center">
+        <div class="phone" style="margin:0 auto">
+          <div class="screen">
+            <div class="dot-bar"></div>
+            <div class="mock-title">👦 Tiến độ của Bin</div>
+            <div class="mock-chip"><span class="mock-star">⭐⭐⭐</span> 128 sao</div>
+            <div class="mock-chip">🔥 Chuỗi 6 ngày liên tiếp</div>
+            <div class="mock-progress"><i style="width:70%"></i></div>
+            <div class="mock-title">Kỹ năng cần luyện</div>
+            <div class="mock-grid">
+              <div class="mock-tile">🎤</div>
+              <div class="mock-tile">🎵</div>
+              <div class="mock-tile">✏️</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hỏi đáp -->
+  <section id="hoi-dap">
+    <div class="wrap" style="max-width:760px">
+      <div class="center" style="margin-bottom:26px">
+        <h2>Câu hỏi thường gặp</h2>
+      </div>
+      <details open>
+        <summary>Bé có cần tự đăng nhập không?</summary>
+        <p>Không. Bé chỉ cần chọn avatar của riêng mình để vào học — tài khoản đăng ký là của phụ huynh, avatar đóng vai trò như "mật khẩu bằng hình" cho bé.</p>
+      </details>
+      <details>
+        <summary>App có dùng được khi không có mạng không?</summary>
+        <p>Sau khi cài vào máy, những bài đã mở trước đó vẫn dùng lại được khi mạng yếu. Một số phần cần tải nội dung mới thì vẫn cần kết nối mạng.</p>
+      </details>
+      <details>
+        <summary>Việc chấm phát âm có chính xác tuyệt đối không?</summary>
+        <p>Đây là công cụ gợi ý giúp bé luyện tập thường xuyên hơn, không đo được các yếu tố như ngữ điệu hay ngắt nghỉ, và không thay thế đánh giá của giáo viên hay chuyên gia ngôn ngữ.</p>
+      </details>
+      <details>
+        <summary>Ứng dụng có hỗ trợ ngôn ngữ nào khác ngoài tiếng Việt không?</summary>
+        <p>Nghĩa của từ mới được giải thích thêm bằng ngôn ngữ mà gia đình đang dùng ở nhà, giúp bé dễ hiểu hơn trong lúc vốn tiếng Việt còn ít.</p>
+      </details>
+      <details>
+        <summary>Học phí thế nào?</summary>
+        <p>Gói học phí do trung tâm quản lý và hiển thị minh bạch ngay trong khu phụ huynh trước khi thanh toán. Vui lòng liên hệ trung tâm bạn đang theo học để biết chi tiết.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA cuối -->
+  <section>
+    <div class="wrap">
+      <div class="cta-banner">
+        <h2>Sẵn sàng cùng con giữ gìn tiếng Việt?</h2>
+        <p>Chỉ mất vài phút để tạo hồ sơ đầu tiên cho bé.</p>
+        <div class="btn-row" style="justify-content:center">
+          <a class="btn" href="/app/">🐓 Vào học ngay</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <span>© <span id="y"></span> Tôi luyện tiếng Việt</span>
+    <span><a href="/app/">Vào ứng dụng</a></span>
+  </div>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+</footer>
+
 </body>
 </html>
