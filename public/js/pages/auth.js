@@ -1,6 +1,6 @@
 import { sb } from "../supabase.js";
 import { CONFIG } from "../config.js";
-import { emojiNodes } from "../emoji.js";
+import { mascotHero } from "../emoji.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 
@@ -58,7 +58,7 @@ function view(root) {
 
   return el(
     "div", null,
-    el("div", { class: "mascot" }, ...emojiNodes("🐓")),
+    mascotHero(),
     el("h1", { style: "text-align:center" }, CONFIG.centerName),
     el("div", { class: "card" }, el("div", { class: "tabs" }, tabBtn("login", T.login), tabBtn("register", T.register)), form),
     legalNote(),

@@ -5,7 +5,7 @@ import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
 import { say, voiceToggle, prefetchItems, playItem, nativeLang } from "./media.js";
 import { childAge } from "./util.js";
-import { emojiNodes, prefetchEmoji } from "../emoji.js";
+import { emojiNodes, prefetchEmoji, mascotHero } from "../emoji.js";
 import { LEVELS } from "../levels.js";
 import * as api from "./api.js";
 import { RUNNERS } from "./runners.js";
@@ -122,7 +122,7 @@ async function start(ctx, skill, scope) {
     say(text);
     return ctx.shell(ctx.root,
       el("button", { class: "btn ghost small", onclick: () => (ageOf() != null && ageOf() < 5 ? skillsScreen(ctx) : scopeScreen(ctx, skill, scope)) }, "◀ " + T.back),
-      el("div", { class: "card", style: "text-align:center" }, el("div", { class: "mascot" }, ...emojiNodes("🐓")), el("p", null, text),
+      el("div", { class: "card", style: "text-align:center" }, mascotHero(), el("p", null, text),
         scope.type !== "all" ? el("button", { class: "btn", onclick: () => start(ctx, skill, { type: "all" }) }, T.practiceTryAll) : null,
         el("button", { class: "btn ghost", onclick: () => skillsScreen(ctx) }, T.practiceOther)));
   }
@@ -190,7 +190,7 @@ async function runSession(ctx, skill, scope, planned) {
   }
   if (total === 0) { // mọi trò đều tự bỏ qua (vd phông chữ mẫu không tải được) → không ghi nhật ký, không để bé kẹt
     say(T.practiceNothing);
-    return paint(root, el("div", { class: "card", style: "text-align:center" }, el("div", { class: "mascot" }, ...emojiNodes("🐓")), el("p", null, T.practiceNothing),
+    return paint(root, el("div", { class: "card", style: "text-align:center" }, mascotHero(), el("p", null, T.practiceNothing),
       el("button", { class: "btn", onclick: () => skillsScreen(ctx) }, T.practiceOther)));
   }
   const score = Math.round((correct / total) * 100);
@@ -217,7 +217,7 @@ function resultScreen(ctx, skill, scope, score, missed, gained = null) {
   say(gained ? T.practiceNewBadge(gained.name, skill.name) : T.practiceDone);
   const n = starsFor(score);
   paint(root, el("div", { class: "card", style: "text-align:center" },
-    el("div", { class: "mascot" }, ...emojiNodes("🐓")),
+    mascotHero(),
     el("h1", null, T.practiceDone),
     el("div", { class: "stars big" }, "⭐".repeat(n) + "☆".repeat(3 - n)),
     gained ? el("div", { class: "badge-new" }, el("span", { class: "badge-big" }, ...emojiNodes(gained.emoji)), el("b", null, T.practiceNewBadge(gained.name, skill.name))) : medals(ctx.data, skill.id),

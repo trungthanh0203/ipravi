@@ -4,7 +4,7 @@ import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
 import { say, voiceToggle, prefetchItems, prefetchParts } from "./media.js";
 import { childAge } from "./util.js";
-import { emojiNodes, prefetchEmoji } from "../emoji.js";
+import { prefetchEmoji, mascotHero } from "../emoji.js";
 import * as api from "./api.js";
 import * as intro from "./activities/intro.js";
 import { RUNNERS } from "./runners.js";
@@ -38,7 +38,8 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   // Cú chạm "Bắt đầu" mở khoá âm thanh trên iOS trước khi phát tự động.
   await new Promise((resolve) =>
     paint(root, el("div", { class: "card", style: "text-align:center" },
-      el("div", { class: "mascot" }, ...emojiNodes("🐓")), el("h1", null, lesson.title_vi),
+      mascotHero(), el("h1", null, lesson.title_vi),
+      lesson.description ? el("p", { class: "muted lesson-desc" }, lesson.description) : null,
       el("button", { class: "btn big", onclick: resolve }, "▶ " + T.start),
       el("button", { class: "btn ghost small", onclick: onExit }, T.back))));
 
@@ -96,7 +97,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   const n = starsFor(score);
   say(T.lessonDone);
   paint(root, el("div", { class: "card", style: "text-align:center" },
-    el("div", { class: "mascot" }, ...emojiNodes("🐓")),
+    mascotHero(),
     el("h1", null, T.lessonDone),
     el("div", { class: "stars big" }, "⭐".repeat(n) + "☆".repeat(3 - n)),
     el("button", { class: "btn big", onclick: onExit }, T.next)));

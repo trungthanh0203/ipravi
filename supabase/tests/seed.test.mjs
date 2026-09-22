@@ -48,6 +48,20 @@ ok(await count("content_items") === 21 && await count("units") === 2, "chạy se
   ok((await one("select title_tr->>'de' as de from public.units where title_vi = 'Gia đình'")).de === "Meine Wahl", "chạy lại lần 2 không đổi gì (tên sửa tay vẫn còn)");
 }
 
+// Diễn giải bài học (003_lesson_descriptions.sql, cột lessons.description từ migration 020): phủ MỌI bài của giáo trình,
+// chỉ bổ sung, chạy lại an toàn. Dùng lại units/lessons đã tạo đủ ở khối "Tên dịch" phía trên.
+{
+  await db.query("update public.lessons set description = 'Đã ghi tay' where title_vi = 'Chào hỏi'"); // admin đã sửa tay
+  const sql3 = readFileSync(dir + "003_lesson_descriptions.sql", "utf8");
+  await db.exec(sql3);
+  const noD = (await db.query("select title_vi from public.lessons where description is null")).rows;
+  const totalLessons = await count("lessons");
+  ok(noD.length === 0, `mọi bài (${totalLessons}) có nội dung diễn giải`, noD.map((r) => r.title_vi).join(", "));
+  ok((await one("select description from public.lessons where title_vi = 'Chào hỏi'")).description === "Đã ghi tay", "diễn giải đã sửa tay được giữ, không bị ghi đè");
+  await db.exec(sql3);
+  ok((await one("select description from public.lessons where title_vi = 'Chào hỏi'")).description === "Đã ghi tay", "chạy lại lần 2 không đổi gì (diễn giải sửa tay vẫn còn)");
+}
+
 // Phụ huynh còn hạn thấy đủ nội dung qua RLS; gộp được nghĩa + âm thanh như app truy vấn.
 const uid = (await one("insert into auth.users (email) values ('p@x.com') returning id")).id;
 await db.exec("set role authenticated");

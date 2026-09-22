@@ -78,6 +78,9 @@ button { font: inherit; cursor: pointer; }
 .rooster { display: inline-block; transform: scaleX(-1); }
 .rooster img { height: 1em; width: 1em; }
 
+/* Nội dung diễn giải bài học, ngay dưới tên bài ở màn "Bắt đầu" */
+.lesson-desc { max-width: 42ch; margin: 0 auto 4px; }
+
 /* Cổng PIN */
 .modal-back { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
 .modal { background: #fff; border-radius: var(--radius); padding: 22px; width: 100%; max-width: 340px; text-align: center; }

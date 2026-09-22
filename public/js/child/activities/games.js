@@ -97,7 +97,7 @@ export async function runMemory(ctx) {
   await new Promise((resolve) => {
     const buttons = cards.map((c) => {
       const b = el("button", { class: "mem-card", "aria-label": T.memoryCard, onclick: () => flip(c, b) },
-        el("span", { class: "mem-back" }, ...emojiNodes("🐓")),
+        el("span", { class: "mem-back" }, el("span", { class: "rooster" }, ...emojiNodes("🐓"))),
         el("span", { class: "mem-face" }, c.word ? el("span", { class: "mem-word" }, c.item.text_vi) : visual(c.item)));
       faces.set(c, b);
       return b;

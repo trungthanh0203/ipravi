@@ -35,6 +35,21 @@ export function emojiNodes(text) {
   });
 }
 
+// Gà trống lớn trong khung tròn màu thương hiệu — DÙNG CHUNG mọi màn hình có "chú gà trống" đứng một mình (bắt đầu bài,
+// đăng nhập, kết quả Luyện tập, "Con là ai nào?"...) để hình luôn đồng nhất, đầu quay sang phải (`.rooster` lật ngang, app.css).
+export function mascotHero() {
+  const hero = document.createElement("div");
+  hero.className = "mascot-hero";
+  const circle = document.createElement("div");
+  circle.className = "circle";
+  const rooster = document.createElement("span");
+  rooster.className = "rooster";
+  rooster.append(...emojiNodes("🐓"));
+  circle.append(rooster);
+  hero.append(circle);
+  return hero;
+}
+
 // Tải trước (nền) hình của nhiều emoji — dùng khi mở bài để các màn hình sau hiện tức thì (SW sẽ cache).
 export function prefetchEmoji(texts) {
   for (const g of new Set(texts.flatMap((t) => graphemes(t)))) {

@@ -4,7 +4,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { AVATARS } from "../data.js";
 import { askPin } from "../pin.js";
-import { emojiNodes } from "../emoji.js";
+import { emojiNodes, mascotHero } from "../emoji.js";
 
 // Màn hình đầu tiên mỗi lần mở app. Hiện TẤT CẢ avatar; chỉ avatar đã gán cho hồ sơ con mới vào được.
 export function mount(root) {
@@ -37,7 +37,7 @@ export function mount(root) {
   }, "🔒");
 
   paint(root, el("div", { class: "avatar-screen" },
-    el("div", { class: "mascot-hero" }, el("div", { class: "circle" }, el("span", { class: "rooster" }, ...emojiNodes("🐓")))),
+    mascotHero(),
     el("h1", { style: "text-align:center" }, T.avatarWhoAreYou),
     feedback, grid, corner));
 }
