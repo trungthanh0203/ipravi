@@ -45,9 +45,9 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   const tones = ["ma", "má", "mà", "mả"].map((t, i) => it(10 + i, t, { item_type: "syllable" }));
   eq([...toneGroups(tones).keys()], ["ma"], "toneGroups: nhóm ma có 4 thanh");
   ok(!feasible("tone_pair", tones.slice(0, 2)) && feasible("tone_pair", tones), "tone_pair: cần ≥ 3 thanh cùng gốc");
-  const u = (id, unit, lvl = 1) => it(id, "w" + id, { unit_id: unit, level: lvl, unit: { id: unit, title_vi: "U" + unit } });
+  const u = (id, unit, lvl = 2) => it(id, "w" + id, { unit_id: unit, level: lvl, unit: { id: unit, title_vi: "U" + unit } });
   ok(feasible("sort_unit", [u(1, 1), u(2, 1), u(3, 2), u(4, 2)]) && !feasible("sort_unit", [u(1, 1), u(2, 1), u(3, 1), u(4, 1)]), "sort_unit: cần ≥ 2 chủ đề, mỗi chủ đề ≥ 2 mục");
-  ok(!feasible("sort_unit", [u(1, 1, 3), u(2, 1, 3), u(3, 2, 3), u(4, 2, 3)]), "sort_unit: chỉ Cấp 1–2 (chữ cái/câu không phải 'loại')");
+  ok(!feasible("sort_unit", [u(1, 1, 1), u(2, 1, 1), u(3, 2, 1), u(4, 2, 1)]), "sort_unit: chỉ Cấp 2–3 (chữ cái/câu không phải 'loại')");
   const tr = (id, m) => it(id, "t" + id, { translations: [{ lang: "de", meaning: m }] });
   ok(feasible("meaning_pick", [tr(1, "a"), tr(2, "b"), tr(3, "c")], { lang: "de" }) && !feasible("meaning_pick", [tr(1, "a"), tr(2, "b"), tr(3, "c")], { lang: "en" }), "meaning_pick: cần nghĩa của ngôn ngữ bản ngữ");
   ok(!feasible("fill_word", [it(1, "con con con con"), it(2, "con con con con")]) && feasible("fill_word", [it(1, "con chó chạy nhanh"), it(2, "mẹ nấu cơm ngon lắm")]), "fill_word: cần ≥ 4 từ khác nhau");

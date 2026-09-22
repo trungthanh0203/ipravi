@@ -46,9 +46,10 @@ export function toneGroups(items) {
   return out;
 }
 
-// Chủ đề có ≥ 2 mục có hình đúng nghĩa (trò "phân loại": mỗi chủ đề là 1 giỏ). Chỉ từ/cụm từ ở Cấp 1–2 — chữ cái/vần/câu ở Cấp 3–4 không phải "loại".
+// Chủ đề có ≥ 2 mục có hình đúng nghĩa (trò "phân loại": mỗi chủ đề là 1 giỏ). Chỉ từ/cụm từ ở Cấp 2–3 (chủ đề theo đề tài:
+// Con vật, Gia đình…) — Cấp 1 (học vần: chữ cái/vần/câu) và Cấp 4 (đọc hiểu) không phải "loại" dù có lẫn vài mục word/phrase.
 const SORT_TYPES = new Set(["word", "phrase"]);
-export const sortable = (i) => isLiteral(i) && SORT_TYPES.has(i.item_type) && i.unit_id != null && (i.level ?? 1) <= 2;
+export const sortable = (i) => isLiteral(i) && SORT_TYPES.has(i.item_type) && i.unit_id != null && [2, 3].includes(i.level ?? 2);
 export function sortGroups(items) {
   const by = new Map();
   for (const i of items.filter(sortable)) {

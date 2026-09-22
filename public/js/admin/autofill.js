@@ -70,9 +70,10 @@ export function ageRange(level) {
 }
 
 // Bộ hoạt động của bài mới theo cấp. Trò không hợp nội dung tự bỏ qua khi chơi nên thừa vài trò cũng không sao.
+// Cấp 1 (học vần, trước là cấp 3 — đổi thứ tự theo yêu cầu chủ dự án) dùng bộ trò học vần; cấp 4 (đọc hiểu) không đổi.
 export function defaultKinds(level) {
   const n = Number(level);
-  if (n === 3) return [...STANDARD_ACTIVITIES, "spell_along", "build_syllable", "trace"];
+  if (n === 1) return [...STANDARD_ACTIVITIES, "spell_along", "build_syllable", "trace"];
   if (n === 4) return [...STANDARD_ACTIVITIES, "fill_word", "write_check", "order_words"];
   return [...STANDARD_ACTIVITIES];
 }

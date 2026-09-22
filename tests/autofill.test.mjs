@@ -16,7 +16,7 @@ eq(["xin chào", "chào buổi sáng", "con chó nhỏ"].map(guessType), ["phras
 eq(["Con chào bà ạ.", "Nhà Nam có mấy người?", "hôm nay trời rất đẹp"].map(guessType), ["sentence", "sentence", "sentence"], "guessType: dấu câu cuối hoặc ≥ 5 tiếng → sentence");
 eq([sayOf("b"), sayOf("B b"), sayOf("ngh"), sayOf("a"), sayOf("A a"), sayOf("ă"), sayOf("y"), sayOf("mèo")], ["bờ", "bờ", "ngờ", "", "a", "á", "i dài", ""], "sayOf: phụ âm đọc \"bờ\", ă đọc \"á\"; từ thường để trống");
 eq([ageRange(1), ageRange(2), ageRange(3), ageRange(4), ageRange(9)], [[3, 4], [4, 6], [5, 7], [6, 8], [3, 4]], "ageRange: theo khung cấp");
-ok(defaultKinds(1).join() === "listen_pick,match,listen_pick_text,listen_repeat" && defaultKinds(3).includes("spell_along") && defaultKinds(4).includes("fill_word"), "defaultKinds: cấp 1–2 = bộ chuẩn; cấp 3–4 thêm trò hợp cấp");
+ok(defaultKinds(2).join() === "listen_pick,match,listen_pick_text,listen_repeat" && defaultKinds(1).includes("spell_along") && defaultKinds(4).includes("fill_word"), "defaultKinds: cấp 2–3 = bộ chuẩn; cấp 1 (học vần) và cấp 4 (đọc hiểu) thêm trò hợp cấp");
 ok([1, 2, 3, 4].every((n) => defaultKinds(n).every((k) => ACTIVITY_DEFAULTS[k])), "defaultKinds: mọi trò đều có cấu hình mặc định");
 ok(!QUICK_TYPES.includes("question") && QUICK_TYPES.includes("story"), "QUICK_TYPES: bỏ câu hỏi đọc hiểu");
 
@@ -57,9 +57,9 @@ const lookup = makeLookup(existing);
   eq([suggestUnit("Con vật", { lookup }).emoji, suggestUnit("Xe cộ", { lookup }).emoji, suggestUnit("Xem phim", { lookup }).emoji, suggestUnit("Điều bất kỳ", { lookup }).emoji], ["🐾", "🚗", "📚", "📚"], "suggestUnit: emoji theo từ khoá NGUYÊN TỪ (\"xe\" không khớp \"xem\"), mặc định 📚");
   eq(suggestUnit("Con vật", { level: 2, lookup }).level, 2, "suggestUnit: cấp theo lựa chọn");
   eq(suggestUnit("Ngôi nhà", { lookup }).title_tr, { de: "", en: "" }, "suggestUnit: tên dịch trống khi chưa biết");
-  const ls = suggestLesson("Bài mới", { level: 3, lookup });
+  const ls = suggestLesson("Bài mới", { level: 1, lookup });
   eq([ls.title_vi, ls.kinds.length > 4, ls.title_tr], ["Bài mới", true, { de: "", en: "" }], "suggestLesson: bộ hoạt động theo cấp");
-  eq(suggestLesson("Con vật quanh nhà", { level: 1, lookup: makeLookup([]) }).kinds, ["listen_pick", "match", "listen_pick_text", "listen_repeat"], "suggestLesson: cấp 1 = bộ chuẩn");
+  eq(suggestLesson("Con vật quanh nhà", { level: 2, lookup: makeLookup([]) }).kinds, ["listen_pick", "match", "listen_pick_text", "listen_repeat"], "suggestLesson: cấp 2 = bộ chuẩn");
 }
 
 // ---- Kiểm tra dữ liệu + nhiều dòng ----

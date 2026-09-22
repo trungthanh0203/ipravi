@@ -5,7 +5,7 @@ const R = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 import { parseCsv, validateRows, keyOf } from "../public/js/admin/csv.js";
 import { splitSyllable, words, toneOf, TONES, spellParts, caseParts, hasProperName, traceTexts } from "../public/js/viet.js";
 let bad = 0;
-for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.csv", 2]]) {
+for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.csv", 3]]) {
   const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
   console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
@@ -41,7 +41,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 1], ["cap2-ga-con-cau-ngan.
   const fail = (m) => { console.log("  CẤP 3:", m); bad = 1; };
   const lessons = new Map();
   for (const it of v.items) {
-    if (it.level !== 3) fail(`dòng ${it.row} không ghi level=3`);
+    if (it.level !== 1) fail(`dòng ${it.row} không ghi level=1`);
     const k = `${it.unit} › ${it.lesson}`;
     (lessons.get(k) ?? lessons.set(k, []).get(k)).push(it);
   }
