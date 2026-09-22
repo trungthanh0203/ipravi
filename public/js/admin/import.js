@@ -160,7 +160,10 @@ export function mount(box, { onImported } = {}) {
     const status = { new: ["Mới", "good"], update: ["Cập nhật", ""], same: ["Không đổi", ""] };
     const progress = el("p", { class: "muted" });
     const result = el("div");
-    const go = el("button", { class: "btn", disabled: blocking || !plan || plan.counts.new + plan.counts.update === 0 }, "Nhập vào (tạo bản nháp)");
+    // Có gì để ghi không: mục mới/đổi, HOẶC chỉ đổi cấp/tên dịch của chủ đề-bài (không đổi mục từ/câu nào) — trường hợp
+    // sau vẫn phải cho nhập, không thì đổi cấp hàng loạt qua CSV sẽ không bấm được (lỗi cũ, phát hiện khi đảo cấp giáo trình).
+    const nothingToDo = plan && plan.counts.new + plan.counts.update + (plan.levelChanges?.length ?? 0) + (plan.titleChanges?.length ?? 0) === 0;
+    const go = el("button", { class: "btn", disabled: blocking || !plan || nothingToDo }, "Nhập vào (tạo bản nháp)");
     go.addEventListener("click", async () => {
       go.disabled = true;
       result.replaceChildren();
