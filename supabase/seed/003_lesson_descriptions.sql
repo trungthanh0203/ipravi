@@ -1,4 +1,4 @@
--- 003_lesson_descriptions.sql — nội dung diễn giải cho MỌI bài của giáo trình hiện có trong giao-trinh/csv/ (137 bài),
+-- 003_lesson_descriptions.sql — nội dung diễn giải cho MỌI bài của giáo trình hiện có trong giao-trinh/csv/ (180 bài),
 -- hiện ngay dưới tên bài ở màn "Bắt đầu" (child/lesson.js). Cần migration 020 (cột lessons.description).
 -- Chạy TAY trong SQL Editor (Supabase), sau khi đã nhập đủ 5 file CSV giáo trình. Chạy lại nhiều lần không hại.
 -- Chỉ BỔ SUNG: bài nào đã có description (sửa tay trong khu admin) thì GIỮ NGUYÊN, không bị ghi đè.
@@ -152,9 +152,52 @@ from (values
   ('Kể chuyện theo tranh', 'Cơn mưa và cầu vồng', 'Bé đọc và sắp xếp các câu kể lại một cơn mưa bất chợt và cầu vồng hiện ra sau đó.'),
   ('Kể chuyện theo tranh', 'Sinh nhật của Lan', 'Bé đọc và sắp xếp các câu kể lại buổi sinh nhật sáu tuổi của bạn Lan.'),
 
-  -- ---- Cấp 3 · Hội thoại hằng ngày (hoi-thoai-giao-tiep.csv) ----
-  ('Hội thoại hằng ngày', 'Làm quen', 'Bé nghe và tập nói theo tình huống làm quen: chào hỏi, hỏi tên, hỏi tuổi, và tạm biệt.'),
-  ('Hội thoại hằng ngày', 'Lễ phép', 'Bé nghe và tập nói theo tình huống lễ phép hằng ngày: cảm ơn, xin lỗi, xin phép, chúc ngủ ngon.')
+  -- ---- Chủ đề hội thoại (hoi-thoai-giao-tiep.csv, 4 cấp) ----
+  ('Chủ đề hội thoại cấp 3', 'Làm quen', 'Bé nghe và tập nói theo tình huống làm quen: chào hỏi, hỏi tên, hỏi tuổi, và tạm biệt.'),
+  ('Chủ đề hội thoại cấp 3', 'Lễ phép', 'Bé nghe và tập nói theo tình huống lễ phép hằng ngày: cảm ơn, xin lỗi, xin phép, chúc ngủ ngon.'),
+  ('Chủ đề hội thoại cấp 3', 'Gia đình của con', 'Bé nghe và tập nói giới thiệu về gia đình mình: có những ai, nghề nghiệp bố mẹ.'),
+  ('Chủ đề hội thoại cấp 3', 'Con cần gì', 'Bé nghe và tập nói khi cần điều gì đó: đồ ăn, nước uống, sự giúp đỡ.'),
+  ('Chủ đề hội thoại cấp 3', 'Bữa ăn', 'Bé nghe và tập nói những câu lễ phép trong bữa ăn: mời cơm, xin thêm, báo đã ăn xong.'),
+  ('Chủ đề hội thoại cấp 3', 'Ở trường', 'Bé nghe và tập nói về một ngày đi học: học gì, chơi với ai, giờ ra chơi.'),
+  ('Chủ đề hội thoại cấp 3', 'Tiếng kêu và thời tiết', 'Bé nghe và tập nói về tiếng kêu con vật và cách ứng phó với thời tiết.'),
+  ('Chủ đề hội thoại cấp 3', 'Tết và lễ hội', 'Bé nghe và tập nói về không khí ngày Tết: lì xì, bánh chưng, chúc Tết ông bà.'),
+  ('Chủ đề hội thoại cấp 3', 'Cảm xúc và lễ phép', 'Bé nghe và tập nói để diễn tả cảm xúc: vui, buồn, sợ, tức giận.'),
+  ('Chủ đề hội thoại cấp 3', 'Việc đã làm, đang làm, sẽ làm', 'Bé nghe và tập nói theo ba thì: việc đã làm, đang làm và sẽ làm.'),
+  ('Chủ đề hội thoại cấp 1', 'Con vật quanh nhà', 'Bé nghe và tập nói về những con vật quen thuộc nuôi trong nhà: gọi tên và bắt chước tiếng kêu.'),
+  ('Chủ đề hội thoại cấp 1', 'Người thân', 'Bé nghe và tập nói về những người thân trong nhà: ông bà, bố mẹ.'),
+  ('Chủ đề hội thoại cấp 1', 'Bữa cơm', 'Bé nghe và tập nói những câu đơn giản trong bữa cơm: đã ăn chưa, thích ăn gì.'),
+  ('Chủ đề hội thoại cấp 1', 'Trong nhà', 'Bé nghe và tập nói về vị trí đồ vật quen thuộc trong nhà.'),
+  ('Chủ đề hội thoại cấp 1', 'Chào và cảm ơn', 'Bé nghe và tập nói những câu chào hỏi và cảm ơn đơn giản đầu tiên.'),
+  ('Chủ đề hội thoại cấp 1', 'Gia đình', 'Bé nghe và tập nói về số người trong nhà và ai nấu cơm.'),
+  ('Chủ đề hội thoại cấp 1', 'Ăn uống', 'Bé nghe và tập nói những câu đơn giản khi ăn uống: muốn uống gì, có đói không.'),
+  ('Chủ đề hội thoại cấp 1', 'Con vật kêu', 'Bé nghe và tập nói tiếng kêu của những con vật quen thuộc.'),
+  ('Chủ đề hội thoại cấp 2', 'Lời chào trong ngày', 'Bé nghe và tập nói lời chào phù hợp với từng thời điểm và người trong ngày.'),
+  ('Chủ đề hội thoại cấp 2', 'Gia đình', 'Bé nghe và tập nói về các thành viên trong gia đình và thứ tự con trong nhà.'),
+  ('Chủ đề hội thoại cấp 2', 'Cơ thể', 'Bé nghe và tập nói về công dụng của mắt, tai, chân trên cơ thể.'),
+  ('Chủ đề hội thoại cấp 2', 'Con vật', 'Bé nghe và tập nói về con vật yêu thích, tiếng kêu và khả năng của từng con vật.'),
+  ('Chủ đề hội thoại cấp 2', 'Màu sắc', 'Bé nghe và tập nói tên màu sắc của bầu trời, quả chuối và màu mình thích.'),
+  ('Chủ đề hội thoại cấp 2', 'Số đếm', 'Bé nghe và tập nói khi đếm số và làm phép cộng đơn giản.'),
+  ('Chủ đề hội thoại cấp 2', 'Ăn uống', 'Bé nghe và tập nói khi được hỏi muốn ăn gì, uống gì.'),
+  ('Chủ đề hội thoại cấp 2', 'Trái cây', 'Bé nghe và tập nói về loại quả yêu thích và vị của trái cây.'),
+  ('Chủ đề hội thoại cấp 2', 'Đồ chơi và đồ dùng học tập', 'Bé nghe và tập nói về đồ chơi đang chơi và đồ dùng học tập cần dùng.'),
+  ('Chủ đề hội thoại cấp 2', 'Ngôi nhà', 'Bé nghe và tập nói về các phòng trong nhà và việc làm ở từng phòng.'),
+  ('Chủ đề hội thoại cấp 2', 'Thiên nhiên và thời tiết', 'Bé nghe và tập nói về thời tiết trong ngày và cần chuẩn bị gì.'),
+  ('Chủ đề hội thoại cấp 2', 'Quần áo và xe cộ', 'Bé nghe và tập nói về quần áo đang mặc và phương tiện đi học.'),
+  ('Chủ đề hội thoại cấp 2', 'Việc hằng ngày và cảm xúc', 'Bé nghe và tập nói về việc làm buổi sáng và cảm xúc trong ngày.'),
+  ('Chủ đề hội thoại cấp 2', 'Tết và Việt Nam', 'Bé nghe và tập nói về những điều thích nhất ngày Tết và quê hương Việt Nam.'),
+  ('Chủ đề hội thoại cấp 2', 'Giờ giấc', 'Bé nghe và tập nói về giờ giấc sinh hoạt trong ngày.'),
+  ('Chủ đề hội thoại cấp 2', 'Thứ trong tuần', 'Bé nghe và tập nói về thứ trong tuần, hôm nay và ngày mai.'),
+  ('Chủ đề hội thoại cấp 2', 'Vị trí', 'Bé nghe và tập nói về vị trí của đồ vật và bản thân.'),
+  ('Chủ đề hội thoại cấp 4', 'Gia đình của Nam', 'Bé nghe và tập nói khi kể lại về gia đình bạn Nam trong bài đọc.'),
+  ('Chủ đề hội thoại cấp 4', 'Buổi sáng của em', 'Bé nghe và tập nói khi kể lại buổi sáng thường ngày của mình.'),
+  ('Chủ đề hội thoại cấp 4', 'Tết ở nhà bà', 'Bé nghe và tập nói khi kể lại một cái Tết ở nhà bà.'),
+  ('Chủ đề hội thoại cấp 4', 'Ngày mưa', 'Bé nghe và tập nói khi kể lại một ngày mưa ở trong nhà.'),
+  ('Chủ đề hội thoại cấp 4', 'Chú mèo của em', 'Bé nghe và tập nói khi kể về chú mèo nuôi trong nhà.'),
+  ('Chủ đề hội thoại cấp 4', 'Ở trường', 'Bé nghe và tập nói khi kể về môn học, cô giáo và bạn bè ở trường.'),
+  ('Chủ đề hội thoại cấp 4', 'Em trồng cây', 'Bé nghe và tập nói khi kể lại quá trình trồng và chăm sóc một cây non.'),
+  ('Chủ đề hội thoại cấp 4', 'Đi chợ cùng mẹ', 'Bé nghe và tập nói khi kể lại một buổi đi chợ cùng mẹ.'),
+  ('Chủ đề hội thoại cấp 4', 'Cơn mưa và cầu vồng', 'Bé nghe và tập nói khi kể lại một cơn mưa và cầu vồng xuất hiện sau đó.'),
+  ('Chủ đề hội thoại cấp 4', 'Sinh nhật của Lan', 'Bé nghe và tập nói khi kể lại buổi sinh nhật của bạn Lan.')
 
 ) as v(unit_title, title_vi, description)
 join public.units un on un.title_vi = v.unit_title

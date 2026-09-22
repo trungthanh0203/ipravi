@@ -151,11 +151,17 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
   for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
   const fail = (m) => { console.log("  GIAO TIẾP:", m); bad = 1; };
   const lessons = new Map();
+  const unitLevels = new Map(); // 1 chủ đề "Chủ đề hội thoại cấp N" / cấp — mọi dòng trong đó phải cùng ghi level=N
   for (const it of v.items) {
-    if (it.level !== 3) fail(`dòng ${it.row} không ghi level=3`);
+    const m = it.unit.match(/cấp (\d)$/);
+    if (!m) fail(`chủ đề "${it.unit}" (dòng ${it.row}) không đặt tên "Chủ đề hội thoại cấp N"`);
+    else if (it.level !== Number(m[1])) fail(`dòng ${it.row}: chủ đề "${it.unit}" phải ghi level=${m[1]}, đang là ${it.level}`);
+    if (unitLevels.has(it.unit) && unitLevels.get(it.unit) !== it.level) fail(`chủ đề "${it.unit}" có dòng khác cấp nhau (dòng ${it.row})`);
+    else unitLevels.set(it.unit, it.level);
     const k = `${it.unit} › ${it.lesson}`;
     (lessons.get(k) ?? lessons.set(k, []).get(k)).push(it);
   }
+  if (unitLevels.size !== 4) fail(`cần đủ 4 chủ đề "Chủ đề hội thoại cấp 1–4", hiện có ${unitLevels.size}`);
   for (const [k, items] of lessons) {
     // dòng lẻ (1,3,5…) = hệ thống hỏi, dòng chẵn = bé đọc — cần số dòng CHẴN và ≥ 4 (≥ 2 lượt) để runDialogue không tự bỏ qua.
     if (items.length % 2 !== 0) fail(`${k}: ${items.length} dòng (lẻ) — hệ thống hỏi/bé đáp phải xen kẽ đúng cặp`);
