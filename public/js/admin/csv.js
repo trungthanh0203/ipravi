@@ -26,6 +26,7 @@ export const ACTIVITY_DEFAULTS = {
   pick_case: { rounds: 4 },
   fix_capital: { rounds: 3 },
   trace: { rounds: 3 },
+  dialogue: {},
 };
 export const STANDARD_ACTIVITIES = ["listen_pick", "match", "listen_pick_text", "listen_repeat"];
 export const activitiesFor = (kinds) => (kinds?.length ? kinds : STANDARD_ACTIVITIES).map((kind) => [kind, { ...ACTIVITY_DEFAULTS[kind] }]);

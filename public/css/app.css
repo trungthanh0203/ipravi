@@ -69,6 +69,14 @@ button { font: inherit; cursor: pointer; }
   background: rgba(0, 0, 0, .06); color: var(--text-2); font-size: 18px; opacity: .6;
 }
 .mascot { text-align: center; font-size: 72px; margin: 6px 0; }
+/* Gà trống kiểu trang giới thiệu: khung tròn màu thương hiệu + lật ngang cho đầu quay sang phải */
+.mascot-hero { display: flex; justify-content: center; margin: 10px 0 6px; }
+.mascot-hero .circle {
+  width: 128px; height: 128px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffb877, var(--brand));
+  display: flex; align-items: center; justify-content: center; font-size: 68px; box-shadow: 0 10px 26px rgba(232, 89, 12, .32);
+}
+.rooster { display: inline-block; transform: scaleX(-1); }
+.rooster img { height: 1em; width: 1em; }
 
 /* Cổng PIN */
 .modal-back { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
@@ -242,6 +250,11 @@ img.visual.big { max-height: 200px; }
 .passage-line { margin: 8px 0; font-size: 20px; line-height: 1.5; }
 .passage-again { margin: 8px 0; text-align: left; }
 .passage-again summary { cursor: pointer; color: var(--brand-dark); font-weight: 700; }
+
+/* Bài giao tiếp (dialogue): dòng hệ thống hỏi khác màu với dòng bé đọc */
+.dialog-line { text-align: left; border-radius: 14px; padding: 10px 14px; margin: 8px 0; font-size: 20px; line-height: 1.4; }
+.dialog-ask { background: #fff; color: var(--text-2); }
+.dialog-reply { background: var(--brand-light); font-weight: 700; }
 .q-text { font-size: 26px; }
 .tile-card { display: flex; align-items: center; gap: 10px; text-align: left; font-size: 18px; font-weight: 600; width: 100%; }
 .tiles-line:has(.tile-card), .tiles-pool:has(.tile-card) { flex-direction: column; align-items: stretch; }

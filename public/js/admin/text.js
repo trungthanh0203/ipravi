@@ -46,6 +46,7 @@ export const KIND_LABEL = {
   build_syllable: "Ghép âm + vần", fill_letter: "Điền chữ còn thiếu", read_pick: "Đọc – chạm hình", order_words: "Xếp từ thành câu", read_quiz: "Đọc đoạn – trả lời câu hỏi",
   fill_word: "Điền từ vào câu", write_check: "Chọn câu viết đúng", spell_word: "Xếp chữ cái thành từ", order_story: "Xếp câu thành chuyện", spell_along: "Đánh vần theo phần",
   match_case: "Ghép chữ hoa – thường", pick_case: "Chọn chữ hoa/thường", fix_capital: "Chạm chữ cần viết hoa", trace: "Tô chữ",
+  dialogue: "Bài giao tiếp (hỏi–đáp)",
 };
 
 // "Thêm nhanh": chỉ gõ chữ Việt, phần còn lại được điền sẵn bằng luật rồi admin xem lại.

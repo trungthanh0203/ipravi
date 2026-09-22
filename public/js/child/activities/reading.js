@@ -56,20 +56,24 @@ export function arrange({ ctx, instr, top, tokens, expected, extras = [], target
   });
 }
 
-// 1) Đọc đoạn – trả lời câu hỏi. Đoạn = các mục thường của bài (theo thứ tự); câu hỏi = các mục type question.
-export async function runQuiz(ctx) {
+// 1) Đọc/nghe đoạn – trả lời câu hỏi. Đoạn = các mục thường của bài (theo thứ tự); câu hỏi = các mục type question.
+// listenMode: đoạn văn KHÔNG hiện chữ (chỉ nghe từng câu) — dùng cho "Nghe nhớ"; false = hiện chữ để đọc — "Đọc nhớ".
+async function runQuizCore(ctx, listenMode) {
   const qs = ctx.questions ?? [];
   if (!qs.length || ctx.items.length < 1) return SKIP;
   let stop = false;
-  const makePassage = () => el("div", { class: "passage" }, ctx.items.map((it) =>
-    el("p", { class: "passage-line" }, el("button", { class: "btn tiny ghost", title: T.listenVi, onclick: () => playItem(it) }, "🔊"), " ", it.text_vi)));
+  const line = (it, i) => el("p", { class: "passage-line" },
+    el("button", { class: "btn tiny ghost", title: T.listenVi, onclick: () => playItem(it) }, "🔊"), " ",
+    listenMode ? T.listenLine(i + 1) : it.text_vi);
+  const makePassage = () => el("div", { class: "passage" }, ctx.items.map(line));
   const playAll = async () => { stop = false; for (const it of ctx.items) { if (stop) break; await playItem(it); } };
+  const instr = listenMode ? T.instrListenPassage : T.instrReadPassage;
   await new Promise((resolve) => {
-    ctx.box.replaceChildren(el("p", { class: "instr" }, T.instrReadPassage), makePassage(),
+    ctx.box.replaceChildren(el("p", { class: "instr" }, instr), makePassage(),
       el("div", { class: "row-btns", style: "justify-content:center" },
         el("button", { class: "btn ghost", onclick: playAll }, T.readListenAll),
-        el("button", { class: "btn", onclick: () => { stop = true; stopAudio(); resolve(); } }, T.readDone)));
-    say(T.instrReadPassage);
+        el("button", { class: "btn", onclick: () => { stop = true; stopAudio(); resolve(); } }, listenMode ? T.listenDone : T.readDone)));
+    say(instr);
   });
   let correct = 0;
   for (let i = 0; i < qs.length; i++) {
@@ -77,13 +81,15 @@ export async function runQuiz(ctx) {
     const q = qs[i];
     const { choices, answer } = q.extra;
     const options = shuffle(choices.map((c, k) => ({ key: k, cls: "opt-text", node: c })));
-    const again = el("details", { class: "passage-again" }, el("summary", null, T.readAgain), makePassage());
+    const again = el("details", { class: "passage-again" }, el("summary", null, listenMode ? T.listenAgain : T.readAgain), makePassage());
     const ok = await pick({ ctx, instr: T.instrQuestion, top: [el("p", { class: "word q-text" }, q.text_vi), listenBtn(q), again], options, correct: answer - 1, target: null, wide: true });
     ctx.record(q.id, ok);
     if (ok) correct++;
   }
   return { correct, total: qs.length };
 }
+export const runQuiz = (ctx) => runQuizCore(ctx, false);
+export const runListenQuiz = (ctx) => runQuizCore(ctx, true);
 
 // 2) Điền từ vào chỗ trống: bỏ 1 từ trong câu, chọn từ đúng trong 3 từ (nhiễu lấy từ các câu khác của bài).
 export async function runFillWord(ctx) {

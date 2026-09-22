@@ -37,7 +37,7 @@ export function mount(root) {
   }, "🔒");
 
   paint(root, el("div", { class: "avatar-screen" },
-    el("div", { class: "mascot" }, ...emojiNodes("🐓")),
+    el("div", { class: "mascot-hero" }, el("div", { class: "circle" }, el("span", { class: "rooster" }, ...emojiNodes("🐓")))),
     el("h1", { style: "text-align:center" }, T.avatarWhoAreYou),
     feedback, grid, corner));
 }

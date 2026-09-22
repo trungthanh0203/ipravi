@@ -11,7 +11,7 @@ import * as api from "./api.js";
 import { RUNNERS } from "./runners.js";
 import { makeCtx } from "./session.js";
 import { GROUPS, BADGES, GOOD_SCORE, groupById, badgeOf, badgeProgress, skillMap } from "./skills.js";
-import { skillsForAge, skillPlayable, planPractice, weakCount } from "./practice-core.js";
+import { skillsForAge, skillPlayable, planPractice, weakCount, storySkillPlayable, planStoryPractice } from "./practice-core.js";
 import { starsFor } from "./lesson.js";
 import { loadSkillStats } from "../stats.js";
 
@@ -41,8 +41,12 @@ export async function showPractice({ root, shell, home }) {
   let data;
   try {
     // Huy hiệu là phần thêm: thiếu migration 017 / lỗi mạng thì skills = null và bỏ qua huy hiệu, vẫn chơi bình thường.
-    const [catalog, progress, skillRows] = await Promise.all([api.loadCatalog(), api.loadAllProgress(child().id), loadSkillStats(child().id).catch(() => null)]);
-    data = { catalog, progress, byId: new Map(catalog.map((i) => [i.id, i])), skills: skillRows ? skillMap(skillRows) : null };
+    // storyLessons (Đọc nhớ/Nghe nhớ) + dialogueLessons (Giao tiếp) tải song song, lỗi thì [] — thẻ đó chỉ mờ đi, không chặn phần còn lại.
+    const [catalog, progress, skillRows, storyLessons, dialogueLessons] = await Promise.all([
+      api.loadCatalog(), api.loadAllProgress(child().id), loadSkillStats(child().id).catch(() => null),
+      api.loadStoryLessons().catch(() => []), api.loadDialogueLessons().catch(() => []),
+    ]);
+    data = { catalog, progress, byId: new Map(catalog.map((i) => [i.id, i])), skills: skillRows ? skillMap(skillRows) : null, storyLessons, dialogueLessons };
   } catch {
     return shell(root, msg("err", T.loadError), el("button", { class: "btn ghost", onclick: home }, "◀ " + T.back));
   }
@@ -51,13 +55,15 @@ export async function showPractice({ root, shell, home }) {
 }
 
 const opts = () => ({ age: ageOf(), lang: nativeLang() });
+// Kỹ năng "story" (readMemory/listenMemory dùng bài Cấp 4 có sẵn; converse dùng bài giao tiếp admin soạn riêng) — mỗi kỹ năng 1 nguồn.
+const storyData = (skill, data) => (skill.id === "converse" ? data.dialogueLessons : data.storyLessons);
 
 // ---- 1) Lưới kỹ năng ----
 function skillsScreen(ctx, note = null) {
   const { root, shell, home, data } = ctx;
   const skills = skillsForAge(ageOf());
   const card = (skill) => {
-    const ok = skillPlayable(skill, data.catalog, opts());
+    const ok = skill.story ? storySkillPlayable(skill, storyData(skill, data), opts()) : skillPlayable(skill, data.catalog, opts());
     return el("button", {
       class: "skill-card" + (ok ? "" : " off"), style: colorStyle(skill), "aria-disabled": ok ? null : "true",
       onclick: () => (ok ? (ageOf() != null && ageOf() < 5 ? start(ctx, skill, { type: "all" }) : scopeScreen(ctx, skill)) : (say(T.practiceNeedMore), skillsScreen(ctx, T.practiceNeedMore))),
@@ -71,6 +77,10 @@ function skillsScreen(ctx, note = null) {
     note ? el("p", { class: "note" }, note) : null,
     data.catalog.length === 0 ? el("div", { class: "card" }, el("p", null, T.practiceNoItems)) : null,
     GROUPS.map((g) => {
+      if (g.comingSoon) {
+        return el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h2", null, g.name),
+          el("div", { class: "skill-grid" }, el("div", { class: "skill-card off", "aria-disabled": "true" }, icon(g.emoji), el("b", null, g.name), el("small", null, T.practiceComingSoon))));
+      }
       const list = skills.filter((s) => s.group === g.id);
       return list.length ? el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h2", null, g.name), el("div", { class: "skill-grid" }, list.map(card))) : null;
     }));
@@ -106,7 +116,7 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
 // ---- 3) Lập phiên + chạy ----
 async function start(ctx, skill, scope) {
   const { data } = ctx;
-  const planned = planPractice(skill, data.catalog, scope, data.progress, opts());
+  const planned = skill.story ? planStoryPractice(skill, storyData(skill, data), scope, data.progress, opts()) : planPractice(skill, data.catalog, scope, data.progress, opts());
   if (!planned.ok) {
     const text = planned.reason === "noWeak" ? T.practiceNoWeak : T.practiceNotEnough;
     say(text);
@@ -165,7 +175,8 @@ async function runSession(ctx, skill, scope, planned) {
   for (const entry of planned.plan) {
     const t1 = Date.now();
     const ctxA = makeCtx({
-      box, account: state.account, child: c, items: entry.items.map((i) => items.get(i.id)).filter(Boolean), progress: data.progress,
+      box, account: state.account, child: c, items: entry.items.map((i) => items.get(i.id)).filter(Boolean),
+      questions: entry.questions?.map((i) => items.get(i.id)).filter(Boolean), progress: data.progress,
       setProgress: (i, n) => paintDots(before + Math.floor((i / Math.max(n, 1)) * entry.turns)),
       onRecord: (id, ok) => outcome.set(id, (outcome.get(id) ?? true) && ok),
     });

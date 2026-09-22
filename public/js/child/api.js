@@ -94,6 +94,63 @@ export const loadCatalog = () => cachedFor("catalog", 300_000, async () => {
   });
 });
 
+// Bài có thể dùng cho "Đọc nhớ"/"Nghe nhớ" (Luyện tập): các bài Cấp 4 đã có sẵn câu hỏi đọc hiểu (item_type 'question') —
+// đoạn văn = MỌI mục còn lại của cùng bài đó (như lesson.js/runQuiz vẫn dùng, không riêng item_type 'story'). Tận dụng
+// nguyên giáo trình đã có, không cần soạn nội dung riêng. Chỉ id (nhẹ, đủ để chọn 1 bài trước khi vào phiên); nội dung
+// đầy đủ tải sau bằng loadItemsByIds() như mọi trò khác. Nhớ 5 phút; clearCache() khi bé thoát.
+export const loadStoryLessons = () => cachedFor("stories", 300_000, async () => {
+  const units = (await loadUnits()).filter((u) => u.status === "approved");
+  const unitById = new Map(units.map((u) => [u.id, u]));
+  const lessons = await fetchAll((a, b) => sb.from("lessons").select("id, unit_id").eq("status", "approved").order("id").range(a, b));
+  const unitOfLesson = new Map(lessons.filter((l) => unitById.has(l.unit_id)).map((l) => [l.id, unitById.get(l.unit_id)]));
+  const qRows = await fetchAll((a, b) => sb.from("content_items").select("id, lesson_id")
+    .eq("status", "approved").eq("item_type", "question").order("id").range(a, b));
+  const questionIds = new Map(); // lesson_id -> [id…]
+  for (const r of qRows) {
+    if (!unitOfLesson.has(r.lesson_id)) continue;
+    if (!questionIds.has(r.lesson_id)) questionIds.set(r.lesson_id, []);
+    questionIds.get(r.lesson_id).push(r.id);
+  }
+  const lessonIds = [...questionIds.keys()];
+  if (!lessonIds.length) return [];
+  const pRows = await fetchAll((a, b) => sb.from("content_items").select("id, lesson_id")
+    .eq("status", "approved").neq("item_type", "question").in("lesson_id", lessonIds).order("lesson_id").order("sort_order").range(a, b));
+  const itemIds = new Map(); // lesson_id -> [id…]
+  for (const r of pRows) {
+    if (!itemIds.has(r.lesson_id)) itemIds.set(r.lesson_id, []);
+    itemIds.get(r.lesson_id).push(r.id);
+  }
+  return lessonIds.map((lessonId) => {
+    const u = unitOfLesson.get(lessonId);
+    return { lessonId, unitId: u.id, level: levelOf(u), itemIds: itemIds.get(lessonId) ?? [], questionIds: questionIds.get(lessonId) };
+  }).filter((g) => g.itemIds.length >= 3); // giống điều kiện tự bỏ qua của runQuiz (≥ 1 câu hỏi đã chắc do lessonIds tới từ đó)
+});
+
+// Bài "giao tiếp" (Luyện tập, kỹ năng Giao tiếp): admin bật hoạt động 'dialogue' cho bài đó (bảng activities, migration
+// 019) — đây là dấu hiệu DUY NHẤT để nhận ra bài giao tiếp (không có item_type riêng). itemIds = MỌI mục của bài, ĐÚNG
+// THỨ TỰ (vai trò hệ thống hỏi/bé đọc suy theo vị trí lẻ/chẵn lúc chạy, xem activities/dialogue.js). questionIds luôn rỗng
+// (không dùng) — chỉ giữ để cùng hình dạng với loadStoryLessons() cho planStoryPractice() dùng chung.
+export const loadDialogueLessons = () => cachedFor("dialogues", 300_000, async () => {
+  const units = (await loadUnits()).filter((u) => u.status === "approved");
+  const unitById = new Map(units.map((u) => [u.id, u]));
+  const lessons = await fetchAll((a, b) => sb.from("lessons").select("id, unit_id").eq("status", "approved").order("id").range(a, b));
+  const unitOfLesson = new Map(lessons.filter((l) => unitById.has(l.unit_id)).map((l) => [l.id, unitById.get(l.unit_id)]));
+  const acts = await fetchAll((a, b) => sb.from("activities").select("lesson_id").eq("kind", "dialogue").order("id").range(a, b));
+  const lessonIds = [...new Set(acts.map((a) => a.lesson_id))].filter((id) => unitOfLesson.has(id));
+  if (!lessonIds.length) return [];
+  const rows = await fetchAll((a, b) => sb.from("content_items").select("id, lesson_id")
+    .eq("status", "approved").neq("item_type", "question").in("lesson_id", lessonIds).order("lesson_id").order("sort_order").range(a, b));
+  const itemIds2 = new Map();
+  for (const r of rows) {
+    if (!itemIds2.has(r.lesson_id)) itemIds2.set(r.lesson_id, []);
+    itemIds2.get(r.lesson_id).push(r.id);
+  }
+  return lessonIds.map((lessonId) => {
+    const u = unitOfLesson.get(lessonId);
+    return { lessonId, unitId: u.id, level: levelOf(u), itemIds: itemIds2.get(lessonId) ?? [], questionIds: [] };
+  }).filter((g) => g.itemIds.length >= 4); // ít nhất 2 lượt hỏi-đáp (runDialogue tự bỏ qua nếu vẫn thiếu)
+});
+
 // Tiến độ của bé trên MỌI mục: Map item_id → { mastery, wrong_count, last_seen_at, ... } (dùng làm độ ưu tiên + "từ hay sai").
 export async function loadAllProgress(childId) {
   const rows = await fetchAll((a, b) => sb.from("child_progress").select("*").eq("child_id", childId).order("id").range(a, b));

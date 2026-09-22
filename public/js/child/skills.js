@@ -2,10 +2,15 @@
 // Ánh xạ trò → kỹ năng PHẢI khớp hàm SQL skill_of() (migration 016); test rls.test.mjs mục 22 kiểm hai bên.
 // Màu theo NHÓM (mỗi kỹ năng thêm biểu tượng riêng) để bé nhận ra ngay: xanh = nghe–nói, xanh lá = vui–nhớ, cam = chữ–viết.
 
+// Thứ tự nhóm là thứ tự hiển thị ở lưới Luyện tập — ĐỪNG append cuối, chèn đúng chỗ theo yêu cầu chủ dự án.
+// 3 nhóm cuối (comingSoon) CHƯA có trò chơi — chỉ hiện tiêu đề + thẻ "Sắp ra mắt", chờ chốt chi tiết mới thêm SKILLS/RUNNERS.
 export const GROUPS = [
+  { id: "write", name: "Chữ – Viết", color: "#e8590c", soft: "#fff1e6" },
   { id: "listen", name: "Nghe – Nói", color: "#3b82f6", soft: "#e7f0ff" },
   { id: "fun", name: "Vui – Nhớ", color: "#2f9e44", soft: "#e6f7ea" },
-  { id: "write", name: "Chữ – Viết", color: "#e8590c", soft: "#fff1e6" },
+  { id: "math", name: "Toán học", emoji: "🔢", color: "#7c3aed", soft: "#f2ecff", comingSoon: true },
+  { id: "stories", name: "Truyện – Thơ", emoji: "📜", color: "#d6336c", soft: "#ffe8ef", comingSoon: true },
+  { id: "news", name: "Tin tức", emoji: "📰", color: "#0f766e", soft: "#e5f7f5", comingSoon: true },
 ];
 
 // kinds: các trò thuộc kỹ năng; needsText: chỉ có trò cần nhận mặt chữ (bé < MIN_AGE_FOR_TEXT không chơi).
@@ -14,8 +19,15 @@ export const SKILLS = [
   { id: "speak", group: "listen", emoji: "🎤", name: "Nói", desc: "Nghe rồi nói theo", kinds: ["listen_repeat"] },
   { id: "tone", group: "listen", emoji: "🎵", name: "Thanh điệu", desc: "Phân biệt ma – má – mà – mả – mã – mạ", kinds: ["listen_pick_tone", "tone_pair"] },
   { id: "meaning", group: "listen", emoji: "🧠", name: "Hiểu nghĩa", desc: "Từ tiếng Việt nghĩa là gì?", kinds: ["meaning_pick"] },
+  // story: true — như readMemory/listenMemory: 1 "lượt" là CẢ 1 bài giao tiếp (nhiều cặp hỏi-đáp), không lấy mục rời theo
+  // POOLS. Bài giao tiếp do admin soạn riêng (hoạt động "dialogue" của bài, migration 019) — chưa soạn bài nào thì thẻ tự mờ.
+  { id: "converse", group: "listen", emoji: "💬", name: "Giao tiếp", desc: "Nghe rồi đọc câu trả lời trong đoạn hội thoại", kinds: ["dialogue"], story: true },
   { id: "memory", group: "fun", emoji: "🧩", name: "Trí nhớ", desc: "Lật thẻ tìm cặp giống nhau", kinds: ["memory_flip"] },
   { id: "sort", group: "fun", emoji: "🗂️", name: "Phân loại", desc: "Xếp mỗi thứ vào đúng nhóm", kinds: ["sort_unit"] },
+  // story: true — 1 "lượt" là CẢ 1 bài (đoạn văn + câu hỏi), không lấy mục theo POOLS như các trò khác (xem practice-core.js planStoryPractice).
+  // Tận dụng nguyên bài Cấp 4 đã có (item_type 'story' + 'question') — chưa có bài nào loại này thì thẻ tự mờ, không cần soạn thêm nội dung.
+  { id: "readMemory", group: "fun", emoji: "📖", name: "Đọc nhớ", desc: "Tự đọc 1 bài rồi trả lời câu hỏi", kinds: ["read_quiz"], story: true },
+  { id: "listenMemory", group: "fun", emoji: "🎧", name: "Nghe nhớ", desc: "Nghe 1 bài rồi trả lời câu hỏi", kinds: ["listen_quiz"], story: true },
   { id: "trace", group: "write", emoji: "✏️", name: "Tô chữ", desc: "Tô theo chữ mẫu", kinds: ["trace"] },
   { id: "spell", group: "write", emoji: "🔤", name: "Đánh vần", desc: "Đánh vần từng phần của tiếng", kinds: ["spell_along"] },
   { id: "build", group: "write", emoji: "🧱", name: "Ghép chữ", desc: "Ghép âm, vần, chữ thành từ", kinds: ["build_syllable", "fill_letter", "order_words", "spell_word", "match_case", "pick_case"] },
@@ -27,13 +39,15 @@ export const SKILLS = [
 export const skillById = (id) => SKILLS.find((s) => s.id === id);
 export const groupById = (id) => GROUPS.find((g) => g.id === id);
 
-// Kỹ năng của 1 trò (cho nhật ký học). Trò của bài học nhưng chưa có thẻ luyện tập (xếp câu, đọc hiểu) vẫn được gán kỹ năng để thống kê.
-const EXTRA = { order_story: "story", read_quiz: "quiz" };
+// Kỹ năng của 1 trò (cho nhật ký học). "Xếp câu" (order_story) là trò CỦA BÀI HỌC, chưa có thẻ luyện tập riêng nên vẫn
+// dùng skill giả "story" để thống kê không bị rơi mất. "read_quiz" từng cũng vậy — nay đã thành kỹ năng thật (readMemory)
+// nên bỏ khỏi EXTRA (SKILLS.find tìm thấy trước, không rơi xuống EXTRA nữa).
+const EXTRA = { order_story: "story" };
 export const skillOf = (kind) => SKILLS.find((s) => s.kinds.includes(kind))?.id ?? EXTRA[kind] ?? null;
 
 // Trẻ nhỏ hơn tuổi này thì bỏ các trò cần nhận mặt chữ. (Dùng chung cho bài học và luyện tập.)
 export const MIN_AGE_FOR_TEXT = 5;
-export const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "fill_word", "write_check", "spell_word", "order_story", "spell_along", "match_case", "pick_case", "fix_capital", "trace",
+export const TEXT_KINDS = new Set(["listen_pick_text", "build_syllable", "fill_letter", "read_pick", "order_words", "read_quiz", "listen_quiz", "dialogue", "fill_word", "write_check", "spell_word", "order_story", "spell_along", "match_case", "pick_case", "fix_capital", "trace",
   "meaning_pick", "pick_spelling", "tone_pair"]);
 export const kindAllowed = (kind, age) => !(TEXT_KINDS.has(kind) && age != null && age < MIN_AGE_FOR_TEXT);
 

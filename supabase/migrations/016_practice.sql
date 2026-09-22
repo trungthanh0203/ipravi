@@ -24,7 +24,9 @@ create or replace function public.skill_of(p_kind text) returns text language sq
     when p_kind in ('fix_capital', 'write_check') then 'case'
     when p_kind = 'pick_spelling' then 'spelling'
     when p_kind = 'order_story' then 'story'
-    when p_kind = 'read_quiz' then 'quiz'
+    when p_kind = 'read_quiz' then 'readMemory'
+    when p_kind = 'listen_quiz' then 'listenMemory'
+    when p_kind = 'dialogue' then 'converse'
   end
 $$;
 

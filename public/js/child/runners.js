@@ -7,6 +7,7 @@ import * as spell from "./activities/spell.js";
 import * as casing from "./activities/casing.js";
 import * as trace from "./activities/trace.js";
 import * as games from "./activities/games.js";
+import * as dialogue from "./activities/dialogue.js";
 
 // Mọi dạng hoạt động chạy được: run(ctx) → { correct, total }. Dùng chung cho bài học (lesson.js) và Luyện tập (practice.js).
 // Thêm dạng mới: viết file trong ./activities/, thêm 1 dòng ở đây, vị từ lọc mục ở pools.js, kỹ năng ở skills.js (+ skill_of trong SQL).
@@ -30,10 +31,13 @@ export const RUNNERS = {
   pick_case: casing.runPickCase,
   fix_capital: casing.runFixCapital,
   trace: trace.runTrace,
+  dialogue: dialogue.runDialogue,
   // Chỉ có ở Luyện tập (không nằm trong bảng activities của bài học)
   meaning_pick: games.runMeaning,
   memory_flip: games.runMemory,
   sort_unit: games.runSort,
   pick_spelling: games.runSpelling,
   tone_pair: games.runTonePair,
+  // "Nghe nhớ": giống read_quiz nhưng KHÔNG hiện chữ đoạn văn lúc nghe
+  listen_quiz: reading.runListenQuiz,
 };

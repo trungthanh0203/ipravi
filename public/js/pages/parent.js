@@ -29,6 +29,27 @@ function voiceCard() {
   return el("div", { class: "card" }, el("h2", null, T.voiceTitle), el("p", { class: "muted" }, T.voiceHelp), el("div", { class: "tabs" }, buttons), feedback);
 }
 
+// Điện thoại/địa chỉ: không bắt buộc, hỏi lúc đặt PIN nhưng sửa lại được ở đây bất cứ lúc nào.
+function contactCard() {
+  const a = state.account;
+  const feedback = el("div");
+  const phone = el("input", { type: "tel", autocomplete: "tel", value: a.phone ?? "" });
+  const address = el("input", { type: "text", autocomplete: "street-address", value: a.address ?? "" });
+  const btn = el("button", { class: "btn small", type: "submit" }, T.save);
+  const form = el("form", null, el("label", null, T.contactPhone), phone, el("label", null, T.contactAddress), address, feedback, btn);
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    btn.disabled = true;
+    const next = { phone: phone.value.trim() || null, address: address.value.trim() || null };
+    const { error } = await sb.from("accounts").update(next).eq("id", a.id);
+    btn.disabled = false;
+    if (error) return feedback.replaceChildren(msg("err", error.message));
+    Object.assign(a, next);
+    feedback.replaceChildren(msg("ok", T.contactSaved));
+  });
+  return el("div", { class: "card" }, el("h2", null, T.contactTitle), form);
+}
+
 // Thêm con: mặc định 1 con/tài khoản; muốn thêm phải xin + trả phí cho người dạy, người dạy xác nhận thì được cấp.
 function addChildCard() {
   const a = state.account;
@@ -135,6 +156,7 @@ export function mount(root) {
     progressCard(),
     voiceCard(),
     pronunciationToggle(),
+    contactCard(),
     addChildCard(),
     el("p", { class: "muted" }, T.soon),
     el("p", { class: "muted", style: "font-size:12px" }, T.credits),

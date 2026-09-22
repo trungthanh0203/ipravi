@@ -119,3 +119,28 @@ export function planPractice(skill, catalog, scope, progress, { age = null, lang
 
 // Các kỹ năng bé có thể chơi ở độ tuổi này (ẩn hẳn kỹ năng chỉ có trò cần đọc chữ khi bé còn nhỏ).
 export const skillsForAge = (age) => SKILLS.filter((s) => s.kinds.some((k) => kindAllowed(k, age)));
+
+// ---- Kỹ năng "story" (Đọc nhớ/Nghe nhớ): 1 lượt = CẢ 1 bài (đoạn văn + câu hỏi), không lấy mục rời theo POOLS như trò khác —
+// nên KHÔNG dùng chooseFamily/selectFor ở trên (những hàm đó lấy mục theo item_type, mục 'story'/'question' cần đi NGUYÊN theo bài).
+// storyLessons: kết quả api.loadStoryLessons() — [{ lessonId, unitId, level, itemIds, questionIds }], mỗi bài Cấp 4 đã có sẵn.
+export function scopeStoryLessons(storyLessons, scope, progress = new Map()) {
+  switch (scope?.type) {
+    case "level": return storyLessons.filter((g) => g.level === scope.level);
+    case "unit": return storyLessons.filter((g) => g.unitId === scope.unitId);
+    case "weak": return storyLessons.filter((g) => g.itemIds.some((id) => isWeak(progress.get(id))));
+    default: return storyLessons;
+  }
+}
+
+export const storySkillPlayable = (skill, storyLessons, { age = null } = {}) => kindAllowed(skill.kinds[0], age) && storyLessons.length > 0;
+
+// Trả cùng hình dạng planPractice() ({ok:false,reason} hoặc {ok:true, skill, family, plan, turns, itemIds}) để practice.js dùng chung luồng.
+export function planStoryPractice(skill, storyLessons, scope, progress, { age = null, rng = Math.random } = {}) {
+  if (!kindAllowed(skill.kinds[0], age)) return { ok: false, reason: "notEnough" };
+  const scoped = scopeStoryLessons(storyLessons, scope, progress);
+  if (!scoped.length) return { ok: false, reason: scope?.type === "weak" ? "noWeak" : "notEnough" };
+  const weight = (g) => g.itemIds.reduce((a, id) => a + weightOf(progress.get(id)), 0) / g.itemIds.length;
+  const g = weightedSample(scoped, 1, weight, rng)[0];
+  const entry = { kind: skill.kinds[0], config: {}, turns: SESSION_TURNS, items: g.itemIds.map((id) => ({ id })), questions: g.questionIds.map((id) => ({ id })) };
+  return { ok: true, skill, family: "stories", plan: [entry], turns: SESSION_TURNS, itemIds: [...g.itemIds, ...g.questionIds] };
+}

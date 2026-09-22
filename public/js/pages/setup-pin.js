@@ -8,6 +8,8 @@ import { hashPin, newSalt, isValidPin } from "../pin.js";
 export function mount(root) {
   const pin1 = el("input", { type: "password", inputmode: "numeric", maxlength: "4", class: "pin-input", autocomplete: "off" });
   const pin2 = el("input", { type: "password", inputmode: "numeric", maxlength: "4", class: "pin-input", autocomplete: "off" });
+  const phone = el("input", { type: "tel", autocomplete: "tel" });
+  const address = el("input", { type: "text", autocomplete: "street-address" });
   const feedback = el("div");
   const btn = el("button", { class: "btn block", type: "submit" }, T.save);
 
@@ -15,6 +17,9 @@ export function mount(root) {
     "form", null,
     el("label", null, T.pinNew), pin1,
     el("label", null, T.pinConfirm), pin2,
+    el("label", null, T.contactPhone), phone,
+    el("label", null, T.contactAddress), address,
+    el("p", { class: "muted" }, T.contactHelp),
     feedback, btn
   );
   form.addEventListener("submit", async (ev) => {
@@ -25,7 +30,7 @@ export function mount(root) {
     const salt = newSalt();
     const { error } = await sb
       .from("accounts")
-      .update({ pin_hash: await hashPin(pin1.value, salt), pin_salt: salt })
+      .update({ pin_hash: await hashPin(pin1.value, salt), pin_salt: salt, phone: phone.value.trim() || null, address: address.value.trim() || null })
       .eq("id", state.session.user.id);
     if (error) {
       btn.disabled = false;

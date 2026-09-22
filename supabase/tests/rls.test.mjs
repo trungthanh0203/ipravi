@@ -46,6 +46,9 @@ await as(A, async () => {
   }
   await db.query("update public.accounts set pin_hash='h', pin_salt='s', pronunciation_enabled=true where id=$1", [A]);
   ok((await q("select pin_hash from public.accounts"))[0].pin_hash === "h", "phụ huynh sửa được PIN + bật chấm phát âm");
+  await db.query("update public.accounts set phone='0901234567', address='123 Đường ABC' where id=$1", [A]);
+  const contact = (await q("select phone, address from public.accounts"))[0];
+  ok(contact.phone === "0901234567" && contact.address === "123 Đường ABC", "phụ huynh tự sửa được điện thoại/địa chỉ (không bị trigger chặn)");
   const r = await db.query("update public.accounts set pin_hash='x' where id=$1", [B]);
   ok(r.affectedRows === 0, "phụ huynh A không sửa được tài khoản B");
 });
@@ -584,6 +587,19 @@ await as(A, async () => {
   await as(P3, async () => ok((await q("select public.child_skill_stats($1) as s", [empty]))[0].s.skills.length === 0, "017: bé chưa chơi → danh sách rỗng, không lỗi"));
   await db.exec(m017);
   ok((await q("select count(*)::int as n from public.activity_log where child_id = $1", [kid]))[0].n === 10, "017: chạy lại migration không mất dữ liệu");
+}
+
+// ---- 23. bài giao tiếp (migration 019) ----
+{
+  const m019 = readFileSync(new URL("../migrations/019_dialogue.sql", import.meta.url), "utf8");
+  await db.exec(m019);
+  await db.query("delete from public.units");
+  const u = (await q("insert into public.units (title_vi, level, status) values ('DL', 2, 'approved') returning id"))[0].id;
+  const l = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1, 'DLL', 'approved') returning id", [u]))[0].id;
+  ok((await fails("insert into public.activities (lesson_id, kind) values ($1, 'dialogue')", [l])) === null, "019: hoạt động 'dialogue' hợp lệ");
+  ok(/check/i.test((await fails("insert into public.activities (lesson_id, kind) values ($1, 'hack')", [l])) ?? ""), "019: hoạt động lạ vẫn bị chặn");
+  await db.exec(m019);
+  ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 1, "019: chạy lại migration không mất dữ liệu");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

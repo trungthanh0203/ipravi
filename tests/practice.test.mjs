@@ -2,7 +2,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { SKILLS, GROUPS, BADGES, skillOf, skillById, kindAllowed, KIND_COST, badgeOf, badgeProgress, trendOf, skillMap, suggestSkills } from "../public/js/child/skills.js";
 import { POOLS, feasible, toneGroups, variants, meaningIn } from "../public/js/child/pools.js";
-import { familyOf, weightOf, weightedSample, scopeItems, weakCount, chooseFamily, planSession, planPractice, selectFor, skillPlayable, skillsForAge } from "../public/js/child/practice-core.js";
+import { familyOf, weightOf, weightedSample, scopeItems, weakCount, chooseFamily, planSession, planPractice, selectFor, skillPlayable, skillsForAge, scopeStoryLessons, storySkillPlayable, planStoryPractice } from "../public/js/child/practice-core.js";
 import { spellingChoices } from "../public/js/viet.js";
 import { parseCsv, validateRows } from "../public/js/admin/csv.js";
 
@@ -14,15 +14,17 @@ const seeded = (seed) => () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let 
 // ---- Đăng ký kỹ năng ----
 const runnersSrc = readFileSync(new URL("../public/js/child/runners.js", import.meta.url), "utf8");
 const runnerKinds = [...runnersSrc.slice(runnersSrc.indexOf("export const RUNNERS")).matchAll(/^\s{2}(\w+): [\w.]+,$/gm)].map((m) => m[1]);
-ok(runnerKinds.length === 24, "runners.js: 24 loại trò", String(runnerKinds.length));
+ok(runnerKinds.length === 26, "runners.js: 26 loại trò", String(runnerKinds.length));
 const kindsInSkills = SKILLS.flatMap((s) => s.kinds);
 ok(new Set(kindsInSkills).size === kindsInSkills.length, "mỗi trò thuộc đúng 1 kỹ năng");
 ok(kindsInSkills.every((k) => runnerKinds.includes(k)), "mọi trò trong kỹ năng đều có runner", kindsInSkills.filter((k) => !runnerKinds.includes(k)).join());
-ok(runnerKinds.every((k) => skillOf(k)), "mọi runner đều có kỹ năng (kể cả xếp câu/đọc hiểu để thống kê)", runnerKinds.filter((k) => !skillOf(k)).join());
-ok(kindsInSkills.every((k) => POOLS[k]), "mọi trò của kỹ năng đều có vị từ lọc trong pools.js");
-eq(SKILLS.length, 12, "12 kỹ năng");
+ok(runnerKinds.every((k) => skillOf(k)), "mọi runner đều có kỹ năng (kể cả xếp câu để thống kê)", runnerKinds.filter((k) => !skillOf(k)).join());
+// Kỹ năng "story" (Đọc nhớ/Nghe nhớ) lấy mục NGUYÊN theo bài (planStoryPractice), không qua POOLS như các trò khác.
+const storyKindsInSkills = SKILLS.filter((s) => s.story).flatMap((s) => s.kinds);
+ok(kindsInSkills.filter((k) => !storyKindsInSkills.includes(k)).every((k) => POOLS[k]), "mọi trò thường (không phải story) đều có vị từ lọc trong pools.js");
+eq(SKILLS.length, 15, "15 kỹ năng (12 trò thường + 3 kỹ năng story: Đọc nhớ, Nghe nhớ, Giao tiếp)");
 ok(SKILLS.every((s) => GROUPS.some((g) => g.id === s.group)), "mỗi kỹ năng thuộc 1 nhóm màu");
-eq([skillOf("order_story"), skillOf("read_quiz"), skillOf("listen_pick"), skillOf("nope")], ["story", "quiz", "listen", null], "skillOf");
+eq([skillOf("order_story"), skillOf("read_quiz"), skillOf("listen_quiz"), skillOf("listen_pick"), skillOf("nope")], ["story", "readMemory", "listenMemory", "listen", null], "skillOf");
 ok(kindAllowed("trace", 4) === false && kindAllowed("trace", 6) && kindAllowed("memory_flip", 3) && kindAllowed("trace", null), "tuổi < 5 bỏ trò cần chữ; không rõ tuổi thì cho chơi");
 ok(skillsForAge(3).length < skillsForAge(6).length && skillsForAge(3).some((s) => s.id === "memory") && !skillsForAge(3).some((s) => s.id === "trace"), "bé 3 tuổi không thấy kỹ năng chỉ có trò cần chữ");
 
@@ -118,6 +120,7 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   const dir = new URL("../giao-trinh/csv/", import.meta.url);
   const catalog = [];
   const unitId = new Map();
+  const storyGroups = new Map(); // khoá `chủ đề|bài` -> {itemIds, questionIds, unitId, level} — mô phỏng api.loadStoryLessons() nhóm theo lesson_id
   let id = 1;
   for (const f of readdirSync(dir).filter((n) => n.endsWith(".csv"))) {
     const v = validateRows(parseCsv(readFileSync(new URL(f, dir), "utf8")), { langs: ["de", "en"] });
@@ -125,15 +128,31 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
     for (const r of v.items) {
       if (r.level) lvl.set(r.unit, r.level);
       if (!unitId.has(r.unit)) unitId.set(r.unit, unitId.size + 1);
-      if (r.type === "question") continue;
       const uid = unitId.get(r.unit);
-      catalog.push({ id: id++, text_vi: r.vi, say_vi: r.say, item_type: r.type, emoji: r.emoji, pic: r.pic === "decor" ? "decor" : null, unit_id: uid, level: lvl.get(r.unit) ?? 1,
+      const curId = id++;
+      const groupKey = `${r.unit}|${r.lesson}`;
+      if (!storyGroups.has(groupKey)) storyGroups.set(groupKey, { itemIds: [], questionIds: [], unitId: uid, level: lvl.get(r.unit) ?? 1 });
+      if (r.type === "question") {
+        storyGroups.get(groupKey).questionIds.push(curId);
+        continue;
+      }
+      catalog.push({ id: curId, text_vi: r.vi, say_vi: r.say, item_type: r.type, emoji: r.emoji, pic: r.pic === "decor" ? "decor" : null, unit_id: uid, level: lvl.get(r.unit) ?? 1,
         unit: { id: uid, title_vi: r.unit, emoji: r.unitEmoji }, translations: Object.entries(r.tr).map(([lang, meaning]) => ({ lang, meaning })) });
+      // Đoạn văn = MỌI mục còn lại của cùng bài (không riêng item_type 'story') — giống lesson.js/runQuiz thật.
+      storyGroups.get(groupKey).itemIds.push(curId);
     }
   }
+  const storyLessons = [...storyGroups.values()].filter((g) => g.itemIds.length >= 3 && g.questionIds.length >= 1);
   ok(catalog.length > 700, `catalog từ CSV: ${catalog.length} mục`);
-  for (const s of SKILLS) ok(skillPlayable(s, catalog, { age: 6, lang: "de" }), `giáo trình: kỹ năng ${s.name} chơi được (bé 6 tuổi, bản ngữ de)`);
-  const young = SKILLS.filter((s) => skillPlayable(s, catalog, { age: 4, lang: "de" })).map((s) => s.id);
+  ok(storyLessons.length > 0, `giáo trình: ${storyLessons.length} bài dùng được cho Đọc nhớ/Nghe nhớ`);
+  // "Giao tiếp" (converse) cần admin bật hoạt động 'dialogue' cho 1 bài (bảng activities) — giáo trình CSV hiện chưa có bài
+  // nào như vậy nên bỏ qua khỏi 2 kiểm tra dưới (đúng thực tế: thẻ tự mờ tới khi có bài); cơ chế riêng kiểm bằng dữ liệu giả cuối khối này.
+  const playableFor = (s, age) => {
+    if (s.id === "converse") return null;
+    return s.story ? storySkillPlayable(s, storyLessons, { age, lang: "de" }) : skillPlayable(s, catalog, { age, lang: "de" });
+  };
+  for (const s of SKILLS) { const p = playableFor(s, 6); if (p !== null) ok(p, `giáo trình: kỹ năng ${s.name} chơi được (bé 6 tuổi, bản ngữ de)`); }
+  const young = SKILLS.filter((s) => playableFor(s, 4)).map((s) => s.id);
   console.log("     (bé 4 tuổi chơi được:", young.join(", "), ")");
   ok(["listen", "speak", "memory", "sort"].every((k) => young.includes(k)), "giáo trình: bé 4 tuổi chơi được ít nhất nghe, nói, trí nhớ, phân loại", young.join());
   // Mọi phiên dựng ra phải hợp lệ: trò nào cũng đủ mục theo đúng vị từ lọc, và tập mục của từng trò cùng họ
@@ -155,6 +174,26 @@ const it = (id, text, extra = {}) => ({ id, text_vi: text, item_type: "word", em
   ok(new Set(sortSel.map((i) => i.unit_id)).size >= 2, "selectFor(sort_unit): có ≥ 2 chủ đề");
   const toneSel = selectFor("tone_pair", catalog.filter((i) => familyOf(i) === "letters"), { config: { rounds: 4 } }, new Map(), {}, seeded(2));
   ok(toneGroups(toneSel).size >= 1, "selectFor(tone_pair): có nhóm ≥ 3 thanh");
+
+  // planStoryPractice trên dữ liệu thật: lấy NGUYÊN 1 bài (không trộn mục của bài khác), items/questions khớp đúng 1 trong storyLessons.
+  const readSkill = skillById("readMemory");
+  const rp = planStoryPractice(readSkill, storyLessons, { type: "all" }, new Map(), { age: 6, rng: seeded(3) });
+  ok(rp.ok && rp.plan.length === 1, "planStoryPractice: dựng được 1 phiên Đọc nhớ từ giáo trình thật");
+  const chosen = storyLessons.find((g) => g.itemIds.length === rp.plan[0].items.length && g.questionIds.length === rp.plan[0].questions.length
+    && g.itemIds.every((id) => rp.plan[0].items.some((i) => i.id === id)));
+  ok(Boolean(chosen), "planStoryPractice: items/questions khớp NGUYÊN 1 bài trong storyLessons (không cắt/trộn)");
+  ok(planStoryPractice(readSkill, storyLessons, { type: "all" }, new Map(), { age: 4 }).ok === false, "planStoryPractice: bé 4 tuổi không chơi Đọc nhớ (cần nhận mặt chữ)");
+  const byLevel4 = scopeStoryLessons(storyLessons, { type: "level", level: 4 }, new Map());
+  ok(byLevel4.every((g) => g.level === 4) && byLevel4.length > 0, "scopeStoryLessons: lọc theo cấp");
+
+  // "Giao tiếp" (converse): giáo trình thật chưa có bài nào (admin tự soạn qua hoạt động 'dialogue') — kiểm cơ chế bằng 1 bài giả.
+  const converseSkill = skillById("converse");
+  const fakeDialogue = [{ lessonId: 1, unitId: 1, level: 2, itemIds: [901, 902, 903, 904, 905, 906], questionIds: [] }];
+  ok(storySkillPlayable(converseSkill, [], { age: 6 }) === false, "storySkillPlayable(converse): chưa có bài giao tiếp nào → chưa chơi được");
+  ok(storySkillPlayable(converseSkill, fakeDialogue, { age: 6 }), "storySkillPlayable(converse): có ≥ 1 bài giao tiếp → chơi được");
+  const cp = planStoryPractice(converseSkill, fakeDialogue, { type: "all" }, new Map(), { age: 6, rng: seeded(1) });
+  eq(cp.ok && cp.plan[0].kind, "dialogue", "planStoryPractice(converse): dựng được phiên, đúng trò 'dialogue'");
+  eq(cp.plan[0].items.map((i) => i.id), fakeDialogue[0].itemIds, "planStoryPractice(converse): lấy NGUYÊN thứ tự các dòng của bài (không xáo — vai trò suy theo vị trí)");
 }
 
 // ---- Huy hiệu + xu hướng + gợi ý (giai đoạn 2) ----
