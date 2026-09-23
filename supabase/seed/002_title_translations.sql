@@ -52,7 +52,7 @@ from (values
   ('Giờ giấc', '{"de": "Uhrzeit", "en": "Time of Day"}'::jsonb),
   ('Thứ trong tuần', '{"de": "Wochentage", "en": "Days of the Week"}'::jsonb),
   ('Vị trí', '{"de": "Position", "en": "Position"}'::jsonb),
-  ('Việc đã làm, đang làm, sẽ làm', '{"de": "Vergangenheit, Gegenwart, Zukunft", "en": "Past, Present, Future"}'::jsonb)
+  ('Sự việc theo thời gian', '{"de": "Vergangenheit, Gegenwart, Zukunft", "en": "Past, Present, Future"}'::jsonb)
 ) as v(title_vi, tr)
 where u.title_vi = v.title_vi and not u.hidden;
 
@@ -237,8 +237,9 @@ from (values
   ('Thứ trong tuần', 'Bảy ngày trong tuần', '{"de": "Die sieben Wochentage", "en": "The Seven Days of the Week"}'::jsonb),
   ('Thứ trong tuần', 'Hôm qua, hôm nay, ngày mai', '{"de": "Gestern, heute, morgen", "en": "Yesterday, Today, Tomorrow"}'::jsonb),
   ('Vị trí', 'Trên dưới trong ngoài', '{"de": "Oben, unten, drinnen, draußen", "en": "Above, Below, Inside, Outside"}'::jsonb),
-  ('Việc đã làm, đang làm, sẽ làm', 'Con đang làm gì', '{"de": "Was ich gerade mache", "en": "What I Am Doing"}'::jsonb),
-  ('Việc đã làm, đang làm, sẽ làm', 'Con đã làm, con sẽ làm', '{"de": "Was ich getan habe und tun werde", "en": "What I Have Done and Will Do"}'::jsonb)
+  ('Sự việc theo thời gian', 'Con đang làm gì', '{"de": "Was ich gerade mache", "en": "What I Am Doing"}'::jsonb),
+  ('Sự việc theo thời gian', 'Con đã làm', '{"de": "Was ich getan habe", "en": "What I Have Done"}'::jsonb),
+  ('Sự việc theo thời gian', 'Con sẽ làm', '{"de": "Was ich tun werde", "en": "What I Will Do"}'::jsonb)
 ) as v(unit_title, title_vi, tr)
 join public.units un on un.title_vi = v.unit_title
 where l.unit_id = un.id and l.title_vi = v.title_vi;

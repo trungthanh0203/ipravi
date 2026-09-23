@@ -54,8 +54,9 @@ from (values
   ('Tiếng kêu và thời tiết', 'Con vật kêu', 'Bé tập nói câu về tiếng kêu của các con vật quen thuộc và về thời tiết, như “Con mèo kêu meo meo.” và “Trời mưa rồi.”'),
   ('Tết và lễ hội', 'Ngày Tết', 'Bé tập nói những câu về ngày Tết, như “Chúc mừng năm mới!” và “Ông bà lì xì cho con.”'),
   ('Cảm xúc và lễ phép', 'Con cảm thấy', 'Bé tập nói câu diễn tả cảm xúc của mình và những câu lễ phép, như “Con vui quá!” và “Con xin phép ạ.”'),
-  ('Việc đã làm, đang làm, sẽ làm', 'Con đang làm gì', 'Bé tập nói câu với “đang” để kể việc mình hoặc người thân đang làm ngay lúc này, như “Con đang ăn cơm.”'),
-  ('Việc đã làm, đang làm, sẽ làm', 'Con đã làm, con sẽ làm', 'Bé tập nói câu với “đã” (việc đã xong) và “sẽ” (việc sắp làm), như “Con đã ăn cơm rồi.” và “Con sẽ đi ngủ.”'),
+  ('Sự việc theo thời gian', 'Con đang làm gì', 'Bé tập nói câu với “đang” để kể việc mình hoặc người thân đang làm ngay lúc này, như “Con đang ăn cơm.”'),
+  ('Sự việc theo thời gian', 'Con đã làm', 'Bé tập nói câu với “đã” để kể việc đã xong, như “Con đã ăn cơm rồi.”'),
+  ('Sự việc theo thời gian', 'Con sẽ làm', 'Bé tập nói câu với “sẽ” để kể việc sắp làm, như “Con sẽ đi ngủ.”'),
 
   -- ---- Cấp 1 · Học vần (cap3-ga-choai-hoc-van.csv) ----
   ('Sáu thanh điệu', 'Tên sáu thanh', 'Bé làm quen với tên gọi và dấu của 6 thanh điệu tiếng Việt: ngang, sắc, huyền, hỏi, ngã, nặng.'),

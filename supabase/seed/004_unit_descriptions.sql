@@ -37,7 +37,7 @@ from (values
   ('Tiếng kêu và thời tiết', 'Chủ đề dạy bé nói những câu ngắn về tiếng kêu con vật và thời tiết.'),
   ('Tết và lễ hội', 'Chủ đề dạy bé nói những câu ngắn về không khí ngày Tết và lễ hội.'),
   ('Cảm xúc và lễ phép', 'Chủ đề dạy bé nói những câu ngắn diễn tả cảm xúc và cư xử lễ phép.'),
-  ('Việc đã làm, đang làm, sẽ làm', 'Chủ đề dạy bé nói câu theo ba thì: việc đã làm, đang làm và sẽ làm.'),
+  ('Sự việc theo thời gian', 'Chủ đề dạy bé nói câu theo ba thì: việc đã làm, đang làm và sẽ làm.'),
 
   -- ---- Cấp 1 · Học vần (cap3-ga-choai-hoc-van.csv) ----
   ('Sáu thanh điệu', 'Chủ đề giúp bé nghe và nhận ra 6 thanh điệu của tiếng Việt: ngang, sắc, huyền, hỏi, ngã, nặng.'),
