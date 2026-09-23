@@ -602,5 +602,137 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.activities where lesson_id = $1", [l]))[0].n === 1, "019: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 24. "Tiếng Việt Bài Bản" — nền dữ liệu (migration 022) ----
+{
+  const P = await uid("p24@x.com"), P2 = await uid("p24b@x.com"), P3 = await uid("p24c@x.com");
+
+  // profile_type: mặc định 'child', chấp nhận 'learner', vẫn tính vào child_slots (trigger cũ không đổi, mỗi
+  // tài khoản mặc định chỉ 1 slot nên dùng 2 tài khoản riêng để thử "mặc định" và "learner dùng hết slot" độc lập).
+  await as(P, async () => {
+    const c1 = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé An','dog') returning profile_type", [P]))[0];
+    ok(c1.profile_type === "child", "022: profile_type mặc định 'child'");
+    const e = await fails("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'Cô Lan','cat','learner')", [P]);
+    ok(e && /Đã đủ số con/.test(e), "022: hồ sơ learner cũng tính vào child_slots (trigger cũ không đổi)", String(e));
+  });
+  await as(P3, async () => {
+    const learnerId = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'Cô Lan','cat','learner') returning id", [P3]))[0].id;
+    ok(!!learnerId, "022: tạo được hồ sơ 'learner'");
+  });
+  await as(P2, async () => {
+    const bad = await fails("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'X','owl','teacher')", [P2]);
+    ok(bad && /check/i.test(bad), "022: profile_type lạ bị chặn bởi CHECK", String(bad));
+  });
+
+  // Dựng cây nội dung: A1 (level) > 1 unit > 1 lesson > 2 chặng (1 duyệt, 1 nháp) + nội dung từng loại chặng.
+  let level, unit, lesson, stepApproved, stepDraft, passage;
+  await as(ADM, async () => {
+    level = (await q("insert into public.bb_levels (code, name_vi, status) values ('A1','Sơ cấp 1','approved') returning id"))[0].id;
+    unit = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'Giới thiệu bản thân','approved') returning id", [level]))[0].id;
+    lesson = (await q("insert into public.bb_lessons (unit_id, title_vi, status) values ($1,'Bài 1','approved') returning id", [unit]))[0].id;
+    stepApproved = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, sort_order, status) values ($1,'vocab',1,'approved') returning id", [lesson]))[0].id;
+    stepDraft = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, sort_order, status) values ($1,'grammar',2,'draft') returning id", [lesson]))[0].id;
+    await db.query("insert into public.bb_vocab (step_id, word_vi, meaning) values ($1,'chào','{\"de\":\"Hallo\"}')", [stepApproved]);
+    await db.query("insert into public.bb_vocab (step_id, word_vi) values ($1,'nháp-vocab')", [stepDraft]);
+    await db.query("insert into public.bb_dialogue_lines (step_id, speaker, line_vi) values ($1,'A','Chào bạn!')", [stepApproved]);
+    await db.query("insert into public.bb_grammar (step_id, formula) values ($1,'Chào + đại từ')", [stepApproved]);
+    await db.query("insert into public.bb_phonics_pairs (step_id, sound_a, sound_b) values ($1,'ch','tr')", [stepApproved]);
+    passage = (await q("insert into public.bb_reading_passages (step_id, passage_vi) values ($1,'Đoạn văn ngắn.') returning id", [stepApproved]))[0].id;
+    await db.query("insert into public.bb_reading_questions (passage_id, question_vi, choices, answer) values ($1,'Câu hỏi?','[\"A\",\"B\"]',1)", [passage]);
+    await db.query("insert into public.bb_writing_tasks (step_id, task_type, prompt_vi) values ($1,'fill','Điền từ')", [stepApproved]);
+  });
+
+  await as(P, async () => {
+    ok((await q("select id from public.bb_levels")).length === 1, "022: phụ huynh còn hạn thấy cấp độ đã duyệt");
+    ok((await q("select id from public.bb_units")).length === 1, "022: thấy chủ đề đã duyệt");
+    ok((await q("select id from public.bb_lessons")).length === 1, "022: thấy bài đã duyệt");
+    ok((await q("select id from public.bb_lesson_steps")).length === 1, "022: chỉ thấy chặng ĐÃ DUYỆT (không thấy chặng nháp)");
+    ok((await q("select id from public.bb_vocab")).length === 1, "022: chỉ thấy từ vựng của chặng đã duyệt (không thấy mục của chặng nháp)");
+    ok((await q("select id from public.bb_dialogue_lines")).length === 1, "022: đọc được hội thoại của chặng đã duyệt");
+    ok((await q("select id from public.bb_grammar")).length === 1, "022: đọc được ngữ pháp của chặng đã duyệt");
+    ok((await q("select id from public.bb_phonics_pairs")).length === 1, "022: đọc được ngữ âm của chặng đã duyệt");
+    ok((await q("select id from public.bb_reading_passages")).length === 1, "022: đọc được đoạn văn của chặng đã duyệt");
+    ok((await q("select id from public.bb_reading_questions")).length === 1, "022: đọc được câu hỏi (đi qua bảng đoạn văn tới chặng)");
+    ok((await q("select id from public.bb_writing_tasks")).length === 1, "022: đọc được bài luyện viết của chặng đã duyệt");
+    for (const [t, sql] of [
+      ["bb_levels", `insert into public.bb_levels (code, name_vi) values ('A2','lậu')`],
+      ["bb_units", `insert into public.bb_units (level_id, title_vi) values (${level},'lậu')`],
+      ["bb_vocab", `insert into public.bb_vocab (step_id, word_vi) values (${stepApproved},'lậu')`],
+    ]) {
+      const e = await fails(sql);
+      ok(e && /row-level security/.test(e), `022: phụ huynh không ghi được vào ${t}`, String(e));
+    }
+  });
+
+  // Hết hạn: không đọc được nội dung Bài Bản nữa (giống nội dung trẻ em).
+  await db.query("update public.accounts set access_until = now() - interval '1 day' where id=$1", [P]);
+  await as(P, async () => {
+    ok((await q("select id from public.bb_levels")).length === 0, "022: HẾT HẠN không đọc được cấp độ");
+    ok((await q("select id from public.bb_vocab")).length === 0, "022: HẾT HẠN không đọc được từ vựng");
+    ok((await q("select id from public.bb_reading_questions")).length === 0, "022: HẾT HẠN không đọc được câu hỏi đọc hiểu");
+  });
+
+  await as(P2, async () => ok((await q("select id from public.bb_levels")).length === 1, "022: phụ huynh khác (còn hạn) vẫn thấy nội dung đã duyệt — không phải riêng theo tài khoản"));
+
+  await as(ADM, async () => {
+    ok((await q("select id from public.bb_lesson_steps")).length === 2, "022: admin thấy cả chặng nháp");
+    ok((await q("select id from public.bb_vocab")).length === 2, "022: admin thấy cả mục nháp");
+  });
+
+  const m022 = readFileSync(new URL("../migrations/022_bai_ban.sql", import.meta.url), "utf8");
+  await db.exec(m022);
+  ok((await q("select count(*)::int as n from public.bb_vocab"))[0].n === 2, "022: chạy lại migration không mất dữ liệu");
+  await as(P2, async () => ok((await q("select id from public.bb_levels")).length === 1, "022: chạy lại migration không hỏng RLS (vẫn đọc được sau khi drop+create policy)"));
+}
+
+// ---- 25. "Tiếng Việt Bài Bản" — tiến độ + ôn tập kiểu Leitner (migration 023) ----
+{
+  const m023 = readFileSync(new URL("../migrations/023_bb_progress.sql", import.meta.url), "utf8");
+  await db.exec(m023);
+  const P = await uid("p25@x.com"), P2 = await uid("p25b@x.com");
+  const kid = (await as(P, () => q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'Học viên','owl','learner') returning id", [P])))[0].id;
+
+  let step;
+  await as(ADM, async () => {
+    const lv = (await q("insert into public.bb_levels (code, name_vi, status) values ('A2','Sơ cấp 2','approved') returning id"))[0].id;
+    const u = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'ĐL25','approved') returning id", [lv]))[0].id;
+    const l = (await q("insert into public.bb_lessons (unit_id, title_vi, status) values ($1,'BL25','approved') returning id", [u]))[0].id;
+    step = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status) values ($1,'vocab','approved') returning id", [l]))[0].id;
+  });
+
+  await as(P, async () => {
+    await db.query("insert into public.bb_progress (child_id, step_id) values ($1,$2)", [kid, step]);
+    ok((await q("select id from public.bb_progress where child_id=$1", [kid])).length === 1, "023: phụ huynh ghi được tiến độ chặng cho con mình");
+    const e = await fails("insert into public.bb_progress (child_id, step_id) values ($1,$2)", [kid, step]);
+    ok(e && /duplicate|unique/i.test(e), "023: mỗi chặng chỉ 1 dòng tiến độ / con (unique child_id,step_id)", String(e));
+
+    await db.query("insert into public.bb_srs_state (child_id, item_type, item_id, box, due_at) values ($1,'vocab',1,2, now()) on conflict (child_id,item_type,item_id) do update set box=excluded.box", [kid]);
+    const s = (await q("select box from public.bb_srs_state where child_id=$1", [kid]))[0];
+    ok(s.box === 2, "023: lưu được trạng thái ôn tập (box Leitner)");
+    const bad = await fails("insert into public.bb_srs_state (child_id, item_type, item_id) values ($1,'hack',1)", [kid]);
+    ok(bad && /check/i.test(bad), "023: item_type lạ bị chặn bởi CHECK", String(bad));
+  });
+
+  await as(P2, async () => {
+    const e = await fails("insert into public.bb_progress (child_id, step_id) values ($1,$2)", [kid, step]);
+    ok(e && /row-level security/i.test(e), "023: phụ huynh khác KHÔNG ghi được tiến độ cho con của người khác", String(e));
+    ok((await q("select id from public.bb_progress where child_id=$1", [kid])).length === 0, "023: phụ huynh khác không đọc được tiến độ của con người khác");
+  });
+
+  // Hết hạn: đọc vẫn được (xuất/xoá), ghi thì không.
+  await db.query("update public.accounts set access_until = now() - interval '1 day' where id=$1", [P]);
+  await as(P, async () => {
+    ok((await q("select id from public.bb_progress where child_id=$1", [kid])).length === 1, "023: HẾT HẠN vẫn đọc được tiến độ (xuất/xoá)");
+    const e = await fails("insert into public.bb_srs_state (child_id, item_type, item_id) values ($1,'grammar',2)", [kid]);
+    ok(e && /row-level security/i.test(e), "023: HẾT HẠN không ghi được trạng thái ôn tập mới", String(e));
+  });
+  await db.query("update public.accounts set access_until = now() + interval '30 days' where id=$1", [P]);
+
+  await as(ADM, async () => ok((await q("select id from public.bb_progress")).length >= 1, "023: admin xem được tiến độ mọi người học"));
+
+  const before = (await q("select count(*)::int as n from public.bb_srs_state"))[0].n;
+  await db.exec(m023);
+  ok((await q("select count(*)::int as n from public.bb_srs_state"))[0].n === before, "023: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

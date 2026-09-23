@@ -143,16 +143,31 @@ function progressCard() {
 
 // TODO: dashboard theo từng con (tiến độ, điểm phát âm), chế độ cùng học (từ Việt 🔊 + nghĩa 🔊),
 // cài đặt (giới hạn thời gian, bật/tắt chấm phát âm, đổi PIN), học phí + "Xin thêm tài khoản cho con".
+// "Tiếng Việt Bài Bản": hồ sơ profile_type='learner' vào từ ĐÂY (không phải màn hình avatar của bé) — đã chốt trong
+// kế hoạch, xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 0/4. Không có thì ẩn hẳn thẻ, không hiện trống.
+function learnerProfilesCard() {
+  const learners = state.children.filter((c) => c.profile_type === "learner");
+  if (learners.length === 0) return null;
+  return el("div", { class: "card" }, el("h2", null, T.bbLearnersTitle),
+    learners.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname, " ",
+      el("button", { class: "btn small", onclick: () => { state.activeChildId = c.id; state.parentOpen = false; render(); } }, T.bbEnterBtn))));
+}
+
 export function mount(root) {
   const a = state.account;
   const status = a.access_status === "trial" ? T.statusTrial : T.statusActive;
+  const canAddProfile = state.children.length < a.child_slots;
   paint(root, el("div", null,
     el("h1", null, T.parentTitle),
     el("div", { class: "card" },
       el("p", null, `${T.accessStatus}: `, el("span", { class: "pill good" }, status)),
       el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
-      state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname))),
+      state.children.filter((c) => c.profile_type !== "learner").map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname)),
+      canAddProfile ? el("button", {
+        class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
+      }, T.addProfileBtn) : null),
+    learnerProfilesCard(),
     progressCard(),
     voiceCard(),
     pronunciationToggle(),

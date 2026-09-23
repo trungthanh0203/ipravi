@@ -7,6 +7,8 @@ import { askPin } from "../pin.js";
 import { emojiNodes, mascotHero } from "../emoji.js";
 
 // Màn hình đầu tiên mỗi lần mở app. Hiện TẤT CẢ avatar; chỉ avatar đã gán cho hồ sơ con mới vào được.
+// Hồ sơ profile_type='learner' ("Tiếng Việt Bài Bản") KHÔNG vào được từ đây — vào từ khu phụ huynh (đã chốt trong
+// kế hoạch, xem KE_HOACH_TIENG_VIET_BAI_BAN.md), nên chỉ khớp avatar với hồ sơ con ở màn hình này.
 export function mount(root) {
   const feedback = el("div", { style: "text-align:center;min-height:52px" });
 
@@ -16,7 +18,7 @@ export function mount(root) {
       el("button", {
         class: "avatar-btn", "aria-label": a.id,
         onclick: () => {
-          const child = state.children.find((c) => c.avatar_id === a.id);
+          const child = state.children.find((c) => c.avatar_id === a.id && c.profile_type !== "learner");
           if (!child) return feedback.replaceChildren(msg("err", T.avatarWrong));
           state.activeChildId = child.id;
           render();

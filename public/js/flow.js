@@ -12,7 +12,12 @@ export function decideScreen() {
   if (!a.pin_hash) return "setup-pin";
   if (isExpired(a)) return "expired";
   if (state.children.length === 0) return "create-child";
-  if (state.activeChildId) return "child-home";
+  if (state.creatingProfile) return "create-child";
+  if (state.activeChildId) {
+    const active = state.children.find((c) => c.id === state.activeChildId);
+    // profile_type='learner' ("Tiếng Việt Bài Bản") vào giao diện khác hẳn khu học của bé (xem KE_HOACH_TIENG_VIET_BAI_BAN.md).
+    return active?.profile_type === "learner" ? "bai-ban-home" : "child-home";
+  }
   if (state.parentOpen) return "parent";
   return "avatars";
 }
@@ -24,6 +29,7 @@ export async function render() {
   const token = ++renderToken;
   const screen = decideScreen();
   document.body.classList.toggle("admin-wide", screen === "admin");
+  document.body.classList.toggle("bb-theme", screen === "bai-ban-home"); // "Tiếng Việt Bài Bản": theme riêng (xem app.css)
   if (screen === "loading") {
     mount(root, el("p", { class: "boot" }, T.loading));
     return;

@@ -52,7 +52,7 @@ vi/de/en); (3) `admin/dict.js` (từ điển gợi ý Thêm nhanh) không tự c
 thiết kế ("không tìm ra thì để trống, không bịa"). KHÔNG cần sửa code cho việc đổi/thêm ngôn ngữ — chỉ cần cấu hình
 `LANGUAGES` + soạn nội dung dịch.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `021_unit_description.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `023_bb_progress.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -172,11 +172,76 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 - **Khu admin tải lại không được làm nhảy trang:** mọi `mount(box)` của tab dùng `beginLoad(box)` (`admin/view.js`) — giữ nội dung + chiều cao cũ trong lúc tải, trả lại vị trí cuộn sau khi vẽ. Đừng `box.replaceChildren("Đang tải…")` khi vùng đã có nội dung.
 - **Âm thanh cho bé:** `audio.js` tải trước NGUYÊN file (blob, `prefetchItems` khi mở bài) rồi phát từ bộ nhớ; SW không cache phản hồi 206 và bỏ qua yêu cầu Range (iOS Safari). Danh sách chủ đề/bài nhớ 60 giây (`child/api.js`, `clearCache()` khi bé thoát).
 - Đừng để 1 hàm "tải dữ liệu" gánh việc ẩn (hiện khung UI...). Chỉ tải dữ liệu màn hình đang cần.
+- **"Tiếng Việt Bài Bản"** (giáo trình có cấu trúc cho người lớn/người nước ngoài; kế hoạch + quyết định:
+  `KE_HOACH_TIENG_VIET_BAI_BAN.md`; **GĐ 1 [nền dữ liệu] + GĐ 2 [luồng chọn hồ sơ] + GĐ 3 [giao diện học 7 chặng] +
+  GĐ 4 [Luyện tập/SRS] ĐÃ LÀM, GĐ 5–7 chưa làm**): **1 GIAO DIỆN HỌC KHÁC trong CÙNG 1 app**, cùng tài khoản phụ huynh/dự án Supabase —
+  KHÔNG phải app/mô hình thu phí riêng. Migration `022_bai_ban.sql` (đầu tiên sau `001_init.sql` tạo bảng mới — mọi
+  migration 002–021 trước đó chỉ ALTER): phân cấp `bb_levels` (mã CEFR A1/A2/B1…) → `bb_units` → `bb_lessons` (có
+  `lesson_type` core/review/reading/writing) → `bb_lesson_steps` (7 chặng tuần tự/bài: hội thoại · từ vựng · ngữ
+  pháp · ngữ âm · mini-game · đọc hiểu · luyện viết) → bảng nội dung riêng theo từng loại chặng
+  (`bb_dialogue_lines`, `bb_vocab`, `bb_grammar`, `bb_phonics_pairs`, `bb_reading_passages`+`bb_reading_questions`,
+  `bb_writing_tasks`); mini-game không có bảng riêng, chạy runtime từ `bb_vocab`/`bb_phonics_pairs` (còn là chỗ
+  đứng `bb/steps/minigame.js`, chưa nối vào Luyện tập — xem "GĐ 4" bên dưới).
+  RLS tái dùng nguyên `is_admin()`/`has_access()` — duyệt/nháp giống nội dung trẻ em, không thêm hàm phân quyền
+  mới. `child_profiles.profile_type` (`child`|`learner`, mặc định `child`) phân biệt hồ sơ con/hồ sơ người học —
+  **không đổi** trigger `child_profiles_limit`/`accounts_guard`/phí thêm con 20% (người học vẫn tính vào
+  `child_slots` như con bình thường). Test: `supabase/tests/rls.test.mjs` mục 24 (26 kiểm tra).
+  **GĐ 2 (luồng chọn hồ sơ):** hồ sơ `learner` KHÔNG vào được từ màn hình avatar-mật khẩu mặt trước (`avatars.js`
+  chỉ khớp avatar với `profile_type !== 'learner'`) — vào từ khu phụ huynh (thẻ "Hồ sơ học bài bản" trong
+  `parent.js`, nút "Vào học"). `decideScreen()` (`flow.js`) rẽ nhánh theo `profile_type` của hồ sơ đang chọn:
+  `learner` → màn `bai-ban-home`, `child` → `child-home` như cũ. `create-child.js` có bước chọn **Loại hồ sơ**; tạo
+  `learner` thì vào thẳng Bài Bản, tạo `child` thì không tự vào (bé vẫn phải tự bấm avatar). Tiện thể thêm nút
+  "+ Thêm hồ sơ mới" trong khu phụ huynh (`state.creatingProfile`) — trước GĐ 2 app KHÔNG có cách tạo hồ sơ thứ 2
+  trở đi dù đã được cấp thêm slot (màn `create-child` chỉ tự mở khi `children.length === 0`), lỗ hổng cũ không
+  liên quan Bài Bản nhưng phải vá để tính năng này dùng được.
+  **GĐ 3 (giao diện học 7 chặng):** thư mục mới `public/js/bb/` (mirroring `child/`) — `bb/api.js` (tải
+  Level/Unit/Lesson/nội dung chặng, chỉ mục `approved`), `bb/media.js` (dùng lại nguyên `speakFallback`/`nativeLang`
+  từ `child/media.js` + `playPath()` phát file bucket `content`/rơi về giọng trình duyệt), `bb/pron.js`
+  (`micButton()` dùng lại hàm chấm phát âm thuần của `pronunciation.js` nhưng KHÔNG lưu kết quả — chưa có bảng
+  tiến độ cho Bài Bản, và `pronunciation_attempts` khoá cứng FK vào `content_items` nên không dùng lại được),
+  `bb/runner.js` (`runLesson()`, cùng khung với `child/lesson.js` `playLesson()` nhưng không ghi log/tính sao),
+  `bb/steps/{dialogue,vocab,grammar,phonics,minigame,reading,writing}.js` (mỗi file 1 renderer `run(box, step)`;
+  `minigame.js` là chỗ đứng — engine thật (5 kiểu) chưa làm, không gắn cứng vào 1 giai đoạn cụ thể (xem GĐ 4 bên
+  dưới); `reading`/`writing` chấm ngay tại chỗ ở trình duyệt, KHÔNG
+  lưu; `writing` dạng `write` KHÔNG tự chấm văn tự do, chỉ cho xem câu mẫu). `pages/bai-ban-home.js` viết lại hoàn
+  toàn: điều hướng trong-trang Level→Unit→Lesson (giống `pages/child-home.js`) rồi gọi `runLesson()`. **Theme riêng**
+  `body.bb-theme` (bật ở `flow.js` `render()`) chỉ đổi biến `--brand`/`--bg`… sang tông xanh dương — mọi
+  `.card`/`.btn`/`.pill`… tự đổi theo vì đã dùng `var(--brand)`, không viết CSS riêng cho từng thành phần; CHỦ Ý tái
+  dùng tối đa lớp CSS có sẵn của khu trẻ em (`.unit-grid`, `.lesson-list`, `.opt-grid`, `.mic`…), chỉ thêm vài lớp
+  `.bb-*` mới cho hình dạng riêng. `tests/browser/mock-sb.js` thêm 11 bảng `bb_*` + nhúng `bb_levels` để thử được
+  bằng dữ liệu giả. Đã thử: chạy đủ 7 chặng liên tiếp + chấm điểm client-side (đọc hiểu, điền từ, xếp câu) + thoát
+  giữa chừng + màn rỗng, CHƯA thử Supabase thật.
+  **GĐ 4 (Luyện tập/SRS):** migration `023_bb_progress.sql` (sau `022`) — `bb_progress(child_id, step_id,
+  completed_at)` (chặng nào đã đi qua; `bb/runner.js` gọi `api.saveStepProgress()` sau mỗi chặng, KHÔNG `await`;
+  dùng để đánh dấu ✓ ở danh sách bài + chặn diện ôn tập chỉ còn mục đã gặp qua) và `bb_srs_state(child_id,
+  item_type, item_id, box, due_at, reviewed_count, correct_count)` (`item_type` ∈ vocab/grammar/phonics/dialogue,
+  KHÔNG có FK vì Postgres không có "FK tuỳ loại" — toàn vẹn do code kiểm; `box` Leitner 1–5 CHỈ có ý nghĩa thật với
+  `vocab`, 3 loại còn lại không chấm, chỉ `due_at` dùng sắp "lâu chưa ôn"). RLS CÙNG luật với
+  `child_progress`/`activity_log` (đọc luôn được để xuất/xoá; ghi chỉ khi còn hạn + đúng con/học viên của mình).
+  Test: `rls.test.mjs` mục 25 (10 kiểm tra). `bb/srs.js` (toán Leitner thuần: `nextBox`, `dueAfter`,
+  `INTERVAL_DAYS=[0,1,2,4,8,16]`) + `bb/practice-core.js` (`pickSession()` — ưu tiên mục đến hạn, hàm thuần không
+  gọi mạng, giống tinh thần `child/practice-core.js`) — test `tests/bb.test.mjs` (23 kiểm tra). `bb/skills.js` —
+  CHỈ 4 kỹ năng (không phải 12 như khu trẻ em): 🔤 Từ vựng (`graded:true`, có box Leitner thật) · 💬 Hội thoại ·
+  📐 Ngữ pháp · 🎧 Ngữ âm (3 mục sau chỉ "xem lại", không chấm). `bb/practice.js` — màn Luyện tập: từ vựng dùng
+  `runVocabReview()` riêng (từng thẻ, ẩn nghĩa → tự đánh giá Nhớ/Quên); 3 loại còn lại **TÁI DÙNG NGUYÊN** renderer
+  của chặng bài học (`bb/steps/dialogue|grammar|phonics.js`, gọi thẳng `run(box, {content: session})` với mục từ
+  nhiều bài) rồi đánh dấu "đã ôn lại" bằng `api.saveReviewBatch()` (đẩy hạn +3 ngày, không chấm). `runLesson()`
+  nhận thêm `childId`. `pages/bai-ban-home.js` thêm màn Home (2 thẻ 📖 Học / 🎯 Luyện tập, tái dùng NGUYÊN
+  `.home-cards`/`.home-card.learn`/`.home-card.practice` của khu trẻ em) thay vì vào thẳng `showLevels()`.
+  **Cố tình CHƯA làm** (đã quyết định, không phải thiếu sót): bảng ghi lượt đọc thử phát âm riêng cho Bài Bản
+  (`bb/pron.js` `micButton()` vẫn không lưu kết quả ở bất kỳ đâu, kể cả trong Luyện tập); mini-game thật
+  (`bb/steps/minigame.js` vẫn là chỗ đứng, chưa nối vào Luyện tập — có thể làm trước GĐ 5, không phụ thuộc khu
+  admin, xem ghi chú cuối kế hoạch). `tests/browser/mock-sb.js` thêm `bb_progress`/`bb_srs_state`. Đã thử: học
+  xong 1 bài → 7 dòng `bb_progress` → danh sách bài hiện ✓ → Luyện tập hiện đúng số mục cần ôn từng loại → ôn Từ
+  vựng (Nhớ → box 2, due +2 ngày; Quên → box 1, due +1 ngày, khớp `INTERVAL_DAYS`) → ôn 3 loại còn lại bằng đúng
+  giao diện chặng bài học → mọi kỹ năng về "Chưa có gì để ôn"; Luyện tập lúc chưa học gì hiện đúng thông báo, không
+  lỗi. Chưa thử Supabase thật. Chưa làm: tab admin nhập nội dung (GĐ 5), nội dung thật (GĐ 7) — chi tiết + ghi chú
+  kỹ thuật ở `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8–13.
 
 ## Kiểm thử
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra) và `node tests/curriculum.test.mjs` (CSV giáo trình) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (183 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập "Tiếng Việt Bài Bản", 23 kiểm tra) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (219 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.

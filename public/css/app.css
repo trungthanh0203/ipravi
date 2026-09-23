@@ -9,6 +9,15 @@
   --err: #c92a2a;
   --radius: 16px;
 }
+/* "Tiếng Việt Bài Bản" — theme riêng để phân biệt trực quan với giao diện gà trống (đã chốt trong kế hoạch, xem
+   KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 3). Chỉ đổi biến màu — mọi .card/.btn/.tabs/.pill… tự đổi theo vì đã dùng
+   var(--brand) sẵn, không cần viết lại CSS riêng cho từng thành phần. body.bb-theme bật/tắt ở flow.js render(). */
+body.bb-theme {
+  --brand: #2b5fa8;
+  --brand-dark: #1e4272;
+  --brand-light: #e8f0fb;
+  --bg: #f5f8fc;
+}
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
 body {
@@ -142,7 +151,7 @@ img.visual.big { max-height: 200px; }
 .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
 .match-col { display: flex; flex-direction: column; gap: 12px; }
 .match-word { font-size: 24px; font-weight: 800; }
-.mic { width: 96px; height: 96px; border-radius: 50%; border: 0; background: var(--brand); color: #fff; font-size: 44px; margin: 12px auto; display: block; box-shadow: 0 4px 14px rgba(232, 89, 12, .4); }
+.mic { width: 96px; height: 96px; border-radius: 50%; border: 0; background: var(--brand); color: #fff; font-size: 44px; margin: 12px auto; display: block; box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
 .mic.listening { animation: pulse 1s infinite; background: var(--err); }
 .pron-feedback { min-height: 70px; font-size: 20px; font-weight: 700; margin-top: 6px; }
 @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
@@ -478,4 +487,26 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .install-card h3 { font-size: 16px; margin: 0 0 8px; }
 .install-card ol { margin: 0; padding-left: 20px; font-size: 15px; }
 .install-card li { margin-bottom: 6px; }
+
+/* "Tiếng Việt Bài Bản" — Giai đoạn 3 (giao diện học 7 chặng). Tái dùng .card/.btn/.unit-grid/.unit-card/.lesson-list/
+   .lesson-btn/.opt-grid/.opt/.mic/.pron-feedback/.row-btns/.pill của khu trẻ em (đổi màu qua body.bb-theme ở trên);
+   chỉ thêm các lớp mới cho hình dạng riêng của từng chặng. */
+.bb-step-dots { text-align: center; color: var(--text-2); font-size: 14px; font-weight: 700; margin: 0 0 4px; }
+.bb-step-body { margin-top: 8px; }
+.bb-line { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
+.bb-line-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.bb-line-vi { font-size: 20px; font-weight: 700; margin: 4px 0; }
+.bb-vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 10px; }
+.bb-vocab-card { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); text-align: center; }
+.bb-vocab-word { font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.bb-grammar-card .bb-formula { font-size: 20px; font-weight: 800; }
+.bb-examples { padding-left: 20px; margin: 8px 0 0; }
+.bb-examples li { margin-bottom: 6px; }
+.bb-phonics-pair { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bb-passage { font-size: 19px; line-height: 1.6; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
+.bb-question { font-size: 20px; font-weight: 700; margin: 10px 0; }
+.bb-task { text-align: left; }
+.bb-fill-sentence { font-size: 18px; font-style: italic; color: var(--text-2); }
+.bb-write-area { width: 100%; font: inherit; font-size: 17px; padding: 12px 14px; border: 2px solid #d7e3f4; border-radius: 12px; background: #fff; color: var(--text); resize: vertical; }
+.bb-write-area:focus { outline: none; border-color: var(--brand); }
 .install-note { margin: 8px 0 0; font-size: 14px; }

@@ -7,6 +7,7 @@ export const state = {
   children: [], // hồ sơ con của phụ huynh này
   // activeChildId: trẻ đang học (chọn ở màn hình avatar) — định nghĩa bên dưới (nhớ trong sessionStorage của tab)
   parentOpen: false, // đang ở khu phụ huynh (đã qua PIN)
+  creatingProfile: false, // phụ huynh bấm "+ Thêm hồ sơ mới" trong khu phụ huynh (khác lần tạo hồ sơ đầu tiên)
 };
 
 // Nhớ bé đang học trong PHIÊN của tab (sessionStorage: mất khi đóng tab/app) để khi hệ điều hành thu hồi trang nền rồi nạp lại,
@@ -29,6 +30,7 @@ export function resetState() {
   state.children = [];
   state.activeChildId = null;
   state.parentOpen = false;
+  state.creatingProfile = false;
 }
 
 export async function loadAccountAndChildren() {

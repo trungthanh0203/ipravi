@@ -4,7 +4,11 @@
 // (xoá dây chuyền), rpc, storage. Trigger của CSDL thật KHÔNG được mô phỏng (đã có bài test PGlite riêng cho SQL).
 
 const TABLES = ["units", "lessons", "content_items", "translations", "content_audio", "activities", "tuition_plans",
-  "payments", "accounts", "settings", "child_profiles", "child_progress", "activity_log", "pronunciation_attempts"];
+  "payments", "accounts", "settings", "child_profiles", "child_progress", "activity_log", "pronunciation_attempts",
+  // "Tiếng Việt Bài Bản" (migration 022) — xem KE_HOACH_TIENG_VIET_BAI_BAN.md
+  "bb_levels", "bb_units", "bb_lessons", "bb_lesson_steps", "bb_dialogue_lines", "bb_vocab", "bb_grammar",
+  "bb_phonics_pairs", "bb_reading_passages", "bb_reading_questions", "bb_writing_tasks",
+  "bb_progress", "bb_srs_state"];
 const DEFAULT_STATUS = { units: "draft", lessons: "draft", content_items: "draft", activities: "draft", payments: "pending" };
 
 export function installMock(sb, seed = {}) {
@@ -37,6 +41,7 @@ export function installMock(sb, seed = {}) {
       else if (name === "translations" || name === "content_audio") out[name] = db[name].filter((x) => x.item_id === row.id);
       else if (name === "accounts") out.accounts = db.accounts.find((a) => a.id === row.account_id) ?? null;
       else if (name === "tuition_plans") out.tuition_plans = db.tuition_plans.find((p) => p.id === row.plan_id) ?? null;
+      else if (name === "bb_levels") out.bb_levels = db.bb_levels.find((l) => l.id === row.level_id) ?? null;
     }
     return out;
   }
