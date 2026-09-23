@@ -106,7 +106,7 @@ async function showLessons(root, unit) {
       el("button", { class: "btn ghost small", onclick: () => showUnits(root, levelOf(unit)) }, "◀ " + T.back),
       el("h1", null, visual(unit), " ", unitNo ? `${unitNo}. ` : "", unit.title_vi),
       el("div", { class: "title-line" }, titleSpeakers(unit), titleIn(unit, nativeLang()) ? el("span", { class: "title-native" }, titleIn(unit, nativeLang())) : null),
-      unit.description ? el("p", { class: "muted unit-desc", style: "text-align:center" }, unit.description) : null,
+      unit.description ? el("p", { class: "muted unit-desc" }, unit.description) : null,
       el("div", { class: "lesson-list" }, lessons.map((l, i) => {
         // Không khoá bài: trẻ đã biết trước có thể vào thẳng bài khó. Chỉ GỢI Ý bài nên học tiếp (bài đầu tiên chưa làm).
         const n = starsFor(scores.get(l.id));
