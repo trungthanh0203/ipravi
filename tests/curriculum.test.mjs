@@ -4,9 +4,13 @@ const R = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 // đủ nghĩa de/en, khớp dữ liệu mẫu đã chạy trên Supabase). Chạy: node tests/curriculum.test.mjs
 import { parseCsv, validateRows, keyOf } from "../public/js/admin/csv.js";
 import { splitSyllable, words, toneOf, TONES, spellParts, caseParts, hasProperName, traceTexts } from "../public/js/viet.js";
+// Bộ CSV giáo trình giữ CHUNG nhiều ngôn ngữ (mỗi bản triển khai vùng chỉ dùng con của bộ này qua biến LANGUAGES của
+// Worker — xem CLAUDE.md mục "Mô hình triển khai") — kiểm đủ nghĩa cho CẢ 5 ngôn ngữ đã có cột trong CSV.
+const LANGS = ["de", "en", "fr", "ko", "ja"];
+const missingTr = (i) => LANGS.filter((l) => !i.tr[l]);
 let bad = 0;
 for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.csv", 3]]) {
-  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: LANGS });
   console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
   for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
@@ -24,8 +28,8 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
     const flag = (items.length < 5 || items.length > 10) ? " ⚠ số mục ngoài 5–10" : "";
     if (dupE.length) { console.log(`  TRÙNG EMOJI trong bài ${k}:`, dupE.join(" ")); bad = 1; }
     if (flag) { console.log(`  ${k}: ${items.length}${flag}`); bad = 1; }
-    const noTr = items.filter((i) => !i.tr.de || !i.tr.en);
-    if (noTr.length) { console.log("  thiếu nghĩa:", noTr.map((i) => i.vi).join(", ")); bad = 1; }
+    const noTr = items.filter((i) => missingTr(i).length);
+    if (noTr.length) { console.log("  thiếu nghĩa:", noTr.map((i) => `${i.vi} (${missingTr(i).join(",")})`).join(", ")); bad = 1; }
   }
   console.log(`  ${units.size} chủ đề, ${lessons.size} bài; bài nhỏ nhất ${Math.min(...[...lessons.values()].map((a) => a.length))}, lớn nhất ${Math.max(...[...lessons.values()].map((a) => a.length))} mục`);
   console.log("  chủ đề:", [...units].map(([u, n]) => `${u}(${n})`).join(" · "));
@@ -33,7 +37,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
 // ---- Cấp 3 (học vần): luật riêng ----
 {
   const f = "cap3-ga-choai-hoc-van.csv";
-  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: LANGS });
   console.log(`
 == ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
@@ -69,8 +73,8 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
       read_pick: items.filter((i) => i.emoji && i.pic !== "decor").length, order_words: items.filter((i) => words(i.vi).length >= 3).length };
     for (const a of items[0].kinds) if (a in need && need[a] < 3) fail(`${k}: hoạt động ${a} cần ≥3 mục phù hợp, bài chỉ có ${need[a]}`);
     if (items[0].kinds.length < 2) fail(`${k}: chỉ ${items[0].kinds.length} hoạt động`);
-    const noTr = items.filter((i) => !i.tr.de || !i.tr.en);
-    if (noTr.length) fail(`${k}: thiếu nghĩa: ${noTr.map((i) => i.vi).join(", ")}`);
+    const noTr = items.filter((i) => missingTr(i).length);
+    if (noTr.length) fail(`${k}: thiếu nghĩa: ${noTr.map((i) => `${i.vi} (${missingTr(i).join(",")})`).join(", ")}`);
   }
   // thanh điệu: ký hiệu emoji của từng mục phải đúng thanh của chữ
   for (const i of v.items.filter((x) => x.unit === "Sáu thanh điệu")) {
@@ -94,7 +98,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
 // ---- Cấp 4 (đọc hiểu, chính tả, viết): luật riêng ----
 {
   const f = "cap4-ga-trong-doc-hieu.csv";
-  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: LANGS });
   console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
   for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
@@ -114,7 +118,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
     if (dup.length) fail(`${k}: trùng emoji ${dup.join(" ")}`);
     if (!all[0].kinds.length) fail(`${k}: dòng đầu chưa ghi activities`);
     if (all.slice(1).some((i) => i.kinds.length)) fail(`${k}: activities chỉ ghi ở dòng đầu của bài`);
-    if (all.some((i) => !i.tr.de || !i.tr.en)) fail(`${k}: thiếu nghĩa de/en`);
+    if (all.some((i) => missingTr(i).length)) fail(`${k}: thiếu nghĩa: ${all.filter((i) => missingTr(i).length).map((i) => `${i.vi} (${missingTr(i).join(",")})`).join(", ")}`);
     if (items.some((i) => !i.emoji)) fail(`${k}: có mục chưa có hình (emoji)`);
     if (qs.some((i) => i.emoji)) fail(`${k}: câu hỏi không hiển thị hình — bỏ emoji ở dòng câu hỏi`);
     // hình gồm tối đa 3 emoji (cảnh ghép) để vừa khung
@@ -145,7 +149,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
 // ---- Bài giao tiếp mẫu (kỹ năng Giao tiếp / Luyện tập, migration 019): luật riêng ----
 {
   const f = "hoi-thoai-giao-tiep.csv";
-  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: ["de", "en"] });
+  const v = validateRows(parseCsv(R("giao-trinh/csv/" + f)), { langs: LANGS });
   console.log(`\n== ${f}: ${v.items.length} mục, ${v.errors.length} lỗi, ${v.warnings.length} cảnh báo`);
   for (const e of v.errors) { console.log("  LỖI dòng", e.row, e.msg); bad = 1; }
   for (const w of v.warnings) console.log("  cảnh báo dòng", w.row, w.msg);
@@ -167,7 +171,7 @@ for (const [f, level] of [["cap1-trung-tu-vung.csv", 2], ["cap2-ga-con-cau-ngan.
     if (items.length % 2 !== 0) fail(`${k}: ${items.length} dòng (lẻ) — hệ thống hỏi/bé đáp phải xen kẽ đúng cặp`);
     if (items.length < 4) fail(`${k}: chỉ ${items.length} dòng (cần ≥4, tức ≥2 lượt hỏi-đáp)`);
     if (!items[0].kinds.includes("dialogue")) fail(`${k}: chưa ghi activities=dialogue`);
-    if (items.some((i) => !i.tr.de || !i.tr.en)) fail(`${k}: thiếu nghĩa de/en`);
+    if (items.some((i) => missingTr(i).length)) fail(`${k}: thiếu nghĩa: ${items.filter((i) => missingTr(i).length).map((i) => `${i.vi} (${missingTr(i).join(",")})`).join(", ")}`);
   }
   console.log(`  ${new Set([...lessons.keys()].map((k) => k.split(" › ")[0])).size} chủ đề, ${lessons.size} bài giao tiếp`);
 }

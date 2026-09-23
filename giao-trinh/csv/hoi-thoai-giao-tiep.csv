@@ -1,295 +1,295 @@
-unit,unit_emoji,level,lesson,vi,say,activities,emoji,type,min_age,max_age,de,en,pic
-Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Đây là con gì?,,dialogue,🐶,sentence,5,8,Was ist das?,What is this?,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Đây là con chó.,,dialogue,🐶,sentence,5,8,Das ist ein Hund.,This is a dog.,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Con mèo kêu thế nào?,,dialogue,🐱,sentence,5,8,Wie macht die Katze?,How does the cat sound?,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Con mèo kêu meo meo.,,dialogue,🐱,sentence,5,8,Die Katze macht miau miau.,The cat says meow meow.,decor
-Chủ đề hội thoại cấp 1,💬,1,Người thân,Đây là ai?,,dialogue,👵,sentence,5,8,Wer ist das?,Who is this?,decor
-Chủ đề hội thoại cấp 1,💬,1,Người thân,Đây là bà của con.,,dialogue,👵,sentence,5,8,Das ist meine Oma.,This is my grandma.,decor
-Chủ đề hội thoại cấp 1,💬,1,Người thân,Con yêu ai nhất?,,dialogue,❤️,sentence,5,8,Wen liebst du am meisten?,Who do you love the most?,decor
-Chủ đề hội thoại cấp 1,💬,1,Người thân,Con yêu bố mẹ nhất.,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Ich liebe meine Eltern am meisten.,I love my parents the most.,decor
-Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con ăn cơm chưa?,,dialogue,🍚,sentence,5,8,Hast du schon gegessen?,Have you eaten rice yet?,decor
-Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,"Dạ, con ăn cơm rồi ạ.",,dialogue,😊,sentence,5,8,"Ja, ich habe schon gegessen.","Yes, I've already eaten.",decor
-Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con thích ăn gì?,,dialogue,🍲,sentence,5,8,Was isst du gerne?,What do you like to eat?,decor
-Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con thích ăn canh rau.,,dialogue,🥬,sentence,5,8,Ich esse gerne Gemüsesuppe.,I like eating vegetable soup.,decor
-Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Con đang ở đâu?,,dialogue,🏠,sentence,5,8,Wo bist du gerade?,Where are you right now?,decor
-Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Con đang ở trong phòng.,,dialogue,🛏️,sentence,5,8,Ich bin gerade im Zimmer.,I'm in the room right now.,decor
-Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Cái bàn ở đâu?,,dialogue,🪑,sentence,5,8,Wo ist der Tisch?,Where is the table?,decor
-Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Cái bàn ở trong bếp.,,dialogue,🍽️,sentence,5,8,Der Tisch ist in der Küche.,The table is in the kitchen.,decor
-Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con chào ai đây?,,dialogue,🙋,sentence,5,8,Wen begrüßt du?,Who are you greeting?,decor
-Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con chào cô ạ.,,dialogue,🙏,phrase,5,8,Ich grüße die Lehrerin.,I'm greeting the teacher.,decor
-Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Ai cho con quà vậy?,,dialogue,🎁,sentence,5,8,Wer hat dir das Geschenk gegeben?,Who gave you the gift?,decor
-Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con cảm ơn bà ạ.,,dialogue,🙏,phrase,5,8,Ich danke meiner Oma.,I thank my grandma.,decor
-Chủ đề hội thoại cấp 1,💬,1,Gia đình,Nhà con có mấy người?,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Wie viele Personen sind in deiner Familie?,How many people are in your family?,decor
-Chủ đề hội thoại cấp 1,💬,1,Gia đình,Nhà con có bốn người.,,dialogue,4️⃣,sentence,5,8,Meine Familie hat vier Personen.,My family has four people.,decor
-Chủ đề hội thoại cấp 1,💬,1,Gia đình,Ai nấu cơm trong nhà?,,dialogue,🍳,sentence,5,8,Wer kocht zu Hause?,Who cooks at home?,decor
-Chủ đề hội thoại cấp 1,💬,1,Gia đình,Mẹ nấu cơm trong nhà.,,dialogue,👩,sentence,5,8,Mama kocht zu Hause.,Mom cooks at home.,decor
-Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con uống gì đây?,,dialogue,🥛,sentence,5,8,Was trinkst du da?,What are you drinking?,decor
-Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con uống sữa ạ.,,dialogue,🥛,phrase,5,8,Ich trinke Milch.,I'm drinking milk.,decor
-Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con có đói không?,,dialogue,🍽️,sentence,5,8,Hast du Hunger?,Are you hungry?,decor
-Chủ đề hội thoại cấp 1,💬,1,Ăn uống,"Dạ, con đói rồi ạ.",,dialogue,😋,phrase,5,8,"Ja, ich habe Hunger.","Yes, I'm hungry.",decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con gà kêu thế nào?,,dialogue,🐓,sentence,5,8,Wie macht das Huhn?,How does the chicken sound?,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con gà kêu ò ó o.,,dialogue,🐓,sentence,5,8,Das Huhn macht kikeriki.,The chicken says cock-a-doodle-doo.,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con chó kêu thế nào?,,dialogue,🐶,sentence,5,8,Wie macht der Hund?,How does the dog sound?,decor
-Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con chó kêu gâu gâu.,,dialogue,🐶,sentence,5,8,Der Hund macht wuff wuff.,The dog says woof woof.,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Buổi sáng con chào ai đầu tiên?,,dialogue,🌅,sentence,4,8,Wen grüßt du morgens zuerst?,Who do you greet first in the morning?,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con chào ông bà ạ.,,dialogue,👴,sentence,4,8,Ich grüße Opa und Oma.,I greet grandpa and grandma.,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Gặp cô giáo con nói gì?,,dialogue,👩‍🏫,sentence,4,8,Was sagst du zur Lehrerin?,What do you say to the teacher?,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con chào cô ạ.,,dialogue,🙋,phrase,4,8,Ich grüße die Lehrerin.,I greet the teacher.,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Trước khi ăn cơm con nói gì?,,dialogue,🍚,sentence,4,8,Was sagst du vor dem Essen?,What do you say before eating?,decor
-Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con mời cả nhà ăn cơm ạ.,,dialogue,🙏,sentence,4,8,Ich lade die Familie zum Essen ein.,I invite the family to eat.,decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,Nhà con có những ai?,,dialogue,👨‍👩‍👧‍👦,sentence,4,8,Wer ist in deiner Familie?,Who is in your family?,decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,"Nhà con có bố, mẹ và em.",,dialogue,👨‍👩‍👧,sentence,4,8,"In meiner Familie sind Papa, Mama und mein Geschwister.","My family has dad, mom and my sibling.",decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con là con thứ mấy?,,dialogue,🔢,sentence,4,8,Das wievielte Kind bist du?,Which child are you?,decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con là con cả.,,dialogue,🧒,phrase,4,8,Ich bin das älteste Kind.,I'm the oldest child.,decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con thích chơi với ai nhất?,,dialogue,🎈,sentence,4,8,Mit wem spielst du am liebsten?,Who do you like playing with most?,decor
-Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con thích chơi với em.,,dialogue,👧,sentence,4,8,Ich spiele am liebsten mit meinem Geschwister.,I like playing with my sibling the most.,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để nhìn?,,dialogue,👁️,sentence,4,8,Womit siehst du?,What do you use to see?,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng mắt để nhìn.,,dialogue,👁️,sentence,4,8,Ich sehe mit den Augen.,I use my eyes to see.,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để nghe?,,dialogue,👂,sentence,4,8,Womit hörst du?,What do you use to hear?,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng tai để nghe.,,dialogue,👂,sentence,4,8,Ich höre mit den Ohren.,I use my ears to hear.,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để đi?,,dialogue,🦶,sentence,4,8,Womit gehst du?,What do you use to walk?,decor
-Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng chân để đi.,,dialogue,🦶,sentence,4,8,Ich gehe mit den Füßen.,I use my feet to walk.,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con thích con vật nào nhất?,,dialogue,🐾,sentence,4,8,Welches Tier magst du am meisten?,Which animal do you like most?,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con thích con chó nhất.,,dialogue,🐶,sentence,4,8,Ich mag Hunde am meisten.,I like dogs the most.,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con mèo kêu thế nào?,,dialogue,🐱,sentence,4,8,Wie macht die Katze?,How does the cat sound?,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con mèo kêu meo meo.,,dialogue,🐱,sentence,4,8,Die Katze macht miau miau.,The cat says meow meow.,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con vật nào biết bay?,,dialogue,🐦,sentence,4,8,Welches Tier kann fliegen?,Which animal can fly?,decor
-Chủ đề hội thoại cấp 2,💬,2,Con vật,Con chim biết bay.,,dialogue,🐦,sentence,4,8,Der Vogel kann fliegen.,The bird can fly.,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Bầu trời màu gì?,,dialogue,☁️,sentence,4,8,Welche Farbe hat der Himmel?,What color is the sky?,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Bầu trời màu xanh.,,dialogue,🔵,sentence,4,8,Der Himmel ist blau.,The sky is blue.,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Con thích màu gì nhất?,,dialogue,🎨,sentence,4,8,Welche Farbe magst du am meisten?,What color do you like most?,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Con thích màu đỏ.,,dialogue,🔴,sentence,4,8,Ich mag Rot am meisten.,I like red the most.,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Quả chuối màu gì?,,dialogue,🍌,sentence,4,8,Welche Farbe hat die Banane?,What color is the banana?,decor
-Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Quả chuối màu vàng.,,dialogue,🟡,sentence,4,8,Die Banane ist gelb.,The banana is yellow.,decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con đếm từ một đến ba được không?,,dialogue,🔢,sentence,4,8,Kannst du von eins bis drei zählen?,Can you count from one to three?,decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,"Một, hai, ba.",,dialogue,🔢,phrase,4,8,"Eins, zwei, drei.","One, two, three.",decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con có mấy ngón tay?,,dialogue,✋,sentence,4,8,Wie viele Finger hast du?,How many fingers do you have?,decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con có mười ngón tay.,,dialogue,🔟,sentence,4,8,Ich habe zehn Finger.,I have ten fingers.,decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,Hai cộng với một là mấy?,,dialogue,➕,sentence,4,8,Was ist zwei plus eins?,What is two plus one?,decor
-Chủ đề hội thoại cấp 2,💬,2,Số đếm,Hai cộng một là ba.,,dialogue,🔢,sentence,4,8,Zwei plus eins ist drei.,Two plus one is three.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn ăn gì?,,dialogue,🍽️,sentence,4,8,Was möchtest du essen?,What do you want to eat?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn ăn cơm.,,dialogue,🍚,sentence,4,8,Ich möchte Reis essen.,I want to eat rice.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn uống gì?,,dialogue,🥤,sentence,4,8,Was möchtest du trinken?,What do you want to drink?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn uống nước.,,dialogue,💧,sentence,4,8,Ich möchte Wasser trinken.,I want to drink water.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Món này có ngon không?,,dialogue,😋,sentence,4,8,Schmeckt das gut?,Does this taste good?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ăn uống,"Dạ, ngon lắm ạ.",,dialogue,😋,phrase,4,8,"Ja, es schmeckt sehr gut.","Yes, it tastes very good.",decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con thích ăn quả gì?,,dialogue,🍎,sentence,4,8,Welches Obst isst du gerne?,What fruit do you like to eat?,decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con thích ăn quả chuối.,,dialogue,🍌,sentence,4,8,Ich esse gerne Bananen.,I like eating bananas.,decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,Quả cam có vị gì?,,dialogue,🍊,sentence,4,8,Wie schmeckt die Orange?,What does the orange taste like?,decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,Quả cam có vị chua ngọt.,,dialogue,🍊,sentence,4,8,Die Orange schmeckt süß-sauer.,The orange tastes sweet and sour.,decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con có muốn ăn thêm không?,,dialogue,🍽️,sentence,4,8,Möchtest du noch mehr essen?,Do you want to eat more?,decor
-Chủ đề hội thoại cấp 2,💬,2,Trái cây,"Dạ, con muốn ăn thêm ạ.",,dialogue,😊,sentence,4,8,"Ja, ich möchte noch mehr essen.","Yes, I want to eat more.",decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con đang chơi gì vậy?,,dialogue,🧸,sentence,4,8,Womit spielst du gerade?,What are you playing with?,decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con đang chơi búp bê.,,dialogue,🧸,sentence,4,8,Ich spiele mit einer Puppe.,I'm playing with a doll.,decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cần gì để vẽ?,,dialogue,🖍️,sentence,4,8,Was brauchst du zum Malen?,What do you need to draw?,decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cần bút chì và giấy.,,dialogue,✏️,sentence,4,8,Ich brauche einen Stift und Papier.,I need a pencil and paper.,decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cất đồ chơi ở đâu?,,dialogue,📦,sentence,4,8,Wo räumst du dein Spielzeug hin?,Where do you put your toys away?,decor
-Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cất đồ chơi vào hộp.,,dialogue,📦,sentence,4,8,Ich räume mein Spielzeug in die Box.,I put my toys in the box.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con nấu cơm ở đâu?,,dialogue,🍳,sentence,4,8,Wo kochst du?,Where do you cook?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con nấu cơm ở nhà bếp.,,dialogue,🍽️,sentence,4,8,Ich koche in der Küche.,I cook in the kitchen.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con ngủ ở đâu?,,dialogue,🛏️,sentence,4,8,Wo schläfst du?,Where do you sleep?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con ngủ ở phòng ngủ.,,dialogue,🛌,sentence,4,8,Ich schlafe im Schlafzimmer.,I sleep in the bedroom.,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con tắm ở đâu?,,dialogue,🛁,sentence,4,8,Wo duschst du?,Where do you take a bath?,decor
-Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con tắm ở nhà tắm.,,dialogue,🚿,sentence,4,8,Ich dusche im Badezimmer.,I take a bath in the bathroom.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Hôm nay trời thế nào?,,dialogue,🌤️,sentence,4,8,Wie ist das Wetter heute?,How is the weather today?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Hôm nay trời nắng.,,dialogue,☀️,sentence,4,8,Heute ist es sonnig.,It's sunny today.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Trời mưa con cần gì?,,dialogue,🌧️,sentence,4,8,Was brauchst du bei Regen?,What do you need when it rains?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con cần cầm ô.,,dialogue,☂️,sentence,4,8,Ich brauche einen Regenschirm.,I need to carry an umbrella.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con thích trời nắng hay trời mưa?,,dialogue,🌈,sentence,4,8,Magst du sonniges oder regnerisches Wetter?,Do you like sunny or rainy weather?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con thích trời nắng.,,dialogue,☀️,sentence,4,8,Ich mag sonniges Wetter.,I like sunny weather.,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đang mặc gì?,,dialogue,👕,sentence,4,8,Was trägst du gerade?,What are you wearing?,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đang mặc áo sơ mi.,,dialogue,👕,sentence,4,8,Ich trage ein Hemd.,I'm wearing a shirt.,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đi học bằng gì?,,dialogue,🚲,sentence,4,8,Womit fährst du zur Schule?,How do you go to school?,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đi học bằng xe đạp.,,dialogue,🚲,sentence,4,8,Ich fahre mit dem Fahrrad zur Schule.,I go to school by bicycle.,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Trời lạnh con mặc gì?,,dialogue,❄️,sentence,4,8,Was trägst du bei Kälte?,What do you wear when it's cold?,decor
-Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Trời lạnh con mặc áo ấm.,,dialogue,👕,sentence,4,8,Bei Kälte trage ich eine warme Jacke.,When it's cold I wear a warm jacket.,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sáng nay con làm gì?,,dialogue,🌅,sentence,4,8,Was hast du heute Morgen gemacht?,What did you do this morning?,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sáng nay con đánh răng.,,dialogue,🦷,sentence,4,8,Heute Morgen habe ich mir die Zähne geputzt.,This morning I brushed my teeth.,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Hôm nay con thấy thế nào?,,dialogue,😊,sentence,4,8,Wie fühlst du dich heute?,How do you feel today?,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Hôm nay con thấy vui.,,dialogue,😄,sentence,4,8,Heute fühle ich mich fröhlich.,Today I feel happy.,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sao con buồn vậy?,,dialogue,😢,sentence,4,8,Warum bist du traurig?,Why are you sad?,decor
-Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Con buồn vì làm rơi đồ chơi.,,dialogue,😢,sentence,4,8,"Ich bin traurig, weil ich mein Spielzeug fallen ließ.",I'm sad because I dropped my toy.,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Tết con thích gì nhất?,,dialogue,🧧,sentence,4,8,Was magst du an Tết am meisten?,What do you like most about Tết?,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con thích lì xì nhất.,,dialogue,🧧,sentence,4,8,Ich mag die Glücksgeld-Umschläge am meisten.,I like the lucky money envelopes the most.,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Ngày Tết nhà con có gì?,,dialogue,🎊,sentence,4,8,Was gibt es bei dir zu Tết?,What do you have at your home for Tết?,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Nhà con có bánh chưng.,,dialogue,🥮,sentence,4,8,Bei uns gibt es Bánh chưng.,At our home we have bánh chưng.,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con là người nước nào?,,dialogue,🌏,sentence,4,8,Aus welchem Land kommst du?,What country are you from?,decor
-Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con là người Việt Nam.,,dialogue,🇻🇳,sentence,4,8,Ich bin Vietnamese.,I am Vietnamese.,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Mấy giờ con dậy?,,dialogue,⏰,sentence,4,8,Um wie viel Uhr stehst du auf?,What time do you get up?,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Con dậy lúc bảy giờ.,,dialogue,⏰,sentence,4,8,Ich stehe um sieben Uhr auf.,I get up at seven o'clock.,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Buổi tối con làm gì?,,dialogue,🌙,sentence,4,8,Was machst du abends?,What do you do in the evening?,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Buổi tối con đi ngủ.,,dialogue,😴,sentence,4,8,Abends gehe ich schlafen.,In the evening I go to sleep.,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Mấy giờ con ăn cơm?,,dialogue,🍚,sentence,4,8,Um wie viel Uhr isst du?,What time do you eat?,decor
-Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Con ăn cơm lúc sáu giờ.,,dialogue,⏰,sentence,4,8,Ich esse um sechs Uhr.,I eat at six o'clock.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Hôm nay là thứ mấy?,,dialogue,📅,sentence,4,8,Welcher Wochentag ist heute?,What day is today?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Hôm nay là thứ hai.,,dialogue,📅,sentence,4,8,Heute ist Montag.,Today is Monday.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Con nghỉ học vào ngày nào?,,dialogue,🏠,sentence,4,8,An welchem Tag hast du schulfrei?,What day do you have off school?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Con nghỉ học vào chủ nhật.,,dialogue,📅,sentence,4,8,Ich habe am Sonntag schulfrei.,I have Sunday off from school.,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Ngày mai là thứ mấy?,,dialogue,📆,sentence,4,8,Welcher Tag ist morgen?,What day is tomorrow?,decor
-Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Ngày mai là thứ ba.,,dialogue,📆,sentence,4,8,Morgen ist Dienstag.,Tomorrow is Tuesday.,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con mèo ở đâu?,,dialogue,🐱,sentence,4,8,Wo ist die Katze?,Where is the cat?,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con mèo ở trên ghế.,,dialogue,🪑,sentence,4,8,Die Katze ist auf dem Stuhl.,The cat is on the chair.,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Quyển sách ở đâu?,,dialogue,📖,sentence,4,8,Wo ist das Buch?,Where is the book?,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Quyển sách ở trong cặp.,,dialogue,🎒,sentence,4,8,Das Buch ist in der Tasche.,The book is in the bag.,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con đứng ở đâu?,,dialogue,📍,sentence,4,8,Wo stehst du?,Where are you standing?,decor
-Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con đứng ở ngoài sân.,,dialogue,🏡,sentence,4,8,Ich stehe draußen im Hof.,I'm standing outside in the yard.,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Xin chào!,,dialogue,👋,phrase,5,8,Hallo!,Hello!,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Chào bạn!,,dialogue,👋,phrase,5,8,Hallo!,Hi there!,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Bạn tên là gì?,,dialogue,🙋,sentence,5,8,Wie heißt du?,What is your name?,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Mình tên là Bin.,,dialogue,😊,sentence,5,8,Ich heiße Bin.,My name is Bin.,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Bạn mấy tuổi?,,dialogue,🎂,sentence,5,8,Wie alt bist du?,How old are you?,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Mình sáu tuổi.,,dialogue,🎂,sentence,5,8,Ich bin sechs Jahre alt.,I am six years old.,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,Tạm biệt nhé!,,dialogue,🖐️,phrase,5,8,Tschüss!,Bye!,decor
-Chủ đề hội thoại cấp 3,💬,3,Làm quen,"Tạm biệt, hẹn gặp lại!",,dialogue,🖐️,sentence,5,8,"Tschüss, bis bald!","Bye, see you soon!",decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Cảm ơn con đã giúp mẹ nhé!,,dialogue,🙏,sentence,5,8,"Danke, dass du mir geholfen hast!",Thank you for helping me!,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,"Dạ, không có gì ạ!",,dialogue,😊,sentence,5,8,Gern geschehen!,You're welcome!,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con làm rơi đồ rồi kìa!,,dialogue,😮,sentence,5,8,Du hast etwas fallen lassen!,You dropped something!,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con xin lỗi ạ.,,dialogue,🙇,phrase,5,8,Es tut mir leid.,I'm sorry.,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con muốn ra ngoài chơi à?,,dialogue,🚪,sentence,5,8,Möchtest du draußen spielen?,Do you want to play outside?,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,"Dạ, con xin phép ạ.",,dialogue,✋,sentence,5,8,"Ja, darf ich bitte?","Yes, may I please?",decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Đến giờ đi ngủ rồi con.,,dialogue,🌙,sentence,5,8,Es ist Zeit ins Bett zu gehen.,It's time to go to bed.,decor
-Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Chúc mẹ ngủ ngon ạ!,,dialogue,🌙,sentence,5,8,Gute Nacht Mama!,Good night Mom!,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con giới thiệu về gia đình con đi.,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Stell mir deine Familie vor.,Tell me about your family.,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,"Nhà con có bố, mẹ và em gái ạ.",,dialogue,👨‍👩‍👧,sentence,5,8,"In meiner Familie sind Papa, Mama und meine kleine Schwester.","My family has dad, mom and my little sister.",decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Bố con làm nghề gì?,,dialogue,👨‍⚕️,sentence,5,8,Was ist der Beruf deines Vaters?,What is your father's job?,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Bố con là bác sĩ ạ.,,dialogue,👨‍⚕️,sentence,5,8,Mein Vater ist Arzt.,My father is a doctor.,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Mẹ con làm nghề gì?,,dialogue,👩‍🏫,sentence,5,8,Was ist der Beruf deiner Mutter?,What is your mother's job?,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Mẹ con là cô giáo ạ.,,dialogue,👩‍🏫,sentence,5,8,Meine Mutter ist Lehrerin.,My mother is a teacher.,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con thương ai nhất trong nhà?,,dialogue,❤️,sentence,5,8,Wen liebst du in der Familie am meisten?,Who do you love most in the family?,decor
-Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con thương cả nhà như nhau ạ.,,dialogue,❤️,sentence,5,8,Ich liebe die ganze Familie gleich.,I love the whole family equally.,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con muốn ăn gì vậy?,,dialogue,🍽️,sentence,5,8,Was möchtest du essen?,What do you want to eat?,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con muốn ăn cơm với canh ạ.,,dialogue,🍲,sentence,5,8,Ich möchte Reis mit Suppe essen.,I want to eat rice with soup.,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con có khát nước không?,,dialogue,💧,sentence,5,8,Hast du Durst?,Are you thirsty?,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,"Dạ, con muốn uống nước ạ.",,dialogue,🥤,sentence,5,8,"Ja, ich möchte Wasser trinken.","Yes, I want to drink water.",decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con cần mẹ giúp gì không?,,dialogue,🤝,sentence,5,8,Brauchst du Mamas Hilfe?,Do you need mom's help?,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con nhờ mẹ buộc dây giày ạ.,,dialogue,👟,sentence,5,8,"Ich bitte Mama, meine Schuhe zu binden.",I ask mom to tie my shoelaces.,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con còn cần gì nữa không?,,dialogue,❓,sentence,5,8,Brauchst du noch etwas?,Do you need anything else?,decor
-Chủ đề hội thoại cấp 3,💬,3,Con cần gì,"Dạ, con cần một cái khăn ạ.",,dialogue,🧣,sentence,5,8,"Ja, ich brauche ein Tuch.","Yes, I need a towel.",decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Mời cả nhà ăn cơm.,,dialogue,🍚,sentence,5,8,Kommt alle zum Essen.,"Come eat, everyone.",decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con mời bố mẹ ăn cơm ạ.,,dialogue,🙏,sentence,5,8,Ich lade Papa und Mama zum Essen ein.,I invite dad and mom to eat.,decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con thấy món canh thế nào?,,dialogue,🍲,sentence,5,8,Wie findest du die Suppe?,How do you find the soup?,decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, canh ngon lắm ạ.",,dialogue,😋,phrase,5,8,Die Suppe ist sehr lecker.,The soup is very delicious.,decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con ăn thêm cơm không?,,dialogue,🍚,sentence,5,8,Möchtest du noch mehr Reis?,Do you want more rice?,decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, con xin thêm một bát ạ.",,dialogue,🍚,sentence,5,8,"Ja, ich hätte gern noch eine Schale.","Yes, I'd like one more bowl.",decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con ăn xong chưa?,,dialogue,🍽️,sentence,5,8,Bist du mit dem Essen fertig?,Are you done eating?,decor
-Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, con ăn xong rồi ạ.",,dialogue,✅,phrase,5,8,"Ja, ich bin fertig mit Essen.","Yes, I've finished eating.",decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Hôm nay con học gì ở trường?,,dialogue,🏫,sentence,5,8,Was hast du heute in der Schule gelernt?,What did you learn at school today?,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con học đếm số và tô màu ạ.,,dialogue,🔢,sentence,5,8,Ich habe Zählen und Malen gelernt.,I learned counting and coloring.,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi với bạn nào?,,dialogue,👫,sentence,5,8,Mit wem hast du gespielt?,Who did you play with?,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi với bạn Bin ạ.,,dialogue,👦,sentence,5,8,Ich habe mit meinem Freund Bin gespielt.,I played with my friend Bin.,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Giờ ra chơi con làm gì?,,dialogue,⏰,sentence,5,8,Was machst du in der Pause?,What do you do at recess?,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi cầu trượt với bạn ạ.,,dialogue,⚽,sentence,5,8,Ich rutsche mit meinen Freunden.,I play on the slide with friends.,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con có thích đi học không?,,dialogue,😊,sentence,5,8,Gehst du gerne zur Schule?,Do you like going to school?,decor
-Chủ đề hội thoại cấp 3,💬,3,Ở trường,"Dạ, con rất thích đi học ạ.",,dialogue,😄,sentence,5,8,"Ja, ich gehe sehr gerne zur Schule.","Yes, I really like going to school.",decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con gà trống gáy thế nào?,,dialogue,🐓,sentence,5,8,Wie kräht der Hahn?,How does the rooster crow?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con gà trống gáy ò ó o.,,dialogue,🐓,sentence,5,8,Der Hahn kräht kikeriki.,The rooster crows cock-a-doodle-doo.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Trời sắp mưa rồi đấy.,,dialogue,🌧️,sentence,5,8,Es wird bald regnen.,It's about to rain.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con lấy ô che mưa cho mẹ ạ.,,dialogue,☂️,sentence,5,8,Ich hole einen Regenschirm für Mama.,I'll get an umbrella for mom.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con nghe thấy tiếng sấm không?,,dialogue,⚡,sentence,5,8,Hörst du den Donner?,Do you hear the thunder?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,"Dạ, con nghe thấy tiếng sấm to lắm ạ.",,dialogue,⚡,sentence,5,8,"Ja, ich höre einen sehr lauten Donner.","Yes, I hear very loud thunder.",decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Trời nắng con cần gì?,,dialogue,☀️,sentence,5,8,Was brauchst du bei Sonne?,What do you need when it's sunny?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con cần đội mũ khi ra nắng ạ.,,dialogue,👒,sentence,5,8,"Ich brauche einen Hut, wenn ich in die Sonne gehe.",I need a hat when I go out in the sun.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,"Sắp đến Tết rồi, con vui không?",,dialogue,🎊,sentence,5,8,"Tết kommt bald, freust du dich?","Tết is coming soon, are you happy?",decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,"Dạ, con vui lắm ạ.",,dialogue,😄,phrase,5,8,"Ja, ich freue mich sehr.","Yes, I'm very happy.",decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con thích ăn gì vào ngày Tết?,,dialogue,🥮,sentence,5,8,Was isst du gerne zu Tết?,What do you like to eat on Tết?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con thích ăn bánh chưng ạ.,,dialogue,🥮,sentence,5,8,Ich esse gerne Bánh chưng.,I like eating bánh chưng.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Ai lì xì cho con?,,dialogue,🧧,sentence,5,8,Wer gibt dir Glücksgeld?,Who gives you lucky money?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Ông bà lì xì cho con ạ.,,dialogue,👴,sentence,5,8,Oma und Opa geben mir Glücksgeld.,Grandpa and grandma give me lucky money.,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con chúc Tết ông bà thế nào?,,dialogue,🙏,sentence,5,8,Was wünschst du Oma und Opa zu Tết?,What do you wish grandpa and grandma for Tết?,decor
-Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con chúc ông bà sống lâu trăm tuổi ạ.,,dialogue,🙏,sentence,5,8,Ich wünsche Oma und Opa ein langes Leben.,I wish grandpa and grandma a long life.,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Hôm nay con cảm thấy thế nào?,,dialogue,😊,sentence,5,8,Wie fühlst du dich heute?,How do you feel today?,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,"Dạ, con thấy vui lắm ạ.",,dialogue,😄,phrase,5,8,Ich fühle mich sehr fröhlich.,I feel very happy.,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Sao con lại buồn vậy?,,dialogue,😢,sentence,5,8,Warum bist du traurig?,Why are you sad?,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con buồn vì làm mất đồ chơi ạ.,,dialogue,😢,sentence,5,8,"Ich bin traurig, weil ich mein Spielzeug verloren habe.",I'm sad because I lost my toy.,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con có sợ bóng tối không?,,dialogue,🌙,sentence,5,8,Hast du Angst vor der Dunkelheit?,Are you afraid of the dark?,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,"Dạ, con hơi sợ một chút ạ.",,dialogue,😨,sentence,5,8,"Ja, ich habe ein bisschen Angst.","Yes, I'm a little afraid.",decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con làm gì khi tức giận?,,dialogue,😠,sentence,5,8,"Was machst du, wenn du wütend bist?",What do you do when you're angry?,decor
-Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con hít thở sâu rồi kể cho mẹ nghe ạ.,,dialogue,😊,sentence,5,8,Ich atme tief durch und erzähle es Mama.,I take a deep breath and tell mom.,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Sáng nay con đã làm gì?,,dialogue,🦷,sentence,5,8,Was hast du heute Morgen gemacht?,What did you do this morning?,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Sáng nay con đã đánh răng rồi ạ.,,dialogue,🦷,sentence,5,8,Heute Morgen habe ich mir schon die Zähne geputzt.,This morning I already brushed my teeth.,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Bây giờ con đang làm gì?,,dialogue,🧸,sentence,5,8,Was machst du gerade jetzt?,What are you doing right now?,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Bây giờ con đang xếp đồ chơi ạ.,,dialogue,🧸,sentence,5,8,Gerade räume ich das Spielzeug auf.,Right now I'm putting away my toys.,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Chiều nay con sẽ làm gì?,,dialogue,🌇,sentence,5,8,Was wirst du heute Nachmittag machen?,What will you do this afternoon?,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Chiều nay con sẽ đi công viên ạ.,,dialogue,🌳,sentence,5,8,Heute Nachmittag gehe ich in den Park.,This afternoon I'll go to the park.,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Tối nay con sẽ làm gì trước khi ngủ?,,dialogue,🌙,sentence,5,8,Was wirst du heute Abend vor dem Schlafen machen?,What will you do tonight before sleeping?,decor
-Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Tối nay con sẽ đọc truyện trước khi ngủ ạ.,,dialogue,📖,sentence,5,8,Heute Abend lese ich vor dem Schlafen eine Geschichte.,Tonight I'll read a story before sleeping.,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bạn kể cho cô nghe về gia đình bạn Nam nhé.,,dialogue,👨‍👩‍👧‍👦,sentence,6,8,Erzähl mir von Nams Familie.,Tell me about Nam's family.,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Gia đình Nam có bốn người ạ.,,dialogue,4️⃣,sentence,6,8,Nams Familie hat vier Personen.,Nam's family has four people.,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có anh chị em không?,,dialogue,👧,sentence,6,8,Hat Nam Geschwister?,Does Nam have siblings?,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có một em gái tên là Mai ạ.,,dialogue,👧,sentence,6,8,Nam hat eine kleine Schwester namens Mai.,Nam has a little sister named Mai.,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bố Nam làm nghề gì?,,dialogue,💼,sentence,6,8,Was ist Nams Vaters Beruf?,What is Nam's father's job?,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bố Nam là kỹ sư ạ.,,dialogue,💼,sentence,6,8,Nams Vater ist Ingenieur.,Nam's father is an engineer.,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có yêu gia đình mình không?,,dialogue,❤️,sentence,6,8,Liebt Nam seine Familie?,Does Nam love his family?,decor
-Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,"Dạ, Nam rất yêu gia đình mình ạ.",,dialogue,❤️,sentence,6,8,"Ja, Nam liebt seine Familie sehr.","Yes, Nam loves his family very much.",decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Buổi sáng em thức dậy lúc mấy giờ?,,dialogue,⏰,sentence,6,8,Um wie viel Uhr wachst du morgens auf?,What time do you wake up in the morning?,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em thức dậy lúc sáu giờ ạ.,,dialogue,⏰,sentence,6,8,Ich wache um sechs Uhr auf.,I wake up at six o'clock.,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Sau khi dậy em làm gì?,,dialogue,🦷,sentence,6,8,Was machst du nach dem Aufwachen?,What do you do after waking up?,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đánh răng rửa mặt rồi ăn sáng ạ.,,dialogue,🦷,sentence,6,8,"Ich putze mir die Zähne, wasche mein Gesicht und frühstücke.","I brush my teeth, wash my face, and eat breakfast.",decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đi học bằng gì?,,dialogue,🚲,sentence,6,8,Womit fährst du zur Schule?,How do you go to school?,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đi học bằng xe đạp ạ.,,dialogue,🚲,sentence,6,8,Ich fahre mit dem Fahrrad zur Schule.,I go to school by bicycle.,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em có thích buổi sáng không?,,dialogue,🌅,sentence,6,8,Magst du den Morgen?,Do you like the morning?,decor
-Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,"Dạ, em rất thích buổi sáng mát mẻ ạ.",,dialogue,🌅,sentence,6,8,"Ja, ich mag den kühlen Morgen sehr.","Yes, I really like the cool morning.",decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Tết này em về đâu chơi?,,dialogue,🧧,sentence,6,8,Wohin fährst du zu Tết?,Where are you going for Tết?,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em về nhà bà ở quê ạ.,,dialogue,👵,sentence,6,8,Ich fahre zu Omas Haus auf dem Land.,I'm going to grandma's house in the countryside.,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Ở nhà bà có gì vui?,,dialogue,🥮,sentence,6,8,Was ist bei Oma zu Hause schön?,What's fun at grandma's house?,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Nhà bà có bánh chưng và hoa mai ạ.,,dialogue,🌼,sentence,6,8,Bei Oma gibt es Bánh chưng und Mai-Blüten.,At grandma's there's bánh chưng and apricot blossoms.,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em giúp bà việc gì?,,dialogue,🤝,sentence,6,8,Wobei hilfst du Oma?,What do you help grandma with?,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em giúp bà lau bàn ghế đón Tết ạ.,,dialogue,🧹,sentence,6,8,"Ich helfe Oma, Tisch und Stühle für Tết zu putzen.",I help grandma clean the table and chairs for Tết.,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em có thích Tết ở quê không?,,dialogue,😊,sentence,6,8,Magst du Tết auf dem Land?,Do you like Tết in the countryside?,decor
-Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,"Dạ, em thích lắm vì được gặp họ hàng ạ.",,dialogue,👨‍👩‍👧‍👦,sentence,6,8,"Ja, ich mag es sehr, weil ich Verwandte treffe.","Yes, I like it a lot because I get to meet relatives.",decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Hôm nay trời thế nào?,,dialogue,🌧️,sentence,6,8,Wie ist das Wetter heute?,How is the weather today?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Hôm nay trời mưa to ạ.,,dialogue,🌧️,sentence,6,8,Heute regnet es stark.,It's raining heavily today.,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em có được ra ngoài chơi không?,,dialogue,🚪,sentence,6,8,Darfst du draußen spielen?,Can you play outside?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,"Dạ, không ạ, em chơi trong nhà thôi ạ.",,dialogue,🏠,sentence,6,8,"Nein, ich spiele nur drinnen.","No, I only play indoors.",decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em làm gì trong lúc trời mưa?,,dialogue,🧩,sentence,6,8,"Was machst du, während es regnet?",What do you do while it rains?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em đọc truyện và xếp hình ạ.,,dialogue,📖,sentence,6,8,Ich lese Geschichten und puzzle.,I read stories and do puzzles.,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em có thích tiếng mưa rơi không?,,dialogue,🌧️,sentence,6,8,Magst du das Geräusch von Regen?,Do you like the sound of falling rain?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,"Dạ, em thích nghe tiếng mưa rơi ạ.",,dialogue,🌧️,sentence,6,8,"Ja, ich höre gerne den Regen fallen.","Yes, I like listening to the rain falling.",decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Em kể cho cô nghe về chú mèo của em đi.,,dialogue,🐱,sentence,6,8,Erzähl mir von deiner Katze.,Tell me about your cat.,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Chú mèo của em tên là Mun ạ.,,dialogue,🐱,sentence,6,8,Meine Katze heißt Mun.,My cat is named Mun.,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun thích ăn gì?,,dialogue,🐟,sentence,6,8,Was frisst Mun gerne?,What does Mun like to eat?,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun thích ăn cá ạ.,,dialogue,🐟,sentence,6,8,Mun frisst gerne Fisch.,Mun likes to eat fish.,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun hay làm gì cả ngày?,,dialogue,😴,sentence,6,8,Was macht Mun den ganzen Tag?,What does Mun do all day?,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun hay ngủ và chơi cuộn len ạ.,,dialogue,😴,sentence,6,8,Mun schläft gerne und spielt mit Wollknäueln.,Mun likes sleeping and playing with yarn.,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Em có yêu Mun không?,,dialogue,❤️,sentence,6,8,Liebst du Mun?,Do you love Mun?,decor
-Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,"Dạ, em rất yêu Mun ạ.",,dialogue,❤️,sentence,6,8,"Ja, ich liebe Mun sehr.","Yes, I love Mun very much.",decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Ở trường em thích môn học nào nhất?,,dialogue,🎨,sentence,6,8,Welches Schulfach magst du am meisten?,What school subject do you like most?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em thích môn vẽ nhất ạ.,,dialogue,🎨,sentence,6,8,Ich mag Malen am meisten.,I like drawing class the most.,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Cô giáo em tên là gì?,,dialogue,👩‍🏫,sentence,6,8,Wie heißt deine Lehrerin?,What is your teacher's name?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Cô giáo em tên là cô Lan ạ.,,dialogue,👩‍🏫,sentence,6,8,Meine Lehrerin heißt Frau Lan.,My teacher's name is Ms. Lan.,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Giờ ra chơi em thường làm gì?,,dialogue,⏰,sentence,6,8,Was machst du normalerweise in der Pause?,What do you usually do at recess?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em thường chơi nhảy dây với các bạn ạ.,,dialogue,🏃,sentence,6,8,Ich springe normalerweise Seil mit Freunden.,I usually jump rope with friends.,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em có nhiều bạn ở trường không?,,dialogue,👫,sentence,6,8,Hast du viele Freunde in der Schule?,Do you have many friends at school?,decor
-Chủ đề hội thoại cấp 4,💬,4,Ở trường,"Dạ, em có rất nhiều bạn ở trường ạ.",,dialogue,👫,sentence,6,8,"Ja, ich habe sehr viele Freunde in der Schule.","Yes, I have many friends at school.",decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em đang làm gì trong vườn vậy?,,dialogue,🌱,sentence,6,8,Was machst du gerade im Garten?,What are you doing in the garden?,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em đang trồng một cây non ạ.,,dialogue,🌱,sentence,6,8,Ich pflanze gerade einen jungen Baum.,I'm planting a young tree.,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Trồng xong em cần làm gì?,,dialogue,💧,sentence,6,8,Was musst du nach dem Pflanzen tun?,What do you need to do after planting?,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em cần tưới nước cho cây mỗi ngày ạ.,,dialogue,💧,sentence,6,8,Ich muss den Baum jeden Tag gießen.,I need to water the tree every day.,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Sau một tháng cây thế nào?,,dialogue,🌳,sentence,6,8,Wie ist der Baum nach einem Monat?,How is the tree after one month?,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Sau một tháng cây đã cao hơn và ra lá mới ạ.,,dialogue,🌳,sentence,6,8,Nach einem Monat ist der Baum größer und hat neue Blätter.,After one month the tree is taller and has new leaves.,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em có vui khi thấy cây lớn không?,,dialogue,😊,sentence,6,8,"Freust du dich, den Baum wachsen zu sehen?",Are you happy to see the tree grow?,decor
-Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,"Dạ, em vui lắm vì đó là cây của em ạ.",,dialogue,😄,sentence,6,8,"Ja, ich freue mich sehr, weil es mein Baum ist.","Yes, I'm very happy because it's my tree.",decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em đi đâu cùng mẹ vậy?,,dialogue,🧺,sentence,6,8,Wohin gehst du mit Mama?,Where are you going with mom?,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em đi chợ cùng mẹ ạ.,,dialogue,🧺,sentence,6,8,Ich gehe mit Mama auf den Markt.,I'm going to the market with mom.,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Mẹ mua những gì ở chợ?,,dialogue,🥬,sentence,6,8,Was kauft Mama auf dem Markt?,What does mom buy at the market?,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,"Mẹ mua rau, cá và trái cây ạ.",,dialogue,🥬,sentence,6,8,"Mama kauft Gemüse, Fisch und Obst.","Mom buys vegetables, fish and fruit.",decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em giúp mẹ việc gì?,,dialogue,🤝,sentence,6,8,Wobei hilfst du Mama?,What do you help mom with?,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em giúp mẹ xách túi rau ạ.,,dialogue,🧺,sentence,6,8,"Ich helfe Mama, die Gemüsetüte zu tragen.",I help mom carry the bag of vegetables.,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Đi chợ về em thấy thế nào?,,dialogue,😊,sentence,6,8,Wie fühlst du dich nach dem Markt?,How do you feel after the market?,decor
-Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,"Dạ, em thấy mệt nhưng rất vui ạ.",,dialogue,😊,sentence,6,8,"Ich bin müde, aber sehr glücklich.",I'm tired but very happy.,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Chuyện gì xảy ra sau cơn mưa vậy?,,dialogue,🌈,sentence,6,8,Was passiert nach dem Regen?,What happens after the rain?,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Sau cơn mưa trời có cầu vồng rất đẹp ạ.,,dialogue,🌈,sentence,6,8,Nach dem Regen gibt es einen wunderschönen Regenbogen.,After the rain there's a very beautiful rainbow.,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Cầu vồng có những màu gì?,,dialogue,🎨,sentence,6,8,Welche Farben hat der Regenbogen?,What colors does the rainbow have?,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Cầu vồng có bảy màu ạ.,,dialogue,🌈,sentence,6,8,Der Regenbogen hat sieben Farben.,The rainbow has seven colors.,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Em cảm thấy thế nào khi thấy cầu vồng?,,dialogue,😊,sentence,6,8,"Wie fühlst du dich, wenn du den Regenbogen siehst?",How do you feel when you see the rainbow?,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,"Dạ, em thấy rất thích thú ạ.",,dialogue,😄,sentence,6,8,Ich finde es sehr aufregend.,I find it very exciting.,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Em muốn vẽ lại cầu vồng không?,,dialogue,🖍️,sentence,6,8,Möchtest du den Regenbogen malen?,Do you want to draw the rainbow?,decor
-Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,"Dạ, em muốn vẽ lại cầu vồng vào vở ạ.",,dialogue,🖍️,sentence,6,8,"Ja, ich möchte den Regenbogen in mein Heft malen.","Yes, I want to draw the rainbow in my notebook.",decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Hôm nay là ngày gì của bạn Lan?,,dialogue,🎂,sentence,6,8,Was für ein Tag ist heute für Lan?,What special day is it for Lan today?,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Hôm nay là sinh nhật của bạn Lan ạ.,,dialogue,🎂,sentence,6,8,Heute ist Lans Geburtstag.,Today is Lan's birthday.,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Các bạn tặng Lan món quà gì?,,dialogue,🎁,sentence,6,8,Was schenken die Freunde Lan?,What gift do the friends give Lan?,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Các bạn tặng Lan một quyển truyện tranh ạ.,,dialogue,📚,sentence,6,8,Die Freunde schenken Lan ein Comicbuch.,The friends give Lan a comic book.,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Mọi người hát bài gì cho Lan?,,dialogue,🎵,sentence,6,8,Was singen alle für Lan?,What song does everyone sing for Lan?,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Mọi người hát bài chúc mừng sinh nhật ạ.,,dialogue,🎵,sentence,6,8,Alle singen das Geburtstagslied.,Everyone sings the happy birthday song.,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Lan cảm thấy thế nào trong ngày sinh nhật?,,dialogue,😊,sentence,6,8,Wie fühlt sich Lan an ihrem Geburtstag?,How does Lan feel on her birthday?,decor
-Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,"Dạ, Lan cảm thấy rất hạnh phúc ạ.",,dialogue,😄,sentence,6,8,Lan fühlt sich sehr glücklich.,Lan feels very happy.,decor
+unit,unit_emoji,level,lesson,vi,say,activities,emoji,type,min_age,max_age,de,en,fr,ko,ja,pic
+Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Đây là con gì?,,dialogue,🐶,sentence,5,8,Was ist das?,What is this?,Qu'est-ce que c'est ?,이게 뭐예요?,これは何ですか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Đây là con chó.,,dialogue,🐶,sentence,5,8,Das ist ein Hund.,This is a dog.,C'est un chien.,이건 개예요.,これは犬です。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Con mèo kêu thế nào?,,dialogue,🐱,sentence,5,8,Wie macht die Katze?,How does the cat sound?,Comment fait le chat ?,고양이가 어떻게 울어요?,猫はどう鳴きますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật quanh nhà,Con mèo kêu meo meo.,,dialogue,🐱,sentence,5,8,Die Katze macht miau miau.,The cat says meow meow.,Le chat fait miaou miaou.,고양이가 야옹야옹 울어요.,猫はニャーニャー鳴きます。,decor
+Chủ đề hội thoại cấp 1,💬,1,Người thân,Đây là ai?,,dialogue,👵,sentence,5,8,Wer ist das?,Who is this?,Qui est-ce ?,이분은 누구예요?,これは誰ですか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Người thân,Đây là bà của con.,,dialogue,👵,sentence,5,8,Das ist meine Oma.,This is my grandma.,C'est ma grand-mère.,이분은 제 할머니예요.,これは私のおばあちゃんです。,decor
+Chủ đề hội thoại cấp 1,💬,1,Người thân,Con yêu ai nhất?,,dialogue,❤️,sentence,5,8,Wen liebst du am meisten?,Who do you love the most?,Qui aimes-tu le plus ?,누구를 제일 사랑해요?,誰が一番好きですか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Người thân,Con yêu bố mẹ nhất.,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Ich liebe meine Eltern am meisten.,I love my parents the most.,J'aime mes parents le plus.,저는 부모님을 제일 사랑해요.,私は両親が一番好きです。,decor
+Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con ăn cơm chưa?,,dialogue,🍚,sentence,5,8,Hast du schon gegessen?,Have you eaten rice yet?,As-tu déjà mangé ?,밥 먹었어요?,もうご飯を食べましたか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,"Dạ, con ăn cơm rồi ạ.",,dialogue,😊,sentence,5,8,"Ja, ich habe schon gegessen.","Yes, I've already eaten.","Oui, j'ai déjà mangé.","네, 벌써 먹었어요.",はい、もう食べました。,decor
+Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con thích ăn gì?,,dialogue,🍲,sentence,5,8,Was isst du gerne?,What do you like to eat?,Qu'est-ce que tu aimes manger ?,뭘 먹는 걸 좋아해요?,何を食べるのが好きですか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Bữa cơm,Con thích ăn canh rau.,,dialogue,🥬,sentence,5,8,Ich esse gerne Gemüsesuppe.,I like eating vegetable soup.,J'aime manger de la soupe de légumes.,저는 채소 국을 좋아해요.,私は野菜スープが好きです。,decor
+Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Con đang ở đâu?,,dialogue,🏠,sentence,5,8,Wo bist du gerade?,Where are you right now?,Où es-tu maintenant ?,지금 어디에 있어요?,今どこにいますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Con đang ở trong phòng.,,dialogue,🛏️,sentence,5,8,Ich bin gerade im Zimmer.,I'm in the room right now.,Je suis dans la chambre.,저는 지금 방에 있어요.,私は今部屋にいます。,decor
+Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Cái bàn ở đâu?,,dialogue,🪑,sentence,5,8,Wo ist der Tisch?,Where is the table?,Où est la table ?,탁자는 어디에 있어요?,テーブルはどこにありますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Trong nhà,Cái bàn ở trong bếp.,,dialogue,🍽️,sentence,5,8,Der Tisch ist in der Küche.,The table is in the kitchen.,La table est dans la cuisine.,탁자는 부엌에 있어요.,テーブルは台所にあります。,decor
+Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con chào ai đây?,,dialogue,🙋,sentence,5,8,Wen begrüßt du?,Who are you greeting?,Qui salues-tu ?,누구에게 인사해요?,誰に挨拶していますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con chào cô ạ.,,dialogue,🙏,phrase,5,8,Ich grüße die Lehrerin.,I'm greeting the teacher.,Je salue la maîtresse.,선생님께 인사해요.,先生に挨拶します。,decor
+Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Ai cho con quà vậy?,,dialogue,🎁,sentence,5,8,Wer hat dir das Geschenk gegeben?,Who gave you the gift?,Qui t'a donné le cadeau ?,누가 선물을 줬어요?,誰がプレゼントをくれましたか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Chào và cảm ơn,Con cảm ơn bà ạ.,,dialogue,🙏,phrase,5,8,Ich danke meiner Oma.,I thank my grandma.,Je remercie ma grand-mère.,할머니께 감사해요.,おばあちゃんにありがとうを言います。,decor
+Chủ đề hội thoại cấp 1,💬,1,Gia đình,Nhà con có mấy người?,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Wie viele Personen sind in deiner Familie?,How many people are in your family?,Combien de personnes y a-t-il dans ta famille ?,가족이 몇 명이에요?,家族は何人ですか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Gia đình,Nhà con có bốn người.,,dialogue,4️⃣,sentence,5,8,Meine Familie hat vier Personen.,My family has four people.,Ma famille a quatre personnes.,우리 가족은 네 명이에요.,私の家族は四人です。,decor
+Chủ đề hội thoại cấp 1,💬,1,Gia đình,Ai nấu cơm trong nhà?,,dialogue,🍳,sentence,5,8,Wer kocht zu Hause?,Who cooks at home?,Qui cuisine à la maison ?,집에서 누가 밥을 해요?,家で誰がご飯を作りますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Gia đình,Mẹ nấu cơm trong nhà.,,dialogue,👩,sentence,5,8,Mama kocht zu Hause.,Mom cooks at home.,Maman cuisine à la maison.,엄마가 집에서 밥을 해요.,ママが家でご飯を作ります。,decor
+Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con uống gì đây?,,dialogue,🥛,sentence,5,8,Was trinkst du da?,What are you drinking?,Qu'est-ce que tu bois ?,뭘 마셔요?,何を飲んでいますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con uống sữa ạ.,,dialogue,🥛,phrase,5,8,Ich trinke Milch.,I'm drinking milk.,Je bois du lait.,우유를 마셔요.,牛乳を飲みます。,decor
+Chủ đề hội thoại cấp 1,💬,1,Ăn uống,Con có đói không?,,dialogue,🍽️,sentence,5,8,Hast du Hunger?,Are you hungry?,As-tu faim ?,배고파요?,お腹が空いていますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Ăn uống,"Dạ, con đói rồi ạ.",,dialogue,😋,phrase,5,8,"Ja, ich habe Hunger.","Yes, I'm hungry.","Oui, j'ai faim.","네, 배고파요.",はい、お腹が空きました。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con gà kêu thế nào?,,dialogue,🐓,sentence,5,8,Wie macht das Huhn?,How does the chicken sound?,Comment fait la poule ?,닭이 어떻게 울어요?,にわとりはどう鳴きますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con gà kêu ò ó o.,,dialogue,🐓,sentence,5,8,Das Huhn macht kikeriki.,The chicken says cock-a-doodle-doo.,La poule fait cocorico.,닭이 꼬끼오 울어요.,にわとりはコケコッコーと鳴きます。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con chó kêu thế nào?,,dialogue,🐶,sentence,5,8,Wie macht der Hund?,How does the dog sound?,Comment fait le chien ?,개가 어떻게 짖어요?,犬はどう鳴きますか。,decor
+Chủ đề hội thoại cấp 1,💬,1,Con vật kêu,Con chó kêu gâu gâu.,,dialogue,🐶,sentence,5,8,Der Hund macht wuff wuff.,The dog says woof woof.,Le chien fait ouaf ouaf.,개가 멍멍 짖어요.,犬はワンワン鳴きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Buổi sáng con chào ai đầu tiên?,,dialogue,🌅,sentence,4,8,Wen grüßt du morgens zuerst?,Who do you greet first in the morning?,Qui salues-tu en premier le matin ?,아침에 누구에게 제일 먼저 인사해요?,朝、誰に一番先に挨拶しますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con chào ông bà ạ.,,dialogue,👴,sentence,4,8,Ich grüße Opa und Oma.,I greet grandpa and grandma.,Je salue grand-père et grand-mère.,할아버지 할머니께 인사해요.,おじいちゃんとおばあちゃんに挨拶します。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Gặp cô giáo con nói gì?,,dialogue,👩‍🏫,sentence,4,8,Was sagst du zur Lehrerin?,What do you say to the teacher?,Que dis-tu à la maîtresse ?,선생님을 만나면 뭐라고 해요?,先生に会ったら何と言いますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con chào cô ạ.,,dialogue,🙋,phrase,4,8,Ich grüße die Lehrerin.,I greet the teacher.,Je salue la maîtresse.,선생님께 인사해요.,先生に挨拶します。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Trước khi ăn cơm con nói gì?,,dialogue,🍚,sentence,4,8,Was sagst du vor dem Essen?,What do you say before eating?,Que dis-tu avant de manger ?,밥 먹기 전에 뭐라고 해요?,ご飯を食べる前に何と言いますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Lời chào trong ngày,Con mời cả nhà ăn cơm ạ.,,dialogue,🙏,sentence,4,8,Ich lade die Familie zum Essen ein.,I invite the family to eat.,J'invite la famille à manger.,가족에게 식사하시라고 해요.,家族にご飯を召し上がってくださいと言います。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,Nhà con có những ai?,,dialogue,👨‍👩‍👧‍👦,sentence,4,8,Wer ist in deiner Familie?,Who is in your family?,Qui y a-t-il dans ta famille ?,가족에는 누가 있어요?,家族には誰がいますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,"Nhà con có bố, mẹ và em.",,dialogue,👨‍👩‍👧,sentence,4,8,"In meiner Familie sind Papa, Mama und mein Geschwister.","My family has dad, mom and my sibling.","Ma famille a papa, maman et mon petit frère (ou sœur).","우리 가족은 아빠, 엄마, 동생이 있어요.",私の家族はパパとママと弟か妹です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con là con thứ mấy?,,dialogue,🔢,sentence,4,8,Das wievielte Kind bist du?,Which child are you?,Tu es le combientième enfant ?,몇째예요?,何番目の子供ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con là con cả.,,dialogue,🧒,phrase,4,8,Ich bin das älteste Kind.,I'm the oldest child.,Je suis l'aîné.,저는 첫째예요.,私は一番上です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con thích chơi với ai nhất?,,dialogue,🎈,sentence,4,8,Mit wem spielst du am liebsten?,Who do you like playing with most?,Avec qui aimes-tu jouer le plus ?,누구와 노는 걸 제일 좋아해요?,誰と遊ぶのが一番好きですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Gia đình,Con thích chơi với em.,,dialogue,👧,sentence,4,8,Ich spiele am liebsten mit meinem Geschwister.,I like playing with my sibling the most.,J'aime jouer avec mon petit frère (ou sœur).,저는 동생과 노는 걸 좋아해요.,私は弟か妹と遊ぶのが好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để nhìn?,,dialogue,👁️,sentence,4,8,Womit siehst du?,What do you use to see?,Avec quoi vois-tu ?,무엇으로 봐요?,何で見ますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng mắt để nhìn.,,dialogue,👁️,sentence,4,8,Ich sehe mit den Augen.,I use my eyes to see.,Je vois avec mes yeux.,눈으로 봐요.,目で見ます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để nghe?,,dialogue,👂,sentence,4,8,Womit hörst du?,What do you use to hear?,Avec quoi entends-tu ?,무엇으로 들어요?,何で聞きますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng tai để nghe.,,dialogue,👂,sentence,4,8,Ich höre mit den Ohren.,I use my ears to hear.,J'entends avec mes oreilles.,귀로 들어요.,耳で聞きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng cái gì để đi?,,dialogue,🦶,sentence,4,8,Womit gehst du?,What do you use to walk?,Avec quoi marches-tu ?,무엇으로 걸어요?,何で歩きますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Cơ thể,Con dùng chân để đi.,,dialogue,🦶,sentence,4,8,Ich gehe mit den Füßen.,I use my feet to walk.,Je marche avec mes pieds.,발로 걸어요.,足で歩きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con thích con vật nào nhất?,,dialogue,🐾,sentence,4,8,Welches Tier magst du am meisten?,Which animal do you like most?,Quel animal aimes-tu le plus ?,어떤 동물을 제일 좋아해요?,どの動物が一番好きですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con thích con chó nhất.,,dialogue,🐶,sentence,4,8,Ich mag Hunde am meisten.,I like dogs the most.,J'aime les chiens le plus.,저는 개를 제일 좋아해요.,私は犬が一番好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con mèo kêu thế nào?,,dialogue,🐱,sentence,4,8,Wie macht die Katze?,How does the cat sound?,Comment fait le chat ?,고양이가 어떻게 울어요?,猫はどう鳴きますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con mèo kêu meo meo.,,dialogue,🐱,sentence,4,8,Die Katze macht miau miau.,The cat says meow meow.,Le chat fait miaou miaou.,고양이가 야옹야옹 울어요.,猫はニャーニャー鳴きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con vật nào biết bay?,,dialogue,🐦,sentence,4,8,Welches Tier kann fliegen?,Which animal can fly?,Quel animal sait voler ?,어떤 동물이 날 수 있어요?,どの動物が飛べますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Con vật,Con chim biết bay.,,dialogue,🐦,sentence,4,8,Der Vogel kann fliegen.,The bird can fly.,L'oiseau sait voler.,새는 날 수 있어요.,鳥は飛べます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Bầu trời màu gì?,,dialogue,☁️,sentence,4,8,Welche Farbe hat der Himmel?,What color is the sky?,De quelle couleur est le ciel ?,하늘은 무슨 색이에요?,空は何色ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Bầu trời màu xanh.,,dialogue,🔵,sentence,4,8,Der Himmel ist blau.,The sky is blue.,Le ciel est bleu.,하늘은 파란색이에요.,空は青いです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Con thích màu gì nhất?,,dialogue,🎨,sentence,4,8,Welche Farbe magst du am meisten?,What color do you like most?,Quelle couleur aimes-tu le plus ?,무슨 색을 제일 좋아해요?,何色が一番好きですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Con thích màu đỏ.,,dialogue,🔴,sentence,4,8,Ich mag Rot am meisten.,I like red the most.,J'aime le rouge le plus.,저는 빨간색을 제일 좋아해요.,私は赤が一番好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Quả chuối màu gì?,,dialogue,🍌,sentence,4,8,Welche Farbe hat die Banane?,What color is the banana?,De quelle couleur est la banane ?,바나나는 무슨 색이에요?,バナナは何色ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Màu sắc,Quả chuối màu vàng.,,dialogue,🟡,sentence,4,8,Die Banane ist gelb.,The banana is yellow.,La banane est jaune.,바나나는 노란색이에요.,バナナは黄色です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con đếm từ một đến ba được không?,,dialogue,🔢,sentence,4,8,Kannst du von eins bis drei zählen?,Can you count from one to three?,Peux-tu compter de un à trois ?,하나부터 셋까지 셀 수 있어요?,一から三まで数えられますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,"Một, hai, ba.",,dialogue,🔢,phrase,4,8,"Eins, zwei, drei.","One, two, three.","Un, deux, trois.","하나, 둘, 셋.",一、二、三。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con có mấy ngón tay?,,dialogue,✋,sentence,4,8,Wie viele Finger hast du?,How many fingers do you have?,Combien de doigts as-tu ?,손가락이 몇 개예요?,指は何本ありますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,Con có mười ngón tay.,,dialogue,🔟,sentence,4,8,Ich habe zehn Finger.,I have ten fingers.,J'ai dix doigts.,저는 손가락이 열 개예요.,私は指が十本あります。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,Hai cộng với một là mấy?,,dialogue,➕,sentence,4,8,Was ist zwei plus eins?,What is two plus one?,Combien font deux plus un ?,이 더하기 일은 얼마예요?,二足す一はいくつですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Số đếm,Hai cộng một là ba.,,dialogue,🔢,sentence,4,8,Zwei plus eins ist drei.,Two plus one is three.,Deux plus un font trois.,이 더하기 일은 삼이에요.,二足す一は三です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn ăn gì?,,dialogue,🍽️,sentence,4,8,Was möchtest du essen?,What do you want to eat?,Que veux-tu manger ?,뭘 먹고 싶어요?,何を食べたいですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn ăn cơm.,,dialogue,🍚,sentence,4,8,Ich möchte Reis essen.,I want to eat rice.,Je veux manger du riz.,저는 밥을 먹고 싶어요.,私はご飯が食べたいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn uống gì?,,dialogue,🥤,sentence,4,8,Was möchtest du trinken?,What do you want to drink?,Que veux-tu boire ?,뭘 마시고 싶어요?,何を飲みたいですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Con muốn uống nước.,,dialogue,💧,sentence,4,8,Ich möchte Wasser trinken.,I want to drink water.,Je veux boire de l'eau.,저는 물을 마시고 싶어요.,私はお水が飲みたいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,Món này có ngon không?,,dialogue,😋,sentence,4,8,Schmeckt das gut?,Does this taste good?,Est-ce que c'est bon ?,이거 맛있어요?,これはおいしいですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ăn uống,"Dạ, ngon lắm ạ.",,dialogue,😋,phrase,4,8,"Ja, es schmeckt sehr gut.","Yes, it tastes very good.","Oui, c'est très bon.","네, 정말 맛있어요.",はい、とてもおいしいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con thích ăn quả gì?,,dialogue,🍎,sentence,4,8,Welches Obst isst du gerne?,What fruit do you like to eat?,Quel fruit aimes-tu manger ?,무슨 과일을 좋아해요?,どの果物が好きですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con thích ăn quả chuối.,,dialogue,🍌,sentence,4,8,Ich esse gerne Bananen.,I like eating bananas.,J'aime manger des bananes.,저는 바나나를 좋아해요.,私はバナナが好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,Quả cam có vị gì?,,dialogue,🍊,sentence,4,8,Wie schmeckt die Orange?,What does the orange taste like?,Quel goût a l'orange ?,오렌지는 무슨 맛이에요?,オレンジはどんな味ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,Quả cam có vị chua ngọt.,,dialogue,🍊,sentence,4,8,Die Orange schmeckt süß-sauer.,The orange tastes sweet and sour.,L'orange a un goût sucré-acidulé.,오렌지는 새콤달콤해요.,オレンジは甘酸っぱいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,Con có muốn ăn thêm không?,,dialogue,🍽️,sentence,4,8,Möchtest du noch mehr essen?,Do you want to eat more?,Veux-tu manger encore ?,더 먹고 싶어요?,もっと食べたいですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Trái cây,"Dạ, con muốn ăn thêm ạ.",,dialogue,😊,sentence,4,8,"Ja, ich möchte noch mehr essen.","Yes, I want to eat more.","Oui, je veux manger encore.","네, 더 먹고 싶어요.",はい、もっと食べたいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con đang chơi gì vậy?,,dialogue,🧸,sentence,4,8,Womit spielst du gerade?,What are you playing with?,À quoi joues-tu ?,뭘 가지고 놀아요?,何で遊んでいますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con đang chơi búp bê.,,dialogue,🧸,sentence,4,8,Ich spiele mit einer Puppe.,I'm playing with a doll.,Je joue avec une poupée.,인형을 가지고 놀아요.,人形で遊んでいます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cần gì để vẽ?,,dialogue,🖍️,sentence,4,8,Was brauchst du zum Malen?,What do you need to draw?,De quoi as-tu besoin pour dessiner ?,그림 그리려면 뭐가 필요해요?,絵を描くのに何が必要ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cần bút chì và giấy.,,dialogue,✏️,sentence,4,8,Ich brauche einen Stift und Papier.,I need a pencil and paper.,J'ai besoin d'un crayon et de papier.,연필이랑 종이가 필요해요.,鉛筆と紙が必要です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cất đồ chơi ở đâu?,,dialogue,📦,sentence,4,8,Wo räumst du dein Spielzeug hin?,Where do you put your toys away?,Où ranges-tu tes jouets ?,장난감을 어디에 정리해요?,おもちゃはどこに片付けますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Đồ chơi và đồ dùng học tập,Con cất đồ chơi vào hộp.,,dialogue,📦,sentence,4,8,Ich räume mein Spielzeug in die Box.,I put my toys in the box.,Je range mes jouets dans la boîte.,장난감을 상자에 넣어요.,おもちゃを箱に入れます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con nấu cơm ở đâu?,,dialogue,🍳,sentence,4,8,Wo kochst du?,Where do you cook?,Où cuisines-tu ?,어디서 밥을 해요?,どこで料理をしますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con nấu cơm ở nhà bếp.,,dialogue,🍽️,sentence,4,8,Ich koche in der Küche.,I cook in the kitchen.,Je cuisine dans la cuisine.,부엌에서 밥을 해요.,台所で料理をします。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con ngủ ở đâu?,,dialogue,🛏️,sentence,4,8,Wo schläfst du?,Where do you sleep?,Où dors-tu ?,어디서 자요?,どこで寝ますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con ngủ ở phòng ngủ.,,dialogue,🛌,sentence,4,8,Ich schlafe im Schlafzimmer.,I sleep in the bedroom.,Je dors dans la chambre.,침실에서 자요.,寝室で寝ます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con tắm ở đâu?,,dialogue,🛁,sentence,4,8,Wo duschst du?,Where do you take a bath?,Où prends-tu ton bain ?,어디서 목욕해요?,どこでお風呂に入りますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Ngôi nhà,Con tắm ở nhà tắm.,,dialogue,🚿,sentence,4,8,Ich dusche im Badezimmer.,I take a bath in the bathroom.,Je prends mon bain dans la salle de bain.,욕실에서 목욕해요.,お風呂場でお風呂に入ります。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Hôm nay trời thế nào?,,dialogue,🌤️,sentence,4,8,Wie ist das Wetter heute?,How is the weather today?,Quel temps fait-il aujourd'hui ?,오늘 날씨가 어때요?,今日の天気はどうですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Hôm nay trời nắng.,,dialogue,☀️,sentence,4,8,Heute ist es sonnig.,It's sunny today.,Il fait beau aujourd'hui.,오늘은 날씨가 맑아요.,今日は晴れています。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Trời mưa con cần gì?,,dialogue,🌧️,sentence,4,8,Was brauchst du bei Regen?,What do you need when it rains?,De quoi as-tu besoin quand il pleut ?,비가 오면 뭐가 필요해요?,雨が降ったら何が必要ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con cần cầm ô.,,dialogue,☂️,sentence,4,8,Ich brauche einen Regenschirm.,I need to carry an umbrella.,J'ai besoin de prendre un parapluie.,우산을 가져가야 해요.,傘を持っていく必要があります。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con thích trời nắng hay trời mưa?,,dialogue,🌈,sentence,4,8,Magst du sonniges oder regnerisches Wetter?,Do you like sunny or rainy weather?,Aimes-tu le temps ensoleillé ou pluvieux ?,맑은 날씨와 비 오는 날씨 중 뭘 좋아해요?,晴れと雨、どちらが好きですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thiên nhiên và thời tiết,Con thích trời nắng.,,dialogue,☀️,sentence,4,8,Ich mag sonniges Wetter.,I like sunny weather.,J'aime le temps ensoleillé.,저는 맑은 날씨를 좋아해요.,私は晴れが好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đang mặc gì?,,dialogue,👕,sentence,4,8,Was trägst du gerade?,What are you wearing?,Que portes-tu ?,뭘 입고 있어요?,何を着ていますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đang mặc áo sơ mi.,,dialogue,👕,sentence,4,8,Ich trage ein Hemd.,I'm wearing a shirt.,Je porte une chemise.,셔츠를 입고 있어요.,シャツを着ています。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đi học bằng gì?,,dialogue,🚲,sentence,4,8,Womit fährst du zur Schule?,How do you go to school?,Comment vas-tu à l'école ?,학교에 뭘 타고 가요?,何で学校に行きますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Con đi học bằng xe đạp.,,dialogue,🚲,sentence,4,8,Ich fahre mit dem Fahrrad zur Schule.,I go to school by bicycle.,Je vais à l'école à vélo.,자전거를 타고 학교에 가요.,自転車で学校に行きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Trời lạnh con mặc gì?,,dialogue,❄️,sentence,4,8,Was trägst du bei Kälte?,What do you wear when it's cold?,Que portes-tu quand il fait froid ?,추울 때 뭘 입어요?,寒いとき何を着ますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Quần áo và xe cộ,Trời lạnh con mặc áo ấm.,,dialogue,👕,sentence,4,8,Bei Kälte trage ich eine warme Jacke.,When it's cold I wear a warm jacket.,"Quand il fait froid, je porte une veste chaude.",추울 때 따뜻한 옷을 입어요.,寒いときは暖かい服を着ます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sáng nay con làm gì?,,dialogue,🌅,sentence,4,8,Was hast du heute Morgen gemacht?,What did you do this morning?,Qu'as-tu fait ce matin ?,오늘 아침에 뭐 했어요?,今朝何をしましたか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sáng nay con đánh răng.,,dialogue,🦷,sentence,4,8,Heute Morgen habe ich mir die Zähne geputzt.,This morning I brushed my teeth.,"Ce matin, je me suis brossé les dents.",오늘 아침에 이를 닦았어요.,今朝歯を磨きました。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Hôm nay con thấy thế nào?,,dialogue,😊,sentence,4,8,Wie fühlst du dich heute?,How do you feel today?,Comment te sens-tu aujourd'hui ?,오늘 기분이 어때요?,今日の気分はどうですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Hôm nay con thấy vui.,,dialogue,😄,sentence,4,8,Heute fühle ich mich fröhlich.,Today I feel happy.,Aujourd'hui je me sens content.,오늘 기분이 좋아요.,今日はうれしいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Sao con buồn vậy?,,dialogue,😢,sentence,4,8,Warum bist du traurig?,Why are you sad?,Pourquoi es-tu triste ?,왜 슬퍼요?,どうして悲しいですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Việc hằng ngày và cảm xúc,Con buồn vì làm rơi đồ chơi.,,dialogue,😢,sentence,4,8,"Ich bin traurig, weil ich mein Spielzeug fallen ließ.",I'm sad because I dropped my toy.,Je suis triste parce que j'ai fait tomber mon jouet.,장난감을 떨어뜨려서 슬퍼요.,おもちゃを落として悲しいです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Tết con thích gì nhất?,,dialogue,🧧,sentence,4,8,Was magst du an Tết am meisten?,What do you like most about Tết?,Qu'est-ce que tu aimes le plus à Tết ?,뗏에서 제일 좋아하는 게 뭐예요?,テトで一番好きなことは何ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con thích lì xì nhất.,,dialogue,🧧,sentence,4,8,Ich mag die Glücksgeld-Umschläge am meisten.,I like the lucky money envelopes the most.,J'aime le plus l'argent porte-bonheur.,저는 세뱃돈을 제일 좋아해요.,私はお年玉が一番好きです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Ngày Tết nhà con có gì?,,dialogue,🎊,sentence,4,8,Was gibt es bei dir zu Tết?,What do you have at your home for Tết?,Qu'y a-t-il chez toi pour Tết ?,뗏에 집에 뭐가 있어요?,テトの日、家に何がありますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Nhà con có bánh chưng.,,dialogue,🥮,sentence,4,8,Bei uns gibt es Bánh chưng.,At our home we have bánh chưng.,"Chez nous, il y a du bánh chưng.",우리 집에는 바인쯩이 있어요.,私の家にはバインチュンがあります。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con là người nước nào?,,dialogue,🌏,sentence,4,8,Aus welchem Land kommst du?,What country are you from?,De quel pays es-tu ?,어느 나라 사람이에요?,どこの国の人ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Tết và Việt Nam,Con là người Việt Nam.,,dialogue,🇻🇳,sentence,4,8,Ich bin Vietnamese.,I am Vietnamese.,Je suis vietnamien(ne).,저는 베트남 사람이에요.,私はベトナム人です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Mấy giờ con dậy?,,dialogue,⏰,sentence,4,8,Um wie viel Uhr stehst du auf?,What time do you get up?,À quelle heure te lèves-tu ?,몇 시에 일어나요?,何時に起きますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Con dậy lúc bảy giờ.,,dialogue,⏰,sentence,4,8,Ich stehe um sieben Uhr auf.,I get up at seven o'clock.,Je me lève à sept heures.,일곱 시에 일어나요.,七時に起きます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Buổi tối con làm gì?,,dialogue,🌙,sentence,4,8,Was machst du abends?,What do you do in the evening?,Que fais-tu le soir ?,저녁에 뭐 해요?,夜は何をしますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Buổi tối con đi ngủ.,,dialogue,😴,sentence,4,8,Abends gehe ich schlafen.,In the evening I go to sleep.,"Le soir, je vais dormir.",저녁에 자러 가요.,夜は寝ます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Mấy giờ con ăn cơm?,,dialogue,🍚,sentence,4,8,Um wie viel Uhr isst du?,What time do you eat?,À quelle heure manges-tu ?,몇 시에 밥을 먹어요?,何時にご飯を食べますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Giờ giấc,Con ăn cơm lúc sáu giờ.,,dialogue,⏰,sentence,4,8,Ich esse um sechs Uhr.,I eat at six o'clock.,Je mange à six heures.,여섯 시에 밥을 먹어요.,六時にご飯を食べます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Hôm nay là thứ mấy?,,dialogue,📅,sentence,4,8,Welcher Wochentag ist heute?,What day is today?,Quel jour sommes-nous aujourd'hui ?,오늘은 무슨 요일이에요?,今日は何曜日ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Hôm nay là thứ hai.,,dialogue,📅,sentence,4,8,Heute ist Montag.,Today is Monday.,Aujourd'hui c'est lundi.,오늘은 월요일이에요.,今日は月曜日です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Con nghỉ học vào ngày nào?,,dialogue,🏠,sentence,4,8,An welchem Tag hast du schulfrei?,What day do you have off school?,Quel jour n'as-tu pas école ?,무슨 요일에 학교를 안 가요?,何曜日に学校が休みですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Con nghỉ học vào chủ nhật.,,dialogue,📅,sentence,4,8,Ich habe am Sonntag schulfrei.,I have Sunday off from school.,Je n'ai pas école le dimanche.,일요일에 학교를 안 가요.,日曜日は学校が休みです。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Ngày mai là thứ mấy?,,dialogue,📆,sentence,4,8,Welcher Tag ist morgen?,What day is tomorrow?,Quel jour sommes-nous demain ?,내일은 무슨 요일이에요?,明日は何曜日ですか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Thứ trong tuần,Ngày mai là thứ ba.,,dialogue,📆,sentence,4,8,Morgen ist Dienstag.,Tomorrow is Tuesday.,Demain c'est mardi.,내일은 화요일이에요.,明日は火曜日です。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con mèo ở đâu?,,dialogue,🐱,sentence,4,8,Wo ist die Katze?,Where is the cat?,Où est le chat ?,고양이는 어디 있어요?,猫はどこにいますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con mèo ở trên ghế.,,dialogue,🪑,sentence,4,8,Die Katze ist auf dem Stuhl.,The cat is on the chair.,Le chat est sur la chaise.,고양이는 의자 위에 있어요.,猫は椅子の上にいます。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Quyển sách ở đâu?,,dialogue,📖,sentence,4,8,Wo ist das Buch?,Where is the book?,Où est le livre ?,책은 어디 있어요?,本はどこにありますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Quyển sách ở trong cặp.,,dialogue,🎒,sentence,4,8,Das Buch ist in der Tasche.,The book is in the bag.,Le livre est dans le cartable.,책은 가방 안에 있어요.,本はかばんの中にあります。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con đứng ở đâu?,,dialogue,📍,sentence,4,8,Wo stehst du?,Where are you standing?,Où te tiens-tu ?,어디 서 있어요?,どこに立っていますか。,decor
+Chủ đề hội thoại cấp 2,💬,2,Vị trí,Con đứng ở ngoài sân.,,dialogue,🏡,sentence,4,8,Ich stehe draußen im Hof.,I'm standing outside in the yard.,Je me tiens dehors dans la cour.,마당 밖에 서 있어요.,外の庭に立っています。,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Xin chào!,,dialogue,👋,phrase,5,8,Hallo!,Hello!,Bonjour !,안녕하세요!,こんにちは！,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Chào bạn!,,dialogue,👋,phrase,5,8,Hallo!,Hi there!,Salut !,안녕!,やあ！,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Bạn tên là gì?,,dialogue,🙋,sentence,5,8,Wie heißt du?,What is your name?,Comment tu t'appelles ?,이름이 뭐예요?,名前は何ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Mình tên là Bin.,,dialogue,😊,sentence,5,8,Ich heiße Bin.,My name is Bin.,Je m'appelle Bin.,제 이름은 빈이에요.,私の名前はビンです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Bạn mấy tuổi?,,dialogue,🎂,sentence,5,8,Wie alt bist du?,How old are you?,Quel âge as-tu ?,몇 살이에요?,何歳ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Mình sáu tuổi.,,dialogue,🎂,sentence,5,8,Ich bin sechs Jahre alt.,I am six years old.,J'ai six ans.,저는 여섯 살이에요.,私は六歳です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,Tạm biệt nhé!,,dialogue,🖐️,phrase,5,8,Tschüss!,Bye!,Au revoir !,안녕히 가세요!,さようなら！,decor
+Chủ đề hội thoại cấp 3,💬,3,Làm quen,"Tạm biệt, hẹn gặp lại!",,dialogue,🖐️,sentence,5,8,"Tschüss, bis bald!","Bye, see you soon!","Au revoir, à bientôt !","안녕, 또 만나요!",さようなら、またね！,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Cảm ơn con đã giúp mẹ nhé!,,dialogue,🙏,sentence,5,8,"Danke, dass du mir geholfen hast!",Thank you for helping me!,Merci de m'avoir aidée !,도와줘서 고마워!,手伝ってくれてありがとう！,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,"Dạ, không có gì ạ!",,dialogue,😊,sentence,5,8,Gern geschehen!,You're welcome!,De rien !,천만에요!,どういたしまして！,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con làm rơi đồ rồi kìa!,,dialogue,😮,sentence,5,8,Du hast etwas fallen lassen!,You dropped something!,Tu as fait tomber quelque chose !,뭔가 떨어뜨렸어요!,何か落としましたよ！,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con xin lỗi ạ.,,dialogue,🙇,phrase,5,8,Es tut mir leid.,I'm sorry.,Je suis désolé.,죄송해요.,ごめんなさい。,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Con muốn ra ngoài chơi à?,,dialogue,🚪,sentence,5,8,Möchtest du draußen spielen?,Do you want to play outside?,Veux-tu aller jouer dehors ?,밖에 나가서 놀고 싶어요?,外で遊びたいですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,"Dạ, con xin phép ạ.",,dialogue,✋,sentence,5,8,"Ja, darf ich bitte?","Yes, may I please?","Oui, puis-je s'il te plaît ?","네, 허락해 주세요.",はい、いいですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Đến giờ đi ngủ rồi con.,,dialogue,🌙,sentence,5,8,Es ist Zeit ins Bett zu gehen.,It's time to go to bed.,C'est l'heure d'aller dormir.,이제 잘 시간이야.,もう寝る時間ですよ。,decor
+Chủ đề hội thoại cấp 3,💬,3,Lễ phép,Chúc mẹ ngủ ngon ạ!,,dialogue,🌙,sentence,5,8,Gute Nacht Mama!,Good night Mom!,Bonne nuit maman !,"엄마, 안녕히 주무세요!",ママ、おやすみなさい！,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con giới thiệu về gia đình con đi.,,dialogue,👨‍👩‍👧‍👦,sentence,5,8,Stell mir deine Familie vor.,Tell me about your family.,Parle-moi de ta famille.,가족에 대해 소개해 줘요.,家族について紹介してください。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,"Nhà con có bố, mẹ và em gái ạ.",,dialogue,👨‍👩‍👧,sentence,5,8,"In meiner Familie sind Papa, Mama und meine kleine Schwester.","My family has dad, mom and my little sister.","Ma famille a papa, maman et ma petite sœur.","우리 가족은 아빠, 엄마, 여동생이 있어요.",私の家族はパパとママと妹です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Bố con làm nghề gì?,,dialogue,👨‍⚕️,sentence,5,8,Was ist der Beruf deines Vaters?,What is your father's job?,Quel est le métier de ton père ?,아빠 직업이 뭐예요?,お父さんの仕事は何ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Bố con là bác sĩ ạ.,,dialogue,👨‍⚕️,sentence,5,8,Mein Vater ist Arzt.,My father is a doctor.,Mon père est médecin.,아빠는 의사예요.,父は医者です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Mẹ con làm nghề gì?,,dialogue,👩‍🏫,sentence,5,8,Was ist der Beruf deiner Mutter?,What is your mother's job?,Quel est le métier de ta mère ?,엄마 직업이 뭐예요?,お母さんの仕事は何ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Mẹ con là cô giáo ạ.,,dialogue,👩‍🏫,sentence,5,8,Meine Mutter ist Lehrerin.,My mother is a teacher.,Ma mère est institutrice.,엄마는 선생님이에요.,母は先生です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con thương ai nhất trong nhà?,,dialogue,❤️,sentence,5,8,Wen liebst du in der Familie am meisten?,Who do you love most in the family?,Qui aimes-tu le plus dans la famille ?,가족 중에 누구를 제일 사랑해요?,家族の中で誰が一番好きですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Gia đình của con,Con thương cả nhà như nhau ạ.,,dialogue,❤️,sentence,5,8,Ich liebe die ganze Familie gleich.,I love the whole family equally.,J'aime toute la famille pareillement.,저는 가족 모두를 똑같이 사랑해요.,私は家族みんなを同じように愛しています。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con muốn ăn gì vậy?,,dialogue,🍽️,sentence,5,8,Was möchtest du essen?,What do you want to eat?,Que veux-tu manger ?,뭘 먹고 싶어요?,何が食べたいですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con muốn ăn cơm với canh ạ.,,dialogue,🍲,sentence,5,8,Ich möchte Reis mit Suppe essen.,I want to eat rice with soup.,Je veux manger du riz avec de la soupe.,밥이랑 국을 먹고 싶어요.,ご飯とスープが食べたいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con có khát nước không?,,dialogue,💧,sentence,5,8,Hast du Durst?,Are you thirsty?,As-tu soif ?,목말라요?,喉が渇いていますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,"Dạ, con muốn uống nước ạ.",,dialogue,🥤,sentence,5,8,"Ja, ich möchte Wasser trinken.","Yes, I want to drink water.","Oui, je veux boire de l'eau.","네, 물을 마시고 싶어요.",はい、お水が飲みたいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con cần mẹ giúp gì không?,,dialogue,🤝,sentence,5,8,Brauchst du Mamas Hilfe?,Do you need mom's help?,As-tu besoin de l'aide de maman ?,엄마 도움이 필요해요?,ママの助けが必要ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con nhờ mẹ buộc dây giày ạ.,,dialogue,👟,sentence,5,8,"Ich bitte Mama, meine Schuhe zu binden.",I ask mom to tie my shoelaces.,Je demande à maman de nouer mes lacets.,엄마한테 신발끈을 묶어달라고 해요.,ママに靴ひもを結んでもらいます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,Con còn cần gì nữa không?,,dialogue,❓,sentence,5,8,Brauchst du noch etwas?,Do you need anything else?,As-tu besoin d'autre chose ?,뭐 더 필요한 거 있어요?,他に何か必要ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Con cần gì,"Dạ, con cần một cái khăn ạ.",,dialogue,🧣,sentence,5,8,"Ja, ich brauche ein Tuch.","Yes, I need a towel.","Oui, j'ai besoin d'une serviette.","네, 수건이 필요해요.",はい、タオルが必要です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Mời cả nhà ăn cơm.,,dialogue,🍚,sentence,5,8,Kommt alle zum Essen.,"Come eat, everyone.","Venez manger, tout le monde.",다 같이 식사해요.,みんなでご飯を食べましょう。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con mời bố mẹ ăn cơm ạ.,,dialogue,🙏,sentence,5,8,Ich lade Papa und Mama zum Essen ein.,I invite dad and mom to eat.,J'invite papa et maman à manger.,아빠 엄마께 식사하시라고 해요.,パパとママにご飯を召し上がってくださいと言います。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con thấy món canh thế nào?,,dialogue,🍲,sentence,5,8,Wie findest du die Suppe?,How do you find the soup?,Comment trouves-tu la soupe ?,국이 어때요?,スープはどうですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, canh ngon lắm ạ.",,dialogue,😋,phrase,5,8,Die Suppe ist sehr lecker.,The soup is very delicious.,La soupe est très bonne.,국이 아주 맛있어요.,スープはとてもおいしいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con ăn thêm cơm không?,,dialogue,🍚,sentence,5,8,Möchtest du noch mehr Reis?,Do you want more rice?,Veux-tu encore du riz ?,밥 더 먹을래요?,ご飯をもっと食べますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, con xin thêm một bát ạ.",,dialogue,🍚,sentence,5,8,"Ja, ich hätte gern noch eine Schale.","Yes, I'd like one more bowl.","Oui, je voudrais un bol de plus.","네, 한 그릇 더 주세요.",はい、もう一杯お願いします。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,Con ăn xong chưa?,,dialogue,🍽️,sentence,5,8,Bist du mit dem Essen fertig?,Are you done eating?,As-tu fini de manger ?,다 먹었어요?,食べ終わりましたか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Bữa ăn,"Dạ, con ăn xong rồi ạ.",,dialogue,✅,phrase,5,8,"Ja, ich bin fertig mit Essen.","Yes, I've finished eating.","Oui, j'ai fini de manger.","네, 다 먹었어요.",はい、食べ終わりました。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Hôm nay con học gì ở trường?,,dialogue,🏫,sentence,5,8,Was hast du heute in der Schule gelernt?,What did you learn at school today?,Qu'as-tu appris à l'école aujourd'hui ?,오늘 학교에서 뭐 배웠어요?,今日学校で何を習いましたか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con học đếm số và tô màu ạ.,,dialogue,🔢,sentence,5,8,Ich habe Zählen und Malen gelernt.,I learned counting and coloring.,J'ai appris à compter et à colorier.,숫자 세기랑 색칠하기를 배웠어요.,数を数えることと色塗りを習いました。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi với bạn nào?,,dialogue,👫,sentence,5,8,Mit wem hast du gespielt?,Who did you play with?,Avec qui as-tu joué ?,누구랑 놀았어요?,誰と遊びましたか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi với bạn Bin ạ.,,dialogue,👦,sentence,5,8,Ich habe mit meinem Freund Bin gespielt.,I played with my friend Bin.,J'ai joué avec mon ami Bin.,친구 빈이랑 놀았어요.,友達のビンちゃんと遊びました。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Giờ ra chơi con làm gì?,,dialogue,⏰,sentence,5,8,Was machst du in der Pause?,What do you do at recess?,Que fais-tu à la récréation ?,쉬는 시간에 뭐 해요?,休み時間に何をしますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con chơi cầu trượt với bạn ạ.,,dialogue,⚽,sentence,5,8,Ich rutsche mit meinen Freunden.,I play on the slide with friends.,Je joue au toboggan avec mes amis.,친구랑 미끄럼틀을 타요.,友達と滑り台で遊びます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,Con có thích đi học không?,,dialogue,😊,sentence,5,8,Gehst du gerne zur Schule?,Do you like going to school?,Aimes-tu aller à l'école ?,학교 가는 거 좋아해요?,学校に行くのが好きですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Ở trường,"Dạ, con rất thích đi học ạ.",,dialogue,😄,sentence,5,8,"Ja, ich gehe sehr gerne zur Schule.","Yes, I really like going to school.","Oui, j'aime beaucoup aller à l'école.","네, 학교 가는 걸 정말 좋아해요.",はい、学校に行くのがとても好きです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con gà trống gáy thế nào?,,dialogue,🐓,sentence,5,8,Wie kräht der Hahn?,How does the rooster crow?,Comment chante le coq ?,수탉이 어떻게 울어요?,雄鶏はどう鳴きますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con gà trống gáy ò ó o.,,dialogue,🐓,sentence,5,8,Der Hahn kräht kikeriki.,The rooster crows cock-a-doodle-doo.,Le coq chante cocorico.,수탉이 꼬끼오 울어요.,雄鶏はコケコッコーと鳴きます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Trời sắp mưa rồi đấy.,,dialogue,🌧️,sentence,5,8,Es wird bald regnen.,It's about to rain.,Il va bientôt pleuvoir.,곧 비가 올 거예요.,もうすぐ雨が降りますよ。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con lấy ô che mưa cho mẹ ạ.,,dialogue,☂️,sentence,5,8,Ich hole einen Regenschirm für Mama.,I'll get an umbrella for mom.,Je vais chercher un parapluie pour maman.,엄마한테 우산을 가져다 드릴게요.,ママに傘を持ってきます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con nghe thấy tiếng sấm không?,,dialogue,⚡,sentence,5,8,Hörst du den Donner?,Do you hear the thunder?,Entends-tu le tonnerre ?,천둥소리 들려요?,雷の音が聞こえますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,"Dạ, con nghe thấy tiếng sấm to lắm ạ.",,dialogue,⚡,sentence,5,8,"Ja, ich höre einen sehr lauten Donner.","Yes, I hear very loud thunder.","Oui, j'entends un tonnerre très fort.","네, 천둥소리가 아주 크게 들려요.",はい、とても大きな雷の音が聞こえます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Trời nắng con cần gì?,,dialogue,☀️,sentence,5,8,Was brauchst du bei Sonne?,What do you need when it's sunny?,De quoi as-tu besoin quand il fait soleil ?,날씨가 맑을 때 뭐가 필요해요?,晴れのとき何が必要ですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tiếng kêu và thời tiết,Con cần đội mũ khi ra nắng ạ.,,dialogue,👒,sentence,5,8,"Ich brauche einen Hut, wenn ich in die Sonne gehe.",I need a hat when I go out in the sun.,J'ai besoin d'un chapeau quand je sors au soleil.,햇볕에 나갈 때 모자를 써야 해요.,日差しの中に出るとき帽子が必要です。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,"Sắp đến Tết rồi, con vui không?",,dialogue,🎊,sentence,5,8,"Tết kommt bald, freust du dich?","Tết is coming soon, are you happy?","Tết arrive bientôt, es-tu content(e) ?","곧 뗏이에요, 기뻐요?",もうすぐテトですね、うれしいですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,"Dạ, con vui lắm ạ.",,dialogue,😄,phrase,5,8,"Ja, ich freue mich sehr.","Yes, I'm very happy.","Oui, je suis très content(e).","네, 정말 기뻐요.",はい、とてもうれしいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con thích ăn gì vào ngày Tết?,,dialogue,🥮,sentence,5,8,Was isst du gerne zu Tết?,What do you like to eat on Tết?,Qu'aimes-tu manger à Tết ?,뗏에 뭐 먹는 걸 좋아해요?,テトに何を食べるのが好きですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con thích ăn bánh chưng ạ.,,dialogue,🥮,sentence,5,8,Ich esse gerne Bánh chưng.,I like eating bánh chưng.,J'aime manger du bánh chưng.,저는 바인쯩을 좋아해요.,私はバインチュンが好きです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Ai lì xì cho con?,,dialogue,🧧,sentence,5,8,Wer gibt dir Glücksgeld?,Who gives you lucky money?,Qui te donne de l'argent porte-bonheur ?,누가 세뱃돈을 줘요?,誰がお年玉をくれますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Ông bà lì xì cho con ạ.,,dialogue,👴,sentence,5,8,Oma und Opa geben mir Glücksgeld.,Grandpa and grandma give me lucky money.,Grand-père et grand-mère me donnent de l'argent porte-bonheur.,할아버지 할머니가 세뱃돈을 주세요.,おじいちゃんとおばあちゃんがお年玉をくれます。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con chúc Tết ông bà thế nào?,,dialogue,🙏,sentence,5,8,Was wünschst du Oma und Opa zu Tết?,What do you wish grandpa and grandma for Tết?,Que souhaites-tu à grand-père et grand-mère pour Tết ?,할아버지 할머니께 뗏 인사로 뭐라고 해요?,おじいちゃんとおばあちゃんにテトの挨拶で何と言いますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Tết và lễ hội,Con chúc ông bà sống lâu trăm tuổi ạ.,,dialogue,🙏,sentence,5,8,Ich wünsche Oma und Opa ein langes Leben.,I wish grandpa and grandma a long life.,Je souhaite à grand-père et grand-mère une longue vie.,할아버지 할머니가 백세까지 사시길 바라요.,おじいちゃんとおばあちゃんが長生きしますようにと願います。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Hôm nay con cảm thấy thế nào?,,dialogue,😊,sentence,5,8,Wie fühlst du dich heute?,How do you feel today?,Comment te sens-tu aujourd'hui ?,오늘 기분이 어때요?,今日の気分はどうですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,"Dạ, con thấy vui lắm ạ.",,dialogue,😄,phrase,5,8,Ich fühle mich sehr fröhlich.,I feel very happy.,Je me sens très content(e).,정말 기분이 좋아요.,とてもうれしいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Sao con lại buồn vậy?,,dialogue,😢,sentence,5,8,Warum bist du traurig?,Why are you sad?,Pourquoi es-tu triste ?,왜 슬퍼요?,どうして悲しいですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con buồn vì làm mất đồ chơi ạ.,,dialogue,😢,sentence,5,8,"Ich bin traurig, weil ich mein Spielzeug verloren habe.",I'm sad because I lost my toy.,Je suis triste parce que j'ai perdu mon jouet.,장난감을 잃어버려서 슬퍼요.,おもちゃをなくして悲しいです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con có sợ bóng tối không?,,dialogue,🌙,sentence,5,8,Hast du Angst vor der Dunkelheit?,Are you afraid of the dark?,As-tu peur du noir ?,어둠이 무서워요?,暗闇が怖いですか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,"Dạ, con hơi sợ một chút ạ.",,dialogue,😨,sentence,5,8,"Ja, ich habe ein bisschen Angst.","Yes, I'm a little afraid.","Oui, j'ai un peu peur.","네, 조금 무서워요.",はい、少し怖いです。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con làm gì khi tức giận?,,dialogue,😠,sentence,5,8,"Was machst du, wenn du wütend bist?",What do you do when you're angry?,Que fais-tu quand tu es fâché(e) ?,화가 날 때 뭐 해요?,怒ったとき何をしますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,Cảm xúc và lễ phép,Con hít thở sâu rồi kể cho mẹ nghe ạ.,,dialogue,😊,sentence,5,8,Ich atme tief durch und erzähle es Mama.,I take a deep breath and tell mom.,Je respire profondément puis je le dis à maman.,숨을 깊게 쉬고 엄마한테 이야기해요.,深呼吸してママに話します。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Sáng nay con đã làm gì?,,dialogue,🦷,sentence,5,8,Was hast du heute Morgen gemacht?,What did you do this morning?,Qu'as-tu fait ce matin ?,오늘 아침에 뭐 했어요?,今朝何をしましたか。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Sáng nay con đã đánh răng rồi ạ.,,dialogue,🦷,sentence,5,8,Heute Morgen habe ich mir schon die Zähne geputzt.,This morning I already brushed my teeth.,"Ce matin, je me suis déjà brossé les dents.",오늘 아침에 벌써 이를 닦았어요.,今朝もう歯を磨きました。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Bây giờ con đang làm gì?,,dialogue,🧸,sentence,5,8,Was machst du gerade jetzt?,What are you doing right now?,Que fais-tu en ce moment ?,지금 뭐 하고 있어요?,今何をしていますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Bây giờ con đang xếp đồ chơi ạ.,,dialogue,🧸,sentence,5,8,Gerade räume ich das Spielzeug auf.,Right now I'm putting away my toys.,"En ce moment, je range mes jouets.",지금 장난감을 정리하고 있어요.,今おもちゃを片付けています。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Chiều nay con sẽ làm gì?,,dialogue,🌇,sentence,5,8,Was wirst du heute Nachmittag machen?,What will you do this afternoon?,Que feras-tu cet après-midi ?,오늘 오후에 뭐 할 거예요?,今日の午後は何をしますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Chiều nay con sẽ đi công viên ạ.,,dialogue,🌳,sentence,5,8,Heute Nachmittag gehe ich in den Park.,This afternoon I'll go to the park.,"Cet après-midi, j'irai au parc.",오늘 오후에 공원에 갈 거예요.,今日の午後は公園に行きます。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Tối nay con sẽ làm gì trước khi ngủ?,,dialogue,🌙,sentence,5,8,Was wirst du heute Abend vor dem Schlafen machen?,What will you do tonight before sleeping?,Que feras-tu ce soir avant de dormir ?,오늘 밤 자기 전에 뭐 할 거예요?,今夜寝る前に何をしますか。,decor
+Chủ đề hội thoại cấp 3,💬,3,"Việc đã làm, đang làm, sẽ làm",Tối nay con sẽ đọc truyện trước khi ngủ ạ.,,dialogue,📖,sentence,5,8,Heute Abend lese ich vor dem Schlafen eine Geschichte.,Tonight I'll read a story before sleeping.,"Ce soir, je lirai une histoire avant de dormir.",오늘 밤 자기 전에 이야기책을 읽을 거예요.,今夜寝る前にお話を読みます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bạn kể cho cô nghe về gia đình bạn Nam nhé.,,dialogue,👨‍👩‍👧‍👦,sentence,6,8,Erzähl mir von Nams Familie.,Tell me about Nam's family.,Parle-moi de la famille de Nam.,남의 가족에 대해 말해 줘요.,ナムの家族について話してください。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Gia đình Nam có bốn người ạ.,,dialogue,4️⃣,sentence,6,8,Nams Familie hat vier Personen.,Nam's family has four people.,La famille de Nam a quatre personnes.,남의 가족은 네 명이에요.,ナムの家族は四人です。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có anh chị em không?,,dialogue,👧,sentence,6,8,Hat Nam Geschwister?,Does Nam have siblings?,Nam a-t-il des frères et sœurs ?,남은 형제자매가 있어요?,ナムに兄弟はいますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có một em gái tên là Mai ạ.,,dialogue,👧,sentence,6,8,Nam hat eine kleine Schwester namens Mai.,Nam has a little sister named Mai.,Nam a une petite sœur qui s'appelle Mai.,남은 마이라는 여동생이 있어요.,ナムにはマイという妹がいます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bố Nam làm nghề gì?,,dialogue,💼,sentence,6,8,Was ist Nams Vaters Beruf?,What is Nam's father's job?,Quel est le métier du père de Nam ?,남의 아버지 직업이 뭐예요?,ナムのお父さんの仕事は何ですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Bố Nam là kỹ sư ạ.,,dialogue,💼,sentence,6,8,Nams Vater ist Ingenieur.,Nam's father is an engineer.,Le père de Nam est ingénieur.,남의 아버지는 엔지니어예요.,ナムのお父さんはエンジニアです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,Nam có yêu gia đình mình không?,,dialogue,❤️,sentence,6,8,Liebt Nam seine Familie?,Does Nam love his family?,Nam aime-t-il sa famille ?,남은 가족을 사랑해요?,ナムは家族が好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Gia đình của Nam,"Dạ, Nam rất yêu gia đình mình ạ.",,dialogue,❤️,sentence,6,8,"Ja, Nam liebt seine Familie sehr.","Yes, Nam loves his family very much.","Oui, Nam aime beaucoup sa famille.","네, 남은 가족을 아주 사랑해요.",はい、ナムは家族がとても好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Buổi sáng em thức dậy lúc mấy giờ?,,dialogue,⏰,sentence,6,8,Um wie viel Uhr wachst du morgens auf?,What time do you wake up in the morning?,À quelle heure te réveilles-tu le matin ?,아침에 몇 시에 일어나요?,朝何時に起きますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em thức dậy lúc sáu giờ ạ.,,dialogue,⏰,sentence,6,8,Ich wache um sechs Uhr auf.,I wake up at six o'clock.,Je me réveille à six heures.,여섯 시에 일어나요.,六時に起きます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Sau khi dậy em làm gì?,,dialogue,🦷,sentence,6,8,Was machst du nach dem Aufwachen?,What do you do after waking up?,Que fais-tu après t'être réveillé(e) ?,일어난 후에 뭐 해요?,起きた後何をしますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đánh răng rửa mặt rồi ăn sáng ạ.,,dialogue,🦷,sentence,6,8,"Ich putze mir die Zähne, wasche mein Gesicht und frühstücke.","I brush my teeth, wash my face, and eat breakfast.","Je me brosse les dents, je me lave le visage puis je prends le petit-déjeuner.",이를 닦고 세수하고 아침을 먹어요.,歯を磨いて顔を洗って朝ごはんを食べます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đi học bằng gì?,,dialogue,🚲,sentence,6,8,Womit fährst du zur Schule?,How do you go to school?,Comment vas-tu à l'école ?,학교에 뭘 타고 가요?,何で学校に行きますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em đi học bằng xe đạp ạ.,,dialogue,🚲,sentence,6,8,Ich fahre mit dem Fahrrad zur Schule.,I go to school by bicycle.,Je vais à l'école à vélo.,자전거를 타고 학교에 가요.,自転車で学校に行きます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,Em có thích buổi sáng không?,,dialogue,🌅,sentence,6,8,Magst du den Morgen?,Do you like the morning?,Aimes-tu le matin ?,아침을 좋아해요?,朝が好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Buổi sáng của em,"Dạ, em rất thích buổi sáng mát mẻ ạ.",,dialogue,🌅,sentence,6,8,"Ja, ich mag den kühlen Morgen sehr.","Yes, I really like the cool morning.","Oui, j'aime beaucoup le matin frais.","네, 시원한 아침을 정말 좋아해요.",はい、涼しい朝がとても好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Tết này em về đâu chơi?,,dialogue,🧧,sentence,6,8,Wohin fährst du zu Tết?,Where are you going for Tết?,Où vas-tu pour Tết ?,이번 뗏에 어디로 놀러 가요?,今度のテトはどこに行きますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em về nhà bà ở quê ạ.,,dialogue,👵,sentence,6,8,Ich fahre zu Omas Haus auf dem Land.,I'm going to grandma's house in the countryside.,Je vais chez grand-mère à la campagne.,시골 할머니 댁에 가요.,田舎のおばあちゃんの家に行きます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Ở nhà bà có gì vui?,,dialogue,🥮,sentence,6,8,Was ist bei Oma zu Hause schön?,What's fun at grandma's house?,Qu'y a-t-il d'amusant chez grand-mère ?,할머니 댁에는 뭐가 재밌어요?,おばあちゃんの家には何が楽しいことがありますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Nhà bà có bánh chưng và hoa mai ạ.,,dialogue,🌼,sentence,6,8,Bei Oma gibt es Bánh chưng und Mai-Blüten.,At grandma's there's bánh chưng and apricot blossoms.,"Chez grand-mère, il y a du bánh chưng et des fleurs d'abricotier.",할머니 댁에는 바인쯩과 매화꽃이 있어요.,おばあちゃんの家にはバインチュンと梅の花があります。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em giúp bà việc gì?,,dialogue,🤝,sentence,6,8,Wobei hilfst du Oma?,What do you help grandma with?,Comment aides-tu grand-mère ?,할머니를 뭘 도와드려요?,おばあちゃんの何を手伝いますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em giúp bà lau bàn ghế đón Tết ạ.,,dialogue,🧹,sentence,6,8,"Ich helfe Oma, Tisch und Stühle für Tết zu putzen.",I help grandma clean the table and chairs for Tết.,J'aide grand-mère à nettoyer la table et les chaises pour Tết.,뗏을 맞아 할머니가 탁자와 의자 닦는 걸 도와드려요.,テトを迎えるためおばあちゃんのテーブルと椅子拭きを手伝います。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,Em có thích Tết ở quê không?,,dialogue,😊,sentence,6,8,Magst du Tết auf dem Land?,Do you like Tết in the countryside?,Aimes-tu Tết à la campagne ?,시골에서 보내는 뗏을 좋아해요?,田舎でのテトが好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Tết ở nhà bà,"Dạ, em thích lắm vì được gặp họ hàng ạ.",,dialogue,👨‍👩‍👧‍👦,sentence,6,8,"Ja, ich mag es sehr, weil ich Verwandte treffe.","Yes, I like it a lot because I get to meet relatives.","Oui, j'aime beaucoup car je vois mes parents.","네, 친척들을 만날 수 있어서 정말 좋아해요.",はい、親戚に会えるのでとても好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Hôm nay trời thế nào?,,dialogue,🌧️,sentence,6,8,Wie ist das Wetter heute?,How is the weather today?,Quel temps fait-il aujourd'hui ?,오늘 날씨가 어때요?,今日の天気はどうですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Hôm nay trời mưa to ạ.,,dialogue,🌧️,sentence,6,8,Heute regnet es stark.,It's raining heavily today.,Aujourd'hui il pleut fort.,오늘 비가 많이 와요.,今日は雨がたくさん降っています。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em có được ra ngoài chơi không?,,dialogue,🚪,sentence,6,8,Darfst du draußen spielen?,Can you play outside?,Peux-tu aller jouer dehors ?,밖에 나가서 놀 수 있어요?,外で遊べますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,"Dạ, không ạ, em chơi trong nhà thôi ạ.",,dialogue,🏠,sentence,6,8,"Nein, ich spiele nur drinnen.","No, I only play indoors.","Non, je joue seulement à l'intérieur.","아니요, 집 안에서만 놀아요.",いいえ、家の中だけで遊びます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em làm gì trong lúc trời mưa?,,dialogue,🧩,sentence,6,8,"Was machst du, während es regnet?",What do you do while it rains?,Que fais-tu pendant qu'il pleut ?,비가 올 때 뭐 해요?,雨が降っているとき何をしますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em đọc truyện và xếp hình ạ.,,dialogue,📖,sentence,6,8,Ich lese Geschichten und puzzle.,I read stories and do puzzles.,Je lis des histoires et je fais des puzzles.,이야기책을 읽고 퍼즐을 맞춰요.,お話を読んでパズルをします。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,Em có thích tiếng mưa rơi không?,,dialogue,🌧️,sentence,6,8,Magst du das Geräusch von Regen?,Do you like the sound of falling rain?,Aimes-tu le bruit de la pluie ?,빗소리를 좋아해요?,雨の音が好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ngày mưa,"Dạ, em thích nghe tiếng mưa rơi ạ.",,dialogue,🌧️,sentence,6,8,"Ja, ich höre gerne den Regen fallen.","Yes, I like listening to the rain falling.","Oui, j'aime écouter le bruit de la pluie.","네, 빗소리 듣는 걸 좋아해요.",はい、雨の音を聞くのが好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Em kể cho cô nghe về chú mèo của em đi.,,dialogue,🐱,sentence,6,8,Erzähl mir von deiner Katze.,Tell me about your cat.,Parle-moi de ton chat.,선생님한테 고양이에 대해 말해 줘요.,あなたの猫について話してください。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Chú mèo của em tên là Mun ạ.,,dialogue,🐱,sentence,6,8,Meine Katze heißt Mun.,My cat is named Mun.,Mon chat s'appelle Mun.,제 고양이 이름은 문이에요.,私の猫の名前はムンです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun thích ăn gì?,,dialogue,🐟,sentence,6,8,Was frisst Mun gerne?,What does Mun like to eat?,Qu'aime manger Mun ?,문은 뭘 좋아해요?,ムンは何を食べるのが好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun thích ăn cá ạ.,,dialogue,🐟,sentence,6,8,Mun frisst gerne Fisch.,Mun likes to eat fish.,Mun aime manger du poisson.,문은 생선을 좋아해요.,ムンは魚が好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun hay làm gì cả ngày?,,dialogue,😴,sentence,6,8,Was macht Mun den ganzen Tag?,What does Mun do all day?,Que fait Mun toute la journée ?,문은 하루 종일 뭐 해요?,ムンは一日中何をしますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Mun hay ngủ và chơi cuộn len ạ.,,dialogue,😴,sentence,6,8,Mun schläft gerne und spielt mit Wollknäueln.,Mun likes sleeping and playing with yarn.,Mun aime dormir et jouer avec une pelote de laine.,문은 자고 털실 뭉치를 갖고 놀아요.,ムンは寝たり毛糸玉で遊んだりします。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,Em có yêu Mun không?,,dialogue,❤️,sentence,6,8,Liebst du Mun?,Do you love Mun?,Aimes-tu Mun ?,문을 사랑해요?,ムンが好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Chú mèo của em,"Dạ, em rất yêu Mun ạ.",,dialogue,❤️,sentence,6,8,"Ja, ich liebe Mun sehr.","Yes, I love Mun very much.","Oui, j'aime beaucoup Mun.","네, 문을 정말 사랑해요.",はい、ムンがとても好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Ở trường em thích môn học nào nhất?,,dialogue,🎨,sentence,6,8,Welches Schulfach magst du am meisten?,What school subject do you like most?,Quelle matière préfères-tu à l'école ?,학교에서 어느 과목을 제일 좋아해요?,学校でどの科目が一番好きですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em thích môn vẽ nhất ạ.,,dialogue,🎨,sentence,6,8,Ich mag Malen am meisten.,I like drawing class the most.,J'aime le plus le dessin.,저는 미술을 제일 좋아해요.,私は絵を描くのが一番好きです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Cô giáo em tên là gì?,,dialogue,👩‍🏫,sentence,6,8,Wie heißt deine Lehrerin?,What is your teacher's name?,Comment s'appelle ta maîtresse ?,선생님 이름이 뭐예요?,先生の名前は何ですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Cô giáo em tên là cô Lan ạ.,,dialogue,👩‍🏫,sentence,6,8,Meine Lehrerin heißt Frau Lan.,My teacher's name is Ms. Lan.,Ma maîtresse s'appelle Mme Lan.,저희 선생님 이름은 란 선생님이에요.,私の先生の名前はラン先生です。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Giờ ra chơi em thường làm gì?,,dialogue,⏰,sentence,6,8,Was machst du normalerweise in der Pause?,What do you usually do at recess?,Que fais-tu habituellement à la récréation ?,쉬는 시간에 보통 뭐 해요?,休み時間には普段何をしますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em thường chơi nhảy dây với các bạn ạ.,,dialogue,🏃,sentence,6,8,Ich springe normalerweise Seil mit Freunden.,I usually jump rope with friends.,Je saute habituellement à la corde avec mes amis.,보통 친구들이랑 줄넘기를 해요.,普段友達と縄跳びをします。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,Em có nhiều bạn ở trường không?,,dialogue,👫,sentence,6,8,Hast du viele Freunde in der Schule?,Do you have many friends at school?,As-tu beaucoup d'amis à l'école ?,학교에 친구가 많아요?,学校に友達がたくさんいますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Ở trường,"Dạ, em có rất nhiều bạn ở trường ạ.",,dialogue,👫,sentence,6,8,"Ja, ich habe sehr viele Freunde in der Schule.","Yes, I have many friends at school.","Oui, j'ai beaucoup d'amis à l'école.","네, 학교에 친구가 아주 많아요.",はい、学校に友達がたくさんいます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em đang làm gì trong vườn vậy?,,dialogue,🌱,sentence,6,8,Was machst du gerade im Garten?,What are you doing in the garden?,Que fais-tu dans le jardin ?,정원에서 뭐 하고 있어요?,庭で何をしていますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em đang trồng một cây non ạ.,,dialogue,🌱,sentence,6,8,Ich pflanze gerade einen jungen Baum.,I'm planting a young tree.,Je plante un jeune arbre.,어린 나무를 심고 있어요.,若い木を植えています。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Trồng xong em cần làm gì?,,dialogue,💧,sentence,6,8,Was musst du nach dem Pflanzen tun?,What do you need to do after planting?,Que dois-tu faire après avoir planté ?,심고 나서 뭘 해야 해요?,植えた後何をする必要がありますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em cần tưới nước cho cây mỗi ngày ạ.,,dialogue,💧,sentence,6,8,Ich muss den Baum jeden Tag gießen.,I need to water the tree every day.,Je dois arroser l'arbre tous les jours.,매일 나무에 물을 줘야 해요.,毎日木に水をやる必要があります。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Sau một tháng cây thế nào?,,dialogue,🌳,sentence,6,8,Wie ist der Baum nach einem Monat?,How is the tree after one month?,Comment est l'arbre après un mois ?,한 달 후 나무는 어때요?,一か月後、木はどうなりますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Sau một tháng cây đã cao hơn và ra lá mới ạ.,,dialogue,🌳,sentence,6,8,Nach einem Monat ist der Baum größer und hat neue Blätter.,After one month the tree is taller and has new leaves.,"Après un mois, l'arbre est plus grand et a de nouvelles feuilles.",한 달 후 나무는 더 커지고 새 잎이 났어요.,一か月後、木は大きくなり新しい葉が出ました。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,Em có vui khi thấy cây lớn không?,,dialogue,😊,sentence,6,8,"Freust du dich, den Baum wachsen zu sehen?",Are you happy to see the tree grow?,Es-tu content(e) de voir l'arbre grandir ?,나무가 자라는 걸 보면 기뻐요?,木が育つのを見てうれしいですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Em trồng cây,"Dạ, em vui lắm vì đó là cây của em ạ.",,dialogue,😄,sentence,6,8,"Ja, ich freue mich sehr, weil es mein Baum ist.","Yes, I'm very happy because it's my tree.","Oui, je suis très content(e) car c'est mon arbre.","네, 제 나무라서 정말 기뻐요.",はい、私の木なのでとてもうれしいです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em đi đâu cùng mẹ vậy?,,dialogue,🧺,sentence,6,8,Wohin gehst du mit Mama?,Where are you going with mom?,Où vas-tu avec maman ?,엄마랑 어디 가요?,ママとどこに行きますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em đi chợ cùng mẹ ạ.,,dialogue,🧺,sentence,6,8,Ich gehe mit Mama auf den Markt.,I'm going to the market with mom.,Je vais au marché avec maman.,엄마랑 시장에 가요.,ママと市場に行きます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Mẹ mua những gì ở chợ?,,dialogue,🥬,sentence,6,8,Was kauft Mama auf dem Markt?,What does mom buy at the market?,Qu'est-ce que maman achète au marché ?,엄마가 시장에서 뭘 사요?,ママは市場で何を買いますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,"Mẹ mua rau, cá và trái cây ạ.",,dialogue,🥬,sentence,6,8,"Mama kauft Gemüse, Fisch und Obst.","Mom buys vegetables, fish and fruit.","Maman achète des légumes, du poisson et des fruits.","엄마가 채소, 생선, 과일을 사요.",ママは野菜と魚と果物を買います。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em giúp mẹ việc gì?,,dialogue,🤝,sentence,6,8,Wobei hilfst du Mama?,What do you help mom with?,Comment aides-tu maman ?,엄마를 뭘 도와드려요?,ママの何を手伝いますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Em giúp mẹ xách túi rau ạ.,,dialogue,🧺,sentence,6,8,"Ich helfe Mama, die Gemüsetüte zu tragen.",I help mom carry the bag of vegetables.,J'aide maman à porter le sac de légumes.,엄마가 채소 봉지 드는 걸 도와드려요.,ママが野菜の袋を持つのを手伝います。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,Đi chợ về em thấy thế nào?,,dialogue,😊,sentence,6,8,Wie fühlst du dich nach dem Markt?,How do you feel after the market?,Comment te sens-tu après le marché ?,시장에 갔다 오면 기분이 어때요?,市場から帰るとどんな気分ですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Đi chợ cùng mẹ,"Dạ, em thấy mệt nhưng rất vui ạ.",,dialogue,😊,sentence,6,8,"Ich bin müde, aber sehr glücklich.",I'm tired but very happy.,Je suis fatigué(e) mais très content(e).,피곤하지만 아주 기뻐요.,疲れましたがとてもうれしいです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Chuyện gì xảy ra sau cơn mưa vậy?,,dialogue,🌈,sentence,6,8,Was passiert nach dem Regen?,What happens after the rain?,Que se passe-t-il après la pluie ?,비가 온 뒤 무슨 일이 있어요?,雨の後何が起こりますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Sau cơn mưa trời có cầu vồng rất đẹp ạ.,,dialogue,🌈,sentence,6,8,Nach dem Regen gibt es einen wunderschönen Regenbogen.,After the rain there's a very beautiful rainbow.,"Après la pluie, il y a un très bel arc-en-ciel.",비가 온 뒤 아주 예쁜 무지개가 있어요.,雨の後、とてもきれいな虹があります。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Cầu vồng có những màu gì?,,dialogue,🎨,sentence,6,8,Welche Farben hat der Regenbogen?,What colors does the rainbow have?,Quelles couleurs a l'arc-en-ciel ?,무지개는 무슨 색이 있어요?,虹にはどんな色がありますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Cầu vồng có bảy màu ạ.,,dialogue,🌈,sentence,6,8,Der Regenbogen hat sieben Farben.,The rainbow has seven colors.,L'arc-en-ciel a sept couleurs.,무지개는 일곱 색이에요.,虹には七色あります。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Em cảm thấy thế nào khi thấy cầu vồng?,,dialogue,😊,sentence,6,8,"Wie fühlst du dich, wenn du den Regenbogen siehst?",How do you feel when you see the rainbow?,Comment te sens-tu quand tu vois l'arc-en-ciel ?,무지개를 보면 기분이 어때요?,虹を見るとどんな気持ちですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,"Dạ, em thấy rất thích thú ạ.",,dialogue,😄,sentence,6,8,Ich finde es sehr aufregend.,I find it very exciting.,Je trouve ça très excitant.,정말 신기하고 재밌어요.,とてもわくわくします。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,Em muốn vẽ lại cầu vồng không?,,dialogue,🖍️,sentence,6,8,Möchtest du den Regenbogen malen?,Do you want to draw the rainbow?,Veux-tu dessiner l'arc-en-ciel ?,무지개를 그리고 싶어요?,虹を描きたいですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Cơn mưa và cầu vồng,"Dạ, em muốn vẽ lại cầu vồng vào vở ạ.",,dialogue,🖍️,sentence,6,8,"Ja, ich möchte den Regenbogen in mein Heft malen.","Yes, I want to draw the rainbow in my notebook.","Oui, je veux dessiner l'arc-en-ciel dans mon cahier.","네, 공책에 무지개를 그리고 싶어요.",はい、ノートに虹を描きたいです。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Hôm nay là ngày gì của bạn Lan?,,dialogue,🎂,sentence,6,8,Was für ein Tag ist heute für Lan?,What special day is it for Lan today?,Quel jour spécial est-ce pour Lan aujourd'hui ?,오늘은 란에게 무슨 날이에요?,今日はランにとって何の日ですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Hôm nay là sinh nhật của bạn Lan ạ.,,dialogue,🎂,sentence,6,8,Heute ist Lans Geburtstag.,Today is Lan's birthday.,Aujourd'hui c'est l'anniversaire de Lan.,오늘은 란의 생일이에요.,今日はランの誕生日です。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Các bạn tặng Lan món quà gì?,,dialogue,🎁,sentence,6,8,Was schenken die Freunde Lan?,What gift do the friends give Lan?,Quel cadeau les amis offrent-ils à Lan ?,친구들이 란에게 무슨 선물을 줘요?,友達はランに何のプレゼントをあげますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Các bạn tặng Lan một quyển truyện tranh ạ.,,dialogue,📚,sentence,6,8,Die Freunde schenken Lan ein Comicbuch.,The friends give Lan a comic book.,Les amis offrent à Lan une bande dessinée.,친구들이 란에게 만화책을 줘요.,友達はランに漫画本をあげます。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Mọi người hát bài gì cho Lan?,,dialogue,🎵,sentence,6,8,Was singen alle für Lan?,What song does everyone sing for Lan?,Quelle chanson tout le monde chante-t-il pour Lan ?,모두 란을 위해 무슨 노래를 불러요?,みんなはランのために何の歌を歌いますか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Mọi người hát bài chúc mừng sinh nhật ạ.,,dialogue,🎵,sentence,6,8,Alle singen das Geburtstagslied.,Everyone sings the happy birthday song.,Tout le monde chante la chanson d'anniversaire.,모두 생일 축하 노래를 불러요.,みんな誕生日の歌を歌います。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,Lan cảm thấy thế nào trong ngày sinh nhật?,,dialogue,😊,sentence,6,8,Wie fühlt sich Lan an ihrem Geburtstag?,How does Lan feel on her birthday?,Comment Lan se sent-elle le jour de son anniversaire ?,란은 생일날 기분이 어때요?,ランは誕生日にどんな気持ちですか。,decor
+Chủ đề hội thoại cấp 4,💬,4,Sinh nhật của Lan,"Dạ, Lan cảm thấy rất hạnh phúc ạ.",,dialogue,😄,sentence,6,8,Lan fühlt sich sehr glücklich.,Lan feels very happy.,Lan se sent très heureuse.,란은 정말 행복해요.,ランはとても幸せです。,decor

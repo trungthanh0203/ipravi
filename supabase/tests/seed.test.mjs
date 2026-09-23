@@ -62,6 +62,20 @@ ok(await count("content_items") === 21 && await count("units") === 2, "chạy se
   ok((await one("select description from public.lessons where title_vi = 'Chào hỏi'")).description === "Đã ghi tay", "chạy lại lần 2 không đổi gì (diễn giải sửa tay vẫn còn)");
 }
 
+// Diễn giải chủ đề (004_unit_descriptions.sql, cột units.description từ migration 021): phủ MỌI chủ đề của giáo trình,
+// chỉ bổ sung, chạy lại an toàn. Dùng lại units đã tạo đủ ở khối "Tên dịch" phía trên.
+{
+  await db.query("update public.units set description = 'Đã ghi tay' where title_vi = 'Gia đình'"); // admin đã sửa tay
+  const sql4 = readFileSync(dir + "004_unit_descriptions.sql", "utf8");
+  await db.exec(sql4);
+  const noD = (await db.query("select title_vi from public.units where description is null and not hidden")).rows;
+  const totalUnits = (await one("select count(*) c from public.units where not hidden")).c;
+  ok(noD.length === 0, `mọi chủ đề (${totalUnits}) có nội dung diễn giải`, noD.map((r) => r.title_vi).join(", "));
+  ok((await one("select description from public.units where title_vi = 'Gia đình'")).description === "Đã ghi tay", "diễn giải chủ đề đã sửa tay được giữ, không bị ghi đè");
+  await db.exec(sql4);
+  ok((await one("select description from public.units where title_vi = 'Gia đình'")).description === "Đã ghi tay", "chạy lại lần 2 không đổi gì (diễn giải chủ đề sửa tay vẫn còn)");
+}
+
 // Phụ huynh còn hạn thấy đủ nội dung qua RLS; gộp được nghĩa + âm thanh như app truy vấn.
 const uid = (await one("insert into auth.users (email) values ('p@x.com') returning id")).id;
 await db.exec("set role authenticated");

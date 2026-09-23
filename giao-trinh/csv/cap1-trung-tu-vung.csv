@@ -1,208 +1,208 @@
-unit,unit_emoji,level,lesson,vi,emoji,type,min_age,max_age,de,en
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,xin chào,👋,phrase,3,8,Hallo,hello
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,chào buổi sáng,☀️,phrase,3,8,Guten Morgen,good morning
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,chúc ngủ ngon,🌙,phrase,3,8,Gute Nacht,good night
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,tạm biệt,🖐️,word,3,8,Tschüss,goodbye
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,hẹn gặp lại,🤝,phrase,3,8,Bis bald,see you later
-Chào hỏi và lễ phép,🙏,2,Chào hỏi,chúc mừng sinh nhật,🎂,phrase,3,8,Alles Gute zum Geburtstag,happy birthday
-Chào hỏi và lễ phép,🙏,2,Lễ phép,cảm ơn,🙏,word,3,8,Danke,thank you
-Chào hỏi và lễ phép,🙏,2,Lễ phép,xin lỗi,🙇,phrase,3,8,Entschuldigung,sorry
-Chào hỏi và lễ phép,🙏,2,Lễ phép,dạ,🙋,word,3,8,Ja (höflich),yes (polite)
-Chào hỏi và lễ phép,🙏,2,Lễ phép,xin phép,✋,phrase,3,8,Darf ich?,may I?
-Chào hỏi và lễ phép,🙏,2,Lễ phép,xin mời,🤲,phrase,3,8,Bitte sehr,please go ahead
-Chào hỏi và lễ phép,🙏,2,Lễ phép,không sao đâu,😊,phrase,3,8,Kein Problem,it's okay
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,bố,👨,word,3,8,Papa,dad
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,mẹ,👩,word,3,8,Mama,mom
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,ông,👴,word,3,8,Opa,grandpa
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,bà,👵,word,3,8,Oma,grandma
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,anh,👦,word,3,8,großer Bruder,older brother
-Gia đình,👨‍👩‍👧‍👦,2,Người thân,chị,👧,word,3,8,große Schwester,older sister
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,em bé,👶,word,3,8,Baby,baby
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,chú,🧔,word,3,8,Onkel,uncle
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,cô,👩‍🦰,word,3,8,Tante,aunt
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,bạn,🧒,word,3,8,Freund,friend
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,gia đình,👨‍👩‍👧‍👦,word,3,8,Familie,family
-Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,nhà,🏠,word,3,8,Haus,house
-Cơ thể,🧍,2,Khuôn mặt,mắt,👁️,word,3,8,Auge,eye
-Cơ thể,🧍,2,Khuôn mặt,mũi,👃,word,3,8,Nase,nose
-Cơ thể,🧍,2,Khuôn mặt,miệng,👄,word,3,8,Mund,mouth
-Cơ thể,🧍,2,Khuôn mặt,tai,👂,word,3,8,Ohr,ear
-Cơ thể,🧍,2,Khuôn mặt,tóc,💇,word,3,8,Haare,hair
-Cơ thể,🧍,2,Khuôn mặt,răng,🦷,word,3,8,Zahn,tooth
-Cơ thể,🧍,2,Tay và chân,tay,✋,word,3,8,Hand,hand
-Cơ thể,🧍,2,Tay và chân,chân,🦶,word,3,8,Fuß,foot
-Cơ thể,🧍,2,Tay và chân,ngón tay,👆,word,3,8,Finger,finger
-Cơ thể,🧍,2,Tay và chân,lưỡi,👅,word,3,8,Zunge,tongue
-Cơ thể,🧍,2,Tay và chân,tim,❤️,word,3,8,Herz,heart
-Cơ thể,🧍,2,Tay và chân,bắp tay,💪,word,3,8,Muskel,muscle
-Con vật,🐾,2,Con vật quanh nhà,con chó,🐶,word,3,8,Hund,dog
-Con vật,🐾,2,Con vật quanh nhà,con mèo,🐱,word,3,8,Katze,cat
-Con vật,🐾,2,Con vật quanh nhà,con gà,🐔,word,3,8,Huhn,chicken
-Con vật,🐾,2,Con vật quanh nhà,con vịt,🦆,word,3,8,Ente,duck
-Con vật,🐾,2,Con vật quanh nhà,con heo,🐷,word,3,8,Schwein,pig
-Con vật,🐾,2,Con vật quanh nhà,con bò,🐮,word,3,8,Kuh,cow
-Con vật,🐾,2,Con vật quanh nhà,con cá,🐟,word,3,8,Fisch,fish
-Con vật,🐾,2,Con vật ở sở thú,con voi,🐘,word,3,8,Elefant,elephant
-Con vật,🐾,2,Con vật ở sở thú,con hổ,🐯,word,3,8,Tiger,tiger
-Con vật,🐾,2,Con vật ở sở thú,con khỉ,🐵,word,3,8,Affe,monkey
-Con vật,🐾,2,Con vật ở sở thú,con gấu,🐻,word,3,8,Bär,bear
-Con vật,🐾,2,Con vật ở sở thú,con thỏ,🐰,word,3,8,Hase,rabbit
-Con vật,🐾,2,Con vật ở sở thú,con hươu,🦌,word,3,8,Hirsch,deer
-Con vật,🐾,2,Con vật nhỏ,con bướm,🦋,word,3,8,Schmetterling,butterfly
-Con vật,🐾,2,Con vật nhỏ,con ong,🐝,word,3,8,Biene,bee
-Con vật,🐾,2,Con vật nhỏ,con kiến,🐜,word,3,8,Ameise,ant
-Con vật,🐾,2,Con vật nhỏ,con ếch,🐸,word,3,8,Frosch,frog
-Con vật,🐾,2,Con vật nhỏ,con rùa,🐢,word,3,8,Schildkröte,turtle
-Con vật,🐾,2,Con vật nhỏ,con chim,🐦,word,3,8,Vogel,bird
-Màu sắc,🎨,2,Các màu cơ bản,màu đỏ,🔴,word,3,8,rot,red
-Màu sắc,🎨,2,Các màu cơ bản,màu xanh dương,🔵,word,3,8,blau,blue
-Màu sắc,🎨,2,Các màu cơ bản,màu xanh lá,🟢,word,3,8,grün,green
-Màu sắc,🎨,2,Các màu cơ bản,màu vàng,🟡,word,3,8,gelb,yellow
-Màu sắc,🎨,2,Các màu cơ bản,màu cam,🟠,word,3,8,orange,orange
-Màu sắc,🎨,2,Các màu cơ bản,màu tím,🟣,word,3,8,lila,purple
-Màu sắc,🎨,2,Các màu cơ bản,màu đen,⚫,word,3,8,schwarz,black
-Màu sắc,🎨,2,Các màu cơ bản,màu trắng,⚪,word,3,8,weiß,white
-Màu sắc,🎨,2,Hình khối,hình tròn,⭕,word,3,8,Kreis,circle
-Màu sắc,🎨,2,Hình khối,hình vuông,🟦,word,3,8,Quadrat,square
-Màu sắc,🎨,2,Hình khối,hình tam giác,🔺,word,3,8,Dreieck,triangle
-Màu sắc,🎨,2,Hình khối,hình thoi,🔶,word,3,8,Raute,diamond
-Màu sắc,🎨,2,Hình khối,trái tim,💖,word,3,8,Herz,heart
-Số đếm,🔢,2,Một đến năm,không,0️⃣,word,3,8,null,zero
-Số đếm,🔢,2,Một đến năm,một,1️⃣,word,3,8,eins,one
-Số đếm,🔢,2,Một đến năm,hai,2️⃣,word,3,8,zwei,two
-Số đếm,🔢,2,Một đến năm,ba,3️⃣,word,3,8,drei,three
-Số đếm,🔢,2,Một đến năm,bốn,4️⃣,word,3,8,vier,four
-Số đếm,🔢,2,Một đến năm,năm,5️⃣,word,3,8,fünf,five
-Số đếm,🔢,2,Sáu đến mười,sáu,6️⃣,word,3,8,sechs,six
-Số đếm,🔢,2,Sáu đến mười,bảy,7️⃣,word,3,8,sieben,seven
-Số đếm,🔢,2,Sáu đến mười,tám,8️⃣,word,3,8,acht,eight
-Số đếm,🔢,2,Sáu đến mười,chín,9️⃣,word,3,8,neun,nine
-Số đếm,🔢,2,Sáu đến mười,mười,🔟,word,3,8,zehn,ten
-Số đếm,🔢,2,Sáu đến mười,một trăm,💯,phrase,3,8,hundert,one hundred
-Ăn uống,🍚,2,Bữa cơm,cơm,🍚,word,3,8,Reis,rice
-Ăn uống,🍚,2,Bữa cơm,phở,🍜,word,3,8,Pho (Nudelsuppe),pho (noodle soup)
-Ăn uống,🍚,2,Bữa cơm,bánh mì,🥖,word,3,8,Brot,bread
-Ăn uống,🍚,2,Bữa cơm,trứng,🥚,word,3,8,Ei,egg
-Ăn uống,🍚,2,Bữa cơm,rau,🥬,word,3,8,Gemüse,vegetables
-Ăn uống,🍚,2,Bữa cơm,canh,🍲,word,3,8,Suppe,soup
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,sữa,🥛,word,3,8,Milch,milk
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,nước,💧,word,3,8,Wasser,water
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,nước cam,🧃,phrase,3,8,Orangensaft,orange juice
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,kem,🍦,word,3,8,Eis,ice cream
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,bánh ngọt,🍰,phrase,3,8,Kuchen,cake
-Ăn uống,🍚,2,Đồ uống và bánh kẹo,kẹo,🍬,word,3,8,Bonbon,candy
-Trái cây,🍎,2,Trái cây quen thuộc,quả chuối,🍌,phrase,3,8,Banane,banana
-Trái cây,🍎,2,Trái cây quen thuộc,quả táo,🍎,phrase,3,8,Apfel,apple
-Trái cây,🍎,2,Trái cây quen thuộc,quả cam,🍊,phrase,3,8,Orange,orange
-Trái cây,🍎,2,Trái cây quen thuộc,quả nho,🍇,phrase,3,8,Weintrauben,grapes
-Trái cây,🍎,2,Trái cây quen thuộc,quả dưa hấu,🍉,phrase,3,8,Wassermelone,watermelon
-Trái cây,🍎,2,Trái cây quen thuộc,quả xoài,🥭,phrase,3,8,Mango,mango
-Trái cây,🍎,2,Trái cây khác,quả dâu tây,🍓,phrase,3,8,Erdbeere,strawberry
-Trái cây,🍎,2,Trái cây khác,quả lê,🍐,phrase,3,8,Birne,pear
-Trái cây,🍎,2,Trái cây khác,quả dứa,🍍,phrase,3,8,Ananas,pineapple
-Trái cây,🍎,2,Trái cây khác,quả đào,🍑,phrase,3,8,Pfirsich,peach
-Trái cây,🍎,2,Trái cây khác,quả chanh,🍋,phrase,3,8,Zitrone,lemon
-Trái cây,🍎,2,Trái cây khác,quả dừa,🥥,phrase,3,8,Kokosnuss,coconut
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,quả bóng,⚽,phrase,3,8,Ball,ball
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,gấu bông,🧸,phrase,3,8,Teddybär,teddy bear
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,cái diều,🪁,phrase,3,8,Drachen,kite
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,xếp hình,🧩,phrase,3,8,Puzzle,puzzle
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,bóng bay,🎈,phrase,3,8,Luftballon,balloon
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,món quà,🎁,phrase,3,8,Geschenk,gift
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,quyển sách,📖,phrase,3,8,Buch,book
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái bút,✏️,phrase,3,8,Bleistift,pencil
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái cặp,🎒,phrase,3,8,Schulranzen,school bag
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái kéo,✂️,phrase,3,8,Schere,scissors
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái thước,📏,phrase,3,8,Lineal,ruler
-Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,bút màu,🖍️,phrase,3,8,Buntstift,crayon
-Ngôi nhà,🏠,2,Trong nhà,cái giường,🛏️,phrase,3,8,Bett,bed
-Ngôi nhà,🏠,2,Trong nhà,cái ghế,🪑,phrase,3,8,Stuhl,chair
-Ngôi nhà,🏠,2,Trong nhà,cái cửa,🚪,phrase,3,8,Tür,door
-Ngôi nhà,🏠,2,Trong nhà,cái đèn,💡,phrase,3,8,Lampe,lamp
-Ngôi nhà,🏠,2,Trong nhà,cái tivi,📺,phrase,3,8,Fernseher,TV
-Ngôi nhà,🏠,2,Trong nhà,cái đồng hồ,⏰,phrase,3,8,Uhr,clock
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái bát,🥣,phrase,3,8,Schüssel,bowl
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái thìa,🥄,phrase,3,8,Löffel,spoon
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,đôi đũa,🥢,phrase,3,8,Essstäbchen,chopsticks
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái cốc,☕,phrase,3,8,Tasse,cup
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái chảo,🍳,phrase,3,8,Pfanne,frying pan
-Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,xà phòng,🧼,phrase,3,8,Seife,soap
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,nắng,☀️,word,3,8,Sonnenschein,sunshine
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,mưa,🌧️,word,3,8,Regen,rain
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,mây,☁️,word,3,8,Wolke,cloud
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,gió,💨,word,3,8,Wind,wind
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,tuyết,❄️,word,3,8,Schnee,snow
-Thiên nhiên và thời tiết,🌤️,2,Thời tiết,cầu vồng,🌈,phrase,3,8,Regenbogen,rainbow
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,cái cây,🌳,phrase,3,8,Baum,tree
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,bông hoa,🌸,phrase,3,8,Blume,flower
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,chiếc lá,🍃,phrase,3,8,Blatt,leaf
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,mặt trăng,🌙,phrase,3,8,Mond,moon
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,ngôi sao,⭐,phrase,3,8,Stern,star
-Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,biển,🌊,word,3,8,Meer,sea
-Quần áo và xe cộ,👕,2,Quần áo,cái áo,👕,phrase,3,8,T-Shirt,shirt
-Quần áo và xe cộ,👕,2,Quần áo,cái quần,👖,phrase,3,8,Hose,pants
-Quần áo và xe cộ,👕,2,Quần áo,cái váy,👗,phrase,3,8,Kleid,dress
-Quần áo và xe cộ,👕,2,Quần áo,đôi giày,👟,phrase,3,8,Schuhe,shoes
-Quần áo và xe cộ,👕,2,Quần áo,cái mũ,🧢,phrase,3,8,Mütze,cap
-Quần áo và xe cộ,👕,2,Quần áo,đôi tất,🧦,phrase,3,8,Socken,socks
-Quần áo và xe cộ,👕,2,Xe cộ,xe đạp,🚲,phrase,3,8,Fahrrad,bicycle
-Quần áo và xe cộ,👕,2,Xe cộ,xe máy,🛵,phrase,3,8,Moped,scooter
-Quần áo và xe cộ,👕,2,Xe cộ,ô tô,🚗,phrase,3,8,Auto,car
-Quần áo và xe cộ,👕,2,Xe cộ,xe buýt,🚌,phrase,3,8,Bus,bus
-Quần áo và xe cộ,👕,2,Xe cộ,tàu hoả,🚆,phrase,3,8,Zug,train
-Quần áo và xe cộ,👕,2,Xe cộ,máy bay,✈️,phrase,3,8,Flugzeug,airplane
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,ngủ,😴,word,3,8,schlafen,sleep
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,chạy,🏃,word,3,8,rennen,run
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,hát,🎤,word,3,8,singen,sing
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,vẽ,🎨,word,3,8,malen,draw
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,tắm,🛁,word,3,8,baden,take a bath
-Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,đi bộ,🚶,phrase,3,8,gehen,walk
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,vui,😄,word,3,8,fröhlich,happy
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,buồn,😢,word,3,8,traurig,sad
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,giận,😠,word,3,8,wütend,angry
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,sợ,😨,word,3,8,ängstlich,scared
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,ngạc nhiên,😲,phrase,3,8,überrascht,surprised
-Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,buồn ngủ,🥱,phrase,3,8,müde,sleepy
-Tết và Việt Nam,🎊,2,Ngày Tết,Tết,🎊,word,3,8,das vietnamesische Neujahrsfest,Vietnamese New Year
-Tết và Việt Nam,🎊,2,Ngày Tết,bánh chưng,🟩,phrase,3,8,Banh Chung (Reiskuchen),banh chung (sticky rice cake)
-Tết và Việt Nam,🎊,2,Ngày Tết,lì xì,🧧,phrase,3,8,Glücksgeld im roten Umschlag,lucky money in a red envelope
-Tết và Việt Nam,🎊,2,Ngày Tết,pháo hoa,🎆,phrase,3,8,Feuerwerk,fireworks
-Tết và Việt Nam,🎊,2,Ngày Tết,đèn lồng,🏮,phrase,3,8,Laterne,lantern
-Tết và Việt Nam,🎊,2,Ngày Tết,hoa đào,🌸,phrase,3,8,Pfirsichblüte,peach blossom
-Tết và Việt Nam,🎊,2,Việt Nam,áo dài,👗,phrase,3,8,Ao Dai (traditionelles Kleid),ao dai (traditional dress)
-Tết và Việt Nam,🎊,2,Việt Nam,nón lá,👒,phrase,3,8,Kegelhut,conical hat
-Tết và Việt Nam,🎊,2,Việt Nam,con trâu,🐃,phrase,3,8,Wasserbüffel,water buffalo
-Tết và Việt Nam,🎊,2,Việt Nam,cánh đồng lúa,🌾,phrase,3,8,Reisfeld,rice field
-Tết và Việt Nam,🎊,2,Việt Nam,cây tre,🎋,phrase,3,8,Bambus,bamboo
-Tết và Việt Nam,🎊,2,Việt Nam,bánh Trung thu,🥮,phrase,3,8,Mondkuchen,mooncake
-Giờ giấc,🕐,2,Buổi trong ngày,sáng,☀️,word,3,8,Morgen,morning
-Giờ giấc,🕐,2,Buổi trong ngày,trưa,🌞,word,3,8,Mittag,noon
-Giờ giấc,🕐,2,Buổi trong ngày,chiều,🌇,word,3,8,Nachmittag,afternoon
-Giờ giấc,🕐,2,Buổi trong ngày,tối,🌙,word,3,8,Abend,evening
-Giờ giấc,🕐,2,Buổi trong ngày,đêm,🌃,word,3,8,Nacht,night
-Giờ giấc,🕐,2,Buổi trong ngày,hôm nay,📅,phrase,3,8,heute,today
-Giờ giấc,🕐,2,Xem đồng hồ,đồng hồ,⏰,word,3,8,Uhr,clock
-Giờ giấc,🕐,2,Xem đồng hồ,giờ,🕐,word,3,8,Stunde,hour
-Giờ giấc,🕐,2,Xem đồng hồ,phút,⏱️,word,3,8,Minute,minute
-Giờ giấc,🕐,2,Xem đồng hồ,giây,⏲️,word,3,8,Sekunde,second
-Giờ giấc,🕐,2,Xem đồng hồ,rưỡi,🕧,word,3,8,halb,half past
-Giờ giấc,🕐,2,Xem đồng hồ,kim đồng hồ,🕰️,phrase,3,8,Uhrzeiger,clock hand
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Hai,1️⃣,phrase,3,8,Montag,Monday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Ba,2️⃣,phrase,3,8,Dienstag,Tuesday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Tư,3️⃣,phrase,3,8,Mittwoch,Wednesday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Năm,4️⃣,phrase,3,8,Donnerstag,Thursday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Sáu,5️⃣,phrase,3,8,Freitag,Friday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Bảy,6️⃣,phrase,3,8,Samstag,Saturday
-Thứ trong tuần,📅,2,Bảy ngày trong tuần,Chủ Nhật,7️⃣,phrase,3,8,Sonntag,Sunday
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm qua,⏮️,phrase,3,8,gestern,yesterday
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm nay,📅,phrase,3,8,heute,today
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",ngày mai,⏭️,phrase,3,8,morgen,tomorrow
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tuần,🗓️,word,3,8,Woche,week
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tháng,📆,word,3,8,Monat,month
-Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",năm,🎆,word,3,8,Jahr,year
-Vị trí,📍,2,Trên dưới trong ngoài,trên,⬆️,word,3,8,oben,above
-Vị trí,📍,2,Trên dưới trong ngoài,dưới,⬇️,word,3,8,unten,below
-Vị trí,📍,2,Trên dưới trong ngoài,trong,📦,word,3,8,drinnen,inside
-Vị trí,📍,2,Trên dưới trong ngoài,ngoài,🌳,word,3,8,draußen,outside
-Vị trí,📍,2,Trên dưới trong ngoài,cạnh,↔️,word,3,8,neben,next to
-Vị trí,📍,2,Trên dưới trong ngoài,giữa,🎯,word,3,8,in der Mitte,in the middle
+unit,unit_emoji,level,lesson,vi,emoji,type,min_age,max_age,de,en,fr,ko,ja
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,xin chào,👋,phrase,3,8,Hallo,hello,Bonjour,안녕하세요,こんにちは
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,chào buổi sáng,☀️,phrase,3,8,Guten Morgen,good morning,Bonjour (le matin),좋은 아침이에요,おはようございます
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,chúc ngủ ngon,🌙,phrase,3,8,Gute Nacht,good night,Bonne nuit,안녕히 주무세요,おやすみなさい
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,tạm biệt,🖐️,word,3,8,Tschüss,goodbye,Au revoir,안녕히 가세요,さようなら
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,hẹn gặp lại,🤝,phrase,3,8,Bis bald,see you later,À bientôt,또 만나요,またね
+Chào hỏi và lễ phép,🙏,2,Chào hỏi,chúc mừng sinh nhật,🎂,phrase,3,8,Alles Gute zum Geburtstag,happy birthday,Joyeux anniversaire,생일 축하해요,お誕生日おめでとう
+Chào hỏi và lễ phép,🙏,2,Lễ phép,cảm ơn,🙏,word,3,8,Danke,thank you,Merci,감사합니다,ありがとう
+Chào hỏi và lễ phép,🙏,2,Lễ phép,xin lỗi,🙇,phrase,3,8,Entschuldigung,sorry,Pardon,죄송해요,ごめんなさい
+Chào hỏi và lễ phép,🙏,2,Lễ phép,dạ,🙋,word,3,8,Ja (höflich),yes (polite),Oui (poli),네,はい
+Chào hỏi và lễ phép,🙏,2,Lễ phép,xin phép,✋,phrase,3,8,Darf ich?,may I?,Puis-je ?,허락해 주세요,失礼します
+Chào hỏi và lễ phép,🙏,2,Lễ phép,xin mời,🤲,phrase,3,8,Bitte sehr,please go ahead,Je vous en prie,어서 하세요,どうぞ
+Chào hỏi và lễ phép,🙏,2,Lễ phép,không sao đâu,😊,phrase,3,8,Kein Problem,it's okay,Ce n'est pas grave,괜찮아요,大丈夫です
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,bố,👨,word,3,8,Papa,dad,papa,아빠,パパ
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,mẹ,👩,word,3,8,Mama,mom,maman,엄마,ママ
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,ông,👴,word,3,8,Opa,grandpa,grand-père,할아버지,おじいちゃん
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,bà,👵,word,3,8,Oma,grandma,grand-mère,할머니,おばあちゃん
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,anh,👦,word,3,8,großer Bruder,older brother,grand frère,형/오빠,お兄ちゃん
+Gia đình,👨‍👩‍👧‍👦,2,Người thân,chị,👧,word,3,8,große Schwester,older sister,grande sœur,누나/언니,お姉ちゃん
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,em bé,👶,word,3,8,Baby,baby,bébé,아기,赤ちゃん
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,chú,🧔,word,3,8,Onkel,uncle,oncle,삼촌,おじさん
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,cô,👩‍🦰,word,3,8,Tante,aunt,tante,이모,おばさん
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,bạn,🧒,word,3,8,Freund,friend,ami,친구,友達
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,gia đình,👨‍👩‍👧‍👦,word,3,8,Familie,family,famille,가족,家族
+Gia đình,👨‍👩‍👧‍👦,2,Người trong nhà,nhà,🏠,word,3,8,Haus,house,maison,집,家
+Cơ thể,🧍,2,Khuôn mặt,mắt,👁️,word,3,8,Auge,eye,œil,눈,目
+Cơ thể,🧍,2,Khuôn mặt,mũi,👃,word,3,8,Nase,nose,nez,코,鼻
+Cơ thể,🧍,2,Khuôn mặt,miệng,👄,word,3,8,Mund,mouth,bouche,입,口
+Cơ thể,🧍,2,Khuôn mặt,tai,👂,word,3,8,Ohr,ear,oreille,귀,耳
+Cơ thể,🧍,2,Khuôn mặt,tóc,💇,word,3,8,Haare,hair,cheveux,머리카락,髪
+Cơ thể,🧍,2,Khuôn mặt,răng,🦷,word,3,8,Zahn,tooth,dent,이,歯
+Cơ thể,🧍,2,Tay và chân,tay,✋,word,3,8,Hand,hand,main,손,手
+Cơ thể,🧍,2,Tay và chân,chân,🦶,word,3,8,Fuß,foot,pied,발,足
+Cơ thể,🧍,2,Tay và chân,ngón tay,👆,word,3,8,Finger,finger,doigt,손가락,指
+Cơ thể,🧍,2,Tay và chân,lưỡi,👅,word,3,8,Zunge,tongue,langue,혀,舌
+Cơ thể,🧍,2,Tay và chân,tim,❤️,word,3,8,Herz,heart,cœur,심장,心臓
+Cơ thể,🧍,2,Tay và chân,bắp tay,💪,word,3,8,Muskel,muscle,muscle,팔 근육,力こぶ
+Con vật,🐾,2,Con vật quanh nhà,con chó,🐶,word,3,8,Hund,dog,chien,개,犬
+Con vật,🐾,2,Con vật quanh nhà,con mèo,🐱,word,3,8,Katze,cat,chat,고양이,猫
+Con vật,🐾,2,Con vật quanh nhà,con gà,🐔,word,3,8,Huhn,chicken,poule,닭,にわとり
+Con vật,🐾,2,Con vật quanh nhà,con vịt,🦆,word,3,8,Ente,duck,canard,오리,あひる
+Con vật,🐾,2,Con vật quanh nhà,con heo,🐷,word,3,8,Schwein,pig,cochon,돼지,ぶた
+Con vật,🐾,2,Con vật quanh nhà,con bò,🐮,word,3,8,Kuh,cow,vache,소,牛
+Con vật,🐾,2,Con vật quanh nhà,con cá,🐟,word,3,8,Fisch,fish,poisson,물고기,魚
+Con vật,🐾,2,Con vật ở sở thú,con voi,🐘,word,3,8,Elefant,elephant,éléphant,코끼리,ぞう
+Con vật,🐾,2,Con vật ở sở thú,con hổ,🐯,word,3,8,Tiger,tiger,tigre,호랑이,とら
+Con vật,🐾,2,Con vật ở sở thú,con khỉ,🐵,word,3,8,Affe,monkey,singe,원숭이,さる
+Con vật,🐾,2,Con vật ở sở thú,con gấu,🐻,word,3,8,Bär,bear,ours,곰,くま
+Con vật,🐾,2,Con vật ở sở thú,con thỏ,🐰,word,3,8,Hase,rabbit,lapin,토끼,うさぎ
+Con vật,🐾,2,Con vật ở sở thú,con hươu,🦌,word,3,8,Hirsch,deer,cerf,사슴,しか
+Con vật,🐾,2,Con vật nhỏ,con bướm,🦋,word,3,8,Schmetterling,butterfly,papillon,나비,ちょう
+Con vật,🐾,2,Con vật nhỏ,con ong,🐝,word,3,8,Biene,bee,abeille,벌,はち
+Con vật,🐾,2,Con vật nhỏ,con kiến,🐜,word,3,8,Ameise,ant,fourmi,개미,あり
+Con vật,🐾,2,Con vật nhỏ,con ếch,🐸,word,3,8,Frosch,frog,grenouille,개구리,かえる
+Con vật,🐾,2,Con vật nhỏ,con rùa,🐢,word,3,8,Schildkröte,turtle,tortue,거북이,かめ
+Con vật,🐾,2,Con vật nhỏ,con chim,🐦,word,3,8,Vogel,bird,oiseau,새,鳥
+Màu sắc,🎨,2,Các màu cơ bản,màu đỏ,🔴,word,3,8,rot,red,rouge,빨간색,赤
+Màu sắc,🎨,2,Các màu cơ bản,màu xanh dương,🔵,word,3,8,blau,blue,bleu,파란색,青
+Màu sắc,🎨,2,Các màu cơ bản,màu xanh lá,🟢,word,3,8,grün,green,vert,초록색,緑
+Màu sắc,🎨,2,Các màu cơ bản,màu vàng,🟡,word,3,8,gelb,yellow,jaune,노란색,黄色
+Màu sắc,🎨,2,Các màu cơ bản,màu cam,🟠,word,3,8,orange,orange,orange,주황색,オレンジ色
+Màu sắc,🎨,2,Các màu cơ bản,màu tím,🟣,word,3,8,lila,purple,violet,보라색,紫
+Màu sắc,🎨,2,Các màu cơ bản,màu đen,⚫,word,3,8,schwarz,black,noir,검은색,黒
+Màu sắc,🎨,2,Các màu cơ bản,màu trắng,⚪,word,3,8,weiß,white,blanc,하얀색,白
+Màu sắc,🎨,2,Hình khối,hình tròn,⭕,word,3,8,Kreis,circle,cercle,원,丸
+Màu sắc,🎨,2,Hình khối,hình vuông,🟦,word,3,8,Quadrat,square,carré,사각형,四角
+Màu sắc,🎨,2,Hình khối,hình tam giác,🔺,word,3,8,Dreieck,triangle,triangle,삼각형,三角
+Màu sắc,🎨,2,Hình khối,hình thoi,🔶,word,3,8,Raute,diamond,losange,마름모,ひし形
+Màu sắc,🎨,2,Hình khối,trái tim,💖,word,3,8,Herz,heart,cœur,하트,ハート
+Số đếm,🔢,2,Một đến năm,không,0️⃣,word,3,8,null,zero,zéro,영,ゼロ
+Số đếm,🔢,2,Một đến năm,một,1️⃣,word,3,8,eins,one,un,하나,一
+Số đếm,🔢,2,Một đến năm,hai,2️⃣,word,3,8,zwei,two,deux,둘,二
+Số đếm,🔢,2,Một đến năm,ba,3️⃣,word,3,8,drei,three,trois,셋,三
+Số đếm,🔢,2,Một đến năm,bốn,4️⃣,word,3,8,vier,four,quatre,넷,四
+Số đếm,🔢,2,Một đến năm,năm,5️⃣,word,3,8,fünf,five,cinq,다섯,五
+Số đếm,🔢,2,Sáu đến mười,sáu,6️⃣,word,3,8,sechs,six,six,여섯,六
+Số đếm,🔢,2,Sáu đến mười,bảy,7️⃣,word,3,8,sieben,seven,sept,일곱,七
+Số đếm,🔢,2,Sáu đến mười,tám,8️⃣,word,3,8,acht,eight,huit,여덟,八
+Số đếm,🔢,2,Sáu đến mười,chín,9️⃣,word,3,8,neun,nine,neuf,아홉,九
+Số đếm,🔢,2,Sáu đến mười,mười,🔟,word,3,8,zehn,ten,dix,열,十
+Số đếm,🔢,2,Sáu đến mười,một trăm,💯,phrase,3,8,hundert,one hundred,cent,백,百
+Ăn uống,🍚,2,Bữa cơm,cơm,🍚,word,3,8,Reis,rice,riz,밥,ご飯
+Ăn uống,🍚,2,Bữa cơm,phở,🍜,word,3,8,Pho (Nudelsuppe),pho (noodle soup),phở (soupe de nouilles),쌀국수,フォー
+Ăn uống,🍚,2,Bữa cơm,bánh mì,🥖,word,3,8,Brot,bread,pain,빵,パン
+Ăn uống,🍚,2,Bữa cơm,trứng,🥚,word,3,8,Ei,egg,œuf,계란,卵
+Ăn uống,🍚,2,Bữa cơm,rau,🥬,word,3,8,Gemüse,vegetables,légumes,채소,野菜
+Ăn uống,🍚,2,Bữa cơm,canh,🍲,word,3,8,Suppe,soup,soupe,국,スープ
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,sữa,🥛,word,3,8,Milch,milk,lait,우유,牛乳
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,nước,💧,word,3,8,Wasser,water,eau,물,お水
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,nước cam,🧃,phrase,3,8,Orangensaft,orange juice,jus d'orange,오렌지 주스,オレンジジュース
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,kem,🍦,word,3,8,Eis,ice cream,glace,아이스크림,アイスクリーム
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,bánh ngọt,🍰,phrase,3,8,Kuchen,cake,gâteau,케이크,ケーキ
+Ăn uống,🍚,2,Đồ uống và bánh kẹo,kẹo,🍬,word,3,8,Bonbon,candy,bonbon,사탕,あめ
+Trái cây,🍎,2,Trái cây quen thuộc,quả chuối,🍌,phrase,3,8,Banane,banana,banane,바나나,バナナ
+Trái cây,🍎,2,Trái cây quen thuộc,quả táo,🍎,phrase,3,8,Apfel,apple,pomme,사과,りんご
+Trái cây,🍎,2,Trái cây quen thuộc,quả cam,🍊,phrase,3,8,Orange,orange,orange,오렌지,オレンジ
+Trái cây,🍎,2,Trái cây quen thuộc,quả nho,🍇,phrase,3,8,Weintrauben,grapes,raisin,포도,ぶどう
+Trái cây,🍎,2,Trái cây quen thuộc,quả dưa hấu,🍉,phrase,3,8,Wassermelone,watermelon,pastèque,수박,すいか
+Trái cây,🍎,2,Trái cây quen thuộc,quả xoài,🥭,phrase,3,8,Mango,mango,mangue,망고,マンゴー
+Trái cây,🍎,2,Trái cây khác,quả dâu tây,🍓,phrase,3,8,Erdbeere,strawberry,fraise,딸기,いちご
+Trái cây,🍎,2,Trái cây khác,quả lê,🍐,phrase,3,8,Birne,pear,poire,배,梨
+Trái cây,🍎,2,Trái cây khác,quả dứa,🍍,phrase,3,8,Ananas,pineapple,ananas,파인애플,パイナップル
+Trái cây,🍎,2,Trái cây khác,quả đào,🍑,phrase,3,8,Pfirsich,peach,pêche,복숭아,桃
+Trái cây,🍎,2,Trái cây khác,quả chanh,🍋,phrase,3,8,Zitrone,lemon,citron,레몬,レモン
+Trái cây,🍎,2,Trái cây khác,quả dừa,🥥,phrase,3,8,Kokosnuss,coconut,noix de coco,코코넛,ココナッツ
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,quả bóng,⚽,phrase,3,8,Ball,ball,ballon,공,ボール
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,gấu bông,🧸,phrase,3,8,Teddybär,teddy bear,ours en peluche,곰 인형,くまのぬいぐるみ
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,cái diều,🪁,phrase,3,8,Drachen,kite,cerf-volant,연,たこ
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,xếp hình,🧩,phrase,3,8,Puzzle,puzzle,puzzle,퍼즐,パズル
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,bóng bay,🎈,phrase,3,8,Luftballon,balloon,ballon (de baudruche),풍선,風船
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ chơi,món quà,🎁,phrase,3,8,Geschenk,gift,cadeau,선물,プレゼント
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,quyển sách,📖,phrase,3,8,Buch,book,livre,책,本
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái bút,✏️,phrase,3,8,Bleistift,pencil,crayon,연필,えんぴつ
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái cặp,🎒,phrase,3,8,Schulranzen,school bag,cartable,책가방,かばん
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái kéo,✂️,phrase,3,8,Schere,scissors,ciseaux,가위,はさみ
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,cái thước,📏,phrase,3,8,Lineal,ruler,règle,자,ものさし
+Đồ chơi và đồ dùng học tập,🧸,2,Đồ dùng học tập,bút màu,🖍️,phrase,3,8,Buntstift,crayon,crayon de couleur,색연필,色鉛筆
+Ngôi nhà,🏠,2,Trong nhà,cái giường,🛏️,phrase,3,8,Bett,bed,lit,침대,ベッド
+Ngôi nhà,🏠,2,Trong nhà,cái ghế,🪑,phrase,3,8,Stuhl,chair,chaise,의자,いす
+Ngôi nhà,🏠,2,Trong nhà,cái cửa,🚪,phrase,3,8,Tür,door,porte,문,ドア
+Ngôi nhà,🏠,2,Trong nhà,cái đèn,💡,phrase,3,8,Lampe,lamp,lampe,등,ランプ
+Ngôi nhà,🏠,2,Trong nhà,cái tivi,📺,phrase,3,8,Fernseher,TV,télé,텔레비전,テレビ
+Ngôi nhà,🏠,2,Trong nhà,cái đồng hồ,⏰,phrase,3,8,Uhr,clock,horloge,시계,時計
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái bát,🥣,phrase,3,8,Schüssel,bowl,bol,그릇,お茶碗
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái thìa,🥄,phrase,3,8,Löffel,spoon,cuillère,숟가락,スプーン
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,đôi đũa,🥢,phrase,3,8,Essstäbchen,chopsticks,baguettes,젓가락,お箸
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái cốc,☕,phrase,3,8,Tasse,cup,tasse,컵,コップ
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,cái chảo,🍳,phrase,3,8,Pfanne,frying pan,poêle,프라이팬,フライパン
+Ngôi nhà,🏠,2,Nhà bếp và nhà tắm,xà phòng,🧼,phrase,3,8,Seife,soap,savon,비누,せっけん
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,nắng,☀️,word,3,8,Sonnenschein,sunshine,soleil,햇빛,日差し
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,mưa,🌧️,word,3,8,Regen,rain,pluie,비,雨
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,mây,☁️,word,3,8,Wolke,cloud,nuage,구름,雲
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,gió,💨,word,3,8,Wind,wind,vent,바람,風
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,tuyết,❄️,word,3,8,Schnee,snow,neige,눈,雪
+Thiên nhiên và thời tiết,🌤️,2,Thời tiết,cầu vồng,🌈,phrase,3,8,Regenbogen,rainbow,arc-en-ciel,무지개,虹
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,cái cây,🌳,phrase,3,8,Baum,tree,arbre,나무,木
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,bông hoa,🌸,phrase,3,8,Blume,flower,fleur,꽃,花
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,chiếc lá,🍃,phrase,3,8,Blatt,leaf,feuille,나뭇잎,葉
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,mặt trăng,🌙,phrase,3,8,Mond,moon,lune,달,月
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,ngôi sao,⭐,phrase,3,8,Stern,star,étoile,별,星
+Thiên nhiên và thời tiết,🌤️,2,Trong thiên nhiên,biển,🌊,word,3,8,Meer,sea,mer,바다,海
+Quần áo và xe cộ,👕,2,Quần áo,cái áo,👕,phrase,3,8,T-Shirt,shirt,chemise,옷,シャツ
+Quần áo và xe cộ,👕,2,Quần áo,cái quần,👖,phrase,3,8,Hose,pants,pantalon,바지,ズボン
+Quần áo và xe cộ,👕,2,Quần áo,cái váy,👗,phrase,3,8,Kleid,dress,robe,치마,ワンピース
+Quần áo và xe cộ,👕,2,Quần áo,đôi giày,👟,phrase,3,8,Schuhe,shoes,chaussures,신발,くつ
+Quần áo và xe cộ,👕,2,Quần áo,cái mũ,🧢,phrase,3,8,Mütze,cap,casquette,모자,帽子
+Quần áo và xe cộ,👕,2,Quần áo,đôi tất,🧦,phrase,3,8,Socken,socks,chaussettes,양말,くつ下
+Quần áo và xe cộ,👕,2,Xe cộ,xe đạp,🚲,phrase,3,8,Fahrrad,bicycle,vélo,자전거,自転車
+Quần áo và xe cộ,👕,2,Xe cộ,xe máy,🛵,phrase,3,8,Moped,scooter,scooter,오토바이,バイク
+Quần áo và xe cộ,👕,2,Xe cộ,ô tô,🚗,phrase,3,8,Auto,car,voiture,자동차,車
+Quần áo và xe cộ,👕,2,Xe cộ,xe buýt,🚌,phrase,3,8,Bus,bus,bus,버스,バス
+Quần áo và xe cộ,👕,2,Xe cộ,tàu hoả,🚆,phrase,3,8,Zug,train,train,기차,電車
+Quần áo và xe cộ,👕,2,Xe cộ,máy bay,✈️,phrase,3,8,Flugzeug,airplane,avion,비행기,飛行機
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,ngủ,😴,word,3,8,schlafen,sleep,dormir,자다,寝る
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,chạy,🏃,word,3,8,rennen,run,courir,달리다,走る
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,hát,🎤,word,3,8,singen,sing,chanter,노래하다,歌う
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,vẽ,🎨,word,3,8,malen,draw,dessiner,그리다,描く
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,tắm,🛁,word,3,8,baden,take a bath,se laver,목욕하다,お風呂に入る
+Việc hằng ngày và cảm xúc,😄,2,Việc hằng ngày,đi bộ,🚶,phrase,3,8,gehen,walk,marcher,걷다,歩く
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,vui,😄,word,3,8,fröhlich,happy,content,기쁜,うれしい
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,buồn,😢,word,3,8,traurig,sad,triste,슬픈,悲しい
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,giận,😠,word,3,8,wütend,angry,fâché,화난,怒っている
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,sợ,😨,word,3,8,ängstlich,scared,effrayé,무서운,怖い
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,ngạc nhiên,😲,phrase,3,8,überrascht,surprised,surpris,놀란,驚いた
+Việc hằng ngày và cảm xúc,😄,2,Cảm xúc,buồn ngủ,🥱,phrase,3,8,müde,sleepy,somnolent,졸린,眠い
+Tết và Việt Nam,🎊,2,Ngày Tết,Tết,🎊,word,3,8,das vietnamesische Neujahrsfest,Vietnamese New Year,Nouvel An vietnamien,뗏(베트남 설날),テト（ベトナムの旧正月）
+Tết và Việt Nam,🎊,2,Ngày Tết,bánh chưng,🟩,phrase,3,8,Banh Chung (Reiskuchen),banh chung (sticky rice cake),bánh chưng (gâteau de riz gluant),바인쯩,バインチュン
+Tết và Việt Nam,🎊,2,Ngày Tết,lì xì,🧧,phrase,3,8,Glücksgeld im roten Umschlag,lucky money in a red envelope,argent porte-bonheur,세뱃돈,お年玉
+Tết và Việt Nam,🎊,2,Ngày Tết,pháo hoa,🎆,phrase,3,8,Feuerwerk,fireworks,feux d'artifice,불꽃놀이,花火
+Tết và Việt Nam,🎊,2,Ngày Tết,đèn lồng,🏮,phrase,3,8,Laterne,lantern,lanterne,등불,ランタン
+Tết và Việt Nam,🎊,2,Ngày Tết,hoa đào,🌸,phrase,3,8,Pfirsichblüte,peach blossom,fleur de pêcher,복숭아꽃,桃の花
+Tết và Việt Nam,🎊,2,Việt Nam,áo dài,👗,phrase,3,8,Ao Dai (traditionelles Kleid),ao dai (traditional dress),áo dài (robe traditionnelle),아오자이,アオザイ
+Tết và Việt Nam,🎊,2,Việt Nam,nón lá,👒,phrase,3,8,Kegelhut,conical hat,chapeau conique,논라(베트남 전통 모자),円錐笠
+Tết và Việt Nam,🎊,2,Việt Nam,con trâu,🐃,phrase,3,8,Wasserbüffel,water buffalo,buffle,물소,水牛
+Tết và Việt Nam,🎊,2,Việt Nam,cánh đồng lúa,🌾,phrase,3,8,Reisfeld,rice field,rizière,논,田んぼ
+Tết và Việt Nam,🎊,2,Việt Nam,cây tre,🎋,phrase,3,8,Bambus,bamboo,bambou,대나무,竹
+Tết và Việt Nam,🎊,2,Việt Nam,bánh Trung thu,🥮,phrase,3,8,Mondkuchen,mooncake,gâteau de lune,월병,月餅
+Giờ giấc,🕐,2,Buổi trong ngày,sáng,☀️,word,3,8,Morgen,morning,matin,아침,朝
+Giờ giấc,🕐,2,Buổi trong ngày,trưa,🌞,word,3,8,Mittag,noon,midi,낮,昼
+Giờ giấc,🕐,2,Buổi trong ngày,chiều,🌇,word,3,8,Nachmittag,afternoon,après-midi,오후,午後
+Giờ giấc,🕐,2,Buổi trong ngày,tối,🌙,word,3,8,Abend,evening,soir,저녁,夜
+Giờ giấc,🕐,2,Buổi trong ngày,đêm,🌃,word,3,8,Nacht,night,nuit,밤,夜中
+Giờ giấc,🕐,2,Buổi trong ngày,hôm nay,📅,phrase,3,8,heute,today,aujourd'hui,오늘,今日
+Giờ giấc,🕐,2,Xem đồng hồ,đồng hồ,⏰,word,3,8,Uhr,clock,horloge,시계,時計
+Giờ giấc,🕐,2,Xem đồng hồ,giờ,🕐,word,3,8,Stunde,hour,heure,시,時
+Giờ giấc,🕐,2,Xem đồng hồ,phút,⏱️,word,3,8,Minute,minute,minute,분,分
+Giờ giấc,🕐,2,Xem đồng hồ,giây,⏲️,word,3,8,Sekunde,second,seconde,초,秒
+Giờ giấc,🕐,2,Xem đồng hồ,rưỡi,🕧,word,3,8,halb,half past,et demie,반,半
+Giờ giấc,🕐,2,Xem đồng hồ,kim đồng hồ,🕰️,phrase,3,8,Uhrzeiger,clock hand,aiguille de l'horloge,시곗바늘,時計の針
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Hai,1️⃣,phrase,3,8,Montag,Monday,lundi,월요일,月曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Ba,2️⃣,phrase,3,8,Dienstag,Tuesday,mardi,화요일,火曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Tư,3️⃣,phrase,3,8,Mittwoch,Wednesday,mercredi,수요일,水曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Năm,4️⃣,phrase,3,8,Donnerstag,Thursday,jeudi,목요일,木曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Sáu,5️⃣,phrase,3,8,Freitag,Friday,vendredi,금요일,金曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,thứ Bảy,6️⃣,phrase,3,8,Samstag,Saturday,samedi,토요일,土曜日
+Thứ trong tuần,📅,2,Bảy ngày trong tuần,Chủ Nhật,7️⃣,phrase,3,8,Sonntag,Sunday,dimanche,일요일,日曜日
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm qua,⏮️,phrase,3,8,gestern,yesterday,hier,어제,昨日
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",hôm nay,📅,phrase,3,8,heute,today,aujourd'hui,오늘,今日
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",ngày mai,⏭️,phrase,3,8,morgen,tomorrow,demain,내일,明日
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tuần,🗓️,word,3,8,Woche,week,semaine,주,週
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",tháng,📆,word,3,8,Monat,month,mois,달(월),月
+Thứ trong tuần,📅,2,"Hôm qua, hôm nay, ngày mai",năm,🎆,word,3,8,Jahr,year,année,년,年
+Vị trí,📍,2,Trên dưới trong ngoài,trên,⬆️,word,3,8,oben,above,au-dessus,위,上
+Vị trí,📍,2,Trên dưới trong ngoài,dưới,⬇️,word,3,8,unten,below,en dessous,아래,下
+Vị trí,📍,2,Trên dưới trong ngoài,trong,📦,word,3,8,drinnen,inside,dedans,안,中
+Vị trí,📍,2,Trên dưới trong ngoài,ngoài,🌳,word,3,8,draußen,outside,dehors,밖,外
+Vị trí,📍,2,Trên dưới trong ngoài,cạnh,↔️,word,3,8,neben,next to,à côté,옆,隣
+Vị trí,📍,2,Trên dưới trong ngoài,giữa,🎯,word,3,8,in der Mitte,in the middle,au milieu,가운데,真ん中

@@ -1,81 +1,81 @@
-unit,unit_emoji,level,lesson,vi,emoji,type,min_age,max_age,de,en
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào bà ạ.,👵,sentence,4,8,"Hallo, Oma.","Hello, Grandma."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào ông ạ.,👴,sentence,4,8,"Hallo, Opa.","Hello, Grandpa."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào bố ạ.,👨,sentence,4,8,"Hallo, Papa.","Hello, Dad."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào mẹ ạ.,👩,sentence,4,8,"Hallo, Mama.","Hello, Mom."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con cảm ơn mẹ ạ.,🙏,sentence,4,8,"Danke, Mama.","Thank you, Mom."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con xin lỗi ạ.,🙇,sentence,4,8,Es tut mir leid.,I'm sorry.
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con mời bà ăn cơm ạ.,🍚,sentence,4,8,"Oma, komm bitte essen.","Grandma, please come and eat."
-Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con đi học đây ạ.,🎒,sentence,4,8,Ich gehe jetzt zur Schule.,I'm off to school now.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là bố.,👨,sentence,4,8,Das ist Papa.,This is Dad.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là mẹ.,👩,sentence,4,8,Das ist Mama.,This is Mom.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là bà.,👵,sentence,4,8,Das ist Oma.,This is Grandma.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Nhà con có bốn người.,🏠,sentence,4,8,Wir sind zu viert zu Hause.,There are four people in my family.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Mẹ nấu cơm.,🍳,sentence,4,8,Mama kocht Reis.,Mom is cooking rice.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Bố đi làm.,💼,sentence,4,8,Papa geht zur Arbeit.,Dad goes to work.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Bà kể chuyện.,📚,sentence,4,8,Oma erzählt eine Geschichte.,Grandma tells a story.
-Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Con yêu gia đình.,❤️,sentence,4,8,Ich liebe meine Familie.,I love my family.
-Con cần gì,🍽️,3,Nói điều con cần,Con đói rồi.,🍽️,sentence,4,8,Ich habe Hunger.,I'm hungry.
-Con cần gì,🍽️,3,Nói điều con cần,Con khát nước.,💧,sentence,4,8,Ich habe Durst.,I'm thirsty.
-Con cần gì,🍽️,3,Nói điều con cần,Con buồn ngủ.,🥱,sentence,4,8,Ich bin müde.,I'm sleepy.
-Con cần gì,🍽️,3,Nói điều con cần,Con mệt rồi.,😩,sentence,4,8,Ich bin erschöpft.,I'm tired.
-Con cần gì,🍽️,3,Nói điều con cần,Con muốn đi vệ sinh.,🚽,sentence,4,8,Ich muss auf die Toilette.,I need to go to the toilet.
-Con cần gì,🍽️,3,Nói điều con cần,Cho con xin nước ạ.,🥛,sentence,4,8,Bitte gib mir Wasser.,"May I have some water, please?"
-Con cần gì,🍽️,3,Nói điều con cần,Con no rồi.,😋,sentence,4,8,Ich bin satt.,I'm full.
-Con cần gì,🍽️,3,Nói điều con cần,Con muốn chơi.,🧸,sentence,4,8,Ich möchte spielen.,I want to play.
-Bữa ăn,🍚,3,Ăn uống,Con rửa tay.,🧼,sentence,4,8,Ich wasche mir die Hände.,I wash my hands.
-Bữa ăn,🍚,3,Ăn uống,Con ăn cơm.,🍚,sentence,4,8,Ich esse Reis.,I eat rice.
-Bữa ăn,🍚,3,Ăn uống,Con uống sữa.,🥛,sentence,4,8,Ich trinke Milch.,I drink milk.
-Bữa ăn,🍚,3,Ăn uống,Con thích quả chuối.,🍌,sentence,4,8,Ich mag Bananen.,I like bananas.
-Bữa ăn,🍚,3,Ăn uống,Cơm ngon quá!,😋,sentence,4,8,Das Essen schmeckt so gut!,The food is so delicious!
-Bữa ăn,🍚,3,Ăn uống,Mẹ nấu canh.,🍲,sentence,4,8,Mama kocht Suppe.,Mom is cooking soup.
-Bữa ăn,🍚,3,Ăn uống,Nóng quá!,🥵,sentence,4,8,Das ist heiß!,It's hot!
-Bữa ăn,🍚,3,Ăn uống,Con ăn phở.,🍜,sentence,4,8,Ich esse Pho.,I eat pho.
-Ở trường,🏫,3,Một ngày đi học,Con đi học.,🎒,sentence,4,8,Ich gehe zur Schule.,I go to school.
-Ở trường,🏫,3,Một ngày đi học,Cô giáo cười.,👩‍🏫,sentence,4,8,Die Lehrerin lächelt.,The teacher is smiling.
-Ở trường,🏫,3,Một ngày đi học,Con vẽ tranh.,🎨,sentence,4,8,Ich male ein Bild.,I draw a picture.
-Ở trường,🏫,3,Một ngày đi học,Con đọc sách.,📖,sentence,4,8,Ich lese ein Buch.,I read a book.
-Ở trường,🏫,3,Một ngày đi học,Con hát bài hát.,🎤,sentence,4,8,Ich singe ein Lied.,I sing a song.
-Ở trường,🏫,3,Một ngày đi học,Con chơi với bạn.,🧒,sentence,4,8,Ich spiele mit meinem Freund.,I play with my friend.
-Ở trường,🏫,3,Một ngày đi học,Con giơ tay.,✋,sentence,4,8,Ich melde mich.,I raise my hand.
-Ở trường,🏫,3,Một ngày đi học,Con xếp hàng.,🚸,sentence,4,8,Ich stelle mich an.,I line up.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con mèo kêu meo meo.,🐱,sentence,4,8,Die Katze macht miau.,The cat says meow.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con chó sủa gâu gâu.,🐶,sentence,4,8,Der Hund bellt wau wau.,The dog barks woof woof.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con gà gáy ò ó o.,🐓,sentence,4,8,Der Hahn kräht kikeriki.,The rooster crows cock-a-doodle-doo.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con vịt kêu cạc cạc.,🦆,sentence,4,8,Die Ente macht quak quak.,The duck says quack quack.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con heo kêu ụt ịt.,🐷,sentence,4,8,Das Schwein grunzt.,The pig oinks.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con ếch kêu ộp ộp.,🐸,sentence,4,8,Der Frosch quakt.,The frog croaks.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Trời mưa rồi.,🌧️,sentence,4,8,Es regnet.,It's raining.
-Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Trời nắng đẹp quá.,☀️,sentence,4,8,Was für ein schöner sonniger Tag!,What a beautiful sunny day!
-Tết và lễ hội,🎊,3,Ngày Tết,Chúc mừng năm mới!,🎊,sentence,4,8,Frohes neues Jahr!,Happy New Year!
-Tết và lễ hội,🎊,3,Ngày Tết,Ông bà lì xì cho con.,🧧,sentence,4,8,Oma und Opa schenken mir Glücksgeld.,Grandma and Grandpa give me lucky money.
-Tết và lễ hội,🎊,3,Ngày Tết,Nhà con gói bánh chưng.,🟩,sentence,4,8,Wir machen Banh Chung.,We make banh chung.
-Tết và lễ hội,🎊,3,Ngày Tết,Con xem pháo hoa.,🎆,sentence,4,8,Ich schaue das Feuerwerk an.,I watch the fireworks.
-Tết và lễ hội,🎊,3,Ngày Tết,Con thích đèn lồng.,🏮,sentence,4,8,Ich mag Laternen.,I like lanterns.
-Tết và lễ hội,🎊,3,Ngày Tết,Hoa đào nở rồi.,🌸,sentence,4,8,Die Pfirsichblüten blühen.,The peach blossoms are in bloom.
-Tết và lễ hội,🎊,3,Ngày Tết,Con ăn bánh Trung thu.,🥮,sentence,4,8,Ich esse Mondkuchen.,I eat mooncake.
-Tết và lễ hội,🎊,3,Ngày Tết,Con mặc áo dài.,👗,sentence,4,8,Ich trage einen Ao Dai.,I wear an ao dai.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con vui quá!,😄,sentence,4,8,Ich freue mich so!,I'm so happy!
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con buồn.,😢,sentence,4,8,Ich bin traurig.,I'm sad.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con sợ.,😨,sentence,4,8,Ich habe Angst.,I'm scared.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con giận.,😠,sentence,4,8,Ich bin wütend.,I'm angry.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con yêu bố mẹ.,💖,sentence,4,8,Ich liebe Mama und Papa.,I love Mom and Dad.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con nhớ ông bà.,🥺,sentence,4,8,Ich vermisse Oma und Opa.,I miss Grandma and Grandpa.
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con xin phép ạ.,🙋,sentence,4,8,Darf ich bitte?,"May I, please?"
-Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con giúp mẹ.,🤝,sentence,4,8,Ich helfe Mama.,I help Mom.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang ăn cơm.,🍚,sentence,4,8,Ich esse gerade Reis.,I am eating rice.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang chơi đồ chơi.,🧸,sentence,4,8,Ich spiele gerade mit Spielzeug.,I am playing with toys.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang học bài.,📖,sentence,4,8,Ich lerne gerade.,I am studying.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang ngủ.,😴,sentence,4,8,Ich schlafe gerade.,I am sleeping.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Mẹ đang nấu ăn.,👩‍🍳,sentence,4,8,Mama kocht gerade.,Mom is cooking.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Bố đang đọc báo.,📰,sentence,4,8,Papa liest gerade Zeitung.,Dad is reading the newspaper.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Em đang tắm.,🛁,sentence,4,8,Mein kleines Geschwisterkind badet gerade.,My little sibling is bathing.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Bà đang xem tivi.,📺,sentence,4,8,Oma schaut gerade fern.,Grandma is watching TV.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã ăn cơm rồi.,🍽️,sentence,4,8,Ich habe schon gegessen.,I have already eaten.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã học bài xong.,✅,sentence,4,8,Ich bin mit den Hausaufgaben fertig.,I have finished my homework.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã tắm rồi.,🚿,sentence,4,8,Ich habe schon geduscht.,I have already showered.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con sẽ đi ngủ.,🛌,sentence,4,8,Ich werde schlafen gehen.,I will go to sleep.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con sẽ đi học.,🎒,sentence,4,8,Ich werde zur Schule gehen.,I will go to school.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Mẹ đã nấu xong rồi.,🍲,sentence,4,8,Mama hat schon fertig gekocht.,Mom has already finished cooking.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Bố sẽ về nhà.,🏠,sentence,4,8,Papa wird nach Hause kommen.,Dad will come home.
-"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Ngày mai con sẽ đi chơi.,🎡,sentence,4,8,Morgen werde ich spielen gehen.,Tomorrow I will go out to play.
+unit,unit_emoji,level,lesson,vi,emoji,type,min_age,max_age,de,en,fr,ko,ja
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào bà ạ.,👵,sentence,4,8,"Hallo, Oma.","Hello, Grandma.",Bonjour grand-mère.,"할머니, 안녕하세요.",おばあちゃん、こんにちは。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào ông ạ.,👴,sentence,4,8,"Hallo, Opa.","Hello, Grandpa.",Bonjour grand-père.,"할아버지, 안녕하세요.",おじいちゃん、こんにちは。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào bố ạ.,👨,sentence,4,8,"Hallo, Papa.","Hello, Dad.",Bonjour papa.,"아빠, 안녕하세요.",パパ、こんにちは。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con chào mẹ ạ.,👩,sentence,4,8,"Hallo, Mama.","Hello, Mom.",Bonjour maman.,"엄마, 안녕하세요.",ママ、こんにちは。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con cảm ơn mẹ ạ.,🙏,sentence,4,8,"Danke, Mama.","Thank you, Mom.",Merci maman.,"엄마, 감사합니다.",ママ、ありがとう。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con xin lỗi ạ.,🙇,sentence,4,8,Es tut mir leid.,I'm sorry.,Je suis désolé.,죄송해요.,ごめんなさい。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con mời bà ăn cơm ạ.,🍚,sentence,4,8,"Oma, komm bitte essen.","Grandma, please come and eat.","Grand-mère, venez manger s'il vous plaît.","할머니, 식사하세요.",おばあちゃん、ご飯を召し上がってください。
+Lễ phép với người thân,🙏,3,Chào và cảm ơn,Con đi học đây ạ.,🎒,sentence,4,8,Ich gehe jetzt zur Schule.,I'm off to school now.,Je pars à l'école.,학교에 다녀올게요.,学校に行ってきます。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là bố.,👨,sentence,4,8,Das ist Papa.,This is Dad.,C'est papa.,이분은 아빠예요.,これはパパです。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là mẹ.,👩,sentence,4,8,Das ist Mama.,This is Mom.,C'est maman.,이분은 엄마예요.,これはママです。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Đây là bà.,👵,sentence,4,8,Das ist Oma.,This is Grandma.,C'est grand-mère.,이분은 할머니예요.,これはおばあちゃんです。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Nhà con có bốn người.,🏠,sentence,4,8,Wir sind zu viert zu Hause.,There are four people in my family.,Ma famille a quatre personnes.,우리 가족은 네 명이에요.,私の家族は四人です。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Mẹ nấu cơm.,🍳,sentence,4,8,Mama kocht Reis.,Mom is cooking rice.,Maman prépare le riz.,엄마가 밥을 해요.,ママがご飯を作っています。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Bố đi làm.,💼,sentence,4,8,Papa geht zur Arbeit.,Dad goes to work.,Papa va au travail.,아빠가 일하러 가요.,パパが仕事に行きます。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Bà kể chuyện.,📚,sentence,4,8,Oma erzählt eine Geschichte.,Grandma tells a story.,Grand-mère raconte une histoire.,할머니가 이야기를 해줘요.,おばあちゃんがお話をしてくれます。
+Gia đình của con,👨‍👩‍👧‍👦,3,Nói về gia đình,Con yêu gia đình.,❤️,sentence,4,8,Ich liebe meine Familie.,I love my family.,J'aime ma famille.,저는 가족을 사랑해요.,私は家族が大好きです。
+Con cần gì,🍽️,3,Nói điều con cần,Con đói rồi.,🍽️,sentence,4,8,Ich habe Hunger.,I'm hungry.,J'ai faim.,배고파요.,お腹が空きました。
+Con cần gì,🍽️,3,Nói điều con cần,Con khát nước.,💧,sentence,4,8,Ich habe Durst.,I'm thirsty.,J'ai soif.,목말라요.,喉が渇きました。
+Con cần gì,🍽️,3,Nói điều con cần,Con buồn ngủ.,🥱,sentence,4,8,Ich bin müde.,I'm sleepy.,J'ai sommeil.,졸려요.,眠いです。
+Con cần gì,🍽️,3,Nói điều con cần,Con mệt rồi.,😩,sentence,4,8,Ich bin erschöpft.,I'm tired.,Je suis fatigué.,피곤해요.,疲れました。
+Con cần gì,🍽️,3,Nói điều con cần,Con muốn đi vệ sinh.,🚽,sentence,4,8,Ich muss auf die Toilette.,I need to go to the toilet.,Je dois aller aux toilettes.,화장실에 가고 싶어요.,トイレに行きたいです。
+Con cần gì,🍽️,3,Nói điều con cần,Cho con xin nước ạ.,🥛,sentence,4,8,Bitte gib mir Wasser.,"May I have some water, please?","Puis-je avoir de l'eau, s'il vous plaît ?",물 좀 주세요.,お水をください。
+Con cần gì,🍽️,3,Nói điều con cần,Con no rồi.,😋,sentence,4,8,Ich bin satt.,I'm full.,Je n'ai plus faim.,배불러요.,お腹がいっぱいです。
+Con cần gì,🍽️,3,Nói điều con cần,Con muốn chơi.,🧸,sentence,4,8,Ich möchte spielen.,I want to play.,Je veux jouer.,놀고 싶어요.,遊びたいです。
+Bữa ăn,🍚,3,Ăn uống,Con rửa tay.,🧼,sentence,4,8,Ich wasche mir die Hände.,I wash my hands.,Je me lave les mains.,손을 씻어요.,手を洗います。
+Bữa ăn,🍚,3,Ăn uống,Con ăn cơm.,🍚,sentence,4,8,Ich esse Reis.,I eat rice.,Je mange du riz.,밥을 먹어요.,ご飯を食べます。
+Bữa ăn,🍚,3,Ăn uống,Con uống sữa.,🥛,sentence,4,8,Ich trinke Milch.,I drink milk.,Je bois du lait.,우유를 마셔요.,牛乳を飲みます。
+Bữa ăn,🍚,3,Ăn uống,Con thích quả chuối.,🍌,sentence,4,8,Ich mag Bananen.,I like bananas.,J'aime les bananes.,저는 바나나를 좋아해요.,私はバナナが好きです。
+Bữa ăn,🍚,3,Ăn uống,Cơm ngon quá!,😋,sentence,4,8,Das Essen schmeckt so gut!,The food is so delicious!,C'est tellement délicieux !,정말 맛있어요!,とてもおいしいです！
+Bữa ăn,🍚,3,Ăn uống,Mẹ nấu canh.,🍲,sentence,4,8,Mama kocht Suppe.,Mom is cooking soup.,Maman prépare la soupe.,엄마가 국을 끓여요.,ママがスープを作っています。
+Bữa ăn,🍚,3,Ăn uống,Nóng quá!,🥵,sentence,4,8,Das ist heiß!,It's hot!,C'est trop chaud !,너무 뜨거워요!,熱すぎます！
+Bữa ăn,🍚,3,Ăn uống,Con ăn phở.,🍜,sentence,4,8,Ich esse Pho.,I eat pho.,Je mange du pho.,저는 쌀국수를 먹어요.,私はフォーを食べます。
+Ở trường,🏫,3,Một ngày đi học,Con đi học.,🎒,sentence,4,8,Ich gehe zur Schule.,I go to school.,Je vais à l'école.,학교에 가요.,学校に行きます。
+Ở trường,🏫,3,Một ngày đi học,Cô giáo cười.,👩‍🏫,sentence,4,8,Die Lehrerin lächelt.,The teacher is smiling.,La maîtresse sourit.,선생님이 웃어요.,先生が笑っています。
+Ở trường,🏫,3,Một ngày đi học,Con vẽ tranh.,🎨,sentence,4,8,Ich male ein Bild.,I draw a picture.,Je dessine.,그림을 그려요.,絵を描きます。
+Ở trường,🏫,3,Một ngày đi học,Con đọc sách.,📖,sentence,4,8,Ich lese ein Buch.,I read a book.,Je lis un livre.,책을 읽어요.,本を読みます。
+Ở trường,🏫,3,Một ngày đi học,Con hát bài hát.,🎤,sentence,4,8,Ich singe ein Lied.,I sing a song.,Je chante une chanson.,노래를 불러요.,歌を歌います。
+Ở trường,🏫,3,Một ngày đi học,Con chơi với bạn.,🧒,sentence,4,8,Ich spiele mit meinem Freund.,I play with my friend.,Je joue avec mon ami.,친구와 놀아요.,友達と遊びます。
+Ở trường,🏫,3,Một ngày đi học,Con giơ tay.,✋,sentence,4,8,Ich melde mich.,I raise my hand.,Je lève la main.,손을 들어요.,手を挙げます。
+Ở trường,🏫,3,Một ngày đi học,Con xếp hàng.,🚸,sentence,4,8,Ich stelle mich an.,I line up.,Je fais la queue.,줄을 서요.,並びます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con mèo kêu meo meo.,🐱,sentence,4,8,Die Katze macht miau.,The cat says meow.,Le chat fait miaou.,고양이가 야옹야옹 울어요.,猫がニャーニャー鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con chó sủa gâu gâu.,🐶,sentence,4,8,Der Hund bellt wau wau.,The dog barks woof woof.,Le chien fait ouaf ouaf.,강아지가 멍멍 짖어요.,犬がワンワン鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con gà gáy ò ó o.,🐓,sentence,4,8,Der Hahn kräht kikeriki.,The rooster crows cock-a-doodle-doo.,Le coq chante cocorico.,수탉이 꼬끼오 울어요.,鶏がコケコッコーと鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con vịt kêu cạc cạc.,🦆,sentence,4,8,Die Ente macht quak quak.,The duck says quack quack.,Le canard fait coin coin.,오리가 꽥꽥 울어요.,アヒルがガーガー鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con heo kêu ụt ịt.,🐷,sentence,4,8,Das Schwein grunzt.,The pig oinks.,Le cochon fait groin groin.,돼지가 꿀꿀 울어요.,豚がブーブー鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Con ếch kêu ộp ộp.,🐸,sentence,4,8,Der Frosch quakt.,The frog croaks.,La grenouille fait coa coa.,개구리가 개굴개굴 울어요.,カエルがゲロゲロ鳴きます。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Trời mưa rồi.,🌧️,sentence,4,8,Es regnet.,It's raining.,Il pleut.,비가 와요.,雨が降っています。
+Tiếng kêu và thời tiết,🐓,3,Con vật kêu,Trời nắng đẹp quá.,☀️,sentence,4,8,Was für ein schöner sonniger Tag!,What a beautiful sunny day!,Quelle belle journée ensoleillée !,날씨가 정말 화창해요!,とてもいい天気ですね！
+Tết và lễ hội,🎊,3,Ngày Tết,Chúc mừng năm mới!,🎊,sentence,4,8,Frohes neues Jahr!,Happy New Year!,Bonne année !,새해 복 많이 받으세요!,明けましておめでとう！
+Tết và lễ hội,🎊,3,Ngày Tết,Ông bà lì xì cho con.,🧧,sentence,4,8,Oma und Opa schenken mir Glücksgeld.,Grandma and Grandpa give me lucky money.,Grand-père et grand-mère me donnent de l'argent porte-bonheur.,할머니 할아버지가 세뱃돈을 주세요.,おじいちゃんとおばあちゃんがお年玉をくれます。
+Tết và lễ hội,🎊,3,Ngày Tết,Nhà con gói bánh chưng.,🟩,sentence,4,8,Wir machen Banh Chung.,We make banh chung.,"Chez nous, on prépare le bánh chưng.",우리 집은 바인쯩을 만들어요.,私の家ではバインチュンを作ります。
+Tết và lễ hội,🎊,3,Ngày Tết,Con xem pháo hoa.,🎆,sentence,4,8,Ich schaue das Feuerwerk an.,I watch the fireworks.,Je regarde les feux d'artifice.,저는 불꽃놀이를 봐요.,私は花火を見ます。
+Tết và lễ hội,🎊,3,Ngày Tết,Con thích đèn lồng.,🏮,sentence,4,8,Ich mag Laternen.,I like lanterns.,J'aime les lanternes.,저는 등불을 좋아해요.,私はランタンが好きです。
+Tết và lễ hội,🎊,3,Ngày Tết,Hoa đào nở rồi.,🌸,sentence,4,8,Die Pfirsichblüten blühen.,The peach blossoms are in bloom.,Les fleurs de pêcher sont écloses.,복숭아꽃이 피었어요.,桃の花が咲きました。
+Tết và lễ hội,🎊,3,Ngày Tết,Con ăn bánh Trung thu.,🥮,sentence,4,8,Ich esse Mondkuchen.,I eat mooncake.,Je mange un gâteau de lune.,저는 월병을 먹어요.,私は月餅を食べます。
+Tết và lễ hội,🎊,3,Ngày Tết,Con mặc áo dài.,👗,sentence,4,8,Ich trage einen Ao Dai.,I wear an ao dai.,Je porte un áo dài.,저는 아오자이를 입어요.,私はアオザイを着ます。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con vui quá!,😄,sentence,4,8,Ich freue mich so!,I'm so happy!,Je suis tellement content !,정말 기뻐요!,とても嬉しいです！
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con buồn.,😢,sentence,4,8,Ich bin traurig.,I'm sad.,Je suis triste.,슬퍼요.,悲しいです。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con sợ.,😨,sentence,4,8,Ich habe Angst.,I'm scared.,J'ai peur.,무서워요.,怖いです。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con giận.,😠,sentence,4,8,Ich bin wütend.,I'm angry.,Je suis fâché.,화가 나요.,怒っています。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con yêu bố mẹ.,💖,sentence,4,8,Ich liebe Mama und Papa.,I love Mom and Dad.,J'aime papa et maman.,저는 엄마 아빠를 사랑해요.,私はパパとママが大好きです。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con nhớ ông bà.,🥺,sentence,4,8,Ich vermisse Oma und Opa.,I miss Grandma and Grandpa.,Grand-père et grand-mère me manquent.,할머니 할아버지가 보고 싶어요.,おじいちゃんとおばあちゃんに会いたいです。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con xin phép ạ.,🙋,sentence,4,8,Darf ich bitte?,"May I, please?","Puis-je, s'il vous plaît ?",허락해 주세요.,許可をください。
+Cảm xúc và lễ phép,💖,3,Con cảm thấy,Con giúp mẹ.,🤝,sentence,4,8,Ich helfe Mama.,I help Mom.,J'aide maman.,저는 엄마를 도와줘요.,私はママを手伝います。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang ăn cơm.,🍚,sentence,4,8,Ich esse gerade Reis.,I am eating rice.,Je suis en train de manger du riz.,저는 밥을 먹고 있어요.,私はご飯を食べています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang chơi đồ chơi.,🧸,sentence,4,8,Ich spiele gerade mit Spielzeug.,I am playing with toys.,Je suis en train de jouer avec des jouets.,저는 장난감을 가지고 놀고 있어요.,私はおもちゃで遊んでいます。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang học bài.,📖,sentence,4,8,Ich lerne gerade.,I am studying.,Je suis en train d'étudier.,저는 공부하고 있어요.,私は勉強しています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Con đang ngủ.,😴,sentence,4,8,Ich schlafe gerade.,I am sleeping.,Je suis en train de dormir.,저는 자고 있어요.,私は寝ています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Mẹ đang nấu ăn.,👩‍🍳,sentence,4,8,Mama kocht gerade.,Mom is cooking.,Maman est en train de cuisiner.,엄마가 요리하고 있어요.,ママが料理をしています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Bố đang đọc báo.,📰,sentence,4,8,Papa liest gerade Zeitung.,Dad is reading the newspaper.,Papa est en train de lire le journal.,아빠가 신문을 읽고 있어요.,パパが新聞を読んでいます。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Em đang tắm.,🛁,sentence,4,8,Mein kleines Geschwisterkind badet gerade.,My little sibling is bathing.,Mon petit frère est en train de se laver.,동생이 목욕하고 있어요.,妹か弟がお風呂に入っています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,Con đang làm gì,Bà đang xem tivi.,📺,sentence,4,8,Oma schaut gerade fern.,Grandma is watching TV.,Grand-mère est en train de regarder la télé.,할머니가 텔레비전을 보고 있어요.,おばあちゃんがテレビを見ています。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã ăn cơm rồi.,🍽️,sentence,4,8,Ich habe schon gegessen.,I have already eaten.,J'ai déjà mangé.,저는 벌써 밥을 먹었어요.,私はもうご飯を食べました。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã học bài xong.,✅,sentence,4,8,Ich bin mit den Hausaufgaben fertig.,I have finished my homework.,J'ai fini mes devoirs.,저는 공부를 다 했어요.,私は勉強を終えました。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con đã tắm rồi.,🚿,sentence,4,8,Ich habe schon geduscht.,I have already showered.,Je me suis déjà lavé.,저는 벌써 목욕했어요.,私はもうお風呂に入りました。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con sẽ đi ngủ.,🛌,sentence,4,8,Ich werde schlafen gehen.,I will go to sleep.,Je vais aller dormir.,저는 잘 거예요.,私は寝ます。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Con sẽ đi học.,🎒,sentence,4,8,Ich werde zur Schule gehen.,I will go to school.,Je vais aller à l'école.,저는 학교에 갈 거예요.,私は学校に行きます。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Mẹ đã nấu xong rồi.,🍲,sentence,4,8,Mama hat schon fertig gekocht.,Mom has already finished cooking.,Maman a déjà fini de cuisiner.,엄마가 요리를 다 끝냈어요.,ママはもう料理を終えました。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Bố sẽ về nhà.,🏠,sentence,4,8,Papa wird nach Hause kommen.,Dad will come home.,Papa va rentrer à la maison.,아빠가 집에 올 거예요.,パパが家に帰ります。
+"Việc đã làm, đang làm, sẽ làm",🕰️,3,"Con đã làm, con sẽ làm",Ngày mai con sẽ đi chơi.,🎡,sentence,4,8,Morgen werde ich spielen gehen.,Tomorrow I will go out to play.,"Demain, je vais sortir jouer.",내일 저는 놀러 갈 거예요.,明日、私は遊びに行きます。

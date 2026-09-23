@@ -142,12 +142,21 @@ function mergeTitleTr(old, next) {
   return JSON.stringify(out) === JSON.stringify(old ?? {}) ? null : out;
 }
 
-export async function updateUnit(unit, { title_vi, emoji, title_tr }, units) {
+// Nội dung diễn giải (units.description / lessons.description, migration 020+021): trống = xoá.
+function descriptionPatch(patch, row, description) {
+  if (description == null) return;
+  const desc = clean(description);
+  need(desc.length > 500 ? "Nội dung diễn giải dài quá 500 ký tự" : null);
+  if (desc !== (row.description ?? "")) patch.description = desc || null;
+}
+
+export async function updateUnit(unit, { title_vi, emoji, title_tr, description }, units) {
   const patch = {};
   if (title_vi != null && clean(title_vi) !== unit.title_vi) { need(checkTitle(title_vi, "Tên chủ đề")); uniqueUnit(units, clean(title_vi), unit.id); patch.title_vi = clean(title_vi); }
   if (emoji != null && clean(emoji) !== (unit.emoji ?? "")) { need(clean(emoji).length > 16 ? "Emoji quá dài" : null); patch.emoji = clean(emoji) || "📚"; }
   const tr = mergeTitleTr(unit.title_tr, title_tr);
   if (tr) patch.title_tr = tr;
+  descriptionPatch(patch, unit, description);
   if (Object.keys(patch).length) check(await sb.from("units").update(patch).eq("id", unit.id));
   return patch;
 }
@@ -175,11 +184,7 @@ export async function updateLesson(lesson, { title_vi, title_tr, description }, 
   }
   const tr = mergeTitleTr(lesson.title_tr, title_tr);
   if (tr) patch.title_tr = tr;
-  if (description != null) {
-    const desc = clean(description);
-    need(desc.length > 500 ? "Nội dung diễn giải dài quá 500 ký tự" : null);
-    if (desc !== (lesson.description ?? "")) patch.description = desc || null;
-  }
+  descriptionPatch(patch, lesson, description);
   if (Object.keys(patch).length) check(await sb.from("lessons").update(patch).eq("id", lesson.id));
   return patch;
 }
