@@ -15,13 +15,13 @@ export const GROUPS = [
 
 // kinds: các trò thuộc kỹ năng; needsText: chỉ có trò cần nhận mặt chữ (bé < MIN_AGE_FOR_TEXT không chơi).
 export const SKILLS = [
+  { id: "tone", group: "listen", emoji: "🎵", name: "Thanh điệu", desc: "Phân biệt ma – má – mà – mả – mã – mạ", kinds: ["listen_pick_tone", "tone_pair"] },
+  { id: "spell", group: "listen", emoji: "🔤", name: "Đánh vần", desc: "Đánh vần từng phần của tiếng", kinds: ["spell_along"] },
   { id: "listen", group: "listen", emoji: "👂", name: "Nghe", desc: "Nghe rồi chọn hình hoặc chữ đúng", kinds: ["listen_pick", "listen_pick_text"] },
   { id: "speak", group: "listen", emoji: "🎤", name: "Nói", desc: "Nghe rồi nói theo", kinds: ["listen_repeat"] },
-  { id: "tone", group: "listen", emoji: "🎵", name: "Thanh điệu", desc: "Phân biệt ma – má – mà – mả – mã – mạ", kinds: ["listen_pick_tone", "tone_pair"] },
   // story: true — như readMemory/listenMemory: 1 "lượt" là CẢ 1 bài giao tiếp (nhiều cặp hỏi-đáp), không lấy mục rời theo
   // POOLS. Bài giao tiếp do admin soạn riêng (hoạt động "dialogue" của bài, migration 019) — chưa soạn bài nào thì thẻ tự mờ.
-  { id: "converse", group: "listen", emoji: "💬", name: "Giao tiếp", desc: "Nghe rồi đọc câu trả lời trong đoạn hội thoại", kinds: ["dialogue"], story: true },
-  { id: "spell", group: "listen", emoji: "🔤", name: "Đánh vần", desc: "Đánh vần từng phần của tiếng", kinds: ["spell_along"] },
+  { id: "converse", group: "listen", emoji: "💬", name: "Hội thoại", desc: "Nghe rồi đọc câu trả lời trong đoạn hội thoại", kinds: ["dialogue"], story: true },
   { id: "memory", group: "fun", emoji: "🧩", name: "Trí nhớ", desc: "Lật thẻ tìm cặp giống nhau", kinds: ["memory_flip"] },
   { id: "sort", group: "fun", emoji: "🗂️", name: "Phân loại", desc: "Xếp mỗi thứ vào đúng nhóm", kinds: ["sort_unit"] },
   // story: true — 1 "lượt" là CẢ 1 bài (đoạn văn + câu hỏi), không lấy mục theo POOLS như các trò khác (xem practice-core.js planStoryPractice).
