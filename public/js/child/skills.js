@@ -18,10 +18,10 @@ export const SKILLS = [
   { id: "listen", group: "listen", emoji: "👂", name: "Nghe", desc: "Nghe rồi chọn hình hoặc chữ đúng", kinds: ["listen_pick", "listen_pick_text"] },
   { id: "speak", group: "listen", emoji: "🎤", name: "Nói", desc: "Nghe rồi nói theo", kinds: ["listen_repeat"] },
   { id: "tone", group: "listen", emoji: "🎵", name: "Thanh điệu", desc: "Phân biệt ma – má – mà – mả – mã – mạ", kinds: ["listen_pick_tone", "tone_pair"] },
-  { id: "meaning", group: "listen", emoji: "🧠", name: "Hiểu nghĩa", desc: "Từ tiếng Việt nghĩa là gì?", kinds: ["meaning_pick"] },
   // story: true — như readMemory/listenMemory: 1 "lượt" là CẢ 1 bài giao tiếp (nhiều cặp hỏi-đáp), không lấy mục rời theo
   // POOLS. Bài giao tiếp do admin soạn riêng (hoạt động "dialogue" của bài, migration 019) — chưa soạn bài nào thì thẻ tự mờ.
   { id: "converse", group: "listen", emoji: "💬", name: "Giao tiếp", desc: "Nghe rồi đọc câu trả lời trong đoạn hội thoại", kinds: ["dialogue"], story: true },
+  { id: "spell", group: "listen", emoji: "🔤", name: "Đánh vần", desc: "Đánh vần từng phần của tiếng", kinds: ["spell_along"] },
   { id: "memory", group: "fun", emoji: "🧩", name: "Trí nhớ", desc: "Lật thẻ tìm cặp giống nhau", kinds: ["memory_flip"] },
   { id: "sort", group: "fun", emoji: "🗂️", name: "Phân loại", desc: "Xếp mỗi thứ vào đúng nhóm", kinds: ["sort_unit"] },
   // story: true — 1 "lượt" là CẢ 1 bài (đoạn văn + câu hỏi), không lấy mục theo POOLS như các trò khác (xem practice-core.js planStoryPractice).
@@ -29,11 +29,11 @@ export const SKILLS = [
   { id: "readMemory", group: "fun", emoji: "📖", name: "Đọc nhớ", desc: "Tự đọc 1 bài rồi trả lời câu hỏi", kinds: ["read_quiz"], story: true },
   { id: "listenMemory", group: "fun", emoji: "🎧", name: "Nghe nhớ", desc: "Nghe 1 bài rồi trả lời câu hỏi", kinds: ["listen_quiz"], story: true },
   { id: "trace", group: "write", emoji: "✏️", name: "Tô chữ", desc: "Tô theo chữ mẫu", kinds: ["trace"] },
-  { id: "spell", group: "write", emoji: "🔤", name: "Đánh vần", desc: "Đánh vần từng phần của tiếng", kinds: ["spell_along"] },
   { id: "build", group: "write", emoji: "🧱", name: "Ghép chữ", desc: "Ghép âm, vần, chữ thành từ", kinds: ["build_syllable", "fill_letter", "order_words", "spell_word", "match_case", "pick_case"] },
   { id: "read", group: "write", emoji: "📖", name: "Đọc", desc: "Đọc chữ rồi chọn hình, điền từ", kinds: ["read_pick", "fill_word", "match"] },
   { id: "case", group: "write", emoji: "🅰️", name: "Viết hoa", desc: "Viết hoa và dấu câu", kinds: ["fix_capital", "write_check"] },
   { id: "spelling", group: "write", emoji: "🔎", name: "Chính tả", desc: "Chọn cách viết đúng", kinds: ["pick_spelling"] },
+  { id: "meaning", group: "write", emoji: "🧠", name: "Hiểu nghĩa", desc: "Từ tiếng Việt nghĩa là gì?", kinds: ["meaning_pick"] },
 ];
 
 export const skillById = (id) => SKILLS.find((s) => s.id === id);
