@@ -100,21 +100,28 @@ export function lessonForm({ unit, level, siblings, onSaved, onCancel }) {
     el("p", { class: "muted" }, Q.autoNote), footer(save, onCancel, err));
 }
 
-// ---- Sửa chủ đề (tên + emoji + tên dịch) hoặc bài (tên + tên dịch): cùng bố cục với lúc thêm mới ----
-// titleTr: title_tr hiện có {lang:tên}; onSave nhận { title_vi, emoji?, title_tr:{lang:tên} } (ô trống = xoá tên dịch của ngôn ngữ đó).
-export function renameForm({ title, emoji, withEmoji = false, titleTr = {}, onSave, onCancel }) {
+// ---- Sửa chủ đề (tên + emoji + tên dịch) hoặc bài (tên + tên dịch + nội dung diễn giải): cùng bố cục với lúc thêm mới ----
+// titleTr: title_tr hiện có {lang:tên}; onSave nhận { title_vi, emoji?, title_tr:{lang:tên}, description? } (ô trống = xoá tên
+// dịch/diễn giải tương ứng). withDescription: chỉ bài mới có cột lessons.description (migration 020) — chủ đề không có.
+export function renameForm({ title, emoji, withEmoji = false, titleTr = {}, description, withDescription = false, onSave, onCancel }) {
   const err = el("div");
   const t = el("input", { type: "text", value: title, maxlength: "60", class: "cell" });
   const e = el("input", { type: "text", value: emoji ?? "", maxlength: "16", class: "cell cell-sm" });
   const tr = Object.fromEntries(langs().map((l) => [l.code, el("input", { type: "text", value: titleTr?.[l.code] ?? "", maxlength: "60", class: "cell", placeholder: Q.missing })]));
+  const d = el("textarea", { rows: "3", maxlength: "500", class: "cell" }, description ?? "");
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
-      await onSave({ title_vi: t.value, ...(withEmoji ? { emoji: e.value } : {}), title_tr: Object.fromEntries(langs().map((l) => [l.code, tr[l.code].value])) });
+      await onSave({
+        title_vi: t.value, ...(withEmoji ? { emoji: e.value } : {}),
+        title_tr: Object.fromEntries(langs().map((l) => [l.code, tr[l.code].value])),
+        ...(withDescription ? { description: d.value } : {}),
+      });
     } catch (x) { save.disabled = false; fail(err, x); }
   }, "btn small");
   return el("div", { class: "qa-box" },
     el("div", { class: "qa-grid" }, labeled("Tên (tiếng Việt)", t), withEmoji ? labeled("Emoji", e) : null, langs().map((l) => labeled(`Tên bằng ${l.label}`, tr[l.code]))),
+    withDescription ? labeled("Nội dung diễn giải (hiện dưới tên bài lúc bắt đầu, có thể để trống)", d) : null,
     el("p", { class: "muted" }, "Tên dịch để bé bấm 🔊 nghe tên bằng ngôn ngữ của nhà; để trống ô nào thì xoá tên dịch của ngôn ngữ đó."), footer(save, onCancel, err));
 }
 

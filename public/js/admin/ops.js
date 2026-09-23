@@ -165,7 +165,7 @@ export async function createLesson(unitId, { title_vi, kinds, title_tr }, siblin
   return data;
 }
 
-export async function updateLesson(lesson, { title_vi, title_tr }, siblings) {
+export async function updateLesson(lesson, { title_vi, title_tr, description }, siblings) {
   const patch = {};
   if (title_vi != null && clean(title_vi) !== lesson.title_vi) {
     const title = clean(title_vi);
@@ -175,6 +175,11 @@ export async function updateLesson(lesson, { title_vi, title_tr }, siblings) {
   }
   const tr = mergeTitleTr(lesson.title_tr, title_tr);
   if (tr) patch.title_tr = tr;
+  if (description != null) {
+    const desc = clean(description);
+    need(desc.length > 500 ? "Nội dung diễn giải dài quá 500 ký tự" : null);
+    if (desc !== (lesson.description ?? "")) patch.description = desc || null;
+  }
   if (Object.keys(patch).length) check(await sb.from("lessons").update(patch).eq("id", lesson.id));
   return patch;
 }

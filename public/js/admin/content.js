@@ -175,8 +175,8 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
     el("div", { class: "row-btns", style: "margin:0" },
       btn("▲", act(() => ops.moveIn("lessons", siblings, lesson, -1)), "btn small ghost", "Đưa bài lên trước"),
       btn("▼", act(() => ops.moveIn("lessons", siblings, lesson, 1)), "btn small ghost", "Đưa bài xuống sau"),
-      btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, titleTr: lesson.title_tr, onCancel: () => renameSlot.replaceChildren(),
-        onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên và tên dịch của bài"),
+      btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, titleTr: lesson.title_tr, description: lesson.description, withDescription: true, onCancel: () => renameSlot.replaceChildren(),
+        onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên, tên dịch và nội dung diễn giải của bài"),
       btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
       lesson.status === "approved"
         ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
