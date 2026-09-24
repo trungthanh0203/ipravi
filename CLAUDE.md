@@ -174,7 +174,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 - Đừng để 1 hàm "tải dữ liệu" gánh việc ẩn (hiện khung UI...). Chỉ tải dữ liệu màn hình đang cần.
 - **"Tiếng Việt Bài Bản"** (giáo trình có cấu trúc cho người lớn/người nước ngoài; kế hoạch + quyết định:
   `KE_HOACH_TIENG_VIET_BAI_BAN.md`; **GĐ 1 [nền dữ liệu] + GĐ 2 [luồng chọn hồ sơ] + GĐ 3 [giao diện học 7 chặng] +
-  GĐ 4 [Luyện tập/SRS] ĐÃ LÀM, GĐ 5–7 chưa làm**): **1 GIAO DIỆN HỌC KHÁC trong CÙNG 1 app**, cùng tài khoản phụ huynh/dự án Supabase —
+  GĐ 4 [Luyện tập/SRS] + GĐ 5 [khu admin nhập nội dung, trừ CSV/TTS] ĐÃ LÀM, GĐ 6 test riêng + GĐ 7 nội dung thật
+  chưa làm**): **1 GIAO DIỆN HỌC KHÁC trong CÙNG 1 app**, cùng tài khoản phụ huynh/dự án Supabase —
   KHÔNG phải app/mô hình thu phí riêng. Migration `022_bai_ban.sql` (đầu tiên sau `001_init.sql` tạo bảng mới — mọi
   migration 002–021 trước đó chỉ ALTER): phân cấp `bb_levels` (mã CEFR A1/A2/B1…) → `bb_units` → `bb_lessons` (có
   `lesson_type` core/review/reading/writing) → `bb_lesson_steps` (7 chặng tuần tự/bài: hội thoại · từ vựng · ngữ
@@ -251,8 +252,22 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   xong 1 bài → 7 dòng `bb_progress` → danh sách bài hiện ✓ → Luyện tập hiện đúng số mục cần ôn từng loại → ôn Từ
   vựng (Nhớ → box 2, due +2 ngày; Quên → box 1, due +1 ngày, khớp `INTERVAL_DAYS`) → ôn 3 loại còn lại bằng đúng
   giao diện chặng bài học → mọi kỹ năng về "Chưa có gì để ôn"; Luyện tập lúc chưa học gì hiện đúng thông báo, không
-  lỗi. Chưa thử Supabase thật. Chưa làm: tab admin nhập nội dung (GĐ 5), nội dung thật (GĐ 7) — chi tiết + ghi chú
-  kỹ thuật ở `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8–13.
+  lỗi. Chưa thử Supabase thật.
+  **GĐ 5 (khu admin nhập nội dung):** tab mới **"Bài Bản"** trong khu quản trị (`admin/bb.js` + `admin/bb-ops.js`),
+  cây Cấp→Chủ đề→Bài→Chặng (7 loại)→nội dung riêng từng loại, cùng khuôn `admin/content.js` (`beginLoad`, `notice`,
+  `slotToggle`, biểu mẫu `.qa-box`). Duyệt LAN LÊN (duyệt 1 chặng tự duyệt luôn bài/chủ đề/cấp chứa nó), ẩn LAN
+  XUỐNG — giống hệt nguyên tắc `ops.setLessonStatus` bên khu trẻ em. `▲▼` dùng lại NGUYÊN `ops.moveIn()`; ảnh
+  `bb_vocab.image_path` dùng lại NGUYÊN `images.setImage/clearImage`; âm thanh viết MỚI `bb-ops.setAudioPath/
+  clearAudioPath` (generic cho mọi cột `audio_path`/`audio_a_path`/`audio_b_path` của mọi bảng `bb_*` — khác hẳn
+  `content_audio` nhiều-dòng bên khu trẻ em) — **CHƯA có TTS**, chỉ tải file admin có sẵn lên (≤ 5 MB). Xoá dọn
+  Storage trước khi xoá dòng (DB tự xoá dây chuyền qua ON DELETE CASCADE). **Lỗi đã gặp + sửa lúc thử:**
+  `panel.replaceChildren(nút, data.map(...))` thiếu `...` trước `.map()` — `replaceChildren()` GỐC (khác `el()`)
+  không tự dàn phẳng mảng, ép mảng thành chuỗi `"[object HTMLDivElement],..."` hiện thẳng lên màn hình; và thông
+  báo "Đã lưu" bị `refresh()` xoá mất ngay vì viết chung `panel` — tách riêng `flash` div sống ngoài `panel`. Đã
+  thử bằng dữ liệu giả: tạo đủ Cấp→Chủ đề→Bài→cả 7 loại chặng, thêm nội dung mọi loại, duyệt lan lên đúng 4 tầng,
+  xoá cả cấp sạch dây chuyền — không lỗi console. Chưa thử tải file thật (chỉ xác nhận nút đúng trạng thái), chưa
+  thử Supabase thật. Chưa làm: **CSV nhập hàng loạt** (khác hẳn khu trẻ em vì cấu trúc Bài Bản lồng sâu hơn — cần
+  thiết kế schema riêng) và **TTS** — chi tiết + ghi chú kỹ thuật ở `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8–15.
 
 ## Kiểm thử
 

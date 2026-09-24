@@ -2,7 +2,8 @@
 
 > Lưu lại từ artifact "Tiếng Việt Bài Bản" (claude.ai) để có nguồn sự thật cục bộ trong repo — đọc mục liên quan
 > bằng Grep/offset, đừng đọc nguyên file. **Trạng thái: Giai đoạn 1 (nền dữ liệu), Giai đoạn 2 (luồng chọn hồ sơ),
-> Giai đoạn 3 (giao diện học 7 chặng) và Giai đoạn 4 (Luyện tập/SRS) ĐÃ LÀM.** Các giai đoạn 5–7 CHƯA làm.
+> Giai đoạn 3 (giao diện học 7 chặng), Giai đoạn 4 (Luyện tập/SRS) và Giai đoạn 5 (khu admin nhập nội dung) ĐÃ LÀM.**
+> Giai đoạn 6 (test mở rộng) đã có 1 phần (test hàm thuần + RLS mỗi GĐ); Giai đoạn 7 (nội dung thật) CHƯA làm.
 
 ## 0. Đã chốt
 
@@ -111,8 +112,8 @@ giao diện → luyện tập, rồi mới mở rộng ra 8 unit.
 | 2 | Luồng chọn hồ sơ + `decideScreen()`: thêm bước chọn loại (Trẻ em / Người học bài bản); sửa `decideScreen()` — CHÈN đúng chỗ theo `profile_type`, không append cuối. | **✅ ĐÃ LÀM** — xem mục 8 dưới đây cho chi tiết luồng + file đã sửa |
 | 3 | Giao diện học (1 Unit mẫu, đủ 7 chặng): Level → Unit → Lesson (không khoá bài); 1 "runner" chạy tuần tự 7 chặng, mỗi chặng 1 renderer riêng; tái dùng `ui.js`, `audio.js`/`pronunciation.js`; theme CSS riêng để phân biệt trực quan với giao diện gà trống. | **✅ ĐÃ LÀM** — xem mục 10 dưới đây |
 | 4 | Màn "Luyện tập" cho người học: SRS từ vựng kiểu Leitner, ôn hội thoại, ôn ngữ pháp/ngữ âm — theo mô hình `skills.js` + `practice-core.js`. | **✅ ĐÃ LÀM** — xem mục 12 dưới đây |
-| 5 | Khu admin nhập nội dung: tab mới soạn bài bài bản — tái dùng quy ước CSV-nhập-được + pipeline TTS (`/api/tts`, `ops.js`), chỉ đổi schema mapping cho 7 chặng. | Chưa làm |
-| 6 | Test + thử bằng dữ liệu giả: test hàm thuần (chọn phiên luyện tập, tính điểm SRS), test RLS chéo vai trò cho bảng mới, thử qua `mock-sb.js` trước khi đụng Supabase thật. | Chưa làm (GĐ 1 đã có phần test RLS) |
+| 5 | Khu admin nhập nội dung: tab mới soạn bài bài bản — tái dùng quy ước CSV-nhập-được + pipeline TTS (`/api/tts`, `ops.js`), chỉ đổi schema mapping cho 7 chặng. | **✅ ĐÃ LÀM (trừ CSV/TTS)** — xem mục 14 dưới đây |
+| 6 | Test + thử bằng dữ liệu giả: test hàm thuần (chọn phiên luyện tập, tính điểm SRS), test RLS chéo vai trò cho bảng mới, thử qua `mock-sb.js` trước khi đụng Supabase thật. | Có 1 phần (test hàm thuần + RLS mỗi GĐ, thử `mock-sb.js` mỗi GĐ) — chưa có bộ test riêng gộp toàn bộ |
 | 7 | Soạn nội dung thật (ngoài phạm vi code): chuyển `giao-trinh-tieng-viet-app-v3.md` thành CSV/JSON theo schema mới, nhập dần qua khu admin cho đủ 8 Unit/31+ bài, rồi mở rộng theo mục 5. | Chưa làm |
 
 ## 8. Giai đoạn 2 — luồng chọn hồ sơ + `decideScreen()` (ĐÃ LÀM)
@@ -297,17 +298,59 @@ vẫn bấm được) → ôn lần lượt Hội thoại/Ngữ pháp/Ngữ âm 
 "Chưa có gì để ôn". Luyện tập lúc CHƯA học bài nào hiện đúng "Học vài bài trước đã nhé…", không lỗi. Chưa thử với
 Supabase thật.
 
-## 13. Ghi chú kỹ thuật khi tiếp tục GĐ 5+
+## 14. Giai đoạn 5 — khu admin nhập nội dung (ĐÃ LÀM, trừ CSV/TTS)
 
-- Migration kế tiếp đánh số `024_...` (GĐ 4 đã dùng `023_bb_progress.sql`).
-- **GĐ 5 (khu admin nhập nội dung)** cần: tab mới soạn bài Bài Bản (7 chặng), tái dùng quy ước CSV-nhập-được +
-  pipeline TTS (`/api/tts`, `ops.js`) — hiện `bb/media.js` `playPath()` chỉ đọc `audio_path` nếu ADMIN đã tự điền
-  sẵn (chưa có nơi tải file lên qua giao diện, giống hệt tình trạng `content_audio`/`image_path` trước khi có tab
-  Nội dung ở khu trẻ em).
-- Mini-game thật (5 engine: flashcard SRS, sentence builder, dialogue roleplay, phonics discrimination, unit boss
-  quest) — có thể LÀM TRƯỚC GĐ 5 nếu muốn (không phụ thuộc khu admin): nối vào `bb/steps/minigame.js` (thay nội
-  dung placeholder) VÀ vào `bb/practice.js` (thêm 1 kỹ năng "🎮 Mini-game" hoặc gắn vào kỹ năng có sẵn) — dữ liệu
-  đọc từ `bb_vocab`/`bb_phonics_pairs` của bài đã có, không cần bảng mới.
+**Tab mới "Bài Bản"** trong khu quản trị (`pages/admin.js` `TABS` thêm `"bb"`, nhãn ở `admin/text.js` `A.tabs.bb`):
+- `admin/bb-ops.js` — CRUD cho cả 4 tầng có `status` (level/unit/lesson/step) + 7 loại nội dung, cùng khuôn với
+  `admin/ops.js` (khu trẻ em): `clean()`/`only()`/`need()`/`nextOrder()` chuẩn hoá dữ liệu, mọi hàm `createX`/
+  `updateX` validate rồi trả lỗi tiếng Việt rõ ràng. **Duyệt LAN LÊN** (duyệt 1 chặng → tự duyệt luôn bài/chủ đề/cấp
+  chứa nó, giống `ops.setLessonStatus` lan lên unit bên khu trẻ em), **ẩn LAN XUỐNG** (ẩn 1 tầng → ẩn hết mọi tầng
+  con, giống `ops.setLessonsStatus`). Xoá: dọn file Storage (ảnh `bb_vocab.image_path`, âm thanh `audio_path`/
+  `audio_a_path`/`audio_b_path` ở mọi bảng nội dung) TRƯỚC khi xoá dòng — Postgres tự xoá dây chuyền DB (ON DELETE
+  CASCADE, migration 022), chỉ Storage không tự dọn theo. `▲▼` đổi thứ tự dùng lại NGUYÊN `ops.moveIn()` — mọi bảng
+  `bb_*` đều có `id`+`sort_order`, không cần viết hàm riêng. Ảnh `bb_vocab.image_path` dùng lại NGUYÊN
+  `images.setImage()`/`clearImage()` (cùng hình dạng `id`+`image_path` với `content_items`/`units`).
+  **Âm thanh là điểm khác biệt lớn nhất so với khu trẻ em**: `content_audio` (khu trẻ em) là bảng riêng nhiều-dòng
+  (nhiều giọng/tốc độ/nguồn cho 1 mục); `bb_*` chỉ có 1 cột `audio_path` phẳng/bảng — nên viết mới
+  `setAudioPath(table, row, col, file)`/`clearAudioPath()` (generic, dùng chung cho MỌI cột âm thanh của MỌI bảng
+  `bb_*`) thay vì tái dùng `admin/audio.js` (gắn chặt với `content_audio`). **CHƯA có TTS** — chỉ tải file admin đã
+  có sẵn lên (≤ 5 MB), không sinh giọng đọc tự động; `/api/tts` chưa được gọi cho nội dung `bb_*`.
+- `admin/bb.js` — giao diện cây Cấp → Chủ đề → Bài → Chặng (7 loại, chọn bằng `<select>` khi thêm) → nội dung riêng
+  từng loại, cùng khuôn `admin/content.js`: `beginLoad()` giữ vị trí cuộn, `notice.set/take()` giữ thông báo qua
+  lần tải lại toàn tab, `slotToggle()` mở/đóng biểu mẫu thêm/sửa (biểu mẫu = `.qa-box`/`.qa-grid` có sẵn, KHÔNG viết
+  CSS mới ngoài `.bb-row` cho mỗi dòng nội dung). Biểu mẫu nhiều ngôn ngữ (nghĩa từ/dịch câu thoại/công thức/đoạn
+  văn/đề bài — đều cùng hình dạng jsonb `{lang: chữ}`) dùng CHUNG 1 hàm `langBlock()` thay vì viết lại 6 lần.
+  **Đơn giản hoá có chủ đích** (ghi rõ trong code, KHÔNG phải thiếu sót): câu ví dụ trong Ngữ pháp
+  (`bb_grammar.examples`) chỉ nhập được câu tiếng Việt qua biểu mẫu nhanh, CHƯA hỗ trợ dịch từng câu ví dụ (sửa
+  bằng SQL nếu cần) — để tránh biểu mẫu quá phức tạp cho 1 trường lồng nhau ít quan trọng.
+  **Lỗi đã gặp và sửa khi thử bằng dữ liệu giả:** `panel.replaceChildren(nút, addSlot, data.map(...))` — hàm
+  `replaceChildren()` GỐC của trình duyệt (khác hẳn `el()`/`mount()` của app, vốn tự `.flat()` mảng con) KHÔNG tự
+  dàn phẳng mảng — truyền thẳng 1 mảng vào đó khiến trình duyệt ép kiểu mảng thành chuỗi
+  (`"[object HTMLDivElement],..."`) và hiện y nguyên chuỗi đó lên màn hình thay vì render các dòng. Sửa: thêm `...`
+  trước mọi `data.map(...)`/`questions.map(...)` khi truyền vào `panel.replaceChildren()`. Cùng lúc sửa 1 lỗi nhỏ
+  khác: thông báo "Đã thêm/Đã lưu" bị mất ngay lập tức vì viết vào chính `panel` rồi `refresh()` xoá trắng `panel`
+  đó — tách riêng 1 `flash` div SỐNG NGOÀI vòng đời của `panel` (xem `stepBlock()`) để thông báo không bị `refresh()`
+  cuốn theo.
+- **Đã thử bằng dữ liệu giả** (browser thật, không phải chỉ đọc code): tạo đủ Cấp → Chủ đề → Bài → cả 7 loại chặng
+  → thêm nội dung cho Hội thoại (kèm dịch), Từ vựng, Đọc hiểu (đoạn văn + câu hỏi, dấu ✓ đúng chỗ đáp án đúng),
+  Luyện viết (đủ cả 3 dạng fill/order/write, tóm tắt hiện đúng) — không còn lỗi hiển thị; "Duyệt chặng" lan lên
+  đúng cả 4 tầng (chặng → bài → chủ đề → cấp đều chuyển "Đã duyệt"); "Xoá" cả 1 cấp xoá sạch dây chuyền không lỗi,
+  không còn sót dữ liệu. Console không có lỗi trong suốt quá trình thử. **Chưa thử tải ảnh/âm thanh bằng file thật**
+  (chỉ xác nhận nút hiện đúng theo trạng thái có/chưa có file — việc chọn file qua hộp thoại hệ điều hành khó mô
+  phỏng bằng công cụ tự động), **chưa thử với Supabase thật**, **chưa làm CSV nhập hàng loạt** (chỉ nhập tay từng
+  mục — soạn nhiều nội dung cùng lúc sẽ chậm hơn khu trẻ em vốn có "Nhập CSV").
+
+## 15. Ghi chú kỹ thuật khi tiếp tục GĐ 6–7
+
+- Migration kế tiếp đánh số `024_...` (GĐ 4 đã dùng `023_bb_progress.sql`; GĐ 5 không thêm migration nào).
+- **CSV nhập hàng loạt cho Bài Bản** (phần còn thiếu của GĐ 5) — chưa làm: cần thiết kế schema CSV cho 7 loại chặng
+  (khác hẳn 1 dòng/1 mục của khu trẻ em vì Bài Bản có cấu trúc lồng sâu hơn — 1 bài có nhiều chặng, mỗi chặng nhiều
+  dòng nội dung hình dạng khác nhau); có thể cần NHIỀU sheet/file CSV (1 cho khung bài, 1+ cho từng loại nội dung)
+  thay vì 1 file phẳng như `admin/csv.js` hiện tại.
+- **TTS cho Bài Bản** — chưa làm: `bb/media.js` `playPath()` đã sẵn sàng phát bất kỳ `audio_path` nào có sẵn, chỉ
+  cần thêm nút "Sinh âm thanh (TTS)" ở `admin/bb.js` gọi `/api/tts` (Worker có sẵn, `tts.js`) rồi lưu qua
+  `bb.setAudioPath()` — không cần sửa Worker, chỉ cần thêm lời gọi ở phía admin UI.
+- Mini-game thật (5 engine) vẫn là chỗ đứng — có thể làm bất cứ lúc nào, không phụ thuộc GĐ 5/6/7.
 - Muốn thêm hồ sơ thứ 2+ cho khu TRẺ EM (không liên quan Bài Bản) giờ cũng dùng được qua "+ Thêm hồ sơ mới" thêm ở
   GĐ 2 (trước đây chỉ tạo được hồ sơ đầu tiên) — tiện thể sửa luôn một khoảng trống cũ của app, không phải việc của
   GĐ 2/kế hoạch Bài Bản, nhưng cần khi thử nghiệm.

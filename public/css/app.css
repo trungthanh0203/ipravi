@@ -194,6 +194,10 @@ img.visual.big { max-height: 200px; }
 .actions { min-width: 250px; }
 .actions .nowrap { margin: 4px 0; }
 
+/* Tab admin "Bài Bản" — 1 dòng/mục nội dung (dòng thoại, từ, công thức ngữ pháp…) */
+.bb-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid #f0e2d5; }
+.bb-row:last-child { border-bottom: none; }
+
 /* Nút chọn giọng nghe của bé */
 .voice-toggle { display: inline-flex; gap: 4px; background: #fff; border-radius: 999px; padding: 3px; box-shadow: 0 1px 6px rgba(80, 40, 10, .12); }
 .vt-btn { width: 46px; height: 42px; border: 0; border-radius: 999px; background: transparent; font-size: 24px; opacity: .55; }
