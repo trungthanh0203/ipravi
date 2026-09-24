@@ -202,7 +202,14 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   sơ `learner` ở màn avatar mặt trước (buộc vào qua khu phụ huynh, theo đúng câu trong artifact gốc bàn TRƯỚC khi
   có người dùng thật); thực tế đầu tiên chủ dự án tạo hồ sơ `learner` cho **chính con mình** tự học — bé bấm đúng
   avatar mà bị báo sai, gây khó hiểu. Nay bỏ hẳn điều kiện lọc theo `profile_type` ở `avatars.js`, mọi hồ sơ vào
-  được từ avatar như nhau. Chi tiết đầy đủ: `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8 "Sửa lại sau khi dùng thật".
+  được từ avatar như nhau. **Sửa tiếp lần 2 cùng ngày:** avatar đã đủ dùng cho cả 2 loại hồ sơ nên thẻ "Hồ sơ học
+  bài bản" + nút "Vào học" riêng trong `parent.js` (`learnerProfilesCard()`) trở thành thừa, gây hỏi "sao lại có
+  thẻ này" — đã BỎ HẲN; danh sách hồ sơ ở thẻ tóm tắt đầu trang giờ gộp chung mọi loại, chỉ thêm nhãn nhỏ
+  `🎓 Bài Bản` (`T.bbProfileTag`) để phân biệt. Đồng thời `progressCard()` ("Tiến độ học của con") lọc bỏ hồ sơ
+  `learner` khỏi ô chọn — RPC `child_stats` không biết gì về `bb_progress`/`bb_srs_state` nên trước đó chọn vào hồ
+  sơ `learner` sẽ ra toàn số 0, hiểu lầm là "chưa học gì". View tiến độ riêng cho Bài Bản (level/box Leitner) —
+  CHƯA làm, hình dạng thống kê khác hẳn khu trẻ em nên không gộp 1 view được. Chi tiết đầy đủ:
+  `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8 "Sửa lại sau khi dùng thật" + "Sửa tiếp lần 2".
   **GĐ 3 (giao diện học 7 chặng):** thư mục mới `public/js/bb/` (mirroring `child/`) — `bb/api.js` (tải
   Level/Unit/Lesson/nội dung chặng, chỉ mục `approved`), `bb/media.js` (dùng lại nguyên `speakFallback`/`nativeLang`
   từ `child/media.js` + `playPath()` phát file bucket `content`/rơi về giọng trình duyệt), `bb/pron.js`

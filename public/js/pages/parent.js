@@ -115,11 +115,16 @@ function pronunciationToggle() {
     feedback);
 }
 
-// Tiến độ học: chọn bé (nếu có nhiều bé) → thống kê từ RPC child_stats. Chỉ tải khi bé được chọn.
+// Tiến độ học: chọn bé (nếu có nhiều bé) → thống kê từ RPC child_stats. CHỈ hồ sơ 'child' — RPC này gắn với dữ liệu
+// khu trẻ em (content_items/child_progress/activity_log), không biết gì về bb_progress/bb_srs_state của "Tiếng Việt
+// Bài Bản" nên hồ sơ 'learner' sẽ chỉ ra toàn số 0, gây hiểu lầm "chưa học gì" dù có thể đã học — ẩn hẳn khỏi đây
+// thay vì hiện sai. Tiến độ Bài Bản xem sau (chưa làm — 2 giáo trình có hình dạng thống kê khác nhau, không gộp
+// chung được 1 view). Xem KE_HOACH_TIENG_VIET_BAI_BAN.md.
 function progressCard() {
+  const kids = state.children.filter((c) => c.profile_type !== "learner");
   const body = el("div");
   const picker = el("div", { class: "child-select" });
-  let current = state.children[0]?.id;
+  let current = kids[0]?.id;
   async function show(id) {
     current = id;
     [...picker.children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
@@ -127,14 +132,14 @@ function progressCard() {
     try {
       // Phần theo kỹ năng + đánh giá đọc tải song song; lỗi ở đó (vd chưa chạy migration 017) không làm mất thống kê chính.
       const [stats, skills, pron] = await Promise.all([loadStats(id), loadSkillStats(id).catch(() => null), loadPronReport(id).catch(() => null)]);
-      const kid = state.children.find((c) => c.id === id);
+      const kid = kids.find((c) => c.id === id);
       if (current === id) body.replaceChildren(parentStatsView(stats, { skills, pron, pronEnabled: Boolean(state.account?.pronunciation_enabled), age: childAge(kid) }));
     } catch {
       if (current === id) body.replaceChildren(msg("err", T.statsError));
     }
   }
-  if (state.children.length > 1) {
-    picker.replaceChildren(...state.children.map((c) => el("button", { type: "button", "data-id": c.id, onclick: () => show(c.id) }, avatarEmoji(c.avatar_id), " ", c.nickname)));
+  if (kids.length > 1) {
+    picker.replaceChildren(...kids.map((c) => el("button", { type: "button", "data-id": c.id, onclick: () => show(c.id) }, avatarEmoji(c.avatar_id), " ", c.nickname)));
   }
   if (current) show(current);
   else body.replaceChildren(el("p", { class: "muted" }, T.parentNoChild));
@@ -143,16 +148,6 @@ function progressCard() {
 
 // TODO: dashboard theo từng con (tiến độ, điểm phát âm), chế độ cùng học (từ Việt 🔊 + nghĩa 🔊),
 // cài đặt (giới hạn thời gian, bật/tắt chấm phát âm, đổi PIN), học phí + "Xin thêm tài khoản cho con".
-// "Tiếng Việt Bài Bản": hồ sơ profile_type='learner' vào từ ĐÂY (không phải màn hình avatar của bé) — đã chốt trong
-// kế hoạch, xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 0/4. Không có thì ẩn hẳn thẻ, không hiện trống.
-function learnerProfilesCard() {
-  const learners = state.children.filter((c) => c.profile_type === "learner");
-  if (learners.length === 0) return null;
-  return el("div", { class: "card" }, el("h2", null, T.bbLearnersTitle),
-    learners.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname, " ",
-      el("button", { class: "btn small", onclick: () => { state.activeChildId = c.id; state.parentOpen = false; render(); } }, T.bbEnterBtn))));
-}
-
 export function mount(root) {
   const a = state.account;
   const status = a.access_status === "trial" ? T.statusTrial : T.statusActive;
@@ -163,11 +158,15 @@ export function mount(root) {
       el("p", null, `${T.accessStatus}: `, el("span", { class: "pill good" }, status)),
       el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
-      state.children.filter((c) => c.profile_type !== "learner").map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname)),
+      // Cùng 1 danh sách cho mọi hồ sơ (con lẫn người học bài bản) — vào lại đều bấm avatar ở màn hình đầu như
+      // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây nữa (bản trước có, gây khó hiểu vì tách biệt
+      // không rõ lý do — xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 8 "Sửa lại sau khi dùng thật"). Chỉ gắn thêm nhãn
+      // nhỏ để phân biệt loại hồ sơ.
+      state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname,
+        c.profile_type === "learner" ? el("span", { class: "pill", style: "margin-left:6px" }, T.bbProfileTag) : null)),
       canAddProfile ? el("button", {
         class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
       }, T.addProfileBtn) : null),
-    learnerProfilesCard(),
     progressCard(),
     voiceCard(),
     pronunciationToggle(),

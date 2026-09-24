@@ -269,8 +269,7 @@ export const T = {
 
   // "Tiếng Việt Bài Bản" — hồ sơ người học (profile_type='learner'), xem KE_HOACH_TIENG_VIET_BAI_BAN.md.
   // Giọng văn TRUNG TÍNH cho người lớn (không xưng "con"/"bé" như khu trẻ em).
-  bbLearnersTitle: "Hồ sơ học bài bản",
-  bbEnterBtn: "Vào học",
+  bbProfileTag: "🎓 Bài Bản",
   bbHomeTitle: "Tiếng Việt Bài Bản",
   bbHomeGreeting: (name) => `Chào, ${name}!`,
   bbHomeBack: "Quay lại",

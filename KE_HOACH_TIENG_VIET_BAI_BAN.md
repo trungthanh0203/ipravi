@@ -168,10 +168,26 @@ hồi 3 điều — cả 3 đã sửa:
    `child`. **Lý do đảo quyết định:** giả định ban đầu (theo câu trong artifact gốc — bàn trước khi có người dùng
    thật) là "Tiếng Việt Bài Bản" chủ yếu dành cho NGƯỜI LỚN nên vào qua khu phụ huynh hợp lý hơn; nhưng thực tế đầu
    tiên chủ dự án dùng lại là tạo hồ sơ `learner` cho MỘT ĐỨA CON để bé tự học — bé tự bấm avatar như mọi hồ sơ
-   khác, bị chặn ở màn hình avatar gây khó hiểu ("chọn đúng hình mà báo sai"). Cả 2 đường vào đều giữ: avatar mặt
-   trước (mới, cho hồ sơ do trẻ tự dùng) **và** thẻ "Hồ sơ học bài bản" trong khu phụ huynh (giữ nguyên, tiện cho
-   trường hợp phụ huynh tự tạo hồ sơ học cho chính mình, không cần nhớ avatar). Cũng sửa `childPickAvatarLearner`/
+   khác, bị chặn ở màn hình avatar gây khó hiểu ("chọn đúng hình mà báo sai"). Cũng sửa `childPickAvatarLearner`/
    `childTypeLearnerHelp` (strings.js) — bỏ câu "chỉ để phân biệt hồ sơ trong khu phụ huynh" (không còn đúng).
+
+### Sửa tiếp lần 2 sau khi dùng thật (2026-09-25, cùng ngày)
+
+Sau khi mục 3 ở trên làm avatar vào được cho cả 2 loại hồ sơ, **thẻ "Hồ sơ học bài bản" + nút "Vào học" riêng
+trong `parent.js` trở thành THỪA** — phụ huynh hỏi thẳng "tại sao lại có thẻ này ở đây" vì nó tách biệt không rõ
+lý do với danh sách hồ sơ chung, trong khi avatar mặt trước đã đủ dùng. Đã bỏ hẳn `learnerProfilesCard()`; danh
+sách hồ sơ ở thẻ tóm tắt đầu trang (`parent.js` `mount()`) giờ gộp chung MỌI loại hồ sơ (bỏ filter
+`profile_type !== 'learner'` của lần sửa trước), chỉ gắn thêm 1 nhãn nhỏ `🎓 Bài Bản` (`T.bbProfileTag`) cạnh tên
+để phân biệt — không còn nút riêng, không còn thẻ riêng.
+
+**Đồng thời sửa 1 vấn đề thật khác chủ dự án chỉ ra:** `progressCard()` ("Tiến độ học của con") gọi RPC
+`child_stats` — RPC này chỉ biết `content_items`/`child_progress`/`activity_log` của khu trẻ em, **không hề biết
+gì về `bb_progress`/`bb_srs_state`** của Bài Bản. Trước khi sửa, hồ sơ `learner` vẫn lọt vào ô chọn của thẻ này
+(vì trước đó không lọc ở `progressCard`, chỉ lọc ở danh sách tóm tắt phía trên) → chọn vào sẽ ra **toàn số 0**,
+trông như "chưa học gì" dù có thể đã học kha khá bên Bài Bản — gây hiểu lầm. Đã lọc `progressCard()` chỉ còn hồ sơ
+`profile_type !== 'learner'`. **Chưa làm** (không thuộc phạm vi sửa nhanh này): 1 view tiến độ RIÊNG cho Bài Bản —
+2 giáo trình có hình dạng thống kê khác hẳn nhau (level/unit/lesson/box Leitner vs cấp/sao/streak), không gộp
+chung 1 RPC/1 view được; cần thiết kế riêng, để dành cho GĐ sau.
 
 ## 10. Giai đoạn 3 — giao diện học 7 chặng (ĐÃ LÀM)
 
