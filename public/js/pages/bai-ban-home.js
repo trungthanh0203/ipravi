@@ -2,6 +2,7 @@ import { state } from "../state.js";
 import { render } from "../flow.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
+import { avatarEmoji } from "../data.js";
 import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
 import { showSkills } from "../bb/practice.js";
@@ -20,7 +21,7 @@ function shell(root, ...body) {
   const c = learner();
   paint(root, el("div", null,
     el("div", { class: "row child-header" },
-      el("span", { class: "who" }, c?.nickname ?? ""),
+      el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
       el("button", { class: "btn ghost small", onclick: () => { state.activeChildId = null; state.parentOpen = true; render(); } }, T.bbHomeBack)),
     ...body));
 }

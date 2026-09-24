@@ -32,28 +32,22 @@ export function mount(root) {
   grid.append(...buttons);
 
   const typeHelp = el("p", { class: "muted", style: "display:none" }, T.childTypeLearnerHelp);
-  const typeButtons = [
-    ["child", T.childTypeChild],
-    ["learner", T.childTypeLearner],
-  ].map(([v, label]) =>
-    el("button", {
-      type: "button",
-      onclick: () => {
-        profileType = v;
-        typeButtons.forEach((x, i) => x.classList.toggle("on", ["child", "learner"][i] === v));
-        nickLabel.textContent = v === "learner" ? T.childNicknameLearner : T.childNickname;
-        avatarLabel.textContent = v === "learner" ? T.childPickAvatarLearner : T.childPickAvatar;
-        typeHelp.style.display = v === "learner" ? "" : "none";
-      },
-    }, label)
-  );
-  typeButtons[0].classList.add("on");
+  const typeSelect = el("select", null,
+    el("option", { value: "child" }, T.childTypeChild),
+    el("option", { value: "learner" }, T.childTypeLearner));
+  typeSelect.addEventListener("change", () => {
+    profileType = typeSelect.value;
+    const v = profileType;
+    nickLabel.textContent = v === "learner" ? T.childNicknameLearner : T.childNickname;
+    avatarLabel.textContent = v === "learner" ? T.childPickAvatarLearner : T.childPickAvatar;
+    typeHelp.style.display = v === "learner" ? "" : "none";
+  });
 
   const form = el(
     "form", null,
-    el("label", null, T.childProfileType), el("div", { class: "tabs" }, ...typeButtons), typeHelp,
     nickLabel, name,
     el("label", null, T.childBirthYear), year,
+    el("label", null, T.childProfileType), typeSelect, typeHelp,
     avatarLabel, grid,
     feedback, btn,
     cameFromParent ? el("button", {

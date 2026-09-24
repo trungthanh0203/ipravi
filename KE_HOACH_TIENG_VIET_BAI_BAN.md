@@ -150,8 +150,28 @@ tài khoản hoàn toàn mới (chưa có con nào) mới tạo được hồ s�
 **Đã thử bằng dữ liệu giả** (`tests/browser/mock-sb.js`, xem mục "Kiểm thử" CLAUDE.md): tạo hồ sơ đầu tiên là
 `learner` → vào thẳng Bài Bản; bấm "Quay lại" → về khu phụ huynh, thấy thẻ "Hồ sơ học bài bản" + "Vào học" hoạt
 động; "+ Thêm hồ sơ mới" tạo thêm 1 hồ sơ `child` → không tự vào, về lại khu phụ huynh, hiện đúng trong danh sách
-con; màn hình avatar mặt trước: bấm avatar của hồ sơ `learner` → bị từ chối ("Chưa đúng rồi"); bấm avatar của hồ sơ
-`child` → vào `child-home` bình thường. Chưa thử với Supabase thật (chỉ có RLS PGlite ở GĐ 1 + dữ liệu giả ở GĐ 2).
+con. Chưa thử với Supabase thật lúc mới làm (chỉ có RLS PGlite ở GĐ 1 + dữ liệu giả ở GĐ 2) — **đã thử trên trang
+thật sau đó, xem "Sửa lại sau khi dùng thật" ngay dưới đây.**
+
+### Sửa lại sau khi dùng thật (2026-09-25)
+
+Chủ dự án tự deploy + tạo hồ sơ `learner` thật cho **chính con mình** (không phải cho bản thân phụ huynh) rồi phản
+hồi 3 điều — cả 3 đã sửa:
+
+1. **"Loại hồ sơ" đổi từ 2 nút `.tabs` sang `<select>` (dropdown)**, và đổi vị trí xuống **dưới "Năm sinh"** (trước
+   đó đặt ở đầu form) — theo đúng yêu cầu, thứ tự form giờ là: Tên → Năm sinh → Loại hồ sơ → Chọn hình đại diện.
+2. **Header khu Bài Bản (`bai-ban-home.js` `shell()`) thiếu icon avatar** — trước đó chỉ hiện tên, không giống khu
+   trẻ em (`child-home.js` có `avatarEmoji(c.avatar_id)` cạnh tên) — đã thêm cho khớp.
+3. **Đảo ngược quyết định ở mục 8 phía trên** ("hồ sơ `learner` KHÔNG vào được từ màn hình avatar mặt trước, cố
+   tình buộc vào qua khu phụ huynh"): `public/js/pages/avatars.js` giờ khớp avatar với **MỌI** hồ sơ, không phân
+   biệt `profile_type` nữa — hồ sơ `learner` bấm đúng avatar là vào được thẳng từ màn hình đầu, giống hệt hồ sơ
+   `child`. **Lý do đảo quyết định:** giả định ban đầu (theo câu trong artifact gốc — bàn trước khi có người dùng
+   thật) là "Tiếng Việt Bài Bản" chủ yếu dành cho NGƯỜI LỚN nên vào qua khu phụ huynh hợp lý hơn; nhưng thực tế đầu
+   tiên chủ dự án dùng lại là tạo hồ sơ `learner` cho MỘT ĐỨA CON để bé tự học — bé tự bấm avatar như mọi hồ sơ
+   khác, bị chặn ở màn hình avatar gây khó hiểu ("chọn đúng hình mà báo sai"). Cả 2 đường vào đều giữ: avatar mặt
+   trước (mới, cho hồ sơ do trẻ tự dùng) **và** thẻ "Hồ sơ học bài bản" trong khu phụ huynh (giữ nguyên, tiện cho
+   trường hợp phụ huynh tự tạo hồ sơ học cho chính mình, không cần nhớ avatar). Cũng sửa `childPickAvatarLearner`/
+   `childTypeLearnerHelp` (strings.js) — bỏ câu "chỉ để phân biệt hồ sơ trong khu phụ huynh" (không còn đúng).
 
 ## 10. Giai đoạn 3 — giao diện học 7 chặng (ĐÃ LÀM)
 

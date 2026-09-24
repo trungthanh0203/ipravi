@@ -186,14 +186,23 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   mới. `child_profiles.profile_type` (`child`|`learner`, mặc định `child`) phân biệt hồ sơ con/hồ sơ người học —
   **không đổi** trigger `child_profiles_limit`/`accounts_guard`/phí thêm con 20% (người học vẫn tính vào
   `child_slots` như con bình thường). Test: `supabase/tests/rls.test.mjs` mục 24 (26 kiểm tra).
-  **GĐ 2 (luồng chọn hồ sơ):** hồ sơ `learner` KHÔNG vào được từ màn hình avatar-mật khẩu mặt trước (`avatars.js`
-  chỉ khớp avatar với `profile_type !== 'learner'`) — vào từ khu phụ huynh (thẻ "Hồ sơ học bài bản" trong
-  `parent.js`, nút "Vào học"). `decideScreen()` (`flow.js`) rẽ nhánh theo `profile_type` của hồ sơ đang chọn:
-  `learner` → màn `bai-ban-home`, `child` → `child-home` như cũ. `create-child.js` có bước chọn **Loại hồ sơ**; tạo
-  `learner` thì vào thẳng Bài Bản, tạo `child` thì không tự vào (bé vẫn phải tự bấm avatar). Tiện thể thêm nút
-  "+ Thêm hồ sơ mới" trong khu phụ huynh (`state.creatingProfile`) — trước GĐ 2 app KHÔNG có cách tạo hồ sơ thứ 2
-  trở đi dù đã được cấp thêm slot (màn `create-child` chỉ tự mở khi `children.length === 0`), lỗ hổng cũ không
-  liên quan Bài Bản nhưng phải vá để tính năng này dùng được.
+  **GĐ 2 (luồng chọn hồ sơ):** hồ sơ `learner` vào được **CẢ 2 đường** — bấm đúng avatar ở màn hình đầu (`avatars.js`
+  khớp avatar với MỌI `profile_type`, không phân biệt — sửa 2026-09-25, xem lý do dưới) **và** từ khu phụ huynh
+  (thẻ "Hồ sơ học bài bản" trong `parent.js`, nút "Vào học", vẫn giữ — tiện khi phụ huynh tự tạo hồ sơ học cho
+  chính mình, không cần nhớ avatar). `decideScreen()` (`flow.js`) rẽ nhánh theo `profile_type` của hồ sơ đang chọn:
+  `learner` → màn `bai-ban-home`, `child` → `child-home` như cũ. `create-child.js` có bước chọn **Loại hồ sơ**
+  (`<select>`, đặt dưới "Năm sinh" — sửa 2026-09-25, ban đầu là 2 nút `.tabs` ở đầu form); tạo `learner` thì vào
+  thẳng Bài Bản, tạo `child` thì không tự vào (bé vẫn phải tự bấm avatar). Tiện thể thêm nút "+ Thêm hồ sơ mới"
+  trong khu phụ huynh (`state.creatingProfile`) — trước GĐ 2 app KHÔNG có cách tạo hồ sơ thứ 2 trở đi dù đã được
+  cấp thêm slot (màn `create-child` chỉ tự mở khi `children.length === 0`), lỗ hổng cũ không liên quan Bài Bản
+  nhưng phải vá để tính năng này dùng được.
+  **Sửa sau khi dùng thật (2026-09-25):** ① form tạo hồ sơ đổi "Loại hồ sơ" từ `.tabs` sang `<select>` + dời xuống
+  dưới "Năm sinh" (yêu cầu trực tiếp). ② `bai-ban-home.js` `shell()` thiếu icon avatar cạnh tên — đã thêm
+  `avatarEmoji()` cho khớp `child-home.js`. ③ **Đảo ngược quyết định ban đầu** — `avatars.js` từng cố tình CHẶN hồ
+  sơ `learner` ở màn avatar mặt trước (buộc vào qua khu phụ huynh, theo đúng câu trong artifact gốc bàn TRƯỚC khi
+  có người dùng thật); thực tế đầu tiên chủ dự án tạo hồ sơ `learner` cho **chính con mình** tự học — bé bấm đúng
+  avatar mà bị báo sai, gây khó hiểu. Nay bỏ hẳn điều kiện lọc theo `profile_type` ở `avatars.js`, mọi hồ sơ vào
+  được từ avatar như nhau. Chi tiết đầy đủ: `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8 "Sửa lại sau khi dùng thật".
   **GĐ 3 (giao diện học 7 chặng):** thư mục mới `public/js/bb/` (mirroring `child/`) — `bb/api.js` (tải
   Level/Unit/Lesson/nội dung chặng, chỉ mục `approved`), `bb/media.js` (dùng lại nguyên `speakFallback`/`nativeLang`
   từ `child/media.js` + `playPath()` phát file bucket `content`/rơi về giọng trình duyệt), `bb/pron.js`
