@@ -1,4 +1,5 @@
 import { sb } from "../supabase.js";
+import { synth, getVoices } from "./audio.js";
 export { setImage, clearImage } from "./images.js"; // dùng lại NGUYÊN cho bb_vocab.image_path (id + image_path — cùng hình dạng content_items/units)
 
 // CRUD + duyệt/ẩn/xoá cho "Tiếng Việt Bài Bản" (xem KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 5).
@@ -206,6 +207,24 @@ export async function clearAudioPath(table, row, col) {
   row[col] = null;
 }
 
+// Sinh âm thanh bằng TTS (dùng lại NGUYÊN /api/tts qua admin/audio.js synth() — cùng Worker, cùng giọng đã cấu hình
+// ở tab Cài đặt) rồi lưu như audio_path thường (KHÔNG phải content_audio nhiều-dòng của khu trẻ em — chỉ 1 file
+// mới nhất/cột, sinh lại thì GHI ĐÈ). lang mặc định 'vi' (giọng người học đang nghe là tiếng Việt); gender mặc định
+// nữ (chưa có UI chọn giới cho Bài Bản — đơn giản hoá GĐ 5, xem KE_HOACH_TIENG_VIET_BAI_BAN.md).
+export async function generateAudio(table, row, col, text, lang = "vi", gender = "female") {
+  need(text && text.trim() ? null : "Chưa có chữ để đọc");
+  const chosen = (await getVoices())[lang]?.[gender];
+  const { blob } = await synth(text.trim(), lang, "normal", chosen, gender);
+  const path = `bb/audio/${table}-${row.id}-${col}-${Date.now()}.mp3`;
+  const up = await sb.storage.from("content").upload(path, blob, { contentType: "audio/mpeg", upsert: false });
+  if (up.error) throw new Error("Tải âm thanh TTS lên thất bại: " + up.error.message);
+  const { error } = await sb.from(table).update({ [col]: path }).eq("id", row.id);
+  if (error) { await sb.storage.from("content").remove([path]); throw error; }
+  if (row[col]) await sb.storage.from("content").remove([row[col]]);
+  row[col] = path;
+  return path;
+}
+
 // ============================================================================
 // Nội dung từng loại chặng — KHÔNG có status riêng, hiện/ẩn theo status của CHẶNG cha.
 // ============================================================================
@@ -339,3 +358,106 @@ export async function updateWritingTask(row, { prompt_vi, prompt_tr, content }) 
   if (Object.keys(patch).length) check(await sb.from("bb_writing_tasks").update(patch).eq("id", row.id));
 }
 export const deleteWritingTask = (id) => sb.from("bb_writing_tasks").delete().eq("id", id).then(check);
+
+// ============================================================================
+// Nhập CSV hàng loạt (admin/bb-csv.js `buildPlan()` tính TRƯỚC kế hoạch thuần, hàm này mới THỰC THI lên CSDL).
+// Nội dung trong 1 chặng ĐÃ CÓ được so trùng theo chữ chính (không phân biệt hoa/thường) để KHÔNG tạo trùng khi
+// nhập lại — giống nguyên tắc "Nhập CSV luôn tạo NHÁP, chạy lại không tạo trùng" của khu trẻ em.
+// ============================================================================
+const ciKey = (s) => clean(s).toLowerCase();
+
+// rows: mảng đối tượng từ plan.groups[].rows; buildRow(row) -> payload cột CSDL (không có step_id/sort_order).
+// mainCol: cột dùng để so trùng với nội dung ĐÃ CÓ trong chặng.
+async function upsertContentRows(table, stepId, mainCol, rows, buildRow) {
+  if (!rows.length) return;
+  const existing = checkData(await sb.from(table).select("*").eq("step_id", stepId));
+  const byKey = new Map(existing.map((r) => [ciKey(r[mainCol]), r]));
+  let order = nextOrder(existing);
+  const toInsert = [];
+  for (const row of rows) {
+    const payload = buildRow(row);
+    const match = byKey.get(ciKey(payload[mainCol]));
+    if (match) check(await sb.from(table).update(payload).eq("id", match.id));
+    else toInsert.push({ step_id: stepId, sort_order: ++order, ...payload });
+  }
+  if (toInsert.length) check(await sb.from(table).insert(toInsert));
+}
+
+// Đoạn văn đọc hiểu: TỐI ĐA 1/chặng — ghi đè nếu đã có, tạo mới nếu chưa. Trả về id để gắn câu hỏi.
+async function upsertPassage(stepId, row) {
+  const existing = checkData(await sb.from("bb_reading_passages").select("id").eq("step_id", stepId));
+  const payload = { passage_vi: row.vi, passage_tr: only(row.tr) };
+  if (existing[0]) { check(await sb.from("bb_reading_passages").update(payload).eq("id", existing[0].id)); return existing[0].id; }
+  return checkData(await sb.from("bb_reading_passages").insert({ step_id: stepId, ...payload }).select("id").single()).id;
+}
+async function upsertQuestions(passageId, rows) {
+  if (!rows.length) return;
+  const existing = checkData(await sb.from("bb_reading_questions").select("*").eq("passage_id", passageId));
+  const byKey = new Map(existing.map((r) => [ciKey(r.question_vi), r]));
+  let order = nextOrder(existing);
+  const toInsert = [];
+  for (const row of rows) {
+    const payload = { question_vi: row.question, choices: row.choices, answer: row.answer };
+    const match = byKey.get(ciKey(row.question));
+    if (match) check(await sb.from("bb_reading_questions").update(payload).eq("id", match.id));
+    else toInsert.push({ passage_id: passageId, sort_order: ++order, ...payload });
+  }
+  if (toInsert.length) check(await sb.from("bb_reading_questions").insert(toInsert));
+}
+
+// Thực thi kế hoạch từ bb-csv.buildPlan(). Trả { levels, units, lessons, steps } (số dòng mới tạo ở mỗi tầng) để
+// admin/bb.js báo tóm tắt. `existing` PHẢI là dữ liệu vừa tải (levels/units/lessons/steps) — dùng để tra id thật.
+export async function importPlan(plan, existing) {
+  const levelByCode = new Map(existing.levels.map((l) => [l.code, l]));
+  for (const nl of plan.newLevels) {
+    const row = checkData(await sb.from("bb_levels").insert({ code: nl.code, name_vi: nl.name_vi, can_do: nl.can_do, sort_order: nextOrder([...existing.levels, ...levelByCode.values()]), status: "draft" }).select().single());
+    levelByCode.set(row.code, row);
+  }
+  const unitByKey = new Map(existing.units.map((u) => [`${u.level_id}|${ciKey(u.title_vi)}`, u]));
+  for (const nu of plan.newUnits) {
+    const levelId = levelByCode.get(nu.level).id;
+    const siblings = existing.units.filter((u) => u.level_id === levelId);
+    const row = checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: nu.title_vi, emoji: nu.emoji, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    unitByKey.set(`${levelId}|${ciKey(nu.title_vi)}`, row);
+  }
+  const lessonByKey = new Map(existing.lessons.map((l) => [`${l.unit_id}|${ciKey(l.title_vi)}`, l]));
+  for (const nl of plan.newLessons) {
+    const unitId = unitByKey.get(`${levelByCode.get(nl.level).id}|${ciKey(nl.unit)}`).id;
+    const siblings = existing.lessons.filter((l) => l.unit_id === unitId);
+    const row = checkData(await sb.from("bb_lessons").insert({ unit_id: unitId, title_vi: nl.title_vi, lesson_type: nl.lesson_type, title_tr: {}, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    lessonByKey.set(`${unitId}|${ciKey(nl.title_vi)}`, row);
+  }
+  const stepByKey = new Map(existing.steps.map((s) => [`${s.lesson_id}|${s.step_type}`, s]));
+  for (const ns of plan.newSteps) {
+    const unitId = unitByKey.get(`${levelByCode.get(ns.level).id}|${ciKey(ns.unit)}`).id;
+    const lessonId = lessonByKey.get(`${unitId}|${ciKey(ns.lesson)}`).id;
+    const siblings = existing.steps.filter((s) => s.lesson_id === lessonId);
+    const row = checkData(await sb.from("bb_lesson_steps").insert({ lesson_id: lessonId, step_type: ns.step_type, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    stepByKey.set(`${lessonId}|${ns.step_type}`, row);
+  }
+
+  for (const g of plan.groups) {
+    const unitId = unitByKey.get(`${levelByCode.get(g.level).id}|${ciKey(g.unit)}`).id;
+    const lessonId = lessonByKey.get(`${unitId}|${ciKey(g.lesson)}`).id;
+    const stepId = stepByKey.get(`${lessonId}|${g.stepType}`).id;
+    if (g.stepType === "dialogue") {
+      await upsertContentRows("bb_dialogue_lines", stepId, "line_vi", g.rows, (r) => ({ speaker: r.speaker, line_vi: r.vi, line_tr: only(r.tr) }));
+    } else if (g.stepType === "vocab") {
+      await upsertContentRows("bb_vocab", stepId, "word_vi", g.rows, (r) => ({ word_vi: r.vi, pos: r.pos, meaning: only(r.tr) }));
+    } else if (g.stepType === "grammar") {
+      await upsertContentRows("bb_grammar", stepId, "formula", g.rows, (r) => ({ formula: r.vi, formula_tr: only(r.tr), examples: r.examples.map((vi) => ({ vi })) }));
+    } else if (g.stepType === "phonics") {
+      await upsertContentRows("bb_phonics_pairs", stepId, "sound_a", g.rows, (r) => ({ sound_a: r.a, sound_b: r.b, examples: r.examples }));
+    } else if (g.stepType === "writing") {
+      await upsertContentRows("bb_writing_tasks", stepId, "prompt_vi", g.rows, (r) => ({ task_type: r.taskType, prompt_vi: r.vi, prompt_tr: only(r.tr), content: r.taskContent }));
+    } else if (g.stepType === "reading") {
+      const passageRow = g.rows.find((r) => r.kind === "passage");
+      const questionRows = g.rows.filter((r) => r.kind === "question");
+      if (passageRow) {
+        const passageId = await upsertPassage(stepId, passageRow);
+        await upsertQuestions(passageId, questionRows);
+      }
+    }
+  }
+  return { levels: plan.newLevels.length, units: plan.newUnits.length, lessons: plan.newLessons.length, steps: plan.newSteps.length, rows: plan.counts.rows };
+}

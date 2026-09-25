@@ -6,6 +6,7 @@ import { beginLoad } from "./view.js";
 import { notice } from "./notice.js";
 import { moveIn } from "./ops.js";
 import * as bb from "./bb-ops.js";
+import * as bbCsv from "./bb-csv.js";
 
 // Tab admin "Bài Bản" — soạn nội dung "Tiếng Việt Bài Bản" (xem KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 5).
 // Cây: Cấp (bb_levels) → Chủ đề (bb_units) → Bài (bb_lessons) → Chặng (bb_lesson_steps, 7 loại) → nội dung riêng
@@ -71,10 +72,63 @@ function render(box, data) {
     })), "btn small"));
 
   if (data.levels.length === 0) {
-    box.replaceChildren(flash, header, addSlot, el("div", { class: "card" }, el("p", { class: "muted" }, "Chưa có cấp độ nào. Thêm cấp đầu tiên (vd A1) để bắt đầu soạn nội dung.")));
+    box.replaceChildren(flash, header, addSlot, csvSection(ctx), el("div", { class: "card" }, el("p", { class: "muted" }, "Chưa có cấp độ nào. Thêm cấp đầu tiên (vd A1) để bắt đầu soạn nội dung, hoặc nhập CSV hàng loạt ở trên.")));
     return;
   }
-  box.replaceChildren(flash, header, addSlot, ...data.levels.map((lv) => levelCard(lv, ctx)));
+  box.replaceChildren(flash, header, addSlot, csvSection(ctx), ...data.levels.map((lv) => levelCard(lv, ctx)));
+}
+
+// ---------------------------------------------------------------------------- Nhập CSV hàng loạt
+function csvSection(ctx) {
+  const text = el("textarea", { rows: "6", placeholder: "…hoặc dán nội dung CSV vào đây", style: "width:100%;font-family:monospace;font-size:13px" });
+  const file = el("input", { type: "file", accept: ".csv,text/csv,text/plain" });
+  file.addEventListener("change", async () => { if (file.files[0]) text.value = await file.files[0].text(); });
+  const preview = el("div");
+  const help = el("p", { class: "muted" },
+    "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|reading|writing). " +
+    "Tuỳ chặng: dialogue dùng speaker+vi · vocab dùng vi+pos · grammar dùng vi (công thức)+examples (cách nhau ;) · " +
+    "phonics dùng vi (âm A)+vi2 (âm B)+examples · reading: dòng đoạn văn dùng vi (để trống cột question), dòng câu " +
+    "hỏi dùng question+choices (cách nhau |)+answer (số) · writing dùng task_type (fill|order|write)+vi (đề bài), " +
+    "rồi fill dùng sentence+answer_text, order dùng words (cách nhau bằng dấu phẩy), write dùng min_words+sample. " +
+    "Cột khác: level_name, can_do, unit_emoji, lesson_type, rồi 1 cột/ngôn ngữ (vd de, en) = bản dịch. " +
+    "Mỗi bài chỉ 1 chặng/loại qua CSV — nhập lại không tạo trùng nội dung trong cùng chặng.");
+  const runCheck = btn("Kiểm tra", () => {
+    preview.replaceChildren(el("p", { class: "muted" }, A.loading));
+    const parsed = bbCsv.parseCsv(text.value);
+    const v = bbCsv.validateRows(parsed, { langs: langs().map((l) => l.code) });
+    const plan = v.errors.length === 0 ? bbCsv.buildPlan(v.items, ctx) : null;
+    renderPreview(v, plan);
+  }, "btn small");
+
+  function renderPreview(v, plan) {
+    const go = btn("Nhập vào (tạo bản nháp)", async () => {
+      go.disabled = true;
+      try {
+        const r = await bb.importPlan(plan, ctx);
+        notice.set("ok", `Đã nhập: ${r.levels} cấp mới, ${r.units} chủ đề mới, ${r.lessons} bài mới, ${r.steps} chặng mới, ${r.rows} dòng nội dung (đã tạo/cập nhật). Nội dung mới đang ở trạng thái NHÁP.`);
+        ctx.reload();
+      } catch (e) {
+        go.disabled = false;
+        preview.append(msg("err", "Dừng giữa chừng: " + e.message + ". Có thể Kiểm tra rồi Nhập lại — mục đã nhập sẽ không bị trùng."));
+      }
+    }, "btn", v.errors.length ? "Còn lỗi, sửa file rồi kiểm tra lại" : undefined);
+    go.disabled = v.errors.length > 0 || !plan;
+    // el() (KHÔNG phải replaceChildren gốc) tự bỏ qua con null — bọc tất cả trong 1 el() rồi mới gắn vào preview,
+    // tránh lặp lại đúng lỗi "[object HTMLDivElement]"/"null" đã gặp ở phần cây nội dung (replaceChildren gốc của
+    // trình duyệt không tự lọc null/mảng, ép kiểu thành chuỗi rồi hiện thẳng lên màn hình).
+    preview.replaceChildren(el("div", null,
+      plan ? el("p", null, `${v.items.length} dòng hợp lệ · sẽ tạo ${plan.newLevels.length} cấp, ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài, ${plan.newSteps.length} chặng mới.`)
+        : el("p", null, "Chưa nhập được — sửa các lỗi sau rồi kiểm tra lại."),
+      v.errors.length ? el("div", { class: "msg err" }, el("b", null, `${v.errors.length} lỗi (phải sửa):`),
+        el("ul", null, v.errors.slice(0, 50).map((e) => el("li", null, `Dòng ${e.row}: ${e.msg}`))),
+        v.errors.length > 50 ? `…và ${v.errors.length - 50} lỗi nữa` : null) : null,
+      v.warnings.length ? el("details", { class: "msg warn" }, el("summary", null, `${v.warnings.length} cảnh báo (vẫn nhập được)`),
+        el("ul", null, v.warnings.slice(0, 100).map((w) => el("li", null, `Dòng ${w.row}: ${w.msg}`)))) : null,
+      go));
+  }
+
+  return el("details", { class: "qa-box" }, el("summary", null, "📄 Nhập CSV hàng loạt"),
+    el("div", { class: "row-btns", style: "justify-content:flex-start" }, file, runCheck), text, help, preview);
 }
 
 // ---------------------------------------------------------------------------- Cấp
@@ -291,14 +345,23 @@ function loadStepContent(panel, step, say) {
 
 const rowHead = (...parts) => el("div", { class: "row", style: "align-items:flex-start" }, el("div", null, ...parts));
 const rowActs = (...buttons) => el("div", { class: "row-btns", style: "margin:0" }, ...buttons);
-const audioBtn = (label, table, row, col, refresh, say) => {
+// text (tuỳ chọn): có chữ thì hiện thêm nút "🔊 TTS" sinh giọng đọc qua /api/tts (dùng lại NGUYÊN pipeline TTS của
+// khu trẻ em — xem bb-ops.generateAudio); không có chữ (vd chưa nhập gì) thì chỉ còn nút tải file tay.
+const audioBtn = (label, table, row, col, refresh, say, text) => {
   const file = el("input", { type: "file", accept: "audio/*", style: "display:none" });
   file.addEventListener("change", async () => {
     if (!file.files[0]) return;
     try { await bb.setAudioPath(table, row, col, file.files[0]); say("ok", "Đã tải âm thanh."); refresh(); } catch (e) { say("err", e.message); }
   });
+  const ttsBtn = text ? btn("🔊 TTS", async (e) => {
+    const b = e.currentTarget;
+    b.disabled = true;
+    try { await bb.generateAudio(table, row, col, text); say("ok", "Đã sinh giọng đọc (TTS)."); refresh(); }
+    catch (err) { b.disabled = false; say("err", err.message); }
+  }, "btn tiny") : null;
   return el("span", { class: "row-btns", style: "margin:0" },
     row[col] ? btn("▶ " + label, () => new Audio(contentUrl(row[col])).play(), "btn tiny") : null,
+    ttsBtn,
     btn(row[col] ? "🔄 Đổi" : "⬆ " + label, () => file.click(), "btn tiny"),
     row[col] ? btn("✕", async () => { try { await bb.clearAudioPath(table, row, col); say("ok", "Đã gỡ âm thanh."); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost") : null,
     file);
@@ -317,7 +380,7 @@ async function dialoguePanel(panel, step, say, refresh) {
       return el("div", { class: "bb-row" },
         rowHead(el("span", { class: "pill" }, row.speaker), " ", el("b", null, row.line_vi), Object.values(row.line_tr ?? {}).length ? el("div", { class: "muted" }, Object.values(row.line_tr).join(" · ")) : null),
         rowActs(
-          audioBtn("Nghe", "bb_dialogue_lines", row, "audio_path", refresh, say),
+          audioBtn("Nghe", "bb_dialogue_lines", row, "audio_path", refresh, say, row.line_vi),
           btn("▲", async () => { try { await moveIn("bb_dialogue_lines", data, row, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("▼", async () => { try { await moveIn("bb_dialogue_lines", data, row, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("✎", slotToggle(editSlot, (close) => dialogueForm(row, step.id, data, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
@@ -362,7 +425,7 @@ async function vocabPanel(panel, step, say, refresh) {
           el("b", null, row.word_vi), row.pos ? el("span", { class: "pill" }, row.pos) : null,
           Object.values(row.meaning ?? {}).length ? el("div", { class: "muted" }, Object.values(row.meaning).join(" · ")) : null),
         rowActs(
-          audioBtn("Nghe", "bb_vocab", row, "audio_path", refresh, say),
+          audioBtn("Nghe", "bb_vocab", row, "audio_path", refresh, say, row.word_vi),
           btn(row.image_path ? "🔄 Ảnh" : "⬆ Ảnh", () => img.click(), "btn tiny"), img,
           btn("▲", async () => { try { await moveIn("bb_vocab", data, row, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("▼", async () => { try { await moveIn("bb_vocab", data, row, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
@@ -440,8 +503,8 @@ async function phonicsPanel(panel, step, say, refresh) {
       return el("div", { class: "bb-row" },
         rowHead(el("b", null, `${row.sound_a} / ${row.sound_b}`), (row.examples ?? []).length ? el("div", { class: "muted" }, row.examples.join(" · ")) : null),
         rowActs(
-          audioBtn("A", "bb_phonics_pairs", row, "audio_a_path", refresh, say),
-          audioBtn("B", "bb_phonics_pairs", row, "audio_b_path", refresh, say),
+          audioBtn("A", "bb_phonics_pairs", row, "audio_a_path", refresh, say, row.sound_a),
+          audioBtn("B", "bb_phonics_pairs", row, "audio_b_path", refresh, say, row.sound_b),
           btn("▲", async () => { try { await moveIn("bb_phonics_pairs", data, row, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("▼", async () => { try { await moveIn("bb_phonics_pairs", data, row, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("✎", slotToggle(editSlot, (close) => phonicsForm(row, step.id, data, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
@@ -486,7 +549,7 @@ async function readingPanel(panel, step, say, refresh) {
   panel.replaceChildren(
     el("div", { class: "bb-row" },
       rowHead(el("p", { class: "bb-passage" }, passage.passage_vi), Object.values(passage.passage_tr ?? {}).length ? el("p", { class: "muted" }, Object.values(passage.passage_tr).join(" · ")) : null),
-      rowActs(audioBtn("Nghe", "bb_reading_passages", passage, "audio_path", refresh, say),
+      rowActs(audioBtn("Nghe", "bb_reading_passages", passage, "audio_path", refresh, say, passage.passage_vi),
         btn("✎", slotToggle(editSlot, (close) => passageForm(passage, step.id, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
         btn("✕ Xoá đoạn văn", async () => { if (!confirm("Xoá đoạn văn cùng mọi câu hỏi bên trong?")) return; try { await bb.deletePassage(passage); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost danger"))),
     editSlot,
@@ -571,13 +634,15 @@ function writingForm(existing, stepId, siblings, onCancel, onSaved) {
   const words = el("input", { type: "text", class: "cell", value: (existing?.content?.words ?? []).join(", "), placeholder: "Tôi, là, An" });
   const minWords = el("input", { type: "number", class: "cell cell-sm", min: "1", value: existing?.content?.min_words ?? "5" });
   const sample = el("textarea", { class: "cell", rows: "2" }, existing?.content?.sample ?? "");
-  const fields = el("div", { class: "qa-grid" });
+  const fields = el("div");
   const paintFields = () => {
     const t = taskType.value;
-    fields.replaceChildren(
+    // Bọc trong el() (không gọi thẳng fields.replaceChildren với mảng/null) — cùng lý do đã sửa ở nơi khác trong
+    // file này: replaceChildren GỐC không tự lọc null/dàn phẳng mảng.
+    fields.replaceChildren(el("div", { class: "qa-grid" },
       t === "fill" ? [labeled("Câu có chỗ trống (đánh dấu bằng ___)", sentence), labeled("Đáp án", answer)] : null,
       t === "order" ? labeled("Các từ đúng thứ tự (cách nhau bằng dấu phẩy)", words) : null,
-      t === "write" ? [labeled("Số từ tối thiểu", minWords), labeled("Câu mẫu (không bắt buộc)", sample)] : null);
+      t === "write" ? [labeled("Số từ tối thiểu", minWords), labeled("Câu mẫu (không bắt buộc)", sample)] : null));
   };
   taskType.addEventListener("change", paintFields);
   paintFields();

@@ -173,9 +173,9 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
 - **Âm thanh cho bé:** `audio.js` tải trước NGUYÊN file (blob, `prefetchItems` khi mở bài) rồi phát từ bộ nhớ; SW không cache phản hồi 206 và bỏ qua yêu cầu Range (iOS Safari). Danh sách chủ đề/bài nhớ 60 giây (`child/api.js`, `clearCache()` khi bé thoát).
 - Đừng để 1 hàm "tải dữ liệu" gánh việc ẩn (hiện khung UI...). Chỉ tải dữ liệu màn hình đang cần.
 - **"Tiếng Việt Bài Bản"** (giáo trình có cấu trúc cho người lớn/người nước ngoài; kế hoạch + quyết định:
-  `KE_HOACH_TIENG_VIET_BAI_BAN.md`; **GĐ 1 [nền dữ liệu] + GĐ 2 [luồng chọn hồ sơ] + GĐ 3 [giao diện học 7 chặng] +
-  GĐ 4 [Luyện tập/SRS] + GĐ 5 [khu admin nhập nội dung, trừ CSV/TTS] ĐÃ LÀM, GĐ 6 test riêng + GĐ 7 nội dung thật
-  chưa làm**): **1 GIAO DIỆN HỌC KHÁC trong CÙNG 1 app**, cùng tài khoản phụ huynh/dự án Supabase —
+  `KE_HOACH_TIENG_VIET_BAI_BAN.md`; **GĐ 1–6 ĐÃ LÀM ĐỦ** (nền dữ liệu, luồng chọn hồ sơ, giao diện học 7 chặng,
+  Luyện tập/SRS, khu admin — GỒM CẢ CSV nhập hàng loạt + TTS, test hàm thuần/RLS đầy đủ); **chỉ còn GĐ 7 (soạn nội
+  dung thật) chưa làm** — ngoài phạm vi code): **1 GIAO DIỆN HỌC KHÁC trong CÙNG 1 app**, cùng tài khoản phụ huynh/dự án Supabase —
   KHÔNG phải app/mô hình thu phí riêng. Migration `022_bai_ban.sql` (đầu tiên sau `001_init.sql` tạo bảng mới — mọi
   migration 002–021 trước đó chỉ ALTER): phân cấp `bb_levels` (mã CEFR A1/A2/B1…) → `bb_units` → `bb_lessons` (có
   `lesson_type` core/review/reading/writing) → `bb_lesson_steps` (7 chặng tuần tự/bài: hội thoại · từ vựng · ngữ
@@ -237,7 +237,7 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   `child_progress`/`activity_log` (đọc luôn được để xuất/xoá; ghi chỉ khi còn hạn + đúng con/học viên của mình).
   Test: `rls.test.mjs` mục 25 (10 kiểm tra). `bb/srs.js` (toán Leitner thuần: `nextBox`, `dueAfter`,
   `INTERVAL_DAYS=[0,1,2,4,8,16]`) + `bb/practice-core.js` (`pickSession()` — ưu tiên mục đến hạn, hàm thuần không
-  gọi mạng, giống tinh thần `child/practice-core.js`) — test `tests/bb.test.mjs` (23 kiểm tra). `bb/skills.js` —
+  gọi mạng, giống tinh thần `child/practice-core.js`) — test `tests/bb.test.mjs` (47 kiểm tra, gồm cả CSV GĐ 5). `bb/skills.js` —
   CHỈ 4 kỹ năng (không phải 12 như khu trẻ em): 🔤 Từ vựng (`graded:true`, có box Leitner thật) · 💬 Hội thoại ·
   📐 Ngữ pháp · 🎧 Ngữ âm (3 mục sau chỉ "xem lại", không chấm). `bb/practice.js` — màn Luyện tập: từ vựng dùng
   `runVocabReview()` riêng (từng thẻ, ẩn nghĩa → tự đánh giá Nhớ/Quên); 3 loại còn lại **TÁI DÙNG NGUYÊN** renderer
@@ -259,19 +259,31 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   XUỐNG — giống hệt nguyên tắc `ops.setLessonStatus` bên khu trẻ em. `▲▼` dùng lại NGUYÊN `ops.moveIn()`; ảnh
   `bb_vocab.image_path` dùng lại NGUYÊN `images.setImage/clearImage`; âm thanh viết MỚI `bb-ops.setAudioPath/
   clearAudioPath` (generic cho mọi cột `audio_path`/`audio_a_path`/`audio_b_path` của mọi bảng `bb_*` — khác hẳn
-  `content_audio` nhiều-dòng bên khu trẻ em) — **CHƯA có TTS**, chỉ tải file admin có sẵn lên (≤ 5 MB). Xoá dọn
-  Storage trước khi xoá dòng (DB tự xoá dây chuyền qua ON DELETE CASCADE). **Lỗi đã gặp + sửa lúc thử:**
-  `panel.replaceChildren(nút, data.map(...))` thiếu `...` trước `.map()` — `replaceChildren()` GỐC (khác `el()`)
-  không tự dàn phẳng mảng, ép mảng thành chuỗi `"[object HTMLDivElement],..."` hiện thẳng lên màn hình; và thông
-  báo "Đã lưu" bị `refresh()` xoá mất ngay vì viết chung `panel` — tách riêng `flash` div sống ngoài `panel`. Đã
-  thử bằng dữ liệu giả: tạo đủ Cấp→Chủ đề→Bài→cả 7 loại chặng, thêm nội dung mọi loại, duyệt lan lên đúng 4 tầng,
-  xoá cả cấp sạch dây chuyền — không lỗi console. Chưa thử tải file thật (chỉ xác nhận nút đúng trạng thái), chưa
-  thử Supabase thật. Chưa làm: **CSV nhập hàng loạt** (khác hẳn khu trẻ em vì cấu trúc Bài Bản lồng sâu hơn — cần
-  thiết kế schema riêng) và **TTS** — chi tiết + ghi chú kỹ thuật ở `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8–15.
+  `content_audio` nhiều-dòng bên khu trẻ em). Xoá dọn Storage trước khi xoá dòng (DB tự xoá dây chuyền qua ON
+  DELETE CASCADE). **Lỗi đã gặp + sửa lúc thử (2 CHỖ trong cùng file):** `panel.replaceChildren(nút, data.map(...))`
+  thiếu `...` trước `.map()`, và sau đó cùng lỗi tái diễn ở `preview.replaceChildren(..., cond ? el() : null)` +
+  `fields.replaceChildren(cond ? [el(),el()] : null)` (form Luyện viết đổi trường theo loại) — `replaceChildren()`
+  GỐC (khác `el()`) KHÔNG tự lọc `null` / dàn phẳng mảng, ép thành chuỗi `"null"`/`"[object HTMLDivElement],..."`
+  hiện thẳng lên màn hình; sửa bằng cách luôn bọc qua 1 `el("div", null, ...)` trước khi gắn vào
+  `replaceChildren()` — **bẫy chung của cả file, nhớ khi thêm chỗ gọi `replaceChildren()` trực tiếp mới**. Cũng sửa
+  thông báo "Đã lưu" bị `refresh()` xoá mất ngay vì viết chung `panel` — tách riêng `flash` div sống ngoài `panel`.
+  **TTS:** `bb-ops.generateAudio()` dùng lại NGUYÊN `synth()`/`getVoices()` từ `admin/audio.js` (cùng `/api/tts`,
+  cùng giọng đã cấu hình ở Cài đặt) rồi lưu vào `audio_path` phẳng (GHI ĐÈ khi sinh lại, không giữ nhiều giọng như
+  `content_audio`) — nút "🔊 TTS" hiện cạnh nút tải file thủ công ở mọi chỗ có sẵn chữ để đọc. **CSV nhập hàng
+  loạt:** `admin/bb-csv.js` (hàm thuần: `validateRows`/`buildPlan`, test `tests/bb.test.mjs`) +
+  `bb-ops.importPlan()` (ghi CSDL) — 1 dòng CSV = 1 dòng nội dung của 1 CHẶNG (khác hẳn 1 dòng = 1 mục bên khu trẻ
+  em), cột đọc tuỳ `step_type`; mỗi bài chỉ 1 chặng/loại qua CSV (không có cột `step_order`, đơn giản hoá có chủ
+  đích); so trùng theo tên/chữ chính không phân biệt hoa/thường ở MỌI tầng (Cấp/Chủ đề/Bài/Chặng + nội dung trong
+  chặng) → nhập lại không tạo trùng, đúng nguyên tắc cũ của khu trẻ em. Giao diện `csvSection()` nằm ngay đầu tab
+  Bài Bản (không phải tab riêng). Đã thử bằng dữ liệu giả: tạo đủ Cấp→Chủ đề→Bài→cả 7 loại chặng + nhập CSV 7 dòng
+  phủ 4 loại chặng vào CSDL trống (đúng số tầng mới tạo) → nhập lại NGUYÊN VẸN cùng file lần 2 → số dòng mọi bảng
+  TRƯỚC/SAU giống hệt nhau (không tạo trùng); duyệt lan lên đúng 4 tầng; xoá cả cấp sạch dây chuyền — không lỗi
+  console trong suốt quá trình. Chưa thử tải file ảnh/âm thanh thật, chưa thử gọi `/api/tts` thật, chưa thử
+  Supabase thật — chi tiết + ghi chú kỹ thuật ở `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 8–17.
 
 ## Kiểm thử
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập "Tiếng Việt Bài Bản", 23 kiểm tra) — không cần cài gì.
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 47 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (219 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
