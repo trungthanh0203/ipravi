@@ -6,6 +6,7 @@ import { unitForm, lessonForm, renameForm, itemsForm, resetLookup } from "./quic
 import * as audio from "./audio.js";
 import * as ops from "./ops.js";
 import { notice } from "./notice.js";
+import { mount as mountCsvImport } from "./import.js";
 import { guessGender } from "../voice-names.js";
 import { LEVELS, levelOf, numberUnits } from "../levels.js";
 import { beginLoad } from "./view.js";
@@ -71,6 +72,14 @@ let pendingDone = null;
 let cardView = false; // duyệt hình theo thẻ lớn
 const flushDone = () => { const d = pendingDone; pendingDone = null; d?.(); };
 
+// Nhập CSV hàng loạt (khu trẻ em) — gấp gọn ở đầu tab, cùng kiểu <details> với csvSection() của tab Bài Bản
+// để 2 khu không dùng chung 1 giao diện nữa (mỗi khu 1 mục nhập CSV riêng, rõ ràng nội dung nào vào đâu).
+function csvSection(reload) {
+  const slot = el("div");
+  mountCsvImport(slot, { onImported: reload });
+  return el("details", { class: "qa-box" }, el("summary", null, "📄 Nhập CSV hàng loạt"), slot);
+}
+
 export async function mount(box) {
   const done = beginLoad(box);
   try {
@@ -101,7 +110,7 @@ function render(box, units, lessons) {
   };
 
   if (units.length === 0) {
-    return box.replaceChildren(el("div", { class: "card" }, el("p", null, "Chưa có nội dung. Sang tab “Nhập CSV” để thêm chủ đề, bài và từ vựng.")));
+    return box.replaceChildren(flash, csvSection(reload), el("div", { class: "card" }, el("p", null, "Chưa có nội dung. Mở khu “Nhập CSV hàng loạt” ở trên để thêm chủ đề, bài và từ vựng.")));
   }
 
   const nums = numberUnits(units.filter((u) => !u.hidden)); // số thứ tự trong cấp (chủ đề ẩn không có số)
@@ -159,7 +168,7 @@ function render(box, units, lessons) {
       el("div", { class: "level-head" }, el("h2", null, "🎙️ Ngân hàng âm (ẩn với bé)"), el("span", { class: "muted" }, "Âm chữ cái, vần, tên dấu thanh — thu giọng người thật ở tab “Thu âm”.")),
       hidden.map(unitCard)));
   }
-  box.replaceChildren(flash, ...groups);
+  box.replaceChildren(flash, csvSection(reload), ...groups);
 }
 
 function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {

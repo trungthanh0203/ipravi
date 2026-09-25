@@ -250,5 +250,5 @@ function render(box, units, lessons) {
 
   // Gọi CUỐI CÙNG: loadAndDraw dùng các biến khai báo bằng let ở trên (gọi sớm hơn sẽ lỗi "chưa khởi tạo")
   if (options.length) loadAndDraw();
-  else work.replaceChildren(el("p", { class: "muted" }, "Chưa có bài nào. Nhập nội dung ở tab “Nhập CSV” hoặc tạo ngân hàng âm."));
+  else work.replaceChildren(el("p", { class: "muted" }, "Chưa có bài nào. Nhập nội dung ở tab “Trẻ em” (mục Nhập CSV hàng loạt) hoặc tạo ngân hàng âm."));
 }

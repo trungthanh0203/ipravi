@@ -130,7 +130,7 @@ async function voiceCard() {
     save.disabled = false;
     if (error) return feedback.replaceChildren(msg("err", error.message));
     resetVoices();
-    feedback.replaceChildren(msg("ok", "Đã lưu giọng đọc. Giọng mới áp dụng cho âm thanh sinh MỚI; muốn đổi các bài đã có, vào tab Nội dung → “Sinh lại TTS bằng giọng hiện tại”."));
+    feedback.replaceChildren(msg("ok", "Đã lưu giọng đọc. Giọng mới áp dụng cho âm thanh sinh MỚI; muốn đổi các bài đã có, vào tab Trẻ em → “Sinh lại TTS bằng giọng hiện tại”."));
   });
 
   return el("div", { class: "card" },
@@ -166,7 +166,7 @@ function diagnosticCard() {
           el("thead", null, el("tr", null, ["Ngôn ngữ", "Giới (nhãn)", "Nguồn", "Giọng đã dùng", "Số file"].map((h) => el("th", null, h)))),
           el("tbody", null, rows.map(tr)))),
         bad.length
-          ? msg("err", "Có file gắn nhãn giới KHÔNG khớp giọng thật (dòng ⚠). Chạy migration 006 để vá nhãn, rồi tab Nội dung → “Sinh lại TTS bằng giọng hiện tại”.")
+          ? msg("err", "Có file gắn nhãn giới KHÔNG khớp giọng thật (dòng ⚠). Chạy migration 006 để vá nhãn, rồi tab Trẻ em → “Sinh lại TTS bằng giọng hiện tại”.")
           : msg("ok", "Nhãn giới khớp với giọng đã dùng."));
     } catch (e) {
       out.replaceChildren(msg("err", e.message));

@@ -1,5 +1,5 @@
 // "Ngân hàng âm": các âm nhỏ cần giọng người thật — âm chữ cái, vần, tên dấu thanh — dùng để thu âm và (sau này) để đánh vần theo từng phần.
-// Hàm thuần, có test trong tests/unit.test.mjs. Danh sách theo cách đọc thông dụng trong dạy học vần; người dạy có thể sửa ở tab Nội dung.
+// Hàm thuần, có test trong tests/unit.test.mjs. Danh sách theo cách đọc thông dụng trong dạy học vần; người dạy có thể sửa ở tab Trẻ em.
 
 // Âm đầu → cách đọc ("b" đọc "bờ"). k, q, gh, ngh đọc giống c, qu, g, ng.
 export const INITIAL_SOUND = {

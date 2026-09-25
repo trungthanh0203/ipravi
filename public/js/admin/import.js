@@ -4,6 +4,7 @@ import { el, msg } from "../ui.js";
 import { A, CSV_HELP, aiPrompt } from "./text.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, keyOf, activitiesFor, summarizeChanges } from "./csv.js";
 import { dropAudio } from "./audio.js";
+import { notice } from "./notice.js";
 
 const langs = () => CONFIG.languages.map((l) => l.code);
 const chunk = (arr, n = 200) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
@@ -170,9 +171,11 @@ export function mount(box, { onImported } = {}) {
       try {
         const c = await execute(plan, ex, (stage, d, n) => { progress.textContent = `${stage}… ${d}/${n}`; });
         progress.textContent = "";
-        result.replaceChildren(msg("ok",
-          `Xong: ${c.units} chủ đề, ${c.lessons} bài, ${c.items} mục mới, ${c.updated} mục cập nhật, ${c.translations} nghĩa. ` +
-          "Nội dung đang ở trạng thái NHÁP — sang tab Nội dung để sinh âm thanh và Duyệt."));
+        const okText = `Xong: ${c.units} chủ đề, ${c.lessons} bài, ${c.items} mục mới, ${c.updated} mục cập nhật, ${c.translations} nghĩa. ` +
+          "Nội dung đang ở trạng thái NHÁP — cuộn xuống danh sách bên dưới để sinh âm thanh và Duyệt.";
+        // onImported (khi có) tải lại CẢ tab ngay sau đây → dòng "Xong: …" viết vào result sẽ bị xoá mất trước khi
+        // admin kịp đọc; notice.set() giữ được thông báo qua lần tải lại đó (giống csvSection() của tab Bài Bản).
+        if (onImported) notice.set("ok", okText); else result.replaceChildren(msg("ok", okText));
         onImported?.();
       } catch (e) {
         progress.textContent = "";
@@ -181,7 +184,10 @@ export function mount(box, { onImported } = {}) {
       }
     });
 
-    preview.replaceChildren(
+    // el() (KHÔNG phải replaceChildren gốc) tự bỏ qua con null — bọc mọi phần có thể null trong 1 el() rồi mới gắn
+    // vào preview, tránh lỗi "null" hiện thành chữ thật (replaceChildren gốc của trình duyệt không tự lọc null,
+    // ép kiểu thành chuỗi rồi hiện thẳng lên màn hình — xem cùng lỗi đã sửa ở admin/bb.js csvSection()).
+    preview.replaceChildren(el("div", null,
       el("p", null, plan
         ? `${v.items.length} dòng hợp lệ: ${plan.counts.new} mới, ${plan.counts.update} cập nhật, ${plan.counts.same} không đổi` +
           ` · sẽ tạo ${plan.newUnits.length} chủ đề, ${plan.newLessons.length} bài` + (plan.levelChanges?.length ? `, đổi cấp ${plan.levelChanges.length} chủ đề` : "") + (plan.titleChanges?.length ? `, cập nhật tên dịch ${plan.titleChanges.length} chủ đề/bài` : "") + "."
@@ -201,7 +207,7 @@ export function mount(box, { onImported } = {}) {
             el("td", null, r.item.emoji), ...langs().map((l) => el("td", null, r.item.tr[l] ?? "")),
             el("td", null, el("span", { class: `pill ${status[r.status][1]}` }, status[r.status][0]))))),
         plan.rows.length > 100 && el("caption", null, `Hiện 100/${plan.rows.length} dòng đầu`)) : null,
-      go, progress, result);
+      go, progress, result));
   }
 
   file.addEventListener("change", async () => {
@@ -210,8 +216,7 @@ export function mount(box, { onImported } = {}) {
     check_();
   });
 
-  box.replaceChildren(el("div", { class: "card" },
-    el("h2", null, "Nhập nội dung bằng CSV"),
+  box.replaceChildren(
     el("p", { class: "muted" }, CSV_HELP),
     el("div", { class: "row-btns", style: "justify-content:flex-start" },
       el("button", { class: "btn small ghost", onclick: () => download("mau-noi-dung.csv", buildTemplate(langs()), "text/csv;charset=utf-8") }, "⬇ Tải file mẫu"),
@@ -221,5 +226,5 @@ export function mount(box, { onImported } = {}) {
       } }, "📋 Sao chép câu lệnh cho AI")),
     el("label", null, "Chọn file CSV"), file, text,
     el("button", { class: "btn small", onclick: check_ }, "Kiểm tra"),
-    preview));
+    preview);
 }
