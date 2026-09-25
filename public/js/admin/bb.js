@@ -72,10 +72,10 @@ function render(box, data) {
     })), "btn small"));
 
   if (data.levels.length === 0) {
-    box.replaceChildren(flash, header, addSlot, csvSection(ctx), el("div", { class: "card" }, el("p", { class: "muted" }, "Chưa có cấp độ nào. Thêm cấp đầu tiên (vd A1) để bắt đầu soạn nội dung, hoặc nhập CSV hàng loạt ở trên.")));
+    box.replaceChildren(flash, csvSection(ctx), header, addSlot, el("div", { class: "card" }, el("p", { class: "muted" }, "Chưa có cấp độ nào. Thêm cấp đầu tiên (vd A1) để bắt đầu soạn nội dung, hoặc nhập CSV hàng loạt ở trên.")));
     return;
   }
-  box.replaceChildren(flash, header, addSlot, csvSection(ctx), ...data.levels.map((lv) => levelCard(lv, ctx)));
+  box.replaceChildren(flash, csvSection(ctx), header, addSlot, ...data.levels.map((lv) => levelCard(lv, ctx)));
 }
 
 // ---------------------------------------------------------------------------- Nhập CSV hàng loạt
@@ -335,7 +335,8 @@ function loadStepContent(panel, step, say) {
       else if (step.step_type === "phonics") await phonicsPanel(panel, step, say, refresh);
       else if (step.step_type === "reading") await readingPanel(panel, step, say, refresh);
       else if (step.step_type === "writing") await writingPanel(panel, step, say, refresh);
-      else panel.replaceChildren(el("p", { class: "muted" }, "Mini-game không có nội dung soạn riêng — chạy runtime từ Từ vựng/Ngữ âm của bài (Giai đoạn 4)."));
+      else if (step.step_type === "minigame") await minigamePanel(panel, step, say, refresh);
+      else panel.replaceChildren(el("p", { class: "muted" }, "Loại chặng chưa được hỗ trợ."));
     } catch (e) {
       panel.replaceChildren(msg("err", A.loadError + e.message));
     }
@@ -491,6 +492,33 @@ function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
 }
 
 // ---- Ngữ âm ----
+// ---- Mini-game: không soạn nội dung riêng — chỉ chọn "chơi kiểu gì" (config.kind), engine tự lấy Từ vựng/Ngữ
+// pháp/Ngữ âm/Hội thoại CÙNG BÀI lúc chơi (xem bb/steps/minigame.js). 2 engine còn lại của 5-engine gốc (lật thẻ
+// trí nhớ, đóng vai hội thoại chấm phát âm) chưa cài — chưa đưa vào danh sách chọn để tránh chọn nhầm 1 kind không
+// chạy gì cả.
+const MINIGAME_KINDS = [
+  { id: "meaning_pick", label: "🔤 Ghép nghĩa", hint: "Nghe 1 từ → chọn đúng nghĩa trong 4 lựa chọn. Cần ≥ 4 từ vựng (chặng Từ vựng) có nghĩa ở ngôn ngữ bé đang xem." },
+  { id: "phonics_discrim", label: "🎧 Phân biệt âm", hint: "Nghe 1 âm trong cặp dễ nhầm → đoán đúng âm nào. Cần chặng Ngữ âm có ít nhất 1 cặp âm." },
+  { id: "sentence_builder", label: "🧩 Xếp câu", hint: "Chạm chữ theo đúng thứ tự để xếp lại câu. Lấy câu từ chặng Hội thoại hoặc ví dụ ở chặng Ngữ pháp (câu ≥ 2 từ)." },
+];
+async function minigamePanel(panel, step, say, refresh) {
+  const chosen = MINIGAME_KINDS.find((k) => k.id === step.config?.kind);
+  const sel = el("select", { class: "cell" },
+    el("option", { value: "", selected: !chosen }, "— Chưa chọn —"),
+    MINIGAME_KINDS.map((k) => el("option", { value: k.id, selected: k.id === chosen?.id }, k.label)));
+  const save = btn(A.save, async () => {
+    save.disabled = true;
+    // refresh() chỉ vẽ lại panel bằng CHÍNH object `step` đang có trong bộ nhớ (không tải lại từ CSDL) — phải tự
+    // cập nhật step.config tại chỗ trước, không thì dropdown hiện lại "Chưa chọn" dù đã lưu đúng (đã gặp lúc thử).
+    try { const cfg = sel.value ? { kind: sel.value } : {}; await bb.updateStepConfig(step, cfg); step.config = cfg; say("ok", "Đã lưu kiểu trò chơi."); refresh(); }
+    catch (e) { save.disabled = false; say("err", e.message); }
+  }, "btn small");
+  panel.replaceChildren(el("div", { class: "qa-box" },
+    el("p", { class: "muted" }, "Mini-game không soạn nội dung riêng — tự lấy Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại CÙNG BÀI lúc chơi. Chọn kiểu trò chơi cho chặng này:"),
+    labeled("Kiểu trò chơi", sel), save,
+    chosen ? el("p", { class: "muted" }, chosen.hint) : null));
+}
+
 async function phonicsPanel(panel, step, say, refresh) {
   const { data, error } = await sb.from("bb_phonics_pairs").select("*").eq("step_id", step.id).order("sort_order");
   if (error) throw error;

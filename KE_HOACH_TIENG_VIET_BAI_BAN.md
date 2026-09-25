@@ -289,8 +289,25 @@ với Supabase thật (chưa có nội dung `bb_*` thật — soạn nội dung 
   xong (lỗi tải không chặn xem danh sách bài, chỉ mất dấu ✓).
 - **KHÔNG làm** (đã nói trước ở mục 11 cũ, giữ nguyên quyết định): bảng ghi lượt đọc thử phát âm riêng cho Bài Bản —
   `bb/pron.js` `micButton()` vẫn KHÔNG lưu kết quả ở mọi nơi dùng nó (cả trong bài học lẫn trong Luyện tập), giữ đơn
-  giản; mini-game thật (5 engine) — `bb/steps/minigame.js` vẫn là chỗ đứng, chưa nối vào Luyện tập.
+  giản.
 - `tests/browser/mock-sb.js` thêm 2 bảng `bb_progress`/`bb_srs_state` vào `TABLES` để thử được bằng dữ liệu giả.
+
+**Cập nhật 2026-09-25 (mini-game thật — 3/5 engine, ngoài lộ trình 7 giai đoạn gốc, làm theo yêu cầu chủ dự án sau
+khi dùng thử):** `bb/steps/minigame.js` từ chỗ đứng → 3 engine chạy thật, KHÔNG cần bảng mới (dùng `bb_lesson_steps.config`
+jsonb có sẵn từ migration 022): 🔤 Ghép nghĩa (`meaning_pick`), 🎧 Phân biệt âm (`phonics_discrim`), 🧩 Xếp câu
+(`sentence_builder`, tái dùng đúng `orderTask()` của `bb/steps/writing.js`). Admin chọn kind ở `admin/bb.js`
+`minigamePanel()` (`bb-ops.updateStepConfig()`). Engine nhận `steps` (toàn bộ chặng đã duyệt của bài, kèm `.content`)
+qua tham số thứ 3 mới của `run(box, step, steps)` — `bb/runner.js` truyền cho MỌI renderer, chỉ minigame.js dùng.
+**2 engine còn thiếu của 5 engine gốc (lật thẻ trí nhớ, đóng vai hội thoại chấm phát âm) CHƯA làm** — chủ dự án chọn
+làm 3 game trước rồi xem thử, quyết định làm tiếp 2 game còn lại sau. flashcard SRS (engine thứ 5 trong danh sách
+gốc) không làm riêng cho chặng Mini-game vì đã có ở màn Luyện tập › Từ vựng (`runVocabReview`), làm lại sẽ trùng.
+**Nhân tiện làm luôn "Boss cuối Unit"** (mục 5 gợi ý cũ): bài `lesson_type='review'` → Mini-game của bài đó gộp
+THÊM dữ liệu Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại của MỌI bài khác trong CÙNG Chủ đề (`api.loadUnitPool()`), không chỉ
+riêng bài đó — đúng tinh thần "Mỗi Unit có 1 Boss cuối gộp kiến thức" ở mục 1. **Cùng đợt, `admin/record.js` (tab
+Thu âm) thêm nút chọn giáo trình** (👶 Trẻ em / 🎓 Bài Bản) vì trước đó chỉ thu được cho khu trẻ em — Ngân hàng âm
+hiện ở cả 2 (dùng chung). Chi tiết kỹ thuật + lỗi gặp lúc thử (parseLessonKey ép Number() sai, step.config không tự
+cập nhật sau khi lưu): xem CLAUDE.md mục "Quy tắc dễ sai" (2 bullet mới "Thu âm chia theo giáo trình" và "Mini-game
+Bài Bản"). Đã thử bằng dữ liệu giả (mock-sb.js): cả 3 engine + Boss cuối Unit chạy đúng, chưa thử Supabase thật.
 
 **Đã thử bằng dữ liệu giả:** học xong 1 bài (7 chặng) → `bb_progress` có đủ 7 dòng → danh sách bài hiện "✓" thay vì
 số → vào Luyện tập thấy đúng "2 mục cần ôn" cho Từ vựng/Hội thoại, "1 mục" cho Ngữ pháp/Ngữ âm (đúng số mục mỗi
@@ -388,8 +405,10 @@ biến môi trường TTS, không mô phỏng được bằng `mock-sb.js`), **c
 
 ## 17. Ghi chú kỹ thuật khi tiếp tục GĐ 7
 
-- Migration kế tiếp đánh số `024_...` (GĐ 4 đã dùng `023_bb_progress.sql`; GĐ 5 không thêm migration nào).
-- Mini-game thật (5 engine) vẫn là chỗ đứng — có thể làm bất cứ lúc nào, không phụ thuộc GĐ 7.
+- Migration kế tiếp đánh số `024_...` (GĐ 4 đã dùng `023_bb_progress.sql`; GĐ 5 không thêm migration nào; đợt
+  mini-game 2026-09-25 cũng không thêm migration — `config` đã có sẵn từ 022).
+- Mini-game: 3/5 engine đã làm (2026-09-25, xem mục 8 cuối). 2 engine còn lại (lật thẻ trí nhớ, đóng vai hội thoại
+  chấm phát âm) vẫn là việc mở — có thể làm bất cứ lúc nào, không phụ thuộc GĐ 7.
 - Muốn thêm hồ sơ thứ 2+ cho khu TRẺ EM (không liên quan Bài Bản) giờ cũng dùng được qua "+ Thêm hồ sơ mới" thêm ở
   GĐ 2 (trước đây chỉ tạo được hồ sơ đầu tiên) — tiện thể sửa luôn một khoảng trống cũ của app, không phải việc của
   GĐ 2/kế hoạch Bài Bản, nhưng cần khi thử nghiệm.

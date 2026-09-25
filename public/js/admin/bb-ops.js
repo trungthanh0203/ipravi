@@ -84,6 +84,11 @@ export async function createStep(lessonId, stepType, siblings) {
   need(STEP_TYPES.includes(stepType) ? null : "Loại chặng không hợp lệ");
   return checkData(await sb.from("bb_lesson_steps").insert({ lesson_id: lessonId, step_type: stepType, sort_order: nextOrder(siblings), status: "draft" }).select().single());
 }
+// Chặng Mini-game không có bảng nội dung riêng (chạy runtime từ Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại CÙNG BÀI) — chỉ
+// cần lưu "chơi kiểu gì" vào `config.kind` (xem bb/steps/minigame.js cho danh sách kind đã cài).
+export async function updateStepConfig(step, config) {
+  check(await sb.from("bb_lesson_steps").update({ config }).eq("id", step.id));
+}
 
 // ============================================================================
 // Duyệt / ẩn theo tầng — chặng không có status riêng để hiện, chỉ có 4 tầng: level/unit/lesson/step.

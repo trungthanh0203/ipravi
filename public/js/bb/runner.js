@@ -27,8 +27,13 @@ const STEP_TITLE = {
 export async function runLesson({ root, lesson, childId, onExit }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   let steps;
+  let bossPool = null; // "Boss cuối Unit": bài lesson_type='review' → Mini-game ôn CẢ Chủ đề, không chỉ riêng bài này
   try {
     steps = (await api.loadLessonContent(lesson.id)).filter((s) => STEP_RUNNERS[s.step_type]);
+    if (lesson.lesson_type === "review") {
+      // Tải phần ôn cả Unit lỗi thì KHÔNG chặn cả bài — Mini-game chỉ ôn hẹp lại như bài thường (bossPool ở null).
+      bossPool = await api.loadUnitPool(lesson.unit_id, lesson.id).catch(() => []);
+    }
   } catch {
     paint(root, el("div", { class: "card" }, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onExit }, T.back)));
     return;
@@ -63,7 +68,12 @@ export async function runLesson({ root, lesson, childId, onExit }) {
     const step = steps[i];
     const body = el("div", { class: "bb-step-body" });
     paint(box, el("p", { class: "bb-step-dots" }, T.bbStepOf(i + 1, steps.length)), el("h2", null, STEP_TITLE[step.step_type]), body);
-    await Promise.race([STEP_RUNNERS[step.step_type](body, step), abortP]);
+    // `steps` (toàn bộ chặng của bài, mỗi chặng kèm `.content`) truyền thêm cho MỌI renderer — chỉ minigame.js dùng
+    // (lấy Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại để chơi), các renderer khác nhận (box, step) như cũ, bỏ qua tham số
+    // thừa. Bài Boss (bossPool khác null) → Mini-game nhận CẢ steps riêng của bài LẪN bossPool (cả Unit), gộp lại
+    // thành 1 mảng — engine không cần biết gì về "Boss", chỉ thấy nguồn dữ liệu rộng hơn bình thường.
+    const pool = step.step_type === "minigame" && bossPool ? [...steps, ...bossPool] : steps;
+    await Promise.race([STEP_RUNNERS[step.step_type](body, step, pool), abortP]);
     if (aborted) return;
     api.saveStepProgress(childId, step.id); // không await — không chặn chuyển chặng nếu mạng chậm, lỗi thì console.warn thôi
   }

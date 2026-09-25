@@ -78,6 +78,31 @@ export async function loadLessonContent(lessonId) {
   });
 }
 
+// Chặng Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại ĐÃ DUYỆT của MỌI bài KHÁC trong CÙNG 1 Chủ đề (loại trừ chính bài đang
+// học) — dùng cho bài "Boss cuối Unit" (`lessons.lesson_type === 'review'`): chặng Mini-game của bài Boss tổng hợp
+// ôn cả Unit thay vì chỉ riêng bài đó (xem bb/runner.js). Không lấy Đọc hiểu/Luyện viết (Mini-game hiện chưa có
+// engine dùng 2 loại đó) và không lấy bài chính nó (đã có trong `steps` riêng của bài rồi, tránh trùng lặp).
+export async function loadUnitPool(unitId, excludeLessonId) {
+  const { data: lessons, error } = await sb.from("bb_lessons").select("id").eq("unit_id", unitId).eq("status", "approved");
+  if (error) throw error;
+  const lessonIds = (lessons ?? []).map((l) => l.id).filter((id) => id !== excludeLessonId);
+  if (!lessonIds.length) return [];
+  const { data: steps, error: e2 } = await sb.from("bb_lesson_steps").select("*").in("lesson_id", lessonIds).eq("status", "approved")
+    .in("step_type", ["dialogue", "vocab", "grammar", "phonics"]);
+  if (e2) throw e2;
+  const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
+  const [dialogue, vocab, grammar, phonics] = await Promise.all([
+    fetchByIds("bb_dialogue_lines", idsOf("dialogue")),
+    fetchByIds("bb_vocab", idsOf("vocab")),
+    fetchByIds("bb_grammar", idsOf("grammar")),
+    fetchByIds("bb_phonics_pairs", idsOf("phonics")),
+  ]);
+  const dMap = groupBy(dialogue, "step_id"), vMap = groupBy(vocab, "step_id");
+  const gMap = groupBy(grammar, "step_id"), phMap = groupBy(phonics, "step_id");
+  const contentOf = { dialogue: dMap, vocab: vMap, grammar: gMap, phonics: phMap };
+  return (steps ?? []).map((s) => ({ ...s, content: bySortOrder(contentOf[s.step_type].get(s.id) ?? []) }));
+}
+
 // Mục nào chưa từng gặp thì "đến hạn ngay" (mốc thời gian rất xa trong quá khứ) — ôn tập chỉ chặn mục đã gặp qua
 // bằng bb_progress, không cần đánh dấu riêng "chưa gặp" ở đây.
 const NEVER = "1970-01-01T00:00:00.000Z";
