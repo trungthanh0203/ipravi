@@ -66,9 +66,9 @@ async function loadChildItems(lessonId) {
 // ---------------------------------------------------------------------------- nạp mục cần thu, khu Bài Bản
 // Chỉ 4/7 chặng có cột âm thanh: Hội thoại, Từ vựng, Ngữ âm (2 slot/dòng: sound_a + sound_b), Đọc hiểu (1 file/cả
 // đoạn văn). Ngữ pháp/Luyện viết/Mini-game không có cột audio_path nào — không hiện trong danh sách thu.
-function bbItem(table, row, col, group, text, sub, maxSeconds) {
+function bbItem(table, row, col, group, text, sub, maxSeconds, sampleText = text) {
   return {
-    key: `${table}:${row.id}:${col}`, group, text, sub, sampleText: text, maxSeconds,
+    key: `${table}:${row.id}:${col}`, group, text, sub, sampleText, maxSeconds,
     get hasAudio() { return Boolean(row[col]); },
     playCurrent: () => { if (row[col]) new Audio(contentUrl(row[col])).play().catch(() => {}); },
     upload: (file) => bb.setAudioPath(table, row, col, file),
@@ -85,7 +85,7 @@ async function loadBbItems(lessonId, allSteps) {
   }
   if (byType.vocab) {
     const rows = check(await sb.from("bb_vocab").select("*").eq("step_id", byType.vocab.id).order("sort_order"));
-    for (const r of rows) items.push(bbItem("bb_vocab", r, "audio_path", "🔤 Từ vựng", r.word_vi, r.pos ? `Loại từ: ${r.pos}` : null, MAX_SECONDS));
+    for (const r of rows) items.push(bbItem("bb_vocab", r, "audio_path", "🔤 Từ vựng", r.word_vi, r.say_vi ? `Đọc là: “${r.say_vi}”` : (r.pos ? `Loại từ: ${r.pos}` : null), MAX_SECONDS, r.say_vi || r.word_vi));
   }
   if (byType.phonics) {
     const rows = check(await sb.from("bb_phonics_pairs").select("*").eq("step_id", byType.phonics.id).order("sort_order"));

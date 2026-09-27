@@ -55,7 +55,7 @@ vi/de/en); (3) `admin/dict.js` (từ điển gợi ý Thêm nhanh) không tự c
 thiết kế ("không tìm ra thì để trống, không bịa"). KHÔNG cần sửa code cho việc đổi/thêm ngôn ngữ — chỉ cần cấu hình
 `LANGUAGES` + soạn nội dung dịch.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `023_bb_progress.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `024_bb_a0_and_say.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -330,21 +330,46 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   rơi về màn chỗ đứng cũ (không lỗi), Boss cuối Unit gộp đúng từ vựng của 2 bài khác vào 1 bài không có chặng Từ
   vựng riêng — không lỗi console ở mọi bước.
 - **GĐ 7 bắt đầu — CSV nhập hàng loạt Bài Bản chưa nhập được chặng minigame + lỗi sort_order (2026-09-27):** soạn mẻ
-  nội dung thật đầu tiên (`giao-trinh/csv/bai-ban-a1-chao-hoi-gia-dinh.csv`, sinh bằng `node scripts/gen-bai-ban-a1.mjs`
-  — sửa nội dung thì sửa script rồi chạy lại, đừng sửa tay CSV) lộ ra 2 lỗi ở `admin/bb-ops.js`/`admin/bb-csv.js`:
-  ① `importPlan()` tính `sort_order` bằng `nextOrder(existing.xxx…)` — chỉ tính dòng ĐÃ CÓ TỪ TRƯỚC, không tính dòng
-  vừa tạo TRONG CÙNG lần nhập → 2 bài/chủ đề/chặng mới cùng 1 cha đều nhận `sort_order=1` (không phải 1 rồi 2) khi
-  CSV tạo nhiều dòng cùng lúc — sửa bằng bộ đếm cục bộ `counters`/`bump()` tăng dần theo từng cha, tính cả dòng mới
-  tạo. ② Chặng `minigame` chưa nhập được qua CSV dù chỉ cần ghi `config.kind` (không cần bảng nội dung riêng) — thêm
-  cột `game` (`bb-csv.js` `GAME_KINDS` = 3 engine đã cài ở mục trên) + `STEP_TYPES` thêm `"minigame"` +
-  `importPlan()` cập nhật `config` cho nhóm `stepType==="minigame"` (chạy cả khi chặng đã có — đổi `game` lúc nhập
-  lại không tạo trùng). Test: `tests/bb.test.mjs` +4 kiểm tra (52 tổng). Chi tiết + kết quả thử toàn bộ nội dung
-  bằng `mock-sb.js` (nhập → duyệt → chơi hết 2 bài + 2 bài Boss, console sạch): `KE_HOACH_TIENG_VIET_BAI_BAN.md`
-  mục 18. Nội dung CSV này do AI soạn theo yêu cầu chủ dự án — **chưa qua người biết tiếng Việt/văn hoá thật rà
-  lại**, coi là bộ khởi đầu để kiểm tra bằng mắt trước khi mở rộng thêm chủ đề.
+  nội dung thật đầu tiên (`giao-trinh/bai-ban/bai-ban-a1-chao-hoi-gia-dinh.csv`, sinh bằng
+  `node scripts/gen-bai-ban-a1.mjs` — sửa nội dung thì sửa script rồi chạy lại, đừng sửa tay CSV) lộ ra 2 lỗi ở
+  `admin/bb-ops.js`/`admin/bb-csv.js`: ① `importPlan()` tính `sort_order` bằng `nextOrder(existing.xxx…)` — chỉ
+  tính dòng ĐÃ CÓ TỪ TRƯỚC, không tính dòng vừa tạo TRONG CÙNG lần nhập → 2 bài/chủ đề/chặng mới cùng 1 cha đều
+  nhận `sort_order=1` (không phải 1 rồi 2) khi CSV tạo nhiều dòng cùng lúc — sửa bằng bộ đếm cục bộ
+  `counters`/`bump()` tăng dần theo từng cha, tính cả dòng mới tạo. ② Chặng `minigame` chưa nhập được qua CSV dù
+  chỉ cần ghi `config.kind` (không cần bảng nội dung riêng) — thêm cột `game` (`bb-csv.js` `GAME_KINDS` = 3 engine
+  đã cài ở mục trên) + `STEP_TYPES` thêm `"minigame"` + `importPlan()` cập nhật `config` cho nhóm
+  `stepType==="minigame"` (chạy cả khi chặng đã có — đổi `game` lúc nhập lại không tạo trùng). Test:
+  `tests/bb.test.mjs` +4 kiểm tra. Chi tiết + kết quả thử toàn bộ nội dung bằng `mock-sb.js` (nhập → duyệt → chơi
+  hết 2 bài + 2 bài Boss, console sạch): `KE_HOACH_TIENG_VIET_BAI_BAN.md` mục 18. Nội dung CSV này do AI soạn theo
+  yêu cầu chủ dự án — **chưa qua người biết tiếng Việt/văn hoá thật rà lại**, coi là bộ khởi đầu để kiểm tra bằng
+  mắt trước khi mở rộng thêm chủ đề. **CSV Bài Bản để ở `giao-trinh/bai-ban/`, KHÔNG phải `giao-trinh/csv/`** —
+  `supabase/tests/seed.test.mjs` quét TOÀN BỘ file `.csv` trong `giao-trinh/csv/` coi là giáo trình khu TRẺ EM
+  (khác schema hẳn); để lẫn CSV Bài Bản vào đó làm test seed báo lỗi giả "thiếu tên dịch/diễn giải" cho unit/lesson
+  của Bài Bản (phát hiện lúc soạn, đã dọn lại).
+- **Chuyên đề "Bảng chữ cái, Ngữ âm & Thanh điệu căn bản" — cấp "A0" (2026-09-27):** phần mở đầu trước cả A1, đã
+  trao đổi 3 điểm với chủ dự án trước khi làm (vị trí, có thêm cột không, 5 bài có ổn không) rồi mới code — xem
+  KE_HOACH_TIENG_VIET_BAI_BAN.md mục 19 cho đầy đủ. Tóm tắt: migration `024_bb_a0_and_say.sql` nới CHECK
+  `bb_levels.code` cho phép `'A0'` (tiền-A1, ngoài mã CEFR chuẩn — sửa cả `bb-ops.createLevel()` VÀ
+  `bb-csv.validateRows()`, 2 chỗ có regex mã cấp) + thêm `bb_vocab.say_vi` (chữ ĐỌC khi khác chữ hiển thị, vd "b"
+  đọc "bờ" — cùng vai trò `content_items.say_vi` bên trẻ em; thiếu cột này TTS sẽ đọc sai tên chữ cái). Toàn bộ
+  chỗ vocab đọc-nghe (`bb/steps/vocab.js`, `bb/practice.js` Luyện tập Từ vựng, `bb/steps/minigame.js` Ghép nghĩa,
+  `admin/record.js` tab Thu âm) đều ưu tiên `say_vi || word_vi` cho audio/chấm phát âm, còn HIỂN THỊ vẫn `word_vi`.
+  **Dữ liệu ngữ âm LẤY NGUYÊN từ `public/js/sounds.js` (`INITIAL_SOUND`, `VOWELS`) + `public/js/viet.js` (`TONES`,
+  `CONFUSE`)** — cùng nguồn "Ngân hàng âm" của khu trẻ em, không tự bịa tên đọc/mô tả thanh riêng — sinh bằng
+  `scripts/gen-bai-ban-a0-phonics.mjs` (import trực tiếp 2 file đó). 5 bài: Tổng quan (29 chữ cái đúng thứ tự) →
+  Nguyên âm (12) → Phụ âm (28 đơn+ghép, PHÂN BIỆT phụ âm nghe khác theo vùng miền [ch/tr, s/x, d/gi/r, l/n — đưa
+  vào `bb_phonics_pairs`/mini-game Phân biệt âm] với phụ âm CHỈ khác cách viết đọc giống nhau 100% [c/k, g/gh,
+  ng/ngh — đưa vào 1 dòng `grammar` giải thích quy tắc viết, KHÔNG đưa vào phonics vì "nghe rồi đoán âm nào" sẽ vô
+  nghĩa khi 2 âm nghe y hệt nhau]) → Thanh điệu (6 âm mẫu ba/bá/bà/bả/bã/bạ + mô tả lên xuống giọng lấy nguyên từ
+  `TONES.hint`) → Ghép vần (`lesson_type='review'`, Boss cuối Unit — dùng NGUYÊN `loadUnitPool()` đã có, không cần
+  code thêm, tự gộp ôn cả 75 mục từ vựng của 4 bài trước). Đã thử toàn bộ 5 bài bằng `mock-sb.js` (learner + admin):
+  chữ cái hiện đúng "Đọc là: "…"", Boss (Bài 5) mini-game hiện nhiễu lấy từ CẢ 4 bài trước (xác nhận qua console),
+  admin thấy đúng "(đọc: bờ)" + form sửa có ô Cách đọc. Console sạch trong suốt. **Chưa thử Supabase/TTS thật; nội
+  dung mô tả 6 thanh bằng thuật ngữ ngữ âm học tiếng Anh (level/rising/falling/dipping/broken rising/heavy tone) là
+  chỗ RỦI RO SAI THUẬT NGỮ NHẤT — nên có người dạy tiếng Việt cho người nước ngoài rà lại trước khi công khai.**
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 52 kiểm tra) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (219 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 55 kiểm tra) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (223 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.

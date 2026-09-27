@@ -14,13 +14,15 @@ export function run(box, step) {
     const lang = nativeLang();
     const cards = words.map((w) => {
       const img = imageOf(w);
-      const [mic, feedback] = micButton(w.word_vi);
+      const spoken = w.say_vi || w.word_vi; // chữ ĐỌC (vd "b" đọc "bờ") — dùng cho cả nghe mẫu và chấm phát âm
+      const [mic, feedback] = micButton(spoken);
       return el("div", { class: "bb-vocab-card" },
         img ? el("img", { class: "visual", src: img, alt: "" }) : null,
         el("div", { class: "bb-vocab-word" }, w.word_vi, w.pos ? el("span", { class: "pill" }, w.pos) : null),
+        w.say_vi ? el("p", { class: "muted" }, `Đọc là: “${w.say_vi}”`) : null,
         w.meaning?.[lang] ? el("p", { class: "muted" }, w.meaning[lang]) : null,
         el("div", { class: "row" },
-          el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, w.word_vi) }, T.bbListen),
+          el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen),
           mic),
         feedback);
     });

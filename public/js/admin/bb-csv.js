@@ -2,10 +2,11 @@
 // tests/bb.test.mjs. Khác CSV khu trẻ em (1 dòng = 1 mục): ở đây 1 dòng = 1 dòng NỘI DUNG của 1 CHẶNG cụ thể
 // trong 1 bài — hình dạng cột cần đọc tuỳ theo step_type của dòng đó.
 //
-// Cột LUÔN cần: level (mã CEFR), unit, lesson, step_type (dialogue|vocab|grammar|phonics|reading|writing).
-// Cột tuỳ chọn theo step_type:
+// Cột LUÔN cần: level (mã CEFR, hoặc "A0" tiền-A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|
+// minigame|reading|writing). Cột tuỳ chọn theo step_type:
 //   - dialogue: speaker (mặc định A), vi (câu)
-//   - vocab: vi (từ), pos (loại từ)
+//   - vocab: vi (từ), pos (loại từ), say (tuỳ chọn — chữ ĐỌC khi khác chữ hiển thị, vd "b" đọc "bờ"; dùng cho
+//            chuyên đề bảng chữ cái/ngữ âm, migration 024)
 //   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;)
 //   - phonics: vi (âm A), vi2 (âm B), examples (ví dụ, cách nhau bằng ;)
 //   - reading: dòng ĐOẠN VĂN (chỉ 1 dòng đầu tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn);
@@ -43,7 +44,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
 
   const known = new Set([
     "level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type",
-    "speaker", "vi", "vi2", "pos", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
+    "speaker", "vi", "vi2", "pos", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
     "question", "choices", "answer", "examples", "game", ...langs,
   ]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
@@ -57,7 +58,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     const level = get("level").toUpperCase();
     const unit = get("unit"), lesson = get("lesson");
     const stepType = get("step_type").toLowerCase();
-    if (!/^[ABC][12]$/.test(level)) problems.push('level phải dạng CEFR (A1, A2, B1, B2, C1, C2)');
+    if (!/^(A0|[ABC][12])$/.test(level)) problems.push('level phải dạng CEFR (A1, A2, B1, B2, C1, C2) hoặc "A0" (tiền-A1)');
     if (!unit) problems.push("thiếu chủ đề (unit)");
     if (unit.length > 60) problems.push("tên chủ đề dài quá 60 ký tự");
     if (!lesson) problems.push("thiếu bài (lesson)");
@@ -77,7 +78,8 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     } else if (stepType === "vocab") {
       const vi = get("vi");
       if (!vi) problems.push("vocab cần cột vi (từ tiếng Việt)");
-      content = { kind: "vocab", vi, pos: get("pos") || null, tr };
+      // say (tuỳ chọn, migration 024): chữ ĐỌC khi khác chữ hiển thị (vd "b" đọc "bờ") — dùng cho bảng chữ cái/ngữ âm.
+      content = { kind: "vocab", vi, pos: get("pos") || null, say: get("say") || null, tr };
     } else if (stepType === "grammar") {
       const vi = get("vi");
       if (!vi) problems.push("grammar cần cột vi (công thức)");

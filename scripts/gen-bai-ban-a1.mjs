@@ -1,8 +1,11 @@
-// Sinh giao-trinh/csv/bai-ban-a1-chao-hoi-gia-dinh.csv (giáo trình "Tiếng Việt Bài Bản", cấp A1, 2 chủ đề: Chào
-// hỏi + Gia đình) — cùng cách các script sinh giáo trình khu trẻ em hoạt động (vd hinh-can-ve.mjs). Muốn sửa nội
-// dung: sửa mảng `r({...})` bên dưới rồi chạy lại `node scripts/gen-bai-ban-a1.mjs`, đừng sửa tay file CSV đã sinh
-// (dễ lệch cột/thiếu dấu ngoặc kép khi câu có dấu phẩy). Đã kiểm qua đúng `admin/bb-csv.js` validateRows/buildPlan
-// (0 lỗi, 0 cảnh báo) + thử toàn bộ 2 bài + 2 bài Ôn tập (Boss cuối Unit) bằng mock-sb.js, không lỗi console.
+// Sinh giao-trinh/bai-ban/bai-ban-a1-chao-hoi-gia-dinh.csv (giáo trình "Tiếng Việt Bài Bản", cấp A1, 2 chủ đề:
+// Chào hỏi + Gia đình). CSV Bài Bản để ở `giao-trinh/bai-ban/` (KHÔNG phải `giao-trinh/csv/`) vì
+// `supabase/tests/seed.test.mjs` quét TOÀN BỘ file .csv trong `giao-trinh/csv/` coi là giáo trình khu TRẺ EM (khác
+// schema hẳn) — để lẫn vào đó sẽ báo lỗi giả "thiếu tên dịch/diễn giải" cho unit/lesson của Bài Bản (đã gặp lúc
+// làm, xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 19). Muốn sửa nội dung: sửa mảng `r({...})` bên dưới rồi chạy lại
+// `node scripts/gen-bai-ban-a1.mjs`, đừng sửa tay file CSV đã sinh (dễ lệch cột/thiếu dấu ngoặc kép khi câu có dấu
+// phẩy). Đã kiểm qua đúng `admin/bb-csv.js` validateRows/buildPlan (0 lỗi, 0 cảnh báo) + thử toàn bộ 2 bài + 2 bài
+// Ôn tập (Boss cuối Unit) bằng mock-sb.js, không lỗi console.
 import { writeFileSync } from "node:fs";
 
 const q = (v) => {
@@ -145,5 +148,5 @@ r({ level: LEVEL, unit: U2, lesson: "Bài 3: Ôn tập", step_type: "dialogue", 
 r({ level: LEVEL, unit: U2, lesson: "Bài 3: Ôn tập", step_type: "minigame", game: "phonics_discrim" });
 
 const text = [HEAD.join(","), ...rows.map((row) => row.map(q).join(","))].join("\n") + "\n";
-writeFileSync("giao-trinh/csv/bai-ban-a1-chao-hoi-gia-dinh.csv", text, "utf8");
+writeFileSync("giao-trinh/bai-ban/bai-ban-a1-chao-hoi-gia-dinh.csv", text, "utf8");
 console.log(`Đã ghi ${rows.length} dòng.`);

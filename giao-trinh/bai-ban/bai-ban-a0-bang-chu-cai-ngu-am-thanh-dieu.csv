@@ -1,0 +1,93 @@
+level,level_name,can_do,unit,unit_emoji,lesson,lesson_type,step_type,speaker,vi,vi2,pos,say,game,question,choices,answer,examples,en,de
+A0,Nhập môn,"Đọc đúng 29 chữ cái, phân biệt nguyên âm/phụ âm, nhận biết 6 thanh điệu, ghép được vần đơn giản.","Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",🔤,Bài 1: Tổng quan bảng chữ cái,core,grammar,,Bảng chữ cái tiếng Việt = 29 chữ cái,,,,,,,,"Dựa trên chữ Latinh, có thêm dấu (ă â ê ô ơ ư đ);Không có f, j, w, z (chỉ dùng trong từ mượn nước ngoài)",Vietnamese alphabet = 29 letters,Vietnamesisches Alphabet = 29 Buchstaben
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,a,,nguyên âm,,,,,,,vowel a,Vokal a
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,ă,,nguyên âm,á,,,,,,vowel ă,Vokal ă
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,â,,nguyên âm,ớ,,,,,,vowel â,Vokal â
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,b,,phụ âm,bờ,,,,,,consonant b,Konsonant b
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,c,,phụ âm,cờ,,,,,,consonant c,Konsonant c
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,d,,phụ âm,dờ,,,,,,consonant d,Konsonant d
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,đ,,phụ âm,đờ,,,,,,consonant đ,Konsonant đ
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,e,,nguyên âm,,,,,,,vowel e,Vokal e
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,ê,,nguyên âm,,,,,,,vowel ê,Vokal ê
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,g,,phụ âm,gờ,,,,,,consonant g,Konsonant g
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,h,,phụ âm,hờ,,,,,,consonant h,Konsonant h
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,i,,nguyên âm,,,,,,,vowel i,Vokal i
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,k,,phụ âm,cờ,,,,,,consonant k,Konsonant k
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,l,,phụ âm,lờ,,,,,,consonant l,Konsonant l
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,m,,phụ âm,mờ,,,,,,consonant m,Konsonant m
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,n,,phụ âm,nờ,,,,,,consonant n,Konsonant n
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,o,,nguyên âm,,,,,,,vowel o,Vokal o
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,ô,,nguyên âm,,,,,,,vowel ô,Vokal ô
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,ơ,,nguyên âm,,,,,,,vowel ơ,Vokal ơ
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,p,,phụ âm,pờ,,,,,,consonant p,Konsonant p
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,q,,phụ âm,cờ,,,,,,consonant q,Konsonant q
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,r,,phụ âm,rờ,,,,,,consonant r,Konsonant r
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,s,,phụ âm,sờ,,,,,,consonant s,Konsonant s
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,t,,phụ âm,tờ,,,,,,consonant t,Konsonant t
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,u,,nguyên âm,,,,,,,vowel u,Vokal u
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,ư,,nguyên âm,,,,,,,vowel ư,Vokal ư
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,v,,phụ âm,vờ,,,,,,consonant v,Konsonant v
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,x,,phụ âm,xờ,,,,,,consonant x,Konsonant x
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,vocab,,y,,nguyên âm,i dài,,,,,,vowel y,Vokal y
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 1: Tổng quan bảng chữ cái,,minigame,,,,,,meaning_pick,,,,,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,a,,nguyên âm,,,,,,,vowel a,Vokal a
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,ă,,nguyên âm,á,,,,,,vowel ă,Vokal ă
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,â,,nguyên âm,ớ,,,,,,vowel â,Vokal â
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,e,,nguyên âm,,,,,,,vowel e,Vokal e
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,ê,,nguyên âm,,,,,,,vowel ê,Vokal ê
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,i,,nguyên âm,,,,,,,vowel i,Vokal i
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,y,,nguyên âm,i dài,,,,,,vowel y,Vokal y
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,o,,nguyên âm,,,,,,,vowel o,Vokal o
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,ô,,nguyên âm,,,,,,,vowel ô,Vokal ô
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,ơ,,nguyên âm,,,,,,,vowel ơ,Vokal ơ
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,u,,nguyên âm,,,,,,,vowel u,Vokal u
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,core,vocab,,ư,,nguyên âm,,,,,,,vowel ư,Vokal ư
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,,grammar,,Nguyên âm trong từ,,,,,,,,ba;ăn;ấm;em;đêm;đi;to;cô;nhớ;thu;thư;ý,Vowels in words,Vokale in Wörtern
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 2: Nguyên âm,,minigame,,,,,,meaning_pick,,,,,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,core,grammar,,Phụ âm đơn và phụ âm ghép,,,,,,,,"Phụ âm ghép gồm 2-3 chữ nhưng đọc thành 1 âm: ch, gh, gi, kh, ng, ngh, nh, ph, qu, th, tr",Single and compound consonants,Einzelne und zusammengesetzte Konsonanten
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,grammar,,"Quy tắc viết c/k, g/gh, ng/ngh",,,,,,,,"Trước i, e, ê viết k, gh, ngh (kem, ghế, nghe);Còn lại viết c, g, ng (cá, gà, ngủ)","Spelling rule for c/k, g/gh, ng/ngh","Schreibregel für c/k, g/gh, ng/ngh"
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,b,,phụ âm,bờ,,,,,,consonant b,Konsonant b
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,c,,phụ âm,cờ,,,,,,consonant c,Konsonant c
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,ch,,phụ âm,chờ,,,,,,consonant ch,Konsonant ch
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,d,,phụ âm,dờ,,,,,,consonant d,Konsonant d
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,đ,,phụ âm,đờ,,,,,,consonant đ,Konsonant đ
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,g,,phụ âm,gờ,,,,,,consonant g,Konsonant g
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,gh,,phụ âm,gờ,,,,,,consonant gh,Konsonant gh
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,gi,,phụ âm,giờ,,,,,,consonant gi,Konsonant gi
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,h,,phụ âm,hờ,,,,,,consonant h,Konsonant h
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,k,,phụ âm,cờ,,,,,,consonant k,Konsonant k
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,kh,,phụ âm,khờ,,,,,,consonant kh,Konsonant kh
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,l,,phụ âm,lờ,,,,,,consonant l,Konsonant l
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,m,,phụ âm,mờ,,,,,,consonant m,Konsonant m
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,n,,phụ âm,nờ,,,,,,consonant n,Konsonant n
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,ng,,phụ âm,ngờ,,,,,,consonant ng,Konsonant ng
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,ngh,,phụ âm,ngờ,,,,,,consonant ngh,Konsonant ngh
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,nh,,phụ âm,nhờ,,,,,,consonant nh,Konsonant nh
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,p,,phụ âm,pờ,,,,,,consonant p,Konsonant p
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,ph,,phụ âm,phờ,,,,,,consonant ph,Konsonant ph
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,q,,phụ âm,cờ,,,,,,consonant q,Konsonant q
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,qu,,phụ âm,quờ,,,,,,consonant qu,Konsonant qu
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,r,,phụ âm,rờ,,,,,,consonant r,Konsonant r
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,s,,phụ âm,sờ,,,,,,consonant s,Konsonant s
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,t,,phụ âm,tờ,,,,,,consonant t,Konsonant t
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,th,,phụ âm,thờ,,,,,,consonant th,Konsonant th
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,tr,,phụ âm,trờ,,,,,,consonant tr,Konsonant tr
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,v,,phụ âm,vờ,,,,,,consonant v,Konsonant v
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,vocab,,x,,phụ âm,xờ,,,,,,consonant x,Konsonant x
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,phonics,,ch,tr,,,,,,,cha - tra,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,phonics,,s,x,,,,,,,sa - xa,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,phonics,,d,gi,,,,,,,da - gia,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,phonics,,d,r,,,,,,,da - ra,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,phonics,,l,n,,,,,,,la - na,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 3: Phụ âm,,minigame,,,,,,phonics_discrim,,,,,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,ba,,thanh ngang,,,,,,,level tone,gleichbleibender Ton
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,bá,,thanh sắc,,,,,,,rising tone,steigender Ton
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,bà,,thanh huyền,,,,,,,falling tone,fallender Ton
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,bả,,thanh hỏi,,,,,,,dipping tone,fallend-steigender Ton
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,bã,,thanh ngã,,,,,,,broken rising tone,"gebrochener, steigender Ton"
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,core,vocab,,bạ,,thanh nặng,,,,,,,heavy tone,"schwerer, kurzer Ton"
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,,grammar,,6 thanh điệu — cách lên xuống giọng,,,,,,,,ngang: phẳng như mặt hồ;sắc: đi lên như mũi tên;huyền: trượt xuống như cầu tuột;hỏi: lượn xuống rồi lên;ngã: gồ ghề như sóng;nặng: rơi bịch xuống,6 tones — pitch pattern,6 Töne — Tonhöhenverlauf
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,,phonics,,hỏi (bả),ngã (bã),,,,,,,bả - bã;Đây là 2 thanh dễ nhầm nhất,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 4: Thanh điệu,,minigame,,,,,,phonics_discrim,,,,,,
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 5: Ghép vần (Ôn tập),review,grammar,,Âm đầu + Vần + Thanh điệu = Tiếng,,,,,,,,bà = b + a + thanh huyền;mẹ = m + e + thanh nặng;cô = c + ô + thanh ngang;chị = ch + i + thanh nặng,Initial sound + rhyme + tone = syllable,Anlaut + Reim + Ton = Silbe
+A0,,,"Bảng chữ cái, Ngữ âm & Thanh điệu căn bản",,Bài 5: Ghép vần (Ôn tập),,minigame,,,,,,meaning_pick,,,,,,

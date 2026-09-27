@@ -734,5 +734,29 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.bb_srs_state"))[0].n === before, "023: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 26. "Tiếng Việt Bài Bản" — cấp "A0" (tiền-A1) + bb_vocab.say_vi (migration 024) ----
+{
+  const m024 = readFileSync(new URL("../migrations/024_bb_a0_and_say.sql", import.meta.url), "utf8");
+  await db.exec(m024);
+
+  await as(ADM, async () => {
+    const lv = (await q("insert into public.bb_levels (code, name_vi, status) values ('A0','Bảng chữ cái','approved') returning id"))[0].id;
+    ok(Boolean(lv), "024: tạo được cấp mã 'A0' (nới CHECK, không phải mã CEFR chuẩn)");
+    const bad = await fails("insert into public.bb_levels (code, name_vi) values ('Z9','lạ')");
+    ok(bad && /check/i.test(bad), "024: mã cấp lạ (không phải A0/CEFR) vẫn bị CHECK chặn", String(bad));
+
+    const u = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'Phụ âm','approved') returning id", [lv]))[0].id;
+    const l = (await q("insert into public.bb_lessons (unit_id, title_vi, status) values ($1,'Bài 1','approved') returning id", [u]))[0].id;
+    const st = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status) values ($1,'vocab','approved') returning id", [l]))[0].id;
+    await db.query("insert into public.bb_vocab (step_id, word_vi, say_vi) values ($1,'b','bờ')", [st]);
+    const row = (await q("select word_vi, say_vi from public.bb_vocab where word_vi='b'"))[0];
+    ok(row?.say_vi === "bờ", "024: ghi/đọc được say_vi như mọi cột khác của bb_vocab");
+  });
+
+  const beforeVocab = (await q("select count(*)::int as n from public.bb_vocab"))[0].n;
+  await db.exec(m024);
+  ok((await q("select count(*)::int as n from public.bb_vocab"))[0].n === beforeVocab, "024: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

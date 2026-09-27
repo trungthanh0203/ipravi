@@ -425,9 +425,10 @@ async function vocabPanel(panel, step, say, refresh) {
       return el("div", { class: "bb-row" },
         rowHead(row.image_path ? el("img", { class: "thumb", src: contentUrl(row.image_path), alt: "" }) : null,
           el("b", null, row.word_vi), row.pos ? el("span", { class: "pill" }, row.pos) : null,
+          row.say_vi ? el("span", { class: "muted", title: "Chữ đọc thành tiếng" }, ` (đọc: ${row.say_vi})`) : null,
           Object.values(row.meaning ?? {}).length ? el("div", { class: "muted" }, Object.values(row.meaning).join(" · ")) : null),
         rowActs(
-          audioBtn("Nghe", "bb_vocab", row, "audio_path", refresh, say, row.word_vi),
+          audioBtn("Nghe", "bb_vocab", row, "audio_path", refresh, say, row.say_vi || row.word_vi),
           btn(row.image_path ? "🔄 Ảnh" : "⬆ Ảnh", () => img.click(), "btn tiny"), img,
           btn("▲", async () => { try { await moveIn("bb_vocab", data, row, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("▼", async () => { try { await moveIn("bb_vocab", data, row, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
@@ -440,17 +441,19 @@ function vocabForm(existing, stepId, siblings, onCancel, onSaved) {
   const err = el("div");
   const word = el("input", { type: "text", class: "cell", value: existing?.word_vi ?? "" });
   const pos = el("input", { type: "text", class: "cell cell-sm", value: existing?.pos ?? "", placeholder: "danh từ…" });
+  const sayVi = el("input", { type: "text", class: "cell cell-sm", value: existing?.say_vi ?? "", placeholder: "để trống = đọc đúng chữ" });
   const tr = langBlock(existing?.meaning);
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
-      if (existing) await bb.updateVocab(existing, { word_vi: word.value, pos: pos.value, meaning: tr.value() });
-      else await bb.createVocab(stepId, { word_vi: word.value, pos: pos.value, meaning: tr.value() }, siblings);
+      if (existing) await bb.updateVocab(existing, { word_vi: word.value, pos: pos.value, say_vi: sayVi.value, meaning: tr.value() });
+      else await bb.createVocab(stepId, { word_vi: word.value, pos: pos.value, say_vi: sayVi.value, meaning: tr.value() }, siblings);
       onSaved();
     } catch (e) { save.disabled = false; fail(err, e); }
   }, "btn small");
   return el("div", { class: "qa-box" },
-    el("div", { class: "qa-grid" }, labeled("Từ tiếng Việt", word), labeled("Loại từ", pos), tr.fields), footer(save, onCancel, err));
+    el("div", { class: "qa-grid" }, labeled("Từ tiếng Việt", word), labeled("Loại từ", pos),
+      labeled("Cách đọc (nếu khác chữ hiển thị, vd \"b\" đọc \"bờ\")", sayVi), tr.fields), footer(save, onCancel, err));
 }
 
 // ---- Ngữ pháp ----

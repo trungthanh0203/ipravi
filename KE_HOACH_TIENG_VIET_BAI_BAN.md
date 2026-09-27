@@ -460,3 +460,71 @@ giọng đọc (TTS)" ở khu admin sau khi nhập, hoặc dùng tab Thu âm đ�
 `writing`; chưa có fr/ko/ja; 2 chủ đề tiếp theo hợp lý để mở rộng theo đúng gợi ý mục 5 (khách sạn, xin việc, gọi
 điện thoại, mua sắm) — cần chủ dự án (hoặc người biết tiếng Việt/văn hoá thật) rà lại nội dung hiện có trước khi mở
 rộng thêm, vì đây là bộ do AI soạn, chưa qua kiểm định của người dạy/nói tiếng Việt thật.
+
+## 19. Chuyên đề "Bảng chữ cái, Ngữ âm & Thanh điệu căn bản" — cấp "A0" tiền-A1 (2026-09-27)
+
+Chủ dự án yêu cầu làm chuyên đề mở đầu dạy 29 chữ cái + ngữ âm + 6 thanh điệu, nhấn mạnh "dễ nhìn dễ hiểu, đầy đủ từ
+tổng quan đến chi tiết" — đã trao đổi trước khi làm (3 câu hỏi: đặt ở đâu, có thêm cột `say_vi` không, 5 bài đề
+xuất có ổn không) rồi mới code.
+
+**Quyết định đã chốt qua trao đổi:**
+- **Cấp riêng mã "A0"** (không phải chủ đề đầu của A1 — chủ dự án chọn phương án tách cấp nếu khả thi). Cần
+  migration `024_bb_a0_and_say.sql`: nới CHECK của `bb_levels.code` từ `^[ABC][12]$` → `code = 'A0' or code ~
+  '^[ABC][12]$'` (giữ nguyên mọi cấp cũ, chỉ THÊM lựa chọn). Cập nhật theo: `admin/bb-ops.createLevel()` +
+  `admin/bb-csv.validateRows()` (2 chỗ có regex mã cấp, phải sửa CẢ HAI).
+- **Thêm cột `bb_vocab.say_vi`** (cùng migration 024) — giống hệt tiền lệ `content_items.say_vi` bên khu trẻ em:
+  chữ hiển thị khác chữ ĐỌC (vd hiển thị "b" nhưng đọc "bờ"). Không có cột này thì TTS/thu âm sẽ đọc sai tên chữ
+  cái/phụ âm ghép. Cập nhật theo: `bb-ops.createVocab/updateVocab` nhận thêm `say_vi`; `bb-ops.importPlan()` vocab
+  mapping thêm `say_vi: r.say`; `bb-csv.js` thêm cột CSV `say` (chỉ áp dụng cho `step_type=vocab`); `admin/bb.js`
+  `vocabForm`/`vocabPanel` thêm ô "Cách đọc" + hiển thị "(đọc: …)"; `admin/record.js` (tab Thu âm) dùng
+  `say_vi||word_vi` làm `sampleText` (nghe mẫu TTS khi thu) nhưng vẫn HIỆN `word_vi` (chữ hiển thị) trong danh sách
+  mục cần thu; `bb/steps/vocab.js`, `bb/practice.js` (Luyện tập › Từ vựng), `bb/steps/minigame.js` (Ghép nghĩa) đều
+  dùng `w.say_vi || w.word_vi` cho CẢ audio (`playPath` fallback) LẪN chấm phát âm (`micButton`) — hiện thêm dòng
+  "Đọc là: "…"" dưới chữ khi có `say_vi`.
+- **5 bài đúng như đề xuất**, không đổi: Tổng quan bảng chữ cái → Nguyên âm → Phụ âm → Thanh điệu → Ghép vần (bài
+  cuối `lesson_type='review'` — Boss cuối Unit, tận dụng NGUYÊN tính năng `loadUnitPool()` đã làm ở mục 18, không
+  cần code thêm gì).
+
+**Dữ liệu ngữ âm LẤY NGUYÊN từ nguồn đã có, không tự bịa lại** (đúng nguyên tắc "không dùng AI/dịch máy" áp dụng
+rộng ra: nghĩa/tên đọc của chữ cái phải có nguồn, không đoán): `public/js/sounds.js` (`INITIAL_SOUND` — tên đọc 28
+phụ âm đơn+ghép; `VOWELS` — 12 nguyên âm + tên đọc khi khác chữ hiển thị) và `public/js/viet.js` (`TONES` — tên +
+mô tả lên/xuống giọng của 6 thanh, `CONFUSE` qua `spellingChoices()` — nhóm phụ âm dễ nhầm) — CÙNG nguồn "Ngân hàng
+âm" đã dùng cho khu trẻ em, đảm bảo tên đọc nhất quán toàn app. Script sinh CSV:
+`scripts/gen-bai-ban-a0-phonics.mjs` (import trực tiếp 2 file trên, không copy tay).
+
+**Phân biệt "lỗi phát âm thật" và "chỉ khác cách viết" (quan trọng, tránh minigame Ngữ âm vô nghĩa):** `CONFUSE`
+gộp cả 2 loại phụ âm dễ nhầm khác nhau hẳn về bản chất — (1) NGHE khác nhau theo vùng miền: ch/tr, s/x, d/gi/r,
+l/n (hợp cho chặng `phonics`/mini-game `phonics_discrim` — "nghe rồi đoán âm nào"); (2) CHỈ khác quy tắc VIẾT, đọc
+GIỐNG NHAU 100% theo sau nguyên âm nào: c/k, g/gh, ng/ngh (KHÔNG đưa vào `bb_phonics_pairs` — nghe y hệt nhau nên
+trò "nghe rồi đoán" sẽ vô nghĩa; đưa vào 1 dòng `grammar` riêng giải thích quy tắc viết ở Bài 3 "Phụ âm"). Chặng
+`phonics` của Bài 3 chỉ dùng 5 cặp loại (1): ch-tr, s-x, d-gi, d-r, l-n (dùng 2 cặp cho nhóm 3-chiều d/gi/r).
+
+**Nội dung (92 dòng CSV):** cấp A0 "Nhập môn" (can-do: đọc đúng 29 chữ, phân biệt nguyên âm/phụ âm, nhận biết 6
+thanh, ghép được vần đơn giản) → 1 chủ đề "Bảng chữ cái, Ngữ âm & Thanh điệu căn bản" 🔤 → 5 bài: **Bài 1** grammar
+(2 sự thật mở đầu) + vocab (29 chữ cái ĐÚNG thứ tự bảng chữ cái, có `say_vi` cho phụ âm + ă/â/y) + minigame
+Ghép nghĩa; **Bài 2** vocab (12 nguyên âm) + grammar (12 từ ví dụ, 1 từ/nguyên âm: ba, ăn, ấm, em, đêm, đi, to, cô,
+nhớ, thu, thư, ý) + minigame Ghép nghĩa; **Bài 3** grammar (đơn/ghép + quy tắc viết c/k,g/gh,ng/ngh) + vocab (28
+phụ âm đơn+ghép từ `INITIAL_SOUND`) + phonics (5 cặp dễ nhầm) + minigame Phân biệt âm; **Bài 4** vocab (6 âm tiết
+mẫu ba/bá/bà/bả/bã/bạ — ví dụ kinh điển dạy 6 thanh, chỉ đổi thanh giữ nguyên phụ âm+vần) + grammar (6 mô tả
+lên/xuống giọng lấy nguyên từ `TONES.hint`) + phonics (hỏi/ngã — 2 thanh dễ nhầm nhất) + minigame Phân biệt âm;
+**Bài 5** (`review`, Boss) grammar (công thức "Âm đầu + Vần + Thanh điệu = Tiếng" + 4 ví dụ tách chữ: bà, mẹ, cô,
+chị) + minigame Ghép nghĩa (gộp cả 75 mục từ vựng của 4 bài trước qua `loadUnitPool()`). Nghĩa chỉ có en+de (gloss
+chung "vowel a"/"consonant b" kiểu `Vokal/Konsonant`, cùng khuôn `LETTER_TR` đã dùng ở `admin/autofill.js` khu trẻ
+em — không tự đặt nghĩa riêng cho từng chữ).
+
+**Đã thử (browser thật qua mock-sb.js — nhập → duyệt → chơi hết CẢ 5 bài):** dán 92 dòng CSV → Kiểm tra → đúng
+"92 dòng hợp lệ · 1 cấp, 1 chủ đề, 5 bài, 16 chặng mới" → Nhập vào → `setLevelStatus` duyệt lan xuống đủ 4 tầng →
+xác nhận qua truy vấn: `sort_order` của 5 bài đúng 1→5 liên tiếp (không lặp lại lỗi sort_order đã sửa ở mục 18) →
+vào vai người học: Bài 1 hiện đúng 29 thẻ chữ cái, mục "b" hiện "Đọc là: "bờ"" dưới chữ + nghe đúng "bờ" (không
+phải TTS đọc "bê" kiểu chữ cái tiếng Anh) → Bài 3 chặng Ngữ âm hiện đủ 5 cặp tĩnh để nghe, mini-game Phân biệt âm
+chạy đúng 5 lượt → Bài 4 hiện đúng 6 âm tiết mẫu + 6 mô tả lên/xuống giọng + cặp hỏi/ngã → **Bài 5 (Boss): mini-game
+Ghép nghĩa hiện "Thẻ 1/8" với target "ba" (từ Bài 4) và nhiễu "Konsonant l"/"Vokal o"/"Konsonant ph" (từ Bài 1-3)**
+— xác nhận `loadUnitPool()` gộp đúng từ vựng của CẢ 4 bài trước vào bài Boss, không chỉ riêng bài đó. Khu admin:
+mở mục Từ vựng của Bài 1 → hiện đúng "b phụ âm (đọc: bờ)" + nút ✎ Sửa mở form có ô "Cách đọc" điền sẵn "bờ". Console
+sạch trong suốt toàn bộ lượt thử (cả learner lẫn admin). **Chưa thử Supabase/Storage/TTS thật.**
+
+**Việc còn mở:** chỉ có tiếng Anh/Đức (chưa fr/ko/ja); chưa sinh âm thanh TTS thật cho 92 dòng (cần bấm "🔊 TTS"
+từng mục hoặc dùng tab Thu âm — nay ĐÃ thu được cho Bài Bản, xem mục "Thu âm chia theo giáo trình" trong CLAUDE.md);
+nội dung do AI soạn theo yêu cầu, gồm cả các gloss ngữ âm học tiếng Anh cho 6 thanh (level/rising/falling/dipping/
+broken rising/heavy tone) — **nên có người dạy tiếng Việt cho người nước ngoài rà lại thuật ngữ** trước khi công
+khai, nhất là phần mô tả 6 thanh (đây là chỗ dễ sai thuật ngữ ngôn ngữ học nhất trong toàn bộ nội dung đã soạn).

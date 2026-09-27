@@ -48,7 +48,7 @@ ok(new Set(SKILLS.map((s) => s.itemType)).size === 4, "itemType không trùng nh
 ok(SKILLS.every((s) => ["vocab", "grammar", "phonics", "dialogue"].includes(s.itemType)), "itemType khớp CHECK constraint bb_srs_state.item_type (migration 023)");
 
 // ---- bb-csv.js: validateRows + buildPlan (nhập hàng loạt) ----
-const HEAD = "level,unit,lesson,step_type,speaker,vi,vi2,pos,task_type,sentence,answer_text,words,min_words,sample,question,choices,answer,examples,de,game";
+const HEAD = "level,unit,lesson,step_type,speaker,vi,vi2,pos,task_type,sentence,answer_text,words,min_words,sample,question,choices,answer,examples,de,game,say";
 const q = (v) => (/[",;\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v); // trường có dấu phẩy (vd cột words) phải bọc trong ngoặc kép, đúng chuẩn CSV
 const csv = (rows) => [HEAD, ...rows.map((r) => r.map(q).join(","))].join("\n");
 const emptyExisting = { levels: [], units: [], lessons: [], steps: [] };
@@ -133,6 +133,16 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(validateRows(parseCsv(csv([none])), { langs: ["de"] }).errors.length === 1, "minigame: thiếu cột game bị từ chối");
   const p = buildPlan(r1.items, { levels: [], units: [], lessons: [], steps: [] });
   ok(p.newSteps.length === 1 && p.newSteps[0].config.kind === "sentence_builder", "buildPlan: chặng minigame mới mang config.kind");
+}
+{
+  // Cấp "A0" (tiền-A1, chuyên đề bảng chữ cái/ngữ âm) được chấp nhận như mã CEFR chuẩn; cột "say" (chữ đọc, vd
+  // "b" đọc "bờ") đọc đúng vào vocab, đi kèm cột "say" mới thêm ở cuối HEAD (cột 21).
+  const row = ["A0", "Phụ âm", "Bài 1", "vocab", "", "b", "", "", "", "", "", "", "", "", "", "", "", "", "Konsonant b", "", "bờ"];
+  const { items, errors } = validateRows(parseCsv(csv([row])), { langs: ["de"] });
+  ok(errors.length === 0, "level: mã \"A0\" (tiền-A1) được chấp nhận", JSON.stringify(errors));
+  ok(items[0]?.content?.say === "bờ", "vocab: cột say đọc đúng chữ đọc thành tiếng", JSON.stringify(items[0]));
+  const bad = ["Z9", "Phụ âm", "Bài 1", "vocab", "", "b"];
+  ok(validateRows(parseCsv(csv([bad])), { langs: ["de"] }).errors.length > 0, "level: mã lạ (không phải A0/CEFR) vẫn bị từ chối");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

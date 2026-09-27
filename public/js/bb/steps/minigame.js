@@ -43,7 +43,7 @@ function meaningPick(box, resolve, steps) {
       el("p", { class: "bb-step-dots" }, T.bbCardOf(i + 1, order.length)),
       el("div", { class: "card", style: "text-align:center" },
         el("div", { class: "bb-vocab-word" }, target.word_vi),
-        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(target.audio_path, target.word_vi) }, T.bbListen)),
+        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(target.audio_path, target.say_vi || target.word_vi) }, T.bbListen)),
       el("div", { class: "row-btns" }, ...btns), feedback);
   }
 }

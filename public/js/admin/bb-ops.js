@@ -20,7 +20,7 @@ const lines = (s) => String(s ?? "").split("\n").map((x) => x.trim()).filter(Boo
 // ============================================================================
 export async function createLevel({ code, name_vi, can_do }, levels) {
   const c = clean(code).toUpperCase();
-  need(/^[ABC][12]$/.test(c) ? null : "Mã cấp phải dạng A1, A2, B1, B2, C1 hoặc C2");
+  need(/^(A0|[ABC][12])$/.test(c) ? null : "Mã cấp phải dạng A1, A2, B1, B2, C1, C2 hoặc A0 (tiền-A1, dùng cho chuyên đề bảng chữ cái/ngữ âm)");
   if (levels.some((l) => l.code === c)) throw new Error(`Đã có cấp ${c}.`);
   const title = clean(name_vi);
   need(title ? null : "Cần nhập tên cấp");
@@ -253,16 +253,19 @@ export async function deleteDialogueLine(row) {
 }
 
 // ---- Từ vựng ----
-export async function createVocab(stepId, { word_vi, pos, meaning }, siblings) {
+// say_vi (tuỳ chọn, migration 024): chữ ĐỌC khi khác chữ hiển thị (vd "b" đọc "bờ") — cần cho chuyên đề Bảng chữ
+// cái/Ngữ âm; từ vựng thường để trống (đọc đúng chữ hiển thị).
+export async function createVocab(stepId, { word_vi, pos, meaning, say_vi }, siblings) {
   const w = clean(word_vi);
   need(w ? null : "Cần nhập từ tiếng Việt");
-  return checkData(await sb.from("bb_vocab").insert({ step_id: stepId, word_vi: w, pos: clean(pos) || null, meaning: only(meaning), sort_order: nextOrder(siblings) }).select().single());
+  return checkData(await sb.from("bb_vocab").insert({ step_id: stepId, word_vi: w, pos: clean(pos) || null, meaning: only(meaning), say_vi: clean(say_vi) || null, sort_order: nextOrder(siblings) }).select().single());
 }
-export async function updateVocab(row, { word_vi, pos, meaning }) {
+export async function updateVocab(row, { word_vi, pos, meaning, say_vi }) {
   const patch = {};
   if (word_vi != null) { need(clean(word_vi) ? null : "Cần nhập từ tiếng Việt"); patch.word_vi = clean(word_vi); }
   if (pos != null) patch.pos = clean(pos) || null;
   if (meaning != null) patch.meaning = only(meaning);
+  if (say_vi != null) patch.say_vi = clean(say_vi) || null;
   if (Object.keys(patch).length) check(await sb.from("bb_vocab").update(patch).eq("id", row.id));
 }
 export async function deleteVocab(row) {
@@ -452,7 +455,7 @@ export async function importPlan(plan, existing) {
     } else if (g.stepType === "dialogue") {
       await upsertContentRows("bb_dialogue_lines", stepId, "line_vi", g.rows, (r) => ({ speaker: r.speaker, line_vi: r.vi, line_tr: only(r.tr) }));
     } else if (g.stepType === "vocab") {
-      await upsertContentRows("bb_vocab", stepId, "word_vi", g.rows, (r) => ({ word_vi: r.vi, pos: r.pos, meaning: only(r.tr) }));
+      await upsertContentRows("bb_vocab", stepId, "word_vi", g.rows, (r) => ({ word_vi: r.vi, pos: r.pos, say_vi: r.say || null, meaning: only(r.tr) }));
     } else if (g.stepType === "grammar") {
       await upsertContentRows("bb_grammar", stepId, "formula", g.rows, (r) => ({ formula: r.vi, formula_tr: only(r.tr), examples: r.examples.map((vi) => ({ vi })) }));
     } else if (g.stepType === "phonics") {

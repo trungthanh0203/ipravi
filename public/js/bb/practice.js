@@ -66,7 +66,8 @@ function runVocabReview(root, session, { childId, onBack }) {
     const w = session[i];
     const img = imageOf(w);
     const meaning = el("p", { class: "muted", style: "display:none" }, w.meaning?.[lang] ?? "");
-    const [mic, feedback] = micButton(w.word_vi);
+    const spoken = w.say_vi || w.word_vi;
+    const [mic, feedback] = micButton(spoken);
     const gradeRow = el("div", { class: "row-btns", style: "display:none" },
       el("button", { class: "btn small ghost", type: "button", onclick: () => grade(false) }, T.bbForgot),
       el("button", { class: "btn small", type: "button", onclick: () => grade(true) }, T.bbRemembered));
@@ -79,7 +80,8 @@ function runVocabReview(root, session, { childId, onBack }) {
       el("div", { class: "card bb-vocab-card" },
         img ? el("img", { class: "visual", src: img, alt: "" }) : null,
         el("div", { class: "bb-vocab-word" }, w.word_vi, w.pos ? el("span", { class: "pill" }, w.pos) : null),
-        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, w.word_vi) }, T.bbListen),
+        w.say_vi ? el("p", { class: "muted" }, `Đọc là: “${w.say_vi}”`) : null,
+        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen),
         mic, feedback, meaning, reveal, gradeRow));
 
     function grade(remembered) {
