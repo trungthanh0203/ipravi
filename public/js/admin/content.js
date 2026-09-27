@@ -128,14 +128,14 @@ function render(box, units, lessons) {
         el("h2", { style: "margin:0" }, `${nums.has(u.id) ? nums.get(u.id) + ". " : ""}${u.emoji ?? ""} ${u.title_vi} `, pill(u.status), el("span", { class: "muted" }, ` · ${ls.length} bài`), trText(u) ? el("span", { class: "muted", title: "Tên dịch" }, ` · 🌐 ${trText(u)}`) : null),
         el("div", { class: "row-btns unit-btns" },
           thumb(u, "tiny"), imageButtons("units", u, say, reload),
-          btn(Q.edit, slotToggle(editSlot, (close) => renameForm({ title: u.title_vi, emoji: u.emoji, withEmoji: true, titleTr: u.title_tr, description: u.description, withDescription: true, onCancel: close,
-            onSave: async (v) => { await ops.updateUnit(u, v, units); saved("Đã lưu chủ đề."); } })), "btn small ghost", "Sửa tên, emoji, tên dịch và nội dung diễn giải của chủ đề"),
           btn("▲", act(() => ops.moveUnit(units, u, -1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề lên trước"),
           btn("▼", act(() => ops.moveUnit(units, u, 1, levelOf), "Đã đổi thứ tự chủ đề."), "btn small ghost", "Đưa chủ đề xuống sau"),
+          btn(Q.edit, slotToggle(editSlot, (close) => renameForm({ title: u.title_vi, emoji: u.emoji, withEmoji: true, titleTr: u.title_tr, description: u.description, withDescription: true, onCancel: close,
+            onSave: async (v) => { await ops.updateUnit(u, v, units); saved("Đã lưu chủ đề."); } })), "btn small ghost", "Sửa tên, emoji, tên dịch và nội dung diễn giải của chủ đề"),
           levelSel,
           btn(open ? "Thu gọn ▲" : "Mở ▼", () => { open ? openUnits.delete(u.id) : openUnits.add(u.id); reload(); }),
           u.status === "approved"
-            ? btn("Ẩn cả chủ đề", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
+            ? btn("Ẩn", act(() => ops.setUnitStatus(u.id, "draft"), "Đã ẩn chủ đề (bé không còn thấy)."))
             : btn("Duyệt cả chủ đề", act(async () => { if (!confirm(`Duyệt "${u.title_vi}" và mọi bài, mục từ bên trong? Bé sẽ thấy ngay.`)) return false; await ops.setUnitStatus(u.id, "approved"); }, "Đã duyệt chủ đề."), "btn small"),
           btn("Xoá", act(async () => { if (!confirm(`Xoá chủ đề "${u.title_vi}" cùng ${ls.length} bài, mọi mục từ và âm thanh? Không hoàn tác được.`)) return false; await ops.deleteUnit(u.id); }, "Đã xoá chủ đề."), "btn small ghost danger"))),
       editSlot,
@@ -186,11 +186,11 @@ function lessonBlock(lesson, reload, say, { siblings = [], level = 1 } = {}) {
       btn("▼", act(() => ops.moveIn("lessons", siblings, lesson, 1)), "btn small ghost", "Đưa bài xuống sau"),
       btn(Q.edit, () => { if (renameSlot.childNodes.length) renameSlot.replaceChildren(); else renameSlot.replaceChildren(renameForm({ title: lesson.title_vi, titleTr: lesson.title_tr, description: lesson.description, withDescription: true, onCancel: () => renameSlot.replaceChildren(),
         onSave: async (v) => { await ops.updateLesson(lesson, v, siblings); notice.set("ok", "Đã lưu tên bài."); await reload(); } })); }, "btn small ghost", "Sửa tên, tên dịch và nội dung diễn giải của bài"),
-      btn(isOpen ? "Đóng danh sách" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
+      btn(isOpen ? "Đóng" : "Xem / sửa từ", () => { openLesson = isOpen ? null : lesson.id; reload(); }),
       lesson.status === "approved"
-        ? btn("Ẩn bài", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
+        ? btn("Ẩn", act(() => ops.setLessonStatus(lesson, "draft"), "Đã ẩn bài."))
         : btn("Duyệt bài", () => approveLesson(lesson, reload, say), "btn small"),
-      btn("Xoá bài", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return false; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
+      btn("Xoá", act(async () => { if (!confirm(`Xoá bài "${lesson.title_vi}" cùng ${n} mục từ và âm thanh?`)) return false; await ops.deleteLesson(lesson.id); }, "Đã xoá bài."), "btn small ghost danger")));
   if (isOpen) itemsPanel(panel, lesson, say, level, reload);
   return el("div", { class: "lesson-block" }, head, renameSlot, panel);
 }

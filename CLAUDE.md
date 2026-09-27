@@ -378,6 +378,27 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   trước đó trong phiên làm việc này) cho CẢ 2 tab: chọn file → tự hiện "N dòng hợp lệ…" + nút "Nhập vào" ngay,
   không cần bấm gì thêm; nút mẫu/AI đều hoạt động (mẫu tự kiểm qua `validateRows` ra 0 lỗi; nút AI rơi về dán vào ô
   bên dưới khi `navigator.clipboard` không có, giống `import.js`). Console sạch.
+- **Thống nhất chữ trên nút giữa tab Trẻ em và Bài Bản (2026-09-27, chủ dự án yêu cầu sau khi dùng cả 2 tab):**
+  5 quy tắc áp cho MỌI cấp/chủ đề/bài/chặng/mục ở CẢ 2 tab — ① nút "✎ Sửa" đứng SAU 2 nút ▲▼ đổi thứ tự (trước đó
+  `content.js` unitCard và `bb.js` levelCard/unitCard đặt "✎ Sửa" TRƯỚC ▲▼, lệch với `lessonBlock`/`stepBlock` đặt
+  sau — nay nhất quán ▲▼ trước, Sửa sau, ở MỌI cấp bậc); ② nút Ẩn bỏ tên đối tượng, chỉ còn "Ẩn" (trước: "Ẩn cả cấp",
+  "Ẩn cả chủ đề", "Ẩn bài", "Ẩn chặng"); ③ nút đóng danh sách con chỉ còn "Đóng" (trước: "Đóng danh sách" ở
+  `content.js`, "Đóng chặng" ở `bb.js` — `stepBlock` đã sẵn "Đóng" nên không đổi); ④ nút Xoá bỏ tên đối tượng, chỉ
+  còn "Xoá" (trước: "Xoá bài", "Xoá chặng"; nút xoá đơn vị/cấp/mục-trong-chặng đã sẵn "Xoá"/"✕" nên không đổi —
+  riêng `readingPanel` sửa "✕ Xoá đoạn văn" → bare "✕" cho khớp mọi nút xoá-trong-chặng khác của CHÍNH `bb.js`).
+  ⑤ **Bản dịch trong mỗi dòng ở tab Bài Bản trước đây chỉ nối chữ không ghi ngôn ngữ nào** (`Object.values(tr).join(" · ")`
+  — 2 bản dịch gần giống nhau nhìn không phân biệt được cái nào là DE/EN; `writingPanel` còn KHÔNG hiện `prompt_tr`
+  ở dòng tóm tắt luôn, phải mở ✎ Sửa mới thấy) — khác hẳn `content.js` (khu Trẻ em) đã có cột DE/EN riêng, đúng như
+  chủ dự án chỉ ra. Thêm hàm `trLine(tr)` dùng chung trong `admin/bb.js` (hiện "DE: … · EN: …", đọc `langs()` nên
+  tự đúng bất kể bản triển khai cấu hình ngôn ngữ nào) — áp cho `dialoguePanel` (line_tr), `vocabPanel` (meaning),
+  `grammarPanel` (formula_tr), `readingPanel` (passage_tr), và THÊM MỚI cho `writingPanel` (prompt_tr, trước đây
+  thiếu hẳn). `phonicsPanel`/câu hỏi đọc hiểu không có cột dịch trong CSDL nên không áp — đúng, không phải thiếu sót.
+  Nhân tiện đổi tên chuyên đề "Bảng chữ cái, Ngữ âm & Thanh điệu **căn bản**" → bỏ "căn bản", và "Bài 1: **Tổng
+  quan** bảng chữ cái" → "Bài 1: Bảng chữ cái" (sửa trong `scripts/gen-bai-ban-a0-phonics.mjs`, chạy lại sinh CSV
+  mới — **nếu đã nhập CSV cũ vào Supabase, đổi tên qua ✎ Sửa trong khu admin, ĐỪNG nhập lại file mới** vì so trùng
+  theo tên nên tên khác sẽ tạo THÊM 1 chủ đề/bài mới thay vì cập nhật cái cũ). Đã thử lại toàn bộ bằng `mock-sb.js`
+  cho cả 2 tab (đến tận chặng Từ vựng/Hội thoại/Ngữ pháp của Bài Bản) — thứ tự nút, chữ nút, và "DE: … · EN: …"
+  đều đúng, console sạch.
 
 - **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 55 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (223 kiểm tra) và

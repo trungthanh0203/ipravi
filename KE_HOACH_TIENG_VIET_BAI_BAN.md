@@ -528,3 +528,10 @@ từng mục hoặc dùng tab Thu âm — nay ĐÃ thu được cho Bài Bản, 
 nội dung do AI soạn theo yêu cầu, gồm cả các gloss ngữ âm học tiếng Anh cho 6 thanh (level/rising/falling/dipping/
 broken rising/heavy tone) — **nên có người dạy tiếng Việt cho người nước ngoài rà lại thuật ngữ** trước khi công
 khai, nhất là phần mô tả 6 thanh (đây là chỗ dễ sai thuật ngữ ngôn ngữ học nhất trong toàn bộ nội dung đã soạn).
+
+**Sửa tên sau khi dùng thật (2026-09-27):** chủ dự án yêu cầu bỏ "căn bản" khỏi tên chủ đề ("Bảng chữ cái, Ngữ âm &
+Thanh điệu **căn bản**" → bỏ "căn bản") và bỏ "Tổng quan" khỏi tên Bài 1 ("Bài 1: **Tổng quan** bảng chữ cái" →
+"Bài 1: Bảng chữ cái") — sửa trong `scripts/gen-bai-ban-a0-phonics.mjs` rồi sinh lại CSV, không sửa tay file CSV.
+Cùng đợt, `admin/bb.js` được thống nhất lại với `admin/content.js` (khu trẻ em) về 5 điểm UI: thứ tự nút Sửa/▲▼,
+rút gọn chữ nút Ẩn/Đóng/Xoá (bỏ tên đối tượng), và thêm nhãn ngôn ngữ rõ ràng ("DE: … · EN: …") cho bản dịch ở mọi
+dòng nội dung — chi tiết đầy đủ xem CLAUDE.md mục "Quy tắc dễ sai" (bullet "Thống nhất chữ trên nút...").

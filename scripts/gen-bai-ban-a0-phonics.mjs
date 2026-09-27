@@ -1,8 +1,8 @@
 // Sinh giao-trinh/bai-ban/bai-ban-a0-bang-chu-cai-ngu-am-thanh-dieu.csv — chuyên đề "Bảng chữ cái, Ngữ âm & Thanh
-// điệu căn bản" (tiền-A1, cấp "A0") cho giáo trình "Tiếng Việt Bài Bản". LẤY NGUYÊN dữ liệu ngữ âm từ
+// điệu" (tiền-A1, cấp "A0") cho giáo trình "Tiếng Việt Bài Bản". LẤY NGUYÊN dữ liệu ngữ âm từ
 // public/js/sounds.js (INITIAL_SOUND, VOWELS) và public/js/viet.js (TONES, CONFUSE qua spellingChoices) — CÙNG
 // nguồn đã dùng cho "Ngân hàng âm" bên khu trẻ em — để tên đọc chữ cái/thanh điệu nhất quán trong toàn app, không
-// tự bịa lại. 5 bài tổng quan → chi tiết (Tổng quan bảng chữ cái → Nguyên âm → Phụ âm → Thanh điệu → Ghép vần),
+// tự bịa lại. 5 bài tổng quan → chi tiết (Bảng chữ cái → Nguyên âm → Phụ âm → Thanh điệu → Ghép vần),
 // bài cuối là "Ôn tập" (Boss cuối Unit, xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 18–19) tự gộp ôn cả 4 bài trước.
 // Sửa nội dung: sửa trong file này rồi chạy lại `node scripts/gen-bai-ban-a0-phonics.mjs`, đừng sửa tay CSV.
 import { writeFileSync } from "node:fs";
@@ -18,7 +18,7 @@ const rows = [];
 const r = (obj) => rows.push(HEAD.map((h) => obj[h] ?? ""));
 
 const LEVEL = "A0";
-const UNIT = "Bảng chữ cái, Ngữ âm & Thanh điệu căn bản";
+const UNIT = "Bảng chữ cái, Ngữ âm & Thanh điệu";
 
 // 29 chữ cái theo đúng thứ tự bảng chữ cái tiếng Việt.
 const ALPHABET = ["a", "ă", "â", "b", "c", "d", "đ", "e", "ê", "g", "h", "i", "k", "l", "m", "n", "o", "ô", "ơ", "p", "q", "r", "s", "t", "u", "ư", "v", "x", "y"];
@@ -29,8 +29,8 @@ const isVowel = (ch) => VOWELS.some((v) => v[0] === ch);
 const glossEn = (ch) => (isVowel(ch) ? `vowel ${ch}` : `consonant ${ch}`);
 const glossDe = (ch) => (isVowel(ch) ? `Vokal ${ch}` : `Konsonant ${ch}`);
 
-// ============================================================== Bài 1: Tổng quan bảng chữ cái
-const L1 = "Bài 1: Tổng quan bảng chữ cái";
+// ============================================================== Bài 1: Bảng chữ cái (tổng quan)
+const L1 = "Bài 1: Bảng chữ cái";
 r({ level: LEVEL, level_name: "Nhập môn", can_do: "Đọc đúng 29 chữ cái, phân biệt nguyên âm/phụ âm, nhận biết 6 thanh điệu, ghép được vần đơn giản.",
   unit: UNIT, unit_emoji: "🔤", lesson: L1, lesson_type: "core", step_type: "grammar",
   vi: "Bảng chữ cái tiếng Việt = 29 chữ cái", en: "Vietnamese alphabet = 29 letters", de: "Vietnamesisches Alphabet = 29 Buchstaben",
