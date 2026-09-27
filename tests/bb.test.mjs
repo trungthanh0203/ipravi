@@ -3,7 +3,7 @@
 import { INTERVAL_DAYS, nextBox, dueAfter } from "../public/js/bb/srs.js";
 import { isDue, dueCount, pickSession } from "../public/js/bb/practice-core.js";
 import { SKILLS } from "../public/js/bb/skills.js";
-import { parseCsv, validateRows, buildPlan, STEP_TYPES } from "../public/js/admin/bb-csv.js";
+import { parseCsv, validateRows, buildPlan, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -48,7 +48,7 @@ ok(new Set(SKILLS.map((s) => s.itemType)).size === 4, "itemType không trùng nh
 ok(SKILLS.every((s) => ["vocab", "grammar", "phonics", "dialogue"].includes(s.itemType)), "itemType khớp CHECK constraint bb_srs_state.item_type (migration 023)");
 
 // ---- bb-csv.js: validateRows + buildPlan (nhập hàng loạt) ----
-const HEAD = "level,unit,lesson,step_type,speaker,vi,vi2,pos,task_type,sentence,answer_text,words,min_words,sample,question,choices,answer,examples,de";
+const HEAD = "level,unit,lesson,step_type,speaker,vi,vi2,pos,task_type,sentence,answer_text,words,min_words,sample,question,choices,answer,examples,de,game";
 const q = (v) => (/[",;\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v); // trường có dấu phẩy (vd cột words) phải bọc trong ngoặc kép, đúng chuẩn CSV
 const csv = (rows) => [HEAD, ...rows.map((r) => r.map(q).join(","))].join("\n");
 const emptyExisting = { levels: [], units: [], lessons: [], steps: [] };
@@ -67,7 +67,8 @@ const emptyExisting = { levels: [], units: [], lessons: [], steps: [] };
   const { errors } = validateRows(parseCsv(bad), { langs: ["de"] });
   ok(errors.some((e) => /step_type/.test(e.msg)), "validateRows: step_type lạ bị chặn", JSON.stringify(errors));
 }
-ok(STEP_TYPES.length === 6 && !STEP_TYPES.includes("minigame"), "STEP_TYPES: 6 loại nhập được qua CSV (minigame không có nội dung CSV)");
+ok(STEP_TYPES.length === 7 && STEP_TYPES.includes("minigame"), "STEP_TYPES: 7 loại nhập được qua CSV (minigame chỉ ghi config.kind, không có bảng nội dung)");
+ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.includes("phonics_discrim") && GAME_KINDS.includes("sentence_builder"), "GAME_KINDS khớp 3 engine đã cài");
 
 {
   // 1 dòng hợp lệ mỗi loại chặng, đủ 6 loại — kiểm hình dạng content parse đúng.
@@ -119,6 +120,19 @@ ok(STEP_TYPES.length === 6 && !STEP_TYPES.includes("minigame"), "STEP_TYPES: 6 l
   ok(plan.newLevels.length === 0 && plan.newUnits.length === 0 && plan.newLessons.length === 0 && plan.newSteps.length === 0,
     "buildPlan: khớp tên có sẵn (không phân biệt hoa/thường) → không tạo mới tầng nào", JSON.stringify({ l: plan.newLevels.length, u: plan.newUnits.length, le: plan.newLessons.length, s: plan.newSteps.length }));
   ok(plan.groups.length === 1 && plan.groups[0].rows.length === 1, "buildPlan: nội dung vẫn gộp đúng vào chặng đã có");
+}
+{
+  // minigame qua CSV: cột game bắt buộc + hợp lệ; buildPlan gắn config.kind vào chặng mới.
+  const pad = (a) => [...a, ...Array(20 - a.length).fill("")]; // HEAD có 20 cột
+  const good = pad(["A1", "Chào hỏi", "Bài 1", "minigame"]); good[19] = "sentence_builder";
+  const bad = pad(["A1", "Chào hỏi", "Bài 1", "minigame"]); bad[19] = "flappy";
+  const none = pad(["A1", "Chào hỏi", "Bài 1", "minigame"]);
+  const r1 = validateRows(parseCsv(csv([good])), { langs: ["de"] });
+  ok(r1.errors.length === 0 && r1.items[0].content.game === "sentence_builder", "minigame: dòng hợp lệ đọc đúng game", JSON.stringify(r1.errors));
+  ok(validateRows(parseCsv(csv([bad])), { langs: ["de"] }).errors.length === 1, "minigame: game lạ bị từ chối");
+  ok(validateRows(parseCsv(csv([none])), { langs: ["de"] }).errors.length === 1, "minigame: thiếu cột game bị từ chối");
+  const p = buildPlan(r1.items, { levels: [], units: [], lessons: [], steps: [] });
+  ok(p.newSteps.length === 1 && p.newSteps[0].config.kind === "sentence_builder", "buildPlan: chặng minigame mới mang config.kind");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

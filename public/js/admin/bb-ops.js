@@ -418,26 +418,27 @@ export async function importPlan(plan, existing) {
     const row = checkData(await sb.from("bb_levels").insert({ code: nl.code, name_vi: nl.name_vi, can_do: nl.can_do, sort_order: nextOrder([...existing.levels, ...levelByCode.values()]), status: "draft" }).select().single());
     levelByCode.set(row.code, row);
   }
+  // sort_order chạy tiếp theo TỪNG cha, tính cả dòng vừa tạo trong lần nhập này (lỗi cũ: chỉ tính dòng đã có từ trước
+  // nên mọi chủ đề/bài/chặng mới của cùng 1 cha đều nhận sort_order = 1 → thứ tự hiển thị lộn xộn khi nhập giáo trình mới).
+  const counters = new Map();
+  const bump = (key, rows) => { const n = (counters.get(key) ?? Math.max(0, ...rows.map((r) => r.sort_order ?? 0))) + 1; counters.set(key, n); return n; };
   const unitByKey = new Map(existing.units.map((u) => [`${u.level_id}|${ciKey(u.title_vi)}`, u]));
   for (const nu of plan.newUnits) {
     const levelId = levelByCode.get(nu.level).id;
-    const siblings = existing.units.filter((u) => u.level_id === levelId);
-    const row = checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: nu.title_vi, emoji: nu.emoji, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    const row = checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: nu.title_vi, emoji: nu.emoji, sort_order: bump(`u${levelId}`, existing.units.filter((u) => u.level_id === levelId)), status: "draft" }).select().single());
     unitByKey.set(`${levelId}|${ciKey(nu.title_vi)}`, row);
   }
   const lessonByKey = new Map(existing.lessons.map((l) => [`${l.unit_id}|${ciKey(l.title_vi)}`, l]));
   for (const nl of plan.newLessons) {
     const unitId = unitByKey.get(`${levelByCode.get(nl.level).id}|${ciKey(nl.unit)}`).id;
-    const siblings = existing.lessons.filter((l) => l.unit_id === unitId);
-    const row = checkData(await sb.from("bb_lessons").insert({ unit_id: unitId, title_vi: nl.title_vi, lesson_type: nl.lesson_type, title_tr: {}, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    const row = checkData(await sb.from("bb_lessons").insert({ unit_id: unitId, title_vi: nl.title_vi, lesson_type: nl.lesson_type, title_tr: {}, sort_order: bump(`l${unitId}`, existing.lessons.filter((l) => l.unit_id === unitId)), status: "draft" }).select().single());
     lessonByKey.set(`${unitId}|${ciKey(nl.title_vi)}`, row);
   }
   const stepByKey = new Map(existing.steps.map((s) => [`${s.lesson_id}|${s.step_type}`, s]));
   for (const ns of plan.newSteps) {
     const unitId = unitByKey.get(`${levelByCode.get(ns.level).id}|${ciKey(ns.unit)}`).id;
     const lessonId = lessonByKey.get(`${unitId}|${ciKey(ns.lesson)}`).id;
-    const siblings = existing.steps.filter((s) => s.lesson_id === lessonId);
-    const row = checkData(await sb.from("bb_lesson_steps").insert({ lesson_id: lessonId, step_type: ns.step_type, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+    const row = checkData(await sb.from("bb_lesson_steps").insert({ lesson_id: lessonId, step_type: ns.step_type, config: ns.config ?? {}, sort_order: bump(`s${lessonId}`, existing.steps.filter((s) => s.lesson_id === lessonId)), status: "draft" }).select().single());
     stepByKey.set(`${lessonId}|${ns.step_type}`, row);
   }
 
@@ -445,7 +446,10 @@ export async function importPlan(plan, existing) {
     const unitId = unitByKey.get(`${levelByCode.get(g.level).id}|${ciKey(g.unit)}`).id;
     const lessonId = lessonByKey.get(`${unitId}|${ciKey(g.lesson)}`).id;
     const stepId = stepByKey.get(`${lessonId}|${g.stepType}`).id;
-    if (g.stepType === "dialogue") {
+    if (g.stepType === "minigame") {
+      const cfg = { kind: g.rows[0].game };
+      check(await sb.from("bb_lesson_steps").update({ config: cfg }).eq("id", stepId));
+    } else if (g.stepType === "dialogue") {
       await upsertContentRows("bb_dialogue_lines", stepId, "line_vi", g.rows, (r) => ({ speaker: r.speaker, line_vi: r.vi, line_tr: only(r.tr) }));
     } else if (g.stepType === "vocab") {
       await upsertContentRows("bb_vocab", stepId, "word_vi", g.rows, (r) => ({ word_vi: r.vi, pos: r.pos, meaning: only(r.tr) }));

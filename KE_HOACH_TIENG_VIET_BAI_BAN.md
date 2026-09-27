@@ -414,3 +414,49 @@ biến môi trường TTS, không mô phỏng được bằng `mock-sb.js`), **c
   GĐ 2/kế hoạch Bài Bản, nhưng cần khi thử nghiệm.
 - GĐ 7 (soạn nội dung thật) giờ có thể dùng CSV nhập hàng loạt (mục 16) thay vì chỉ nhập tay từng mục qua giao
   diện (mục 14) — nên soạn nội dung thật dưới dạng CSV theo đúng cột đã tả ở `admin/bb-csv.js`.
+
+## 18. GĐ 7 bắt đầu — mẻ nội dung đầu tiên + 2 lỗi CSV sửa lúc soạn (2026-09-27)
+
+Chủ dự án yêu cầu soạn thử nội dung giáo trình thật dạng CSV để tự nhập vào hệ thống (GĐ 7, trước đó ngoài phạm vi
+code vì "cần người soạn nội dung thật" — nay chủ dự án tự yêu cầu AI soạn, không phải người biết tiếng Việt/văn hoá
+thật tự viết, nên xem là **bộ khởi đầu để rà lại**, không phải nội dung "cuối cùng" như các mẻ nội dung khu trẻ em).
+
+**File:** `giao-trinh/csv/bai-ban-a1-chao-hoi-gia-dinh.csv` — sinh bằng `node scripts/gen-bai-ban-a1.mjs` (sửa nội
+dung thì sửa trong script rồi chạy lại, ĐỪNG sửa tay file CSV — dễ lệch cột/thiếu ngoặc kép khi câu có dấu phẩy).
+**Phạm vi (bộ khởi đầu, không phải đủ A1–A2 như tài liệu nguồn 8 Unit/31 bài):** cấp A1 "Sơ cấp 1", 2 chủ đề (Chào
+hỏi 👋, Gia đình 👪), mỗi chủ đề 3 bài (2 bài `core` + 1 bài `review`/Boss cuối Unit) = 6 bài, 24 chặng, 64 dòng.
+Đủ cả 5 loại chặng có nội dung CSV được (dialogue/vocab/grammar/phonics/minigame), riêng reading chỉ dùng ở 1 bài
+(Bài 2 chủ đề Gia đình, 1 đoạn văn + 2 câu hỏi) để có ví dụ; chưa có bài `writing` nào (task_type fill/order/write
+chưa thử với nội dung thật). Nghĩa chỉ có **en+de** (chưa có fr/ko/ja — khác quy ước "đủ cả 5" của giáo trình khu
+trẻ em; thêm ngôn ngữ sau nếu cần). Cả 3 engine mini-game đã cài (meaning_pick/sentence_builder/phonics_discrim)
+đều được dùng, gồm cả 2 bài Boss cuối Unit (mỗi bài chỉ có 1 chặng dialogue tự soạn riêng cho bài Boss + 1 chặng
+minigame — không có vocab/phonics riêng, dựa hẳn vào `loadUnitPool()` gộp từ 2 bài core cùng chủ đề).
+
+**2 lỗi phát hiện + sửa lúc soạn (trước khi soạn nội dung thật, đã tự kiểm bằng `validateRows`/`buildPlan` +
+`importPlan` + chạy hết bài bằng `mock-sb.js` — không phải chỉ đọc code):**
+1. **`bb-ops.importPlan()` tính `sort_order` sai khi nhập CSV có NHIỀU chủ đề/bài/chặng mới CÙNG 1 cha trong 1 lần
+   nhập** — code cũ dùng lại `nextOrder(existing.xxx.filter(...))` (chỉ tính dòng ĐÃ CÓ TỪ TRƯỚC) cho MỌI dòng mới,
+   nên 2 bài mới của cùng 1 chủ đề đều nhận `sort_order = 1` (không phải 1 rồi 2) → thứ tự bài/chủ đề/chặng lộn xộn
+   khi nhập giáo trình thật nhiều bài cùng lúc (lỗi cũ của khu trẻ em không có vì `execute()` ở `admin/import.js`
+   tính đúng — chỉ riêng `bb-ops.importPlan()` copy sai). Sửa bằng bộ đếm `counters`/`bump()` cục bộ, tăng dần theo
+   TỪNG cha (đơn vị/bài/chặng), tính cả dòng vừa tạo trong CÙNG lần nhập.
+2. **Chặng `minigame` chưa nhập được qua CSV** (đã ghi "không có nội dung CSV" trong comment cũ, nhưng thật ra chỉ
+   cần ghi `config.kind`, không cần bảng nội dung) — thêm cột `game` (`admin/bb-csv.js` `GAME_KINDS` = 3 engine đã
+   cài) + `STEP_TYPES` thêm `"minigame"` + `bb-ops.importPlan()` cập nhật `bb_lesson_steps.config` khi gặp nhóm
+   `stepType==="minigame"` (chạy cho CẢ chặng mới lẫn đã có — nhập lại đổi được `game` mà không tạo trùng). Test:
+   4 kiểm tra mới trong `tests/bb.test.mjs` (validateRows nhận/từ chối cột `game`, `buildPlan` gắn đúng `config`).
+
+**Đã thử (browser thật qua mock-sb.js, không phải chỉ chạy test hàm thuần):** dán CSV → Kiểm tra → 64 dòng hợp lệ,
+0 lỗi, 0 cảnh báo → Nhập vào → đúng 1 cấp/2 chủ đề/6 bài/24 chặng mới → duyệt cả cấp (`setLevelStatus`, lan xuống
+đủ 4 tầng) → vào vai người học, chơi hết Bài 1 (5 chặng, kể cả mini-game Ghép nghĩa) → **quay lại danh sách bài,
+Bài 1 hiện ✓** → vào bài Boss "Bài 3: Ôn tập" của chủ đề Chào hỏi → mini-game hiện "Thẻ 1/8" — ĐÚNG gộp từ vựng của
+CẢ Bài 1 lẫn Bài 2 (12 từ, giới hạn 8 lượt/phiên) chứ không phải chỉ từ vựng riêng bài Boss (bài Boss không có
+chặng Từ vựng) → sang chủ đề Gia đình, Bài 2 (có chặng Đọc hiểu): đoạn văn → 2 câu hỏi trắc nghiệm đều chấm đúng
+(✓ Đúng rồi) → mini-game Xếp câu xáo đúng chữ, ghép lại đúng câu gốc, tự chuyển câu kế. Console sạch trong suốt
+toàn bộ lượt thử. **Chưa thử Supabase/Storage/TTS thật** (chưa sinh âm thanh cho các dòng CSV này — bấm "🔊 Sinh
+giọng đọc (TTS)" ở khu admin sau khi nhập, hoặc dùng tab Thu âm để thu giọng người thật, xem CLAUDE.md).
+
+**Việc còn mở (không phải lỗi, chỉ là phạm vi):** chỉ 2 chủ đề (KE_HOACH mục 5 gợi ý 8–10 chủ đề/cấp); chưa có bài
+`writing`; chưa có fr/ko/ja; 2 chủ đề tiếp theo hợp lý để mở rộng theo đúng gợi ý mục 5 (khách sạn, xin việc, gọi
+điện thoại, mua sắm) — cần chủ dự án (hoặc người biết tiếng Việt/văn hoá thật) rà lại nội dung hiện có trước khi mở
+rộng thêm, vì đây là bộ do AI soạn, chưa qua kiểm định của người dạy/nói tiếng Việt thật.

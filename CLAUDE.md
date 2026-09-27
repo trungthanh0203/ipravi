@@ -329,8 +329,21 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   chạy hết vòng + đúng/sai đúng đáp án, `T.bbMinigameEmpty` hiện đúng lúc thiếu dữ liệu, chưa chọn `config.kind` vẫn
   rơi về màn chỗ đứng cũ (không lỗi), Boss cuối Unit gộp đúng từ vựng của 2 bài khác vào 1 bài không có chặng Từ
   vựng riêng — không lỗi console ở mọi bước.
+- **GĐ 7 bắt đầu — CSV nhập hàng loạt Bài Bản chưa nhập được chặng minigame + lỗi sort_order (2026-09-27):** soạn mẻ
+  nội dung thật đầu tiên (`giao-trinh/csv/bai-ban-a1-chao-hoi-gia-dinh.csv`, sinh bằng `node scripts/gen-bai-ban-a1.mjs`
+  — sửa nội dung thì sửa script rồi chạy lại, đừng sửa tay CSV) lộ ra 2 lỗi ở `admin/bb-ops.js`/`admin/bb-csv.js`:
+  ① `importPlan()` tính `sort_order` bằng `nextOrder(existing.xxx…)` — chỉ tính dòng ĐÃ CÓ TỪ TRƯỚC, không tính dòng
+  vừa tạo TRONG CÙNG lần nhập → 2 bài/chủ đề/chặng mới cùng 1 cha đều nhận `sort_order=1` (không phải 1 rồi 2) khi
+  CSV tạo nhiều dòng cùng lúc — sửa bằng bộ đếm cục bộ `counters`/`bump()` tăng dần theo từng cha, tính cả dòng mới
+  tạo. ② Chặng `minigame` chưa nhập được qua CSV dù chỉ cần ghi `config.kind` (không cần bảng nội dung riêng) — thêm
+  cột `game` (`bb-csv.js` `GAME_KINDS` = 3 engine đã cài ở mục trên) + `STEP_TYPES` thêm `"minigame"` +
+  `importPlan()` cập nhật `config` cho nhóm `stepType==="minigame"` (chạy cả khi chặng đã có — đổi `game` lúc nhập
+  lại không tạo trùng). Test: `tests/bb.test.mjs` +4 kiểm tra (52 tổng). Chi tiết + kết quả thử toàn bộ nội dung
+  bằng `mock-sb.js` (nhập → duyệt → chơi hết 2 bài + 2 bài Boss, console sạch): `KE_HOACH_TIENG_VIET_BAI_BAN.md`
+  mục 18. Nội dung CSV này do AI soạn theo yêu cầu chủ dự án — **chưa qua người biết tiếng Việt/văn hoá thật rà
+  lại**, coi là bộ khởi đầu để kiểm tra bằng mắt trước khi mở rộng thêm chủ đề.
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 47 kiểm tra) — không cần cài gì.
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 52 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (219 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên

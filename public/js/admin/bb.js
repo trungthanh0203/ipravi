@@ -85,13 +85,14 @@ function csvSection(ctx) {
   file.addEventListener("change", async () => { if (file.files[0]) text.value = await file.files[0].text(); });
   const preview = el("div");
   const help = el("p", { class: "muted" },
-    "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|reading|writing). " +
+    "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|minigame|reading|writing). " +
     "Tuỳ chặng: dialogue dùng speaker+vi · vocab dùng vi+pos · grammar dùng vi (công thức)+examples (cách nhau ;) · " +
-    "phonics dùng vi (âm A)+vi2 (âm B)+examples · reading: dòng đoạn văn dùng vi (để trống cột question), dòng câu " +
-    "hỏi dùng question+choices (cách nhau |)+answer (số) · writing dùng task_type (fill|order|write)+vi (đề bài), " +
-    "rồi fill dùng sentence+answer_text, order dùng words (cách nhau bằng dấu phẩy), write dùng min_words+sample. " +
-    "Cột khác: level_name, can_do, unit_emoji, lesson_type, rồi 1 cột/ngôn ngữ (vd de, en) = bản dịch. " +
-    "Mỗi bài chỉ 1 chặng/loại qua CSV — nhập lại không tạo trùng nội dung trong cùng chặng.");
+    "phonics dùng vi (âm A)+vi2 (âm B)+examples · minigame dùng game (meaning_pick|phonics_discrim|sentence_builder, " +
+    "không cần nội dung riêng — tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp cùng bài) · reading: dòng đoạn văn dùng vi " +
+    "(để trống cột question), dòng câu hỏi dùng question+choices (cách nhau |)+answer (số) · writing dùng task_type " +
+    "(fill|order|write)+vi (đề bài), rồi fill dùng sentence+answer_text, order dùng words (cách nhau bằng dấu phẩy), " +
+    "write dùng min_words+sample. Cột khác: level_name, can_do, unit_emoji, lesson_type, rồi 1 cột/ngôn ngữ (vd de, en) " +
+    "= bản dịch. Mỗi bài chỉ 1 chặng/loại qua CSV — nhập lại không tạo trùng nội dung trong cùng chặng.");
   const runCheck = btn("Kiểm tra", () => {
     preview.replaceChildren(el("p", { class: "muted" }, A.loading));
     const parsed = bbCsv.parseCsv(text.value);

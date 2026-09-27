@@ -10,6 +10,8 @@
 //   - phonics: vi (âm A), vi2 (âm B), examples (ví dụ, cách nhau bằng ;)
 //   - reading: dòng ĐOẠN VĂN (chỉ 1 dòng đầu tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn);
 //              dòng CÂU HỎI (cột `question` có giá trị) dùng question, choices (cách nhau bằng |), answer (số)
+//   - minigame: cột game (meaning_pick|phonics_discrim|sentence_builder); không có nội dung riêng (chạy từ Từ vựng/Ngữ âm/
+//              Hội thoại/Ngữ pháp cùng bài) — 1 dòng/bài, dòng này chỉ ghi `config.kind` của chặng
 //   - writing: task_type (fill|order|write), vi (đề bài); fill dùng sentence+answer_text; order dùng words
 //              (cách nhau bằng dấu phẩy); write dùng min_words+sample
 // Cột khác: level_name, can_do (chỉ dùng khi TẠO MỚI cấp), unit_emoji, lesson_type (core|review|reading|writing,
@@ -21,7 +23,9 @@
 export { parseCsv, keyOf } from "./csv.js";
 import { keyOf } from "./csv.js";
 
-export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "reading", "writing"]; // minigame không có nội dung CSV được (xem GĐ 4)
+export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame", "reading", "writing"];
+// Kiểu trò chơi của chặng minigame (cột `game`) — PHẢI khớp ENGINES ở bb/steps/minigame.js + MINIGAME_KINDS ở admin/bb.js.
+export const GAME_KINDS = ["meaning_pick", "phonics_discrim", "sentence_builder"];
 const clean = (s) => String(s ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
 const lines = (s, sep) => String(s ?? "").split(sep).map((x) => x.trim()).filter(Boolean);
 
@@ -40,7 +44,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   const known = new Set([
     "level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type",
     "speaker", "vi", "vi2", "pos", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
-    "question", "choices", "answer", "examples", ...langs,
+    "question", "choices", "answer", "examples", "game", ...langs,
   ]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
 
@@ -96,6 +100,10 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
         if (!vi) problems.push("reading (đoạn văn, cột question để trống) cần cột vi (đoạn văn)");
         content = { kind: "passage", vi, tr };
       }
+    } else if (stepType === "minigame") {
+      const game = get("game").toLowerCase();
+      if (!GAME_KINDS.includes(game)) problems.push(`minigame cần cột game là một trong: ${GAME_KINDS.join(", ")}`);
+      content = { kind: "minigame", game };
     } else if (stepType === "writing") {
       const taskType = get("task_type").toLowerCase();
       const vi = get("vi");
@@ -163,7 +171,7 @@ export function buildPlan(items, existing) {
     const existingLesson = existingUnit && lessonByKey.get(`${existingUnit.id}|${keyOf(it.lesson)}`);
     if (!(existingLesson && stepByKey.has(`${existingLesson.id}|${it.stepType}`)) && !seenStep.has(stepKey)) {
       seenStep.add(stepKey);
-      newSteps.push({ level: it.level, unit: it.unit, lesson: it.lesson, step_type: it.stepType });
+      newSteps.push({ level: it.level, unit: it.unit, lesson: it.lesson, step_type: it.stepType, config: it.stepType === "minigame" ? { kind: it.content.game } : {} });
     }
     if (!groups.has(stepKey)) groups.set(stepKey, { level: it.level, unit: it.unit, lesson: it.lesson, stepType: it.stepType, rows: [] });
     groups.get(stepKey).rows.push(it.content);
