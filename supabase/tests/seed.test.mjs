@@ -76,6 +76,28 @@ ok(await count("content_items") === 21 && await count("units") === 2, "chạy se
   ok((await one("select description from public.units where title_vi = 'Gia đình'")).description === "Đã ghi tay", "chạy lại lần 2 không đổi gì (diễn giải chủ đề sửa tay vẫn còn)");
 }
 
+// Tên dịch Bài Bản cấp A1 (005_bb_a1_title_translations.sql, cột bb_units/bb_lessons.title_tr từ migration 022/025):
+// bù tên dịch cho chủ đề/bài đã tồn tại TRƯỚC KHI có cột — chỉ bổ sung, chạy lại an toàn, giống khối 002 ở trên.
+{
+  const lv = (await one("insert into public.bb_levels (code, name_vi) values ('A1', 'Sơ cấp 1') returning id")).id;
+  const u1 = (await one("insert into public.bb_units (level_id, title_vi) values ($1, 'Chào hỏi') returning id", [lv])).id;
+  const u2 = (await one("insert into public.bb_units (level_id, title_vi) values ($1, 'Gia đình') returning id", [lv])).id;
+  for (const t of ["Bài 1: Xin chào", "Bài 2: Bạn tên gì?", "Bài 3: Ôn tập"]) await db.query("insert into public.bb_lessons (unit_id, title_vi) values ($1, $2)", [u1, t]);
+  for (const t of ["Bài 1: Gia đình tôi", "Bài 2: Gia đình bạn có mấy người?", "Bài 3: Ôn tập"]) await db.query("insert into public.bb_lessons (unit_id, title_vi) values ($1, $2)", [u2, t]);
+  await db.query("update public.bb_units set title_tr = '{\"de\": \"Meine Wahl\"}' where title_vi = 'Gia đình'"); // admin đã sửa tay
+
+  const sql5 = readFileSync(dir + "005_bb_a1_title_translations.sql", "utf8");
+  await db.exec(sql5);
+  const noU = (await db.query("select title_vi from public.bb_units where level_id = $1 and not (title_tr ? 'de' and title_tr ? 'en')", [lv])).rows;
+  const noL = (await db.query("select l.title_vi from public.bb_lessons l join public.bb_units u on u.id = l.unit_id where u.level_id = $1 and not (l.title_tr ? 'de' and l.title_tr ? 'en')", [lv])).rows;
+  ok(noU.length === 0, "2 chủ đề A1 (Chào hỏi, Gia đình) có tên dịch de + en", noU.map((r) => r.title_vi).join(", "));
+  ok(noL.length === 0, "6 bài A1 có tên dịch de + en", noL.map((r) => r.title_vi).join(", "));
+  const kept = (await one("select title_tr->>'de' as de, title_tr->>'en' as en from public.bb_units where title_vi = 'Gia đình'"));
+  ok(kept.de === "Meine Wahl" && kept.en === "Family", "tên chủ đề đã sửa tay được giữ, chỉ bổ sung ngôn ngữ còn thiếu", JSON.stringify(kept));
+  await db.exec(sql5);
+  ok((await one("select title_tr->>'de' as de from public.bb_units where title_vi = 'Gia đình'")).de === "Meine Wahl", "chạy lại lần 2 không đổi gì (tên sửa tay vẫn còn)");
+}
+
 // Phụ huynh còn hạn thấy đủ nội dung qua RLS; gộp được nghĩa + âm thanh như app truy vấn.
 const uid = (await one("insert into auth.users (email) values ('p@x.com') returning id")).id;
 await db.exec("set role authenticated");

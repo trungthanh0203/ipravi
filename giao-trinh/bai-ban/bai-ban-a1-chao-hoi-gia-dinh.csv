@@ -1,65 +1,129 @@
-level,level_name,can_do,unit,unit_emoji,lesson,lesson_type,step_type,speaker,vi,vi2,pos,game,question,choices,answer,examples,en,de
-A1,Sơ cấp 1,"Chào hỏi, giới thiệu bản thân, nói vài câu đơn giản hằng ngày.",Chào hỏi,👋,Bài 1: Xin chào,core,dialogue,A,Xin chào!,,,,,,,,Hello!,Hallo!
-A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,B,Xin chào! Bạn khoẻ không?,,,,,,,,Hello! How are you?,Hallo! Wie geht es dir?
-A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,A,"Tôi khoẻ, cảm ơn. Bạn thì sao?",,,,,,,,"I'm fine, thanks. And you?","Mir geht es gut, danke. Und dir?"
-A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,B,Tôi cũng khoẻ. Cảm ơn bạn.,,,,,,,,I'm fine too. Thank you.,Mir geht es auch gut. Danke.
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,xin chào,,interj,,,,,,hello,Hallo
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,chào,,interj,,,,,,hi,Hallo
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,bạn,,pron,,,,,,you,du
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,tôi,,pron,,,,,,I,ich
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,khoẻ,,adj,,,,,,"fine, healthy","gut, gesund"
-A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,cảm ơn,,interj,,,,,,thank you,danke
-A1,,,Chào hỏi,,Bài 1: Xin chào,,grammar,,Chào + đại từ,,,,,,,Chào bạn.;Chào anh.,Hello + pronoun,Hallo + Pronomen
-A1,,,Chào hỏi,,Bài 1: Xin chào,,phonics,,ch,tr,,,,,,cha - tra,,
-A1,,,Chào hỏi,,Bài 1: Xin chào,,minigame,,,,,meaning_pick,,,,,,
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,core,dialogue,A,Bạn tên gì?,,,,,,,,What's your name?,Wie heißt du?
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,B,Tôi tên là Mai. Bạn tên gì?,,,,,,,,My name is Mai. What's your name?,Ich heiße Mai. Wie heißt du?
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,A,Tôi tên là Nam. Rất vui được gặp bạn.,,,,,,,,My name is Nam. Nice to meet you.,"Ich heiße Nam. Freut mich, dich kennenzulernen."
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,B,Tôi cũng rất vui được gặp bạn.,,,,,,,,Nice to meet you too.,"Mich auch, freut mich."
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,tên,,n,,,,,,name,der Name
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,là,,v,,,,,,"to be, is","sein, ist"
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,gì,,pron,,,,,,what,was
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,rất,,adv,,,,,,very,sehr
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,vui,,adj,,,,,,"happy, glad",froh
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,gặp,,v,,,,,,to meet,treffen
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,grammar,,Tôi tên là + tên,,,,,,,Tôi tên là Mai.;Tôi tên là Nam.,My name is + name,Ich heiße + Name
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,phonics,,d,r,,,,,,da - ra,,
-A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,minigame,,,,,sentence_builder,,,,,,
-A1,,,Chào hỏi,,Bài 3: Ôn tập,review,dialogue,A,Xin chào! Bạn tên gì?,,,,,,,,Hello! What's your name?,Hallo! Wie heißt du?
-A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,B,Tôi tên là Hoa. Bạn khoẻ không?,,,,,,,,My name is Hoa. How are you?,Ich heiße Hoa. Wie geht es dir?
-A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,A,"Tôi khoẻ, cảm ơn. Rất vui được gặp bạn.",,,,,,,,"I'm fine, thanks. Nice to meet you.","Mir geht es gut, danke. Freut mich, dich kennenzulernen."
-A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,B,Tôi cũng rất vui được gặp bạn.,,,,,,,,Nice to meet you too.,"Mich auch, freut mich."
-A1,,,Chào hỏi,,Bài 3: Ôn tập,,minigame,,,,,meaning_pick,,,,,,
-A1,,,Gia đình,👪,Bài 1: Gia đình tôi,core,dialogue,A,Đây là gia đình tôi.,,,,,,,,This is my family.,Das ist meine Familie.
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,B,Đây là ai?,,,,,,,,Who is this?,Wer ist das?
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,A,"Đây là bố tôi, đây là mẹ tôi.",,,,,,,,"This is my dad, this is my mom.","Das ist mein Vater, das ist meine Mutter."
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,B,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,gia đình,,n,,,,,,family,die Familie
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,bố,,n,,,,,,dad,der Vater
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,mẹ,,n,,,,,,mom,die Mutter
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,anh,,n,,,,,,older brother,der ältere Bruder
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,chị,,n,,,,,,older sister,die ältere Schwester
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,em,,n,,,,,,younger sibling,das jüngere Geschwister
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,grammar,,Đây là + danh từ,,,,,,,Đây là bố tôi.;Đây là mẹ tôi.,This is + noun,Das ist + Nomen
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,phonics,,s,x,,,,,,sa - xa,,
-A1,,,Gia đình,,Bài 1: Gia đình tôi,,minigame,,,,,phonics_discrim,,,,,,
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,core,dialogue,A,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,B,"Gia đình tôi có bốn người: bố, mẹ, tôi và em tôi.",,,,,,,,"My family has four people: dad, mom, me, and my younger sibling.","Meine Familie hat vier Personen: Vater, Mutter, ich und mein jüngeres Geschwister."
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,A,Bạn có anh chị không?,,,,,,,,Do you have older siblings?,Hast du ältere Geschwister?
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,B,"Không, tôi không có anh chị.",,,,,,,,"No, I don't have older siblings.","Nein, ich habe keine älteren Geschwister."
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,mấy,,pron,,,,,,how many,wie viele
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,người,,n,,,,,,person,die Person
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,có,,v,,,,,,to have,haben
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,bốn,,num,,,,,,four,vier
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,và,,conj,,,,,,and,und
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,không,,adv,,,,,,"no, not","nein, nicht"
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,grammar,,Gia đình + có + số + người,,,,,,,Gia đình tôi có bốn người.;Gia đình bạn có mấy người?,Family + has + number + people,Familie + hat + Zahl + Personen
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,"Gia đình tôi có bốn người. Bố tôi là bác sĩ. Mẹ tôi là giáo viên. Em tôi còn nhỏ, chưa đi học.",,,,,,,,My family has four people. My dad is a doctor. My mom is a teacher. My younger sibling is still small and doesn't go to school yet.,Meine Familie hat vier Personen. Mein Vater ist Arzt. Meine Mutter ist Lehrerin. Mein jüngeres Geschwister ist noch klein und geht noch nicht in die Schule.
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,,,,,Gia đình có mấy người?,Ba người|Bốn người|Năm người|Hai người,2,,,
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,,,,,Mẹ làm nghề gì?,Bác sĩ|Giáo viên|Kỹ sư|Ca sĩ,2,,,
-A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,minigame,,,,,sentence_builder,,,,,,
-A1,,,Gia đình,,Bài 3: Ôn tập,review,dialogue,A,"Đây là gia đình tôi: bố, mẹ và em tôi.",,,,,,,,"This is my family: dad, mom, and my younger sibling.","Das ist meine Familie: Vater, Mutter und mein jüngeres Geschwister."
-A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,B,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?
-A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,A,Gia đình tôi có bốn người.,,,,,,,,My family has four people.,Meine Familie hat vier Personen.
-A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,B,Bạn có anh chị không?,,,,,,,,Do you have older siblings?,Hast du ältere Geschwister?
-A1,,,Gia đình,,Bài 3: Ôn tập,,minigame,,,,,phonics_discrim,,,,,,
+level,level_name,can_do,unit,unit_emoji,lesson,lesson_type,step_type,speaker,vi,vi2,pos,game,question,choices,answer,examples,en,de,unit_de,lesson_de,unit_en,lesson_en
+A1,Sơ cấp 1,"Chào hỏi, giới thiệu bản thân, nói vài câu đơn giản hằng ngày.",Chào hỏi,👋,Bài 1: Xin chào,core,dialogue,A,Xin chào!,,,,,,,,Hello!,Hallo!,Begrüßung,Lektion 1: Hallo,Greetings,Lesson 1: Hello
+A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,B,Xin chào! Bạn khoẻ không?,,,,,,,,Hello! How are you?,Hallo! Wie geht es dir?,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,A,"Tôi khoẻ, cảm ơn. Bạn thì sao?",,,,,,,,"I'm fine, thanks. And you?","Mir geht es gut, danke. Und dir?",,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,dialogue,B,Tôi cũng khoẻ. Cảm ơn bạn.,,,,,,,,I'm fine too. Thank you.,Mir geht es auch gut. Danke.,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,xin chào,,interj,,,,,,hello,Hallo,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,chào,,interj,,,,,,hi,Hallo,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,bạn,,pron,,,,,,you,du,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,tôi,,pron,,,,,,I,ich,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,khoẻ,,adj,,,,,,"fine, healthy","gut, gesund",,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,vocab,,cảm ơn,,interj,,,,,,thank you,danke,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,grammar,,Chào + đại từ,,,,,,,Chào bạn.;Chào anh.,Hello + pronoun,Hallo + Pronomen,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,phonics,,ch,tr,,,,,,cha - tra,,,,,,
+A1,,,Chào hỏi,,Bài 1: Xin chào,,minigame,,,,,meaning_pick,,,,,,,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,core,dialogue,A,Bạn tên gì?,,,,,,,,What's your name?,Wie heißt du?,,Lektion 2: Wie heißt du?,,Lesson 2: What's Your Name?
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,B,Tôi tên là Mai. Bạn tên gì?,,,,,,,,My name is Mai. What's your name?,Ich heiße Mai. Wie heißt du?,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,A,Tôi tên là Nam. Rất vui được gặp bạn.,,,,,,,,My name is Nam. Nice to meet you.,"Ich heiße Nam. Freut mich, dich kennenzulernen.",,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,dialogue,B,Tôi cũng rất vui được gặp bạn.,,,,,,,,Nice to meet you too.,"Mich auch, freut mich.",,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,tên,,n,,,,,,name,der Name,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,là,,v,,,,,,"to be, is","sein, ist",,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,gì,,pron,,,,,,what,was,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,rất,,adv,,,,,,very,sehr,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,vui,,adj,,,,,,"happy, glad",froh,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,vocab,,gặp,,v,,,,,,to meet,treffen,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,grammar,,Tôi tên là + tên,,,,,,,Tôi tên là Mai.;Tôi tên là Nam.,My name is + name,Ich heiße + Name,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,phonics,,d,r,,,,,,da - ra,,,,,,
+A1,,,Chào hỏi,,Bài 2: Bạn tên gì?,,minigame,,,,,sentence_builder,,,,,,,,,,
+A1,,,Chào hỏi,,Bài 3: Ôn tập,review,dialogue,A,Xin chào! Bạn tên gì?,,,,,,,,Hello! What's your name?,Hallo! Wie heißt du?,,Lektion 3: Wiederholung,,Lesson 3: Review
+A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,B,Tôi tên là Hoa. Bạn khoẻ không?,,,,,,,,My name is Hoa. How are you?,Ich heiße Hoa. Wie geht es dir?,,,,
+A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,A,"Tôi khoẻ, cảm ơn. Rất vui được gặp bạn.",,,,,,,,"I'm fine, thanks. Nice to meet you.","Mir geht es gut, danke. Freut mich, dich kennenzulernen.",,,,
+A1,,,Chào hỏi,,Bài 3: Ôn tập,,dialogue,B,Tôi cũng rất vui được gặp bạn.,,,,,,,,Nice to meet you too.,"Mich auch, freut mich.",,,,
+A1,,,Chào hỏi,,Bài 3: Ôn tập,,minigame,,,,,meaning_pick,,,,,,,,,,
+A1,,,Gia đình,👪,Bài 1: Gia đình tôi,core,dialogue,A,Đây là gia đình tôi.,,,,,,,,This is my family.,Das ist meine Familie.,Familie,Lektion 1: Meine Familie,Family,Lesson 1: My Family
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,B,Đây là ai?,,,,,,,,Who is this?,Wer ist das?,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,A,"Đây là bố tôi, đây là mẹ tôi.",,,,,,,,"This is my dad, this is my mom.","Das ist mein Vater, das ist meine Mutter.",,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,dialogue,B,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,gia đình,,n,,,,,,family,die Familie,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,bố,,n,,,,,,dad,der Vater,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,mẹ,,n,,,,,,mom,die Mutter,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,anh,,n,,,,,,older brother,der ältere Bruder,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,chị,,n,,,,,,older sister,die ältere Schwester,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,vocab,,em,,n,,,,,,younger sibling,das jüngere Geschwister,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,grammar,,Đây là + danh từ,,,,,,,Đây là bố tôi.;Đây là mẹ tôi.,This is + noun,Das ist + Nomen,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,phonics,,s,x,,,,,,sa - xa,,,,,,
+A1,,,Gia đình,,Bài 1: Gia đình tôi,,minigame,,,,,phonics_discrim,,,,,,,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,core,dialogue,A,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?,,Lektion 2: Wie viele Personen sind in deiner Familie?,,Lesson 2: How Many People Are in Your Family?
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,B,"Gia đình tôi có bốn người: bố, mẹ, tôi và em tôi.",,,,,,,,"My family has four people: dad, mom, me, and my younger sibling.","Meine Familie hat vier Personen: Vater, Mutter, ich und mein jüngeres Geschwister.",,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,A,Bạn có anh chị không?,,,,,,,,Do you have older siblings?,Hast du ältere Geschwister?,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,dialogue,B,"Không, tôi không có anh chị.",,,,,,,,"No, I don't have older siblings.","Nein, ich habe keine älteren Geschwister.",,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,mấy,,pron,,,,,,how many,wie viele,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,người,,n,,,,,,person,die Person,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,có,,v,,,,,,to have,haben,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,bốn,,num,,,,,,four,vier,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,và,,conj,,,,,,and,und,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,vocab,,không,,adv,,,,,,"no, not","nein, nicht",,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,grammar,,Gia đình + có + số + người,,,,,,,Gia đình tôi có bốn người.;Gia đình bạn có mấy người?,Family + has + number + people,Familie + hat + Zahl + Personen,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,"Gia đình tôi có bốn người. Bố tôi là bác sĩ. Mẹ tôi là giáo viên. Em tôi còn nhỏ, chưa đi học.",,,,,,,,My family has four people. My dad is a doctor. My mom is a teacher. My younger sibling is still small and doesn't go to school yet.,Meine Familie hat vier Personen. Mein Vater ist Arzt. Meine Mutter ist Lehrerin. Mein jüngeres Geschwister ist noch klein und geht noch nicht in die Schule.,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,,,,,Gia đình có mấy người?,Ba người|Bốn người|Năm người|Hai người,2,,,,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,reading,,,,,,Mẹ làm nghề gì?,Bác sĩ|Giáo viên|Kỹ sư|Ca sĩ,2,,,,,,,
+A1,,,Gia đình,,Bài 2: Gia đình bạn có mấy người?,,minigame,,,,,sentence_builder,,,,,,,,,,
+A1,,,Gia đình,,Bài 3: Ôn tập,review,dialogue,A,"Đây là gia đình tôi: bố, mẹ và em tôi.",,,,,,,,"This is my family: dad, mom, and my younger sibling.","Das ist meine Familie: Vater, Mutter und mein jüngeres Geschwister.",,Lektion 3: Wiederholung,,Lesson 3: Review
+A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,B,Gia đình bạn có mấy người?,,,,,,,,How many people are in your family?,Wie viele Personen sind in deiner Familie?,,,,
+A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,A,Gia đình tôi có bốn người.,,,,,,,,My family has four people.,Meine Familie hat vier Personen.,,,,
+A1,,,Gia đình,,Bài 3: Ôn tập,,dialogue,B,Bạn có anh chị không?,,,,,,,,Do you have older siblings?,Hast du ältere Geschwister?,,,,
+A1,,,Gia đình,,Bài 3: Ôn tập,,minigame,,,,,phonics_discrim,,,,,,,,,,
+A1,,,Số đếm,🔢,Bài 1: Một đến năm,core,dialogue,A,Bạn có mấy quyển sách?,,,,,,,,How many books do you have?,Wie viele Bücher hast du?,Zahlen,Lektion 1: Eins bis fünf,Numbers,Lesson 1: One to Five
+A1,,,Số đếm,,Bài 1: Một đến năm,,dialogue,B,Tôi có ba quyển sách.,,,,,,,,I have three books.,Ich habe drei Bücher.,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,dialogue,A,Còn bút thì sao?,,,,,,,,What about pens?,Und wie viele Stifte?,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,dialogue,B,Tôi có năm cái bút.,,,,,,,,I have five pens.,Ich habe fünf Stifte.,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,một,,num,,,,,,one,eins,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,hai,,num,,,,,,two,zwei,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,ba,,num,,,,,,three,drei,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,bốn,,num,,,,,,four,vier,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,năm,,num,,,,,,five,fünf,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,quyển sách,,n,,,,,,book,das Buch,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,vocab,,cái bút,,n,,,,,,pen,der Stift,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,grammar,,Số + danh từ,,,,,,,ba quyển sách;năm cái bút,Number + noun,Zahl + Nomen,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,phonics,,l,n,,,,,,la - na,,,,,,
+A1,,,Số đếm,,Bài 1: Một đến năm,,minigame,,,,,meaning_pick,,,,,,,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,core,dialogue,A,Táo giá bao nhiêu?,,,,,,,,How much are the apples?,Wie viel kosten die Äpfel?,,Lektion 2: Sechs bis zehn,,Lesson 2: Six to Ten
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,dialogue,B,Táo giá năm nghìn đồng một quả.,,,,,,,,Apples are five thousand dong each.,Äpfel kosten fünftausend Dong pro Stück.,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,dialogue,A,Còn cam thì sao?,,,,,,,,What about oranges?,Und wie viel kosten die Orangen?,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,dialogue,B,Cam giá bảy nghìn đồng một quả.,,,,,,,,Oranges are seven thousand dong each.,Orangen kosten siebentausend Dong pro Stück.,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,sáu,,num,,,,,,six,sechs,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,bảy,,num,,,,,,seven,sieben,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,tám,,num,,,,,,eight,acht,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,chín,,num,,,,,,nine,neun,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,mười,,num,,,,,,ten,zehn,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,giá,,n,,,,,,price,der Preis,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,vocab,,bao nhiêu,,pron,,,,,,how much,wie viel,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,grammar,,... giá bao nhiêu?,,,,,,,Táo giá bao nhiêu?;Táo giá năm nghìn đồng.,How much is ...?,Wie viel kostet ...?,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,phonics,,d,gi,,,,,,da - gia,,,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,reading,,Ở chợ có táo và cam. Táo giá năm nghìn đồng một quả. Cam giá bảy nghìn đồng một quả. Táo rẻ hơn cam.,,,,,,,,At the market there are apples and oranges. Apples cost five thousand dong each. Oranges cost seven thousand dong each. Apples are cheaper than oranges.,Auf dem Markt gibt es Äpfel und Orangen. Äpfel kosten fünftausend Dong pro Stück. Orangen kosten siebentausend Dong pro Stück. Äpfel sind billiger als Orangen.,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,reading,,,,,,Táo giá bao nhiêu?,Năm nghìn đồng|Sáu nghìn đồng|Bảy nghìn đồng|Tám nghìn đồng,1,,,,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,reading,,,,,,Quả nào rẻ hơn?,Cam|Táo|Cả hai bằng nhau|Không quả nào,2,,,,,,,
+A1,,,Số đếm,,Bài 2: Sáu đến mười,,minigame,,,,,sentence_builder,,,,,,,,,,
+A1,,,Số đếm,,Bài 3: Ôn tập,review,dialogue,A,Bạn có mấy quyển sách?,,,,,,,,How many books do you have?,Wie viele Bücher hast du?,,Lektion 3: Wiederholung,,Lesson 3: Review
+A1,,,Số đếm,,Bài 3: Ôn tập,,dialogue,B,Tôi có năm quyển sách. Táo giá bao nhiêu?,,,,,,,,I have five books. How much are the apples?,Ich habe fünf Bücher. Wie viel kosten die Äpfel?,,,,
+A1,,,Số đếm,,Bài 3: Ôn tập,,dialogue,A,Táo giá bảy nghìn đồng một quả.,,,,,,,,Apples are seven thousand dong each.,Äpfel kosten siebentausend Dong pro Stück.,,,,
+A1,,,Số đếm,,Bài 3: Ôn tập,,minigame,,,,,meaning_pick,,,,,,,,,,
+A1,,,Màu sắc,🎨,Bài 1: Màu cơ bản,core,dialogue,A,Bạn thích màu gì?,,,,,,,,What color do you like?,Welche Farbe magst du?,Farben,Lektion 1: Die Grundfarben,Colors,Lesson 1: Basic Colors
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,dialogue,B,Tôi thích màu đỏ. Bạn thích màu gì?,,,,,,,,I like red. What color do you like?,Ich mag Rot. Welche Farbe magst du?,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,dialogue,A,Tôi thích màu xanh.,,,,,,,,I like blue.,Ich mag Blau.,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,dialogue,B,Màu xanh rất đẹp.,,,,,,,,Blue is very pretty.,Blau ist sehr schön.,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,đỏ,,adj,,,,,,red,rot,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,xanh,,adj,,,,,,"blue, green","blau, grün",,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,vàng,,adj,,,,,,yellow,gelb,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,trắng,,adj,,,,,,white,weiß,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,đen,,adj,,,,,,black,schwarz,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,vocab,,thích,,v,,,,,,to like,mögen,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,grammar,,Tôi thích + màu,,,,,,,Tôi thích màu đỏ.;Tôi thích màu xanh.,I like + color,Ich mag + Farbe,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,phonics,,ch,tr,,,,,,cha - tra,,,,,,
+A1,,,Màu sắc,,Bài 1: Màu cơ bản,,minigame,,,,,phonics_discrim,,,,,,,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,core,dialogue,A,Đây là hình gì?,,,,,,,,What shape is this?,Was für eine Form ist das?,,Lektion 2: Formen,,Lesson 2: Shapes
+A1,,,Màu sắc,,Bài 2: Hình dạng,,dialogue,B,Đây là hình vuông màu đỏ.,,,,,,,,This is a red square.,Das ist ein rotes Quadrat.,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,dialogue,A,Còn đây?,,,,,,,,And this one?,Und das hier?,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,dialogue,B,Đây là hình tròn màu vàng.,,,,,,,,This is a yellow circle.,Das ist ein gelber Kreis.,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,vocab,,hình vuông,,n,,,,,,square,das Quadrat,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,vocab,,hình tròn,,n,,,,,,circle,der Kreis,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,vocab,,hình tam giác,,n,,,,,,triangle,das Dreieck,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,vocab,,to,,adj,,,,,,big,groß,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,vocab,,nhỏ,,adj,,,,,,small,klein,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,grammar,,Đây là + hình + màu,,,,,,,Đây là hình vuông màu đỏ.;Đây là hình tròn màu vàng.,This is a + shape + color,Das ist ein/e + Form + Farbe,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,phonics,,s,x,,,,,,sa - xa,,,,,,
+A1,,,Màu sắc,,Bài 2: Hình dạng,,minigame,,,,,meaning_pick,,,,,,,,,,
+A1,,,Màu sắc,,Bài 3: Ôn tập,review,dialogue,A,Bạn thích màu gì?,,,,,,,,What color do you like?,Welche Farbe magst du?,,Lektion 3: Wiederholung,,Lesson 3: Review
+A1,,,Màu sắc,,Bài 3: Ôn tập,,dialogue,B,Tôi thích màu đỏ. Đây là hình vuông màu đỏ.,,,,,,,,I like red. This is a red square.,Ich mag Rot. Das ist ein rotes Quadrat.,,,,
+A1,,,Màu sắc,,Bài 3: Ôn tập,,dialogue,A,Còn đây là hình tròn màu vàng.,,,,,,,,And this is a yellow circle.,Und das ist ein gelber Kreis.,,,,
+A1,,,Màu sắc,,Bài 3: Ôn tập,,minigame,,,,,phonics_discrim,,,,,,,,,,

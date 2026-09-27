@@ -434,10 +434,29 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   vựng (có chấm Nhớ/Quên) và Ngữ pháp (chỉ xem lại) đều ra màn kết quả đúng tóm tắt → "Ôn lại" lập phiên mới đúng
   (mục vừa "nhớ" biến mất khỏi vòng ôn tiếp vì `due_at` đã đẩy xa) → "Kỹ năng khác" về đúng lưới — console sạch
   suốt quá trình.
+- **A1 thêm 2 chủ đề (Số đếm, Màu sắc) + seed bù tên dịch cho 2 chủ đề cũ (2026-09-28):** tiếp tục soạn nội dung
+  GĐ 7 theo yêu cầu chủ dự án. `scripts/gen-bai-ban-a1.mjs` thêm **Unit 3 "Số đếm"** 🔢 (Bài 1 số 1–5, Bài 2 số
+  6–10 + giá cả ở chợ — có chặng `reading` gắn số vào ngữ cảnh thật, Bài 3 Ôn tập/Boss) và **Unit 4 "Màu sắc"** 🎨
+  (Bài 1 màu cơ bản, Bài 2 hình dạng, Bài 3 Ôn tập/Boss) — cùng khuôn 3-bài-1-unit đã dùng cho Chào hỏi/Gia đình.
+  File CSV vẫn giữ tên cũ `bai-ban-a1-chao-hoi-gia-dinh.csv` (tên chỉ mang tính lịch sử, giống cách A0 giữ tên file
+  cũ sau khi đổi nội dung cấp — xem mục "Cấp học"). **Nhân dịp này thêm cột `unit_<lang>`/`lesson_<lang>` vào CẢ 4
+  chủ đề** (kể cả 2 chủ đề cũ) — tận dụng tính năng vừa làm ở bullet "Bài Bản còn thiếu tên dịch..." phía trên, để
+  CSV tự mang tên dịch ngay lúc nhập cho bản triển khai MỚI hoàn toàn. Nhưng vì cột `unit_<lang>`/`lesson_<lang>`
+  CHỈ áp dụng lúc TẠO MỚI (không cập nhật chủ đề/bài đã có), bản triển khai ĐÃ nhập 2 chủ đề cũ TRƯỚC khi có tính
+  năng này (chủ dự án) sẽ không tự có tên dịch qua việc nhập lại CSV — thêm `supabase/seed/005_bb_a1_title_translations.sql`
+  (chạy TAY, cùng khuôn chỉ-bổ-sung/an toàn chạy lại như `002_title_translations.sql`) để bù riêng cho 2 chủ đề
+  "Chào hỏi"/"Gia đình" + 6 bài của chúng. File seed này KHÁC 002–004: KHÔNG cần chạy trên bản triển khai hoàn toàn
+  mới (CSV đã tự đủ), chỉ cần cho bản ĐÃ nhập CSV trước 2026-09-28 — ghi rõ trong comment đầu file. Test:
+  `supabase/tests/seed.test.mjs` +4 kiểm tra (dựng bb_units/bb_lessons thiếu title_tr, chạy seed, kiểm tra đủ
+  de+en, kiểm tra tên sửa tay không bị ghi đè, chạy lại lần 2 không đổi). Đã thử toàn bộ bằng `mock-sb.js` qua ĐÚNG
+  luồng admin thật (dán CSV → Kiểm tra → "128 dòng hợp lệ · 1 cấp, 4 chủ đề, 12 bài, 49 chặng mới" → Nhập vào →
+  Duyệt cả cấp) rồi vào vai người học chơi hết Bài 2 "Số đếm" (hội thoại → từ vựng → ngữ pháp → ngữ âm → đọc hiểu
+  đúng cả 2 câu hỏi → mini-game Xếp câu xáo đúng câu "Táo giá năm nghìn đồng") — cả 4 chủ đề đều hiện đúng
+  "DE: … · EN: …" ở admin và 🔊 VI/🔊 DE + tên dịch ở khu học, không lỗi console.
 
 - **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 61 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (225 kiểm tra) và
-  `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
+  `node supabase/tests/seed.test.mjs` (23). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.
 - **Chạy giao diện local:** `node scripts/dev-server.mjs` (hoặc `preview_start` tên `dev`) — dùng chính `worker.js`, đọc `.dev.vars`

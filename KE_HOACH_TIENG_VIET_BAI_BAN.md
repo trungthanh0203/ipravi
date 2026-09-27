@@ -560,3 +560,35 @@ biệt có chủ ý của Bài Bản (không có sao/điểm vì hầu hết k�
 đúng ở cây quản trị; khu học hiện đúng 🔊 VI/🔊 DE + tên dịch ở màn danh sách bài; Luyện tập chia đúng 2 nhóm màu,
 chơi Từ vựng (có chấm) và Ngữ pháp (không chấm) đều ra màn kết quả, "Ôn lại" lập phiên mới đúng, "Kỹ năng khác" về
 đúng lưới — console sạch. **Chưa thử Supabase thật** (như mọi phần khác của Bài Bản tới giờ).
+
+## 21. A1 thêm 2 chủ đề (Số đếm, Màu sắc) + seed bù tên dịch cho nội dung đã nhập trước đó (2026-09-28)
+
+Tiếp tục GĐ 7 theo yêu cầu chủ dự án ("làm tiếp các bài tiếp theo của các chủ đề cấp A1"). `scripts/gen-bai-ban-a1.mjs`
+(cùng file đã sinh Chào hỏi/Gia đình ở mục 18) thêm 2 chủ đề mới, giữ đúng khuôn 3-bài-1-unit (2 bài `core` + 1 bài
+`review`/Boss cuối Unit) đã dùng cho 2 chủ đề trước:
+- **Số đếm** 🔢 — Bài 1 (số 1–5, mẫu câu "Số + danh từ"), Bài 2 (số 6–10 gắn với giá cả ở chợ "... giá bao nhiêu?",
+  có thêm chặng `reading` — đoạn văn + 2 câu hỏi, đặt số vào ngữ cảnh thực tế thay vì học thuộc rời rạc), Bài 3 Ôn tập.
+- **Màu sắc** 🎨 — Bài 1 (5 màu cơ bản + "Tôi thích + màu"), Bài 2 (hình dạng: vuông/tròn/tam giác + to/nhỏ), Bài 3 Ôn tập.
+
+File CSV output vẫn giữ tên cũ `bai-ban-a1-chao-hoi-gia-dinh.csv` — tên chỉ mang tính lịch sử (giống cách chủ đề A0
+giữ tên file cũ sau khi đổi thứ tự cấp, xem mục 19), đọc nội dung thật bên trong mới đúng.
+
+**Nhân dịp có tính năng `unit_<lang>`/`lesson_<lang>` (mục 20) — áp dụng luôn cho CẢ 4 chủ đề trong file, không chỉ
+2 chủ đề mới.** Nhưng cột này chỉ điền lúc TẠO MỚI chủ đề/bài (không cập nhật chủ đề/bài đã có sẵn trong CSDL) — 2
+chủ đề "Chào hỏi"/"Gia đình" đã được chủ dự án nhập vào Supabase từ mục 18 (2026-09-27, TRƯỚC khi có migration 025 +
+cột CSV này), nên nhập lại file CSV mới sẽ KHÔNG tự thêm tên dịch cho 2 chủ đề đó (chỉ tạo mới 2 chủ đề còn thiếu,
+đúng thiết kế chống trùng). Vá bằng `supabase/seed/005_bb_a1_title_translations.sql` (chạy TAY, cùng khuôn "chỉ bổ
+sung, chạy lại an toàn" như `002_title_translations.sql` bên khu trẻ em) — UPDATE riêng cho 2 chủ đề + 6 bài đã có.
+File này KHÁC 002–004 ở một điểm: KHÔNG cần chạy trên bản triển khai hoàn toàn mới (CSV giờ đã tự đủ tên dịch lúc
+nhập), chỉ cần cho bản đã nhập CSV trước khi có tính năng này — ghi rõ trong comment đầu file để không ai chạy nhầm
+trên bản mới rồi thắc mắc sao không thấy gì đổi (UPDATE không khớp dòng nào thì tự bỏ qua, không lỗi, nhưng cũng
+không có gì để báo — dễ hiểu lầm là "chạy hỏng").
+
+Test: `supabase/tests/seed.test.mjs` +4 kiểm tra (dựng `bb_units`/`bb_lessons` thiếu `title_tr` mô phỏng đúng tình
+huống "đã nhập trước migration 025" → chạy seed → đủ de+en cho cả 2 chủ đề + 6 bài → tên đã sửa tay giữ nguyên →
+chạy lại lần 2 không đổi gì). Đã thử toàn bộ bằng `mock-sb.js` qua ĐÚNG luồng admin thật (dán CSV → Kiểm tra hiện
+"128 dòng hợp lệ · 1 cấp, 4 chủ đề, 12 bài, 49 chặng mới" → Nhập vào → Duyệt cả cấp) rồi vào vai người học: cả 4
+chủ đề + 12 bài hiện đúng tên dịch DE/EN (cả ở cây quản trị lẫn 🔊 VI/🔊 DE ở khu học); chơi hết Bài 2 "Số đếm"
+(hội thoại → từ vựng → ngữ pháp → ngữ âm → đọc hiểu, trả lời đúng cả 2 câu hỏi ra "✓ Đúng rồi!" → mini-game Xếp câu
+xáo đúng câu "Táo giá năm nghìn đồng" từ chính câu hội thoại của bài) — không lỗi console trong suốt. **Chưa thử
+Supabase thật.**
