@@ -327,6 +327,10 @@ export const T = {
   bbRemembered: "✓ Nhớ rồi",
   bbCardOf: (i, n) => `Thẻ ${i}/${n}`,
   bbSessionDone: "Đã ôn xong!",
+  bbReviewedCount: (n, name) => `Đã ôn lại ${n} mục ${name}.`,
+  bbVocabResult: (remembered, forgot) => `Đã ôn ${remembered + forgot} từ — nhớ ${remembered}, quên ${forgot}.`,
+  bbReviewAgain: "🔁 Ôn lại",
+  bbOtherSkill: "◀ Kỹ năng khác",
 
   bbMicLabel: "Đọc thử",
   bbPronUnsupported: "Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Hãy thử bằng Chrome hoặc Safari.",

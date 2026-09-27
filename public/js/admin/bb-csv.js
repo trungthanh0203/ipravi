@@ -45,7 +45,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
   const known = new Set([
     "level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type",
     "speaker", "vi", "vi2", "pos", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
-    "question", "choices", "answer", "examples", "game", ...langs,
+    "question", "choices", "answer", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`]),
   ]);
   H.forEach((h, i) => { if (h && !known.has(h)) warnings.push({ row: 1, msg: `Cột "${headers[i]}" không được dùng (bỏ qua)` }); });
 
@@ -69,6 +69,16 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
 
     const tr = {};
     for (const l of langs) { const v = get(l); if (v) tr[l] = v; }
+    // Tên chủ đề/bài bằng ngôn ngữ ở nhà (cột unit_de, lesson_de…) — tuỳ chọn, CHỈ áp dụng lúc TẠO MỚI chủ đề/bài
+    // (khớp cách khu trẻ em đọc unit_<lang>/lesson_<lang>, xem csv.js) — bài/chủ đề đã có thì sửa tên dịch qua ✎ Sửa.
+    const unitTr = {}, lessonTr = {};
+    for (const l of langs) {
+      for (const [name, into] of [[`unit_${l}`, unitTr], [`lesson_${l}`, lessonTr]]) {
+        if (col(name) < 0) continue;
+        const v = get(name);
+        if (v) into[l] = v;
+      }
+    }
 
     let content = null; // hình dạng tuỳ step_type, gắn thêm vào item bên dưới
     if (stepType === "dialogue") {
@@ -132,7 +142,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     }
     items.push({
       row: n, level, levelName: get("level_name"), canDo: get("can_do"),
-      unit, unitEmoji: get("unit_emoji"), lesson, lessonType, stepType, content,
+      unit, unitEmoji: get("unit_emoji"), unitTr, lesson, lessonType, lessonTr, stepType, content,
     });
   });
 
@@ -159,15 +169,22 @@ export function buildPlan(items, existing) {
       newLevels.push({ code: it.level, name_vi: it.levelName || it.level, can_do: it.canDo || null });
     }
     const unitKey = `${it.level}|${keyOf(it.unit)}`; // dùng mã cấp tạm làm khoá gộp (level_id thật chỉ có sau khi tạo)
-    if (!unitByKey.has(`${levelByCode.get(it.level)?.id}|${keyOf(it.unit)}`) && !seenUnit.has(unitKey)) {
+    const isNewUnit = !unitByKey.has(`${levelByCode.get(it.level)?.id}|${keyOf(it.unit)}`);
+    if (isNewUnit && !seenUnit.has(unitKey)) {
       seenUnit.add(unitKey);
-      newUnits.push({ level: it.level, title_vi: it.unit, emoji: it.unitEmoji || null });
+      newUnits.push({ level: it.level, title_vi: it.unit, emoji: it.unitEmoji || null, title_tr: { ...it.unitTr } });
+    } else if (isNewUnit) {
+      // Nhiều dòng CSV cùng chủ đề mới — gộp tên dịch từ MỌI dòng (dòng nào có unit_<lang> thì dùng, không chỉ dòng đầu).
+      Object.assign(newUnits.find((u) => u.level === it.level && keyOf(u.title_vi) === keyOf(it.unit)).title_tr, it.unitTr);
     }
     const lessonKey = `${unitKey}|${keyOf(it.lesson)}`;
     const existingUnit = unitByKey.get(`${levelByCode.get(it.level)?.id}|${keyOf(it.unit)}`);
-    if (!(existingUnit && lessonByKey.has(`${existingUnit.id}|${keyOf(it.lesson)}`)) && !seenLesson.has(lessonKey)) {
+    const isNewLesson = !(existingUnit && lessonByKey.has(`${existingUnit.id}|${keyOf(it.lesson)}`));
+    if (isNewLesson && !seenLesson.has(lessonKey)) {
       seenLesson.add(lessonKey);
-      newLessons.push({ level: it.level, unit: it.unit, title_vi: it.lesson, lesson_type: it.lessonType });
+      newLessons.push({ level: it.level, unit: it.unit, title_vi: it.lesson, lesson_type: it.lessonType, title_tr: { ...it.lessonTr } });
+    } else if (isNewLesson) {
+      Object.assign(newLessons.find((l) => l.unit === it.unit && keyOf(l.title_vi) === keyOf(it.lesson)).title_tr, it.lessonTr);
     }
     const stepKey = `${lessonKey}|${it.stepType}`;
     const existingLesson = existingUnit && lessonByKey.get(`${existingUnit.id}|${keyOf(it.lesson)}`);
@@ -192,11 +209,12 @@ export function buildPlan(items, existing) {
 // ============================================================================
 const bbQ = (v) => (/[",;\n]/.test(v) ? `"${String(v ?? "").replace(/"/g, '""')}"` : (v ?? ""));
 export function buildTemplate(langs) {
-  const head = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs];
+  const head = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])];
   const ex = {
     de: ["Hallo!", "Hallo, wie geht's?", "der Hund", "Hallo + Pronomen", ""],
     en: ["Hello!", "Hello, how are you?", "dog", "Hello + pronoun", ""],
   };
+  const exTitle = { de: ["Begrüßung", "Lektion 1: Hallo"], en: ["Greetings", "Lesson 1: Hello"] };
   const sample = [
     ["A1", "Chào hỏi", "Bài 1", "dialogue", "A", "Xin chào!", "", "", "", ""],
     ["A1", "Chào hỏi", "Bài 1", "dialogue", "B", "Xin chào, bạn khoẻ không?", "", "", "", ""],
@@ -204,12 +222,14 @@ export function buildTemplate(langs) {
     ["A1", "Chào hỏi", "Bài 1", "grammar", "", "Chào + đại từ", "", "", "Chào bạn.;Chào anh.", ""],
     ["A1", "Chào hỏi", "Bài 1", "minigame", "", "", "", "", "", "meaning_pick"],
   ];
-  const lines = [head, ...sample.map((r, i) => [...r, ...langs.map((l) => ex[l]?.[i] ?? "")])];
+  // unit_<lang>/lesson_<lang> chỉ cần điền ở 1 dòng bất kỳ của chủ đề/bài đó (gộp từ mọi dòng) — mẫu điền ở dòng đầu
+  // cho dễ nhìn, các dòng sau để trống.
+  const lines = [head, ...sample.map((r, i) => [...r, ...langs.map((l) => ex[l]?.[i] ?? ""), ...langs.flatMap((l) => (i === 0 ? [exTitle[l]?.[0] ?? "", exTitle[l]?.[1] ?? ""] : ["", ""]))])];
   return "﻿" + lines.map((r) => r.map(bbQ).join(",")).join("\r\n") + "\r\n";
 }
 
 export function aiPrompt(langs) {
-  const cols = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs].join(",");
+  const cols = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])].join(",");
   return `Bạn là giáo viên tiếng Việt cho người lớn/người nước ngoài học tiếng Việt (giáo trình "Tiếng Việt Bài Bản"). Hãy soạn nội dung học về chủ đề: [ĐIỀN CHỦ ĐỀ, ví dụ: "Đi chợ"].
 
 Trả về DUY NHẤT một file CSV (UTF-8, phân cách bằng dấu phẩy, dòng đầu là tiêu đề) với đúng các cột:
@@ -221,6 +241,7 @@ Quy tắc:
 - step_type: dialogue (hội thoại, speaker A/B, vi = câu), vocab (từ vựng, vi = từ, pos = loại từ), grammar (công thức, vi = công thức vd "Chào + đại từ", examples = câu ví dụ cách nhau bằng ";"), phonics (cặp âm dễ nhầm THẬT theo vùng miền — ch/tr, s/x, d/gi, d/r, l/n — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh vì đọc giống nhau), minigame (game = meaning_pick | phonics_discrim | sentence_builder, không cần cột nội dung nào khác — chặng này tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp CÙNG BÀI để chơi).
 - Mỗi bài nên có ít nhất: 1 chặng dialogue (3-6 câu), 1 chặng vocab (5-8 từ), 1 chặng grammar (1 công thức + 2-3 ví dụ), 1 chặng minigame.
 - ${langs.map((l) => `Cột "${l}": nghĩa/bản dịch bằng ngôn ngữ mã "${l}", ngắn gọn, đúng nghĩa`).join("\n- ")}
+- ${langs.map((l) => `Cột "unit_${l}"/"lesson_${l}"`).join(", ")}: tên chủ đề/tên bài dịch sang ngôn ngữ đó (chỉ cần điền ở 1 dòng của chủ đề/bài đó, để trống ở các dòng còn lại).
 - KHÔNG bịa cách đọc/ngữ âm nếu không chắc — để trống cột đó.
 - Ô có dấu phẩy phải đặt trong dấu ngoặc kép. Không thêm lời giải thích ngoài file CSV.`;
 }

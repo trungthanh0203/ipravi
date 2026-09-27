@@ -55,7 +55,7 @@ vi/de/en); (3) `admin/dict.js` (từ điển gợi ý Thêm nhanh) không tự c
 thiết kế ("không tìm ra thì để trống, không bịa"). KHÔNG cần sửa code cho việc đổi/thêm ngôn ngữ — chỉ cần cấu hình
 `LANGUAGES` + soạn nội dung dịch.
 
-Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `024_bb_a0_and_say.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
+Dựng bản mới: tạo dự án Supabase → chạy `001_init.sql` … `025_bb_unit_title_tr.sql` (theo thứ tự, tất cả trong `supabase/migrations/`) → đăng ký 1
 tài khoản qua app → `update public.accounts set role='admin' where email='...'` → đặt biến ở Cloudflare (thêm `TTS_PROVIDER`,
 `TTS_KEY` [Secret], `TTS_REGION` nếu dùng sinh giọng — xem `tts.js`/`.dev.vars.example`) → deploy. Dữ liệu mẫu (tuỳ chọn):
 `supabase/seed/001_sample_content.sql`.
@@ -399,9 +399,44 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   theo tên nên tên khác sẽ tạo THÊM 1 chủ đề/bài mới thay vì cập nhật cái cũ). Đã thử lại toàn bộ bằng `mock-sb.js`
   cho cả 2 tab (đến tận chặng Từ vựng/Hội thoại/Ngữ pháp của Bài Bản) — thứ tự nút, chữ nút, và "DE: … · EN: …"
   đều đúng, console sạch.
+- **Bài Bản còn thiếu tên dịch chủ đề/bài + Luyện tập chỉ chạy 1 lượt không có kết quả/phân nhóm (2026-09-28, chủ dự
+  án chỉ ra Bài Bản đang KÉM HƠN khu Trẻ em ở 2 việc này, yêu cầu làm bằng hoặc hơn):**
+  ① **`bb_units` thiếu `title_tr`** (migration `025_bb_unit_title_tr.sql`, jsonb, khớp `bb_lessons.title_tr` đã có
+  từ 022 — `units.title_tr` bên khu Trẻ em có từ 015 nhưng Bài Bản mới chỉ làm cho bài, không làm cho chủ đề).
+  `admin/bb-ops.js` `createUnit`/`updateUnit` nay nhận thêm `title_tr` (giống `createLesson`/`updateLesson`);
+  `admin/bb.js` `unitForm`/`unitEditForm` thêm `langBlock()` (như `lessonForm` đã có), `unitCard`/`lessonBlock` hiện
+  thêm `trLine(thing.title_tr)` ngay dưới tên (dữ liệu `lessonBlock` đã thu qua form Sửa từ trước nhưng CHƯA TỪNG
+  hiện ra — thuần lỗi thiếu hiển thị). CSV nhập hàng loạt (`admin/bb-csv.js`) thêm cột `unit_<lang>`/`lesson_<lang>`
+  (khớp `unit_de`/`lesson_de`… bên `csv.js` khu Trẻ em) — CHỈ áp dụng lúc TẠO MỚI chủ đề/bài (gộp từ mọi dòng CSV
+  cùng chủ đề/bài, không cần điền lặp lại ở mỗi dòng); chủ đề/bài ĐÃ CÓ thì cột này bị bỏ qua, sửa tên dịch qua ✎
+  Sửa. `buildTemplate()`/`aiPrompt()` cũng thêm 2 cột này. Khu học (`pages/bai-ban-home.js` `showLessons()`) thêm
+  `titleSpeakers()`/`titleIn()` (dùng lại NGUYÊN từ `child/media.js`, tái xuất qua `bb/media.js` — 2 hàm này agnostic-
+  giáo-trình, chỉ cần `thing.title_vi`/`title_tr`) ngay dưới tên chủ đề + mỗi dòng bài, giống hệt `child-home.js`.
+  ② **Luyện tập Bài Bản (`bb/practice.js`) không có kết quả/lượt tiếp theo:** trước đó `runReviewList()` chạy XONG
+  1 lượt rồi gọi `onBack()` NGAY, lặng lẽ về lưới kỹ năng — không có "chơi lại", không tóm tắt gì; `runVocabReview()`
+  cũng chỉ có màn "Đã ôn xong!" + 1 nút "Tiếp". Thêm `resultScreen()` DÙNG CHUNG cho cả 2 (thay `child/practice.js`
+  `resultScreen()` làm mẫu, không có "sao" vì hầu hết kỹ năng Bài Bản không chấm điểm): tóm tắt lượt vừa xong (số
+  mục đã ôn; riêng Từ vựng thêm số nhớ/quên) + "🔁 Ôn lại" (gọi lại `runSkill()` với `items` — POOL ĐẦY ĐỦ, không
+  phải `session` vừa chơi, để lập phiên MỚI qua `pickSession`) + "◀ Kỹ năng khác" (về lưới). ③ **Lưới kỹ năng
+  không phân nhóm** (4 kỹ năng nằm chung 1 lưới, khác `child/skills.js` có `GROUPS` theo màu) — `bb/skills.js` thêm
+  `GROUPS` (2 nhóm: "Từ vựng – Ngữ pháp" cam, "Hội thoại – Ngữ âm" xanh — CÙNG 2 màu đã dùng bên khu Trẻ em cho
+  đúng ý nghĩa, không tự đặt bảng màu riêng) + `group` trên mỗi `SKILLS` entry + `groupById()`; `showSkills()` vẽ
+  theo từng `<section class="skill-group">`, đổi từ `.unit-card` sang `.skill-card`/`.skill-grid` (tái dùng NGUYÊN
+  lớp CSS đã có cho lưới kỹ năng bên khu Trẻ em, không viết CSS mới). **Lỗi gặp lúc thử:** viết `paint(root, ...,
+  GROUPS.map(...))` — truyền mảng làm 1 tham số RỜI cho `mount()`/`replaceChildren()` gốc (không tự dàn phẳng như
+  `el()`) ép thành chuỗi `"[object HTMLElement],…"` hiện thẳng lên màn hình; sửa bằng cách bọc toàn bộ nội dung
+  `showSkills()` trong 1 `el("div", null, …)` trước khi đưa vào `paint()` — ĐÚNG bẫy `replaceChildren` đã ghi ở mục
+  "Gọn lại khu admin"/"admin/bb.js", nay hoá ra cũng phải nhớ ở phía khu học (`bb/practice.js`), không riêng khu
+  admin. Test mới: `rls.test.mjs` mục 27 (title_tr + chạy lại migration không mất dữ liệu), `bb.test.mjs` (cột
+  `unit_<lang>`/`lesson_<lang>`: đọc đúng khi có điền, gộp đúng khi nhiều dòng, bỏ qua khi chủ đề/bài đã có — 6 kiểm
+  tra mới). Đã thử lại toàn bộ bằng `mock-sb.js`: tạo chủ đề/bài kèm DE/EN qua form VÀ qua CSV → hiện đúng
+  "DE: … · EN: …" ở admin, hiện đúng 🔊 VI/🔊 DE + tên dịch ở khu học; Luyện tập → lưới chia đúng 2 nhóm → chơi Từ
+  vựng (có chấm Nhớ/Quên) và Ngữ pháp (chỉ xem lại) đều ra màn kết quả đúng tóm tắt → "Ôn lại" lập phiên mới đúng
+  (mục vừa "nhớ" biến mất khỏi vòng ôn tiếp vì `due_at` đã đẩy xa) → "Kỹ năng khác" về đúng lưới — console sạch
+  suốt quá trình.
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 55 kiểm tra) — không cần cài gì.
-- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (223 kiểm tra) và
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 61 kiểm tra) — không cần cài gì.
+- **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (225 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (19). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên
   ràng buộc khoá ngoại như `accounts!payments_account_id_fkey`) — 2 chỗ này chỉ kiểm được trên Supabase thật.

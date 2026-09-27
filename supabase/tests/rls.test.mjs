@@ -758,5 +758,20 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.bb_vocab"))[0].n === beforeVocab, "024: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 27. "Tiếng Việt Bài Bản" — bb_units.title_tr (migration 025, khớp bb_lessons.title_tr đã có từ 022) ----
+{
+  const m025 = readFileSync(new URL("../migrations/025_bb_unit_title_tr.sql", import.meta.url), "utf8");
+  await db.exec(m025);
+  await as(ADM, async () => {
+    const lv = (await q("insert into public.bb_levels (code, name_vi, status) values ('B1','Trung cấp 1','approved') returning id"))[0].id;
+    await db.query("insert into public.bb_units (level_id, title_vi, title_tr, status) values ($1,'Chào hỏi','{\"de\":\"Begrüßung\"}','approved')", [lv]);
+    const row = (await q("select title_vi, title_tr from public.bb_units where title_vi='Chào hỏi'"))[0];
+    ok(row?.title_tr?.de === "Begrüßung", "025: ghi/đọc được title_tr như bb_lessons.title_tr đã có");
+  });
+  const beforeUnits = (await q("select count(*)::int as n from public.bb_units"))[0].n;
+  await db.exec(m025);
+  ok((await q("select count(*)::int as n from public.bb_units"))[0].n === beforeUnits, "025: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

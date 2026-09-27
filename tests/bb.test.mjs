@@ -144,6 +144,44 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   const bad = ["Z9", "Phụ âm", "Bài 1", "vocab", "", "b"];
   ok(validateRows(parseCsv(csv([bad])), { langs: ["de"] }).errors.length > 0, "level: mã lạ (không phải A0/CEFR) vẫn bị từ chối");
 }
+{
+  // unit_<lang>/lesson_<lang> (tên chủ đề/bài dịch, migration 025) — chỉ cần điền ở 1 dòng bất kỳ của cùng
+  // chủ đề/bài, buildPlan gộp lại đúng khi tạo MỚI (không áp dụng cho chủ đề/bài đã có trong CSDL).
+  const head = HEAD + ",unit_de,lesson_de";
+  const q2 = (v) => (/[",;\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v);
+  const csv2 = (rows) => [head, ...rows.map((r) => r.map(q2).join(","))].join("\n");
+  const pad2 = (a, extra) => [...a, ...Array(21 - a.length).fill(""), ...extra];
+  const rows = [
+    pad2(["A1", "Chào hỏi", "Bài 1", "dialogue", "A", "Xin chào!", "", "", "", "", "", "", "", "", "", "", "", "", "Hallo!"], ["Begrüßung", "Lektion 1"]),
+    pad2(["A1", "Chào hỏi", "Bài 1", "vocab", "", "xin chào", "", "", "", "", "", "", "", "", "", "", "", "", "Hallo"], ["", ""]),
+  ];
+  const { items, errors, warnings } = validateRows(parseCsv(csv2(rows)), { langs: ["de"] });
+  ok(errors.length === 0 && warnings.length === 0, "unit_de/lesson_de: cột hợp lệ, không lỗi/cảnh báo thừa", JSON.stringify({ errors, warnings }));
+  ok(items[0].unitTr.de === "Begrüßung" && items[0].lessonTr.de === "Lektion 1", "validateRows: đọc đúng unit_de/lesson_de ở dòng có điền");
+  ok(Object.keys(items[1].unitTr).length === 0, "validateRows: dòng để trống unit_de thì không có giá trị (không bịa)");
+
+  const plan = buildPlan(items, emptyExisting);
+  ok(plan.newUnits.length === 1 && plan.newUnits[0].title_tr.de === "Begrüßung", "buildPlan: chủ đề mới mang đúng title_tr từ dòng có điền");
+  ok(plan.newLessons.length === 1 && plan.newLessons[0].title_tr.de === "Lektion 1", "buildPlan: bài mới mang đúng title_tr từ dòng có điền");
+}
+{
+  // Chủ đề/bài ĐÃ CÓ trong CSDL: cột unit_de/lesson_de trong CSV lúc này không có tác dụng gì (không có cơ chế
+  // cập nhật title_tr qua CSV cho tầng đã có — admin sửa qua ✎ Sửa) — buildPlan không tạo mới, không lỗi.
+  const existing = {
+    levels: [{ id: 1, code: "A1", name_vi: "Sơ cấp 1" }],
+    units: [{ id: 10, level_id: 1, title_vi: "Chào hỏi" }],
+    lessons: [{ id: 100, unit_id: 10, title_vi: "Bài 1" }],
+    steps: [],
+  };
+  const head = HEAD + ",unit_de,lesson_de";
+  const q2 = (v) => (/[",;\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v);
+  const csv2 = (rows) => [head, ...rows.map((r) => r.map(q2).join(","))].join("\n");
+  const pad2 = (a, extra) => [...a, ...Array(21 - a.length).fill(""), ...extra];
+  const row = pad2(["A1", "Chào hỏi", "Bài 1", "vocab", "", "tạm biệt", "", "", "", "", "", "", "", "", "", "", "", "", "Tschüss"], ["Begrüßung (mới)", ""]);
+  const { items } = validateRows(parseCsv(csv2([row])), { langs: ["de"] });
+  const plan = buildPlan(items, existing);
+  ok(plan.newUnits.length === 0 && plan.newLessons.length === 0, "buildPlan: chủ đề/bài đã có → unit_de trong CSV bị bỏ qua, không tạo trùng");
+}
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

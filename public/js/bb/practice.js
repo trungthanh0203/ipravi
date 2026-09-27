@@ -1,8 +1,9 @@
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
+import { mascotHero } from "../emoji.js";
 import * as api from "./api.js";
 import { pickSession, dueCount } from "./practice-core.js";
-import { SKILLS } from "./skills.js";
+import { SKILLS, GROUPS, groupById } from "./skills.js";
 import { playPath, imageOf, nativeLang } from "./media.js";
 import { micButton } from "./pron.js";
 import * as dialogueStep from "./steps/dialogue.js";
@@ -11,8 +12,10 @@ import * as phonicsStep from "./steps/phonics.js";
 
 // Màn "Luyện tập" của người học: SRS từ vựng kiểu Leitner (tự đánh giá Nhớ/Quên) + ôn hội thoại/ngữ pháp/ngữ âm
 // (chỉ xem lại, không chấm) — xem KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 4. Chỉ ôn mục ĐÃ GẶP QUA (bb_progress); chưa
-// học bài nào thì màn này trống, không lỗi.
+// học bài nào thì màn này trống, không lỗi. Sau mỗi lượt CÓ màn kết quả + "Ôn lại"/"Kỹ năng khác" (khớp
+// child/practice.js resultScreen — trước đó chỉ chạy 1 lượt rồi lặng lẽ quay về, không có việc tiếp theo).
 const RUN_BY_TYPE = { dialogue: dialogueStep.run, grammar: grammarStep.run, phonics: phonicsStep.run };
+const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${g.color};--soft:${g.soft}`; };
 
 export async function showSkills(root, { childId, onBack }) {
   paint(root, el("p", { class: "boot" }, T.loading));
@@ -24,41 +27,64 @@ export async function showSkills(root, { childId, onBack }) {
     return;
   }
   const total = SKILLS.reduce((n, s) => n + catalog[s.itemType].length, 0);
-  paint(root,
+  const card = (s) => {
+    const items = catalog[s.itemType];
+    const n = dueCount(items);
+    return el("button", { class: "skill-card" + (items.length === 0 ? " off" : ""), style: colorStyle(s), disabled: items.length === 0,
+      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack }) }) },
+      el("span", { class: "sk-emoji" }, s.emoji),
+      el("b", null, s.name),
+      el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
+  };
+  // Bọc trong 1 el("div") trước khi gắn vào paint() (=mount()=replaceChildren gốc): replaceChildren gốc KHÔNG tự
+  // dàn phẳng mảng như el() — truyền GROUPS.map(...) trực tiếp làm 1 tham số rời sẽ ép thành chuỗi
+  // "[object HTMLElement],…" hiện thẳng lên màn hình (đúng lỗi đã gặp + sửa ở admin/bb.js, xem CLAUDE.md).
+  paint(root, el("div", null,
     el("button", { class: "btn ghost small", onclick: onBack }, "◀ " + T.back),
     el("h1", { style: "text-align:center" }, T.bbPracticeTitle),
     total === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoReview)) :
-      el("div", { class: "unit-grid" }, SKILLS.map((s) => {
-        const items = catalog[s.itemType];
-        const n = dueCount(items);
-        return el("button", { class: "unit-card", disabled: items.length === 0,
-          onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack }) }) },
-          el("span", { class: "visual emoji" }, s.emoji),
-          el("span", null, s.name),
-          el("span", { class: "muted" }, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
+      GROUPS.map((g) => {
+        const list = SKILLS.filter((s) => s.group === g.id);
+        return list.length ? el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h2", null, g.name),
+          el("div", { class: "skill-grid" }, list.map(card))) : null;
       })));
 }
 
-function runSkill(root, skill, items, { childId, onBack }) {
+function runSkill(root, skill, items, ctx) {
   const session = pickSession(items, { limit: 8 });
-  if (skill.itemType === "vocab") return runVocabReview(root, session, { childId, onBack });
-  return runReviewList(root, skill, session, { childId, onBack });
+  if (skill.itemType === "vocab") return runVocabReview(root, skill, items, session, ctx);
+  return runReviewList(root, skill, items, session, ctx);
+}
+
+// Màn kết quả CHUNG cho mọi kỹ năng (thay cho onBack() lặng lẽ trước đây): tóm tắt lượt vừa ôn + "🔁 Ôn lại" (lập
+// phiên MỚI trên CÙNG kỹ năng, gọi lại runSkill với `items` — pool đầy đủ, không phải `session` vừa chơi) + "◀ Kỹ
+// năng khác" (về lưới kỹ năng).
+function resultScreen(root, skill, items, ctx, summary) {
+  paint(root, el("div", { class: "card", style: `text-align:center;${colorStyle(skill)}` },
+    mascotHero(),
+    el("h1", null, T.bbSessionDone),
+    el("p", null, summary),
+    el("button", { class: "btn big", style: `background:${groupById(skill.group).color}`, onclick: () => runSkill(root, skill, items, ctx) }, T.bbReviewAgain),
+    el("div", null, el("button", { class: "btn ghost", onclick: ctx.onBack }, T.bbOtherSkill))));
 }
 
 // Hội thoại/Ngữ pháp/Ngữ âm: tái dùng NGUYÊN renderer của chặng bài học (xem bb/steps/*.js) — chỉ khác là mục lấy
 // từ nhiều bài đã học thay vì 1 chặng, và cuối cùng đánh dấu "đã ôn lại" thay vì đánh dấu tiến độ bài học.
-async function runReviewList(root, skill, session, { childId, onBack }) {
+async function runReviewList(root, skill, items, session, ctx) {
+  const { childId } = ctx;
   const box = el("div", { class: "lesson-box" });
   paint(root, el("h2", { style: "text-align:center" }, skill.emoji + " " + skill.name), box);
   await RUN_BY_TYPE[skill.itemType](box, { content: session });
   api.saveReviewBatch(childId, skill.itemType, session.map((i) => i.id));
-  onBack();
+  resultScreen(root, skill, items, ctx, T.bbReviewedCount(session.length, skill.name));
 }
 
 // Từ vựng: từng thẻ 1 (chữ + nghe + đọc thử) → bấm xem nghĩa → tự đánh giá Nhớ/Quên → lưu box Leitner → thẻ kế tiếp.
-function runVocabReview(root, session, { childId, onBack }) {
+function runVocabReview(root, skill, items, session, ctx) {
+  const { childId } = ctx;
   const lang = nativeLang();
   let i = 0;
+  let remembered = 0, forgot = 0;
   showCard();
 
   function showCard() {
@@ -84,16 +110,15 @@ function runVocabReview(root, session, { childId, onBack }) {
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen),
         mic, feedback, meaning, reveal, gradeRow));
 
-    function grade(remembered) {
-      api.saveVocabResult(childId, w.id, remembered);
+    function grade(ok) {
+      if (ok) remembered++; else forgot++;
+      api.saveVocabResult(childId, w.id, ok);
       i++;
       showCard();
     }
   }
 
   function finish() {
-    paint(root, el("div", { class: "card", style: "text-align:center" },
-      el("h1", null, T.bbSessionDone),
-      el("button", { class: "btn big", onclick: onBack }, T.next)));
+    resultScreen(root, skill, items, ctx, T.bbVocabResult(remembered, forgot));
   }
 }

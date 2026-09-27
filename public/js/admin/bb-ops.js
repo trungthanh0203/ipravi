@@ -37,16 +37,18 @@ export async function updateLevel(level, { name_vi, can_do }) {
 // ============================================================================
 // Chủ đề (bb_units)
 // ============================================================================
-export async function createUnit(levelId, { title_vi, emoji, description }, siblings) {
+export async function createUnit(levelId, { title_vi, emoji, title_tr, description }, siblings) {
   const title = clean(title_vi);
   need(title ? null : "Cần nhập tên chủ đề");
   if (siblings.some((u) => u.title_vi.toLowerCase() === title.toLowerCase())) throw new Error(`Cấp này đã có chủ đề "${title}".`);
-  return checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: title, emoji: clean(emoji) || null, description: clean(description) || null, sort_order: nextOrder(siblings), status: "draft" }).select().single());
+  const tr = only(title_tr);
+  return checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: title, emoji: clean(emoji) || null, title_tr: tr, description: clean(description) || null, sort_order: nextOrder(siblings), status: "draft" }).select().single());
 }
-export async function updateUnit(unit, { title_vi, emoji, description }) {
+export async function updateUnit(unit, { title_vi, emoji, title_tr, description }) {
   const patch = {};
   if (title_vi != null && clean(title_vi) !== unit.title_vi) { need(clean(title_vi) ? null : "Cần nhập tên chủ đề"); patch.title_vi = clean(title_vi); }
   if (emoji != null && clean(emoji) !== (unit.emoji ?? "")) patch.emoji = clean(emoji) || null;
+  if (title_tr != null) { const tr = only(title_tr); if (JSON.stringify(tr) !== JSON.stringify(unit.title_tr ?? {})) patch.title_tr = tr; }
   if (description != null && clean(description) !== (unit.description ?? "")) patch.description = clean(description) || null;
   if (Object.keys(patch).length) check(await sb.from("bb_units").update(patch).eq("id", unit.id));
   return patch;
@@ -428,13 +430,13 @@ export async function importPlan(plan, existing) {
   const unitByKey = new Map(existing.units.map((u) => [`${u.level_id}|${ciKey(u.title_vi)}`, u]));
   for (const nu of plan.newUnits) {
     const levelId = levelByCode.get(nu.level).id;
-    const row = checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: nu.title_vi, emoji: nu.emoji, sort_order: bump(`u${levelId}`, existing.units.filter((u) => u.level_id === levelId)), status: "draft" }).select().single());
+    const row = checkData(await sb.from("bb_units").insert({ level_id: levelId, title_vi: nu.title_vi, emoji: nu.emoji, title_tr: only(nu.title_tr), sort_order: bump(`u${levelId}`, existing.units.filter((u) => u.level_id === levelId)), status: "draft" }).select().single());
     unitByKey.set(`${levelId}|${ciKey(nu.title_vi)}`, row);
   }
   const lessonByKey = new Map(existing.lessons.map((l) => [`${l.unit_id}|${ciKey(l.title_vi)}`, l]));
   for (const nl of plan.newLessons) {
     const unitId = unitByKey.get(`${levelByCode.get(nl.level).id}|${ciKey(nl.unit)}`).id;
-    const row = checkData(await sb.from("bb_lessons").insert({ unit_id: unitId, title_vi: nl.title_vi, lesson_type: nl.lesson_type, title_tr: {}, sort_order: bump(`l${unitId}`, existing.lessons.filter((l) => l.unit_id === unitId)), status: "draft" }).select().single());
+    const row = checkData(await sb.from("bb_lessons").insert({ unit_id: unitId, title_vi: nl.title_vi, lesson_type: nl.lesson_type, title_tr: only(nl.title_tr), sort_order: bump(`l${unitId}`, existing.lessons.filter((l) => l.unit_id === unitId)), status: "draft" }).select().single());
     lessonByKey.set(`${unitId}|${ciKey(nl.title_vi)}`, row);
   }
   const stepByKey = new Map(existing.steps.map((s) => [`${s.lesson_id}|${s.step_type}`, s]));

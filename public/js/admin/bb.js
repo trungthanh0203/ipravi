@@ -206,28 +206,30 @@ function unitForm(levelId, siblings, onCancel, onSaved) {
   const err = el("div");
   const title = el("input", { type: "text", class: "cell", placeholder: "Chào hỏi" });
   const emoji = el("input", { type: "text", class: "cell cell-sm", maxlength: "16", placeholder: "👋" });
+  const tr = langBlock();
   const desc = el("textarea", { class: "cell", rows: "2" });
   const save = btn(A.save, async () => {
     save.disabled = true;
-    try { onSaved(await bb.createUnit(levelId, { title_vi: title.value, emoji: emoji.value, description: desc.value }, siblings)); }
+    try { onSaved(await bb.createUnit(levelId, { title_vi: title.value, emoji: emoji.value, title_tr: tr.value(), description: desc.value }, siblings)); }
     catch (e) { save.disabled = false; fail(err, e); }
   }, "btn small");
   return el("div", { class: "qa-box" },
-    el("div", { class: "qa-grid" }, labeled("Tên chủ đề", title), labeled("Emoji", emoji)),
+    el("div", { class: "qa-grid" }, labeled("Tên chủ đề", title), labeled("Emoji", emoji), tr.fields),
     labeled("Diễn giải (không bắt buộc)", desc), footer(save, onCancel, err));
 }
 function unitEditForm(unit, onCancel, onSaved) {
   const err = el("div");
   const title = el("input", { type: "text", class: "cell", value: unit.title_vi });
   const emoji = el("input", { type: "text", class: "cell cell-sm", maxlength: "16", value: unit.emoji ?? "" });
+  const tr = langBlock(unit.title_tr);
   const desc = el("textarea", { class: "cell", rows: "2" }, unit.description ?? "");
   const save = btn(A.save, async () => {
     save.disabled = true;
-    try { await bb.updateUnit(unit, { title_vi: title.value, emoji: emoji.value, description: desc.value }); onSaved(); }
+    try { await bb.updateUnit(unit, { title_vi: title.value, emoji: emoji.value, title_tr: tr.value(), description: desc.value }); onSaved(); }
     catch (e) { save.disabled = false; fail(err, e); }
   }, "btn small");
   return el("div", { class: "qa-box" },
-    el("div", { class: "qa-grid" }, labeled("Tên chủ đề", title), labeled("Emoji", emoji)),
+    el("div", { class: "qa-grid" }, labeled("Tên chủ đề", title), labeled("Emoji", emoji), tr.fields),
     labeled("Diễn giải", desc), footer(save, onCancel, err));
 }
 
@@ -237,7 +239,9 @@ function unitCard(unit, ctx) {
   const editSlot = el("div"), addSlot = el("div");
   return el("div", { class: "card", style: "margin-left:16px" },
     el("div", { class: "unit-head" },
-      el("h3", { style: "margin:0" }, `${unit.emoji ?? ""} ${unit.title_vi} `, pill(unit.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
+      el("div", null,
+        el("h3", { style: "margin:0" }, `${unit.emoji ?? ""} ${unit.title_vi} `, pill(unit.status), el("span", { class: "muted" }, ` · ${ls.length} bài`)),
+        trLine(unit.title_tr)),
       el("div", { class: "row-btns unit-btns" },
         btn("▲", ctx.act(() => moveIn("bb_units", ctx.units.filter((u) => u.level_id === unit.level_id), unit, -1), "Đã đổi thứ tự chủ đề."), "btn small ghost"),
         btn("▼", ctx.act(() => moveIn("bb_units", ctx.units.filter((u) => u.level_id === unit.level_id), unit, 1), "Đã đổi thứ tự chủ đề."), "btn small ghost"),
@@ -297,7 +301,9 @@ function lessonBlock(lesson, ctx) {
   const addStepType = el("select", { class: "cell cell-sm" }, bb.STEP_TYPES.map((t) => el("option", { value: t }, STEP_LABEL[t])));
   return el("div", { class: "lesson-block", style: "margin-left:16px" },
     el("div", { class: "row lesson-row" },
-      el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${LESSON_TYPE_LABEL[lesson.lesson_type]} · ${steps.length} chặng`)),
+      el("div", null,
+        el("div", null, el("b", null, lesson.title_vi), " ", pill(lesson.status), el("span", { class: "muted" }, ` · ${LESSON_TYPE_LABEL[lesson.lesson_type]} · ${steps.length} chặng`)),
+        trLine(lesson.title_tr)),
       el("div", { class: "row-btns", style: "margin:0" },
         btn("▲", ctx.act(() => moveIn("bb_lessons", siblingLessons, lesson, -1), "Đã đổi thứ tự bài."), "btn small ghost"),
         btn("▼", ctx.act(() => moveIn("bb_lessons", siblingLessons, lesson, 1), "Đã đổi thứ tự bài."), "btn small ghost"),

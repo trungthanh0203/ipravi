@@ -535,3 +535,28 @@ Thanh điệu **căn bản**" → bỏ "căn bản") và bỏ "Tổng quan" kh�
 Cùng đợt, `admin/bb.js` được thống nhất lại với `admin/content.js` (khu trẻ em) về 5 điểm UI: thứ tự nút Sửa/▲▼,
 rút gọn chữ nút Ẩn/Đóng/Xoá (bỏ tên đối tượng), và thêm nhãn ngôn ngữ rõ ràng ("DE: … · EN: …") cho bản dịch ở mọi
 dòng nội dung — chi tiết đầy đủ xem CLAUDE.md mục "Quy tắc dễ sai" (bullet "Thống nhất chữ trên nút...").
+
+## 20. Bù 2 lỗ hổng so với khu Trẻ em: tên dịch chủ đề/bài + kết quả/phân nhóm Luyện tập (2026-09-28)
+
+Chủ dự án chỉ ra Bài Bản đang LÀM KÉM HƠN khu Trẻ em ở đúng 2 việc khu Trẻ em đã làm từ lâu, yêu cầu làm bằng hoặc
+hơn, không chấp nhận thêm 1 vòng góp ý nữa. Cả 2 việc đã xong, tự kiểm bằng test + `mock-sb.js` trước khi báo xong
+(chi tiết kỹ thuật đầy đủ ở CLAUDE.md mục "Quy tắc dễ sai" — bullet "Bài Bản còn thiếu tên dịch chủ đề/bài..."; ở
+đây chỉ tóm lược quyết định + vì sao).
+
+**① `bb_units` thiếu `title_tr`.** Khu Trẻ em có `units.title_tr` từ migration 015; Bài Bản làm `bb_lessons.title_tr`
+ở migration 022 nhưng QUÊN làm tương tự cho `bb_units` — thuần lỗi bỏ sót lúc thiết kế schema 022, không phải quyết
+định có chủ ý. Vá bằng migration riêng `025_bb_unit_title_tr.sql` (thêm cột, không đổi gì khác) rồi nối dây đủ 3
+tầng: ghi (admin form + CSV) → lưu (bb-ops) → đọc/hiện (admin list + khu học `bai-ban-home.js`, dùng lại nguyên
+`titleIn`/`titleSpeakers` của `child/media.js` vì 2 hàm đó không có gì riêng cho trẻ em).
+
+**② Luyện tập chỉ chạy 1 lượt, không có "chơi tiếp"/"quay lại", không phân nhóm kỹ năng.** Đây không phải thiếu 1
+cột dữ liệu mà thiếu cả 1 lớp UX — GĐ 4 (mục 12) khi làm `bb/practice.js` đã tập trung vào cơ chế SRS/Leitner đúng
+mục tiêu lúc đó ("ôn tập"), nhưng không đối chiếu lại với `child/practice.js` đã có sẵn màn kết quả + lưới kỹ năng
+phân nhóm từ trước — nên khi có nhiều hơn 1 kỹ năng, thiếu sót này mới lộ ra rõ. Quyết định: dùng `child/skills.js`
+GROUPS + `child/practice.js` resultScreen làm MẪU đối chiếu trực tiếp (không thiết kế lại từ đầu), giữ đúng khác
+biệt có chủ ý của Bài Bản (không có sao/điểm vì hầu hết kỹ năng "chỉ xem lại, không chấm" — xem mục 12).
+
+**Đã thử (mock-sb.js):** admin tạo/sửa chủ đề+bài kèm DE/EN qua form và qua CSV (cột `unit_de`/`lesson_de`…) → hiện
+đúng ở cây quản trị; khu học hiện đúng 🔊 VI/🔊 DE + tên dịch ở màn danh sách bài; Luyện tập chia đúng 2 nhóm màu,
+chơi Từ vựng (có chấm) và Ngữ pháp (không chấm) đều ra màn kết quả, "Ôn lại" lập phiên mới đúng, "Kỹ năng khác" về
+đúng lưới — console sạch. **Chưa thử Supabase thật** (như mọi phần khác của Bài Bản tới giờ).

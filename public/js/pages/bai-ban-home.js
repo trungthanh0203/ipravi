@@ -6,6 +6,7 @@ import { avatarEmoji } from "../data.js";
 import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
 import { showSkills } from "../bb/practice.js";
+import { titleSpeakers, titleIn, nativeLang } from "../bb/media.js";
 
 // Khu học "Tiếng Việt Bài Bản" (hồ sơ profile_type='learner'): 📖 Học (Level → Unit → Lesson → 7 chặng) | 🎯 Luyện
 // tập (ôn nội dung đã học, GĐ 4) — 2 phần độc lập, cùng cách tổ chức màn hình chính với khu trẻ em
@@ -80,16 +81,20 @@ async function showLessons(root, unit) {
     shell(root,
       el("button", { class: "btn ghost small", onclick: () => showUnits(root, unit.bb_levels ?? { id: unit.level_id }) }, "◀ " + T.back),
       el("h1", null, unit.emoji ? unit.emoji + " " : "", unit.title_vi),
+      el("div", { class: "title-line" }, titleSpeakers(unit), titleIn(unit, nativeLang()) ? el("span", { class: "title-native" }, titleIn(unit, nativeLang())) : null),
       unit.description ? el("p", { class: "muted" }, unit.description) : null,
       lessons.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoLessons)) :
-        el("div", { class: "lesson-list" }, lessons.map((l, i) =>
-          el("div", { class: "lesson-item" },
+        el("div", { class: "lesson-list" }, lessons.map((l, i) => {
+          const native = titleIn(l, nativeLang());
+          return el("div", { class: "lesson-item" },
             el("button", {
               class: "lesson-btn",
               onclick: () => runLesson({ root, lesson: l, childId, onExit: () => showLessons(root, unit) }),
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),
-            el("span", { class: "title" }, l.title_vi, l.lesson_type === "review" ? el("span", { class: "lv-tag" }, T.bbLessonReview) : null))))));
+            el("span", { class: "title" }, l.title_vi, l.lesson_type === "review" ? el("span", { class: "lv-tag" }, T.bbLessonReview) : null, native ? el("small", { class: "title-native" }, native) : null)),
+            titleSpeakers(l));
+        })));
   } catch {
     shell(root, msg("err", T.bbLoadError));
   }
