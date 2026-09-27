@@ -184,3 +184,43 @@ export function buildPlan(items, existing) {
     counts: { levels: newLevels.length, units: newUnits.length, lessons: newLessons.length, steps: newSteps.length, rows: items.length },
   };
 }
+
+// ============================================================================
+// Mẫu file CSV (⬇ Tải file mẫu) + câu lệnh nhờ AI soạn nội dung (📋 Sao chép câu lệnh cho AI) — cùng vai trò với
+// csv.js buildTemplate()/text.js aiPrompt() bên khu trẻ em, để 2 khu có UI CSV giống nhau (đã thiếu ở khu Bài Bản
+// tới giờ, phát hiện lúc chủ dự án dùng thử — xem KE_HOACH_TIENG_VIET_BAI_BAN.md).
+// ============================================================================
+const bbQ = (v) => (/[",;\n]/.test(v) ? `"${String(v ?? "").replace(/"/g, '""')}"` : (v ?? ""));
+export function buildTemplate(langs) {
+  const head = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs];
+  const ex = {
+    de: ["Hallo!", "Hallo, wie geht's?", "der Hund", "Hallo + Pronomen", ""],
+    en: ["Hello!", "Hello, how are you?", "dog", "Hello + pronoun", ""],
+  };
+  const sample = [
+    ["A1", "Chào hỏi", "Bài 1", "dialogue", "A", "Xin chào!", "", "", "", ""],
+    ["A1", "Chào hỏi", "Bài 1", "dialogue", "B", "Xin chào, bạn khoẻ không?", "", "", "", ""],
+    ["A1", "Chào hỏi", "Bài 1", "vocab", "", "con chó", "", "n", "", ""],
+    ["A1", "Chào hỏi", "Bài 1", "grammar", "", "Chào + đại từ", "", "", "Chào bạn.;Chào anh.", ""],
+    ["A1", "Chào hỏi", "Bài 1", "minigame", "", "", "", "", "", "meaning_pick"],
+  ];
+  const lines = [head, ...sample.map((r, i) => [...r, ...langs.map((l) => ex[l]?.[i] ?? "")])];
+  return "﻿" + lines.map((r) => r.map(bbQ).join(",")).join("\r\n") + "\r\n";
+}
+
+export function aiPrompt(langs) {
+  const cols = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs].join(",");
+  return `Bạn là giáo viên tiếng Việt cho người lớn/người nước ngoài học tiếng Việt (giáo trình "Tiếng Việt Bài Bản"). Hãy soạn nội dung học về chủ đề: [ĐIỀN CHỦ ĐỀ, ví dụ: "Đi chợ"].
+
+Trả về DUY NHẤT một file CSV (UTF-8, phân cách bằng dấu phẩy, dòng đầu là tiêu đề) với đúng các cột:
+${cols}
+
+Quy tắc:
+- Mỗi dòng là 1 dòng NỘI DUNG của 1 CHẶNG trong 1 bài (KHÁC khu trẻ em — không phải 1 dòng = 1 từ). level: mã CEFR (A1, A2, B1, B2, C1, C2) hoặc "A0" (tiền-A1, bảng chữ cái/ngữ âm). Mọi dòng cùng chủ đề/bài ghi cùng level/unit/lesson.
+- unit: tên chủ đề (ngắn, tiếng Việt). lesson: tên bài — chia chủ đề thành 2–4 bài từ dễ đến khó, ĐẶT TÊN RÕ (vd "Bài 1: Xin chào").
+- step_type: dialogue (hội thoại, speaker A/B, vi = câu), vocab (từ vựng, vi = từ, pos = loại từ), grammar (công thức, vi = công thức vd "Chào + đại từ", examples = câu ví dụ cách nhau bằng ";"), phonics (cặp âm dễ nhầm THẬT theo vùng miền — ch/tr, s/x, d/gi, d/r, l/n — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh vì đọc giống nhau), minigame (game = meaning_pick | phonics_discrim | sentence_builder, không cần cột nội dung nào khác — chặng này tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp CÙNG BÀI để chơi).
+- Mỗi bài nên có ít nhất: 1 chặng dialogue (3-6 câu), 1 chặng vocab (5-8 từ), 1 chặng grammar (1 công thức + 2-3 ví dụ), 1 chặng minigame.
+- ${langs.map((l) => `Cột "${l}": nghĩa/bản dịch bằng ngôn ngữ mã "${l}", ngắn gọn, đúng nghĩa`).join("\n- ")}
+- KHÔNG bịa cách đọc/ngữ âm nếu không chắc — để trống cột đó.
+- Ô có dấu phẩy phải đặt trong dấu ngoặc kép. Không thêm lời giải thích ngoài file CSV.`;
+}

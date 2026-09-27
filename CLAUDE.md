@@ -367,6 +367,17 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   admin thấy đúng "(đọc: bờ)" + form sửa có ô Cách đọc. Console sạch trong suốt. **Chưa thử Supabase/TTS thật; nội
   dung mô tả 6 thanh bằng thuật ngữ ngữ âm học tiếng Anh (level/rising/falling/dipping/broken rising/heavy tone) là
   chỗ RỦI RO SAI THUẬT NGỮ NHẤT — nên có người dạy tiếng Việt cho người nước ngoài rà lại trước khi công khai.**
+- **CSV Bài Bản thiếu nút + chọn file không tự kiểm tra (2026-09-27, chủ dự án phát hiện lúc dùng thử):**
+  `admin/bb.js` `csvSection()` khi build ban đầu (GĐ 5) KHÔNG chép theo đúng `admin/import.js` (khu Trẻ em) ở 2 chỗ:
+  ① thiếu hẳn nút "⬇ Tải file mẫu" và "📋 Sao chép câu lệnh cho AI" — thêm `bb-csv.js` `buildTemplate()`/`aiPrompt()`
+  (cùng vai trò `csv.js` `buildTemplate()`/`text.js` `aiPrompt()` bên Trẻ em, mẫu phủ đủ dialogue/vocab/grammar/
+  minigame). ② chọn file CSV KHÔNG tự chạy Kiểm tra (`import.js` có, `bb.js` không) — admin chọn file xong không
+  thấy nút "Nhập vào" đâu (nút đó chỉ hiện sau khi bấm Kiểm tra), dễ hiểu lầm là màn hình hỏng; sửa bằng cách gọi
+  `check_()` ngay trong `file.addEventListener("change", …)`, khớp hành vi 2 tab. Đã thử lại đúng cách chủ dự án
+  gặp lỗi — dùng `File`+`DataTransfer` giả lập CHỌN FILE THẬT (không phải dán chữ vào ô textarea như mọi lần thử
+  trước đó trong phiên làm việc này) cho CẢ 2 tab: chọn file → tự hiện "N dòng hợp lệ…" + nút "Nhập vào" ngay,
+  không cần bấm gì thêm; nút mẫu/AI đều hoạt động (mẫu tự kiểm qua `validateRows` ra 0 lỗi; nút AI rơi về dán vào ô
+  bên dưới khi `navigator.clipboard` không có, giống `import.js`). Console sạch.
 
 - **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 55 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (223 kiểm tra) và

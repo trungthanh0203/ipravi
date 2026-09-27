@@ -82,7 +82,11 @@ function render(box, data) {
 function csvSection(ctx) {
   const text = el("textarea", { rows: "6", placeholder: "…hoặc dán nội dung CSV vào đây", style: "width:100%;font-family:monospace;font-size:13px" });
   const file = el("input", { type: "file", accept: ".csv,text/csv,text/plain" });
-  file.addEventListener("change", async () => { if (file.files[0]) text.value = await file.files[0].text(); });
+  const download = (name, content, type) => {
+    const a = el("a", { href: URL.createObjectURL(new Blob([content], { type })), download: name });
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
   const preview = el("div");
   const help = el("p", { class: "muted" },
     "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|minigame|reading|writing). " +
@@ -93,13 +97,17 @@ function csvSection(ctx) {
     "(fill|order|write)+vi (đề bài), rồi fill dùng sentence+answer_text, order dùng words (cách nhau bằng dấu phẩy), " +
     "write dùng min_words+sample. Cột khác: level_name, can_do, unit_emoji, lesson_type, rồi 1 cột/ngôn ngữ (vd de, en) " +
     "= bản dịch. Mỗi bài chỉ 1 chặng/loại qua CSV — nhập lại không tạo trùng nội dung trong cùng chặng.");
-  const runCheck = btn("Kiểm tra", () => {
+  const check_ = () => {
     preview.replaceChildren(el("p", { class: "muted" }, A.loading));
     const parsed = bbCsv.parseCsv(text.value);
     const v = bbCsv.validateRows(parsed, { langs: langs().map((l) => l.code) });
     const plan = v.errors.length === 0 ? bbCsv.buildPlan(v.items, ctx) : null;
     renderPreview(v, plan);
-  }, "btn small");
+  };
+  const runCheck = btn("Kiểm tra", check_, "btn small");
+  // Chọn file thì TỰ kiểm tra luôn (không phải bấm thêm "Kiểm tra") — khớp hành vi của import.js bên khu Trẻ em;
+  // thiếu bước này khiến admin chọn file rồi không thấy nút "Nhập vào" đâu (tưởng màn hình bị hỏng, đã gặp lúc thử).
+  file.addEventListener("change", async () => { if (file.files[0]) { text.value = await file.files[0].text(); check_(); } });
 
   function renderPreview(v, plan) {
     const go = btn("Nhập vào (tạo bản nháp)", async () => {
@@ -129,7 +137,15 @@ function csvSection(ctx) {
   }
 
   return el("details", { class: "qa-box" }, el("summary", null, "📄 Nhập CSV hàng loạt"),
-    el("div", { class: "row-btns", style: "justify-content:flex-start" }, file, runCheck), text, help, preview);
+    help,
+    el("div", { class: "row-btns", style: "justify-content:flex-start" },
+      btn("⬇ Tải file mẫu", () => download("mau-bai-ban.csv", bbCsv.buildTemplate(langs().map((l) => l.code)), "text/csv;charset=utf-8"), "btn small ghost"),
+      btn("📋 Sao chép câu lệnh cho AI", async (e) => {
+        const prompt = bbCsv.aiPrompt(langs().map((l) => l.code));
+        try { await navigator.clipboard.writeText(prompt); e.target.textContent = "✓ Đã sao chép"; }
+        catch { text.value = prompt; e.target.textContent = "Đã dán vào ô bên dưới"; }
+      }, "btn small ghost")),
+    el("label", null, "Chọn file CSV"), file, text, runCheck, preview);
 }
 
 // ---------------------------------------------------------------------------- Cấp
