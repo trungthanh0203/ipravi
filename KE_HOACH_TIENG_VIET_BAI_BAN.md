@@ -592,3 +592,27 @@ chủ đề + 12 bài hiện đúng tên dịch DE/EN (cả ở cây quản tr�
 (hội thoại → từ vựng → ngữ pháp → ngữ âm → đọc hiểu, trả lời đúng cả 2 câu hỏi ra "✓ Đúng rồi!" → mini-game Xếp câu
 xáo đúng câu "Táo giá năm nghìn đồng" từ chính câu hội thoại của bài) — không lỗi console trong suốt. **Chưa thử
 Supabase thật.**
+
+## 22. File mẫu CSV + câu lệnh cho AI cập nhật đủ 7 step_type (2026-09-28)
+
+Chủ dự án yêu cầu cập nhật nút "⬇ Tải file mẫu"/"📋 Sao chép câu lệnh cho AI" (tab Bài Bản) cho khớp cấu trúc dữ
+liệu mới nhất. Soát lại `admin/bb-csv.js` `buildTemplate()`/`aiPrompt()` (viết lúc GĐ 5, xem CLAUDE.md bullet "CSV
+Bài Bản thiếu nút…") thì thấy 2 hàm này CHƯA từng được cập nhật theo các cột đã thêm dần từ đó tới giờ — chỉ demo
+4/7 step_type (dialogue/vocab/grammar/minigame), thiếu hẳn `phonics`/`reading`/`writing` và các cột
+`level_name`/`can_do`/`unit_emoji`/`lesson_type`/`say`/`task_type`/`sentence`/`answer_text`/`words`/`min_words`/
+`sample`/`question`/`choices`/`answer` — admin nhìn file mẫu sẽ không biết cách nhập 3 loại chặng còn thiếu qua CSV.
+
+Viết lại 1 bài demo "Bài 1: Ở chợ" (chủ đề "Đi chợ" 🛒, cấp A2) đủ CẢ 7 step_type, đủ mọi cột hiện có (kể cả
+`unit_de`/`lesson_de`/`unit_en`/`lesson_en` mới thêm ở mục 20). `buildTemplate()` đổi cách viết từ mảng theo vị trí
+cột (dễ lệch khi thêm cột/dòng — đúng nguyên nhân khiến file cũ tụt lại phía sau) sang `row(obj)` map theo TÊN cột,
+giống cách `r({...})` được dùng trong các script sinh giáo trình thật (`scripts/gen-bai-ban-*.mjs`) — thêm cột mới
+sau này chỉ cần thêm 1 khoá vào object, không phải đếm lại vị trí trong mảng. `aiPrompt()` viết lại phần "Quy tắc"
+giải thích đủ 7 step_type (mỗi loại 1 dòng riêng, nêu rõ cột nào dùng khi nào) + vai trò các cột mới (level_name/
+can_do chỉ cần lúc tạo cấp mới, `say` chỉ cần cho bảng chữ cái/ngữ âm, 3 dạng `task_type` của writing).
+
+Test: `tests/bb.test.mjs` +30 kiểm tra — file mẫu tự kiểm ngược qua `validateRows()`/`buildPlan()` (0 lỗi, 0 cảnh
+báo, phủ đủ `STEP_TYPES`, chủ đề/bài mẫu mang đúng `title_tr` de+en) và câu lệnh AI có nhắc đủ mọi cột/step_type
+mới (tránh tái diễn — sau này thêm cột mà quên cập nhật prompt sẽ bị test bắt ngay). Đã thử qua đúng 2 nút trong
+giao diện thật (`mock-sb.js`): chặn `URL.createObjectURL` để đọc nội dung file "Tải file mẫu" (12 dòng, đủ cấu
+trúc mới) và giả `navigator.clipboard.writeText` để đọc nội dung "Sao chép câu lệnh cho AI" (có nhắc đủ
+say/writing/reading) — console sạch.

@@ -208,28 +208,54 @@ export function buildPlan(items, existing) {
 // tới giờ, phát hiện lúc chủ dự án dùng thử — xem KE_HOACH_TIENG_VIET_BAI_BAN.md).
 // ============================================================================
 const bbQ = (v) => (/[",;\n]/.test(v) ? `"${String(v ?? "").replace(/"/g, '""')}"` : (v ?? ""));
+// Đầy đủ MỌI cột hiện có (khớp `known` ở validateRows) — trước đây chỉ mẫu dialogue/vocab/grammar/minigame, thiếu
+// hẳn phonics/reading/writing/say/level_name/can_do/unit_emoji/lesson_type (2026-09-28, chủ dự án yêu cầu cập nhật
+// theo đúng cấu trúc dữ liệu mới nhất). 1 bài "Bài 1: Ở chợ" demo đủ 7 step_type để admin thấy đúng hình dạng cột
+// từng loại; task_type chỉ demo "fill" (order/write đã có ví dụ đầy đủ trong help text phía trên + câu lệnh AI).
 export function buildTemplate(langs) {
-  const head = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])];
-  const ex = {
-    de: ["Hallo!", "Hallo, wie geht's?", "der Hund", "Hallo + Pronomen", ""],
-    en: ["Hello!", "Hello, how are you?", "dog", "Hello + pronoun", ""],
+  const HEAD = ["level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type", "speaker",
+    "vi", "vi2", "pos", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
+    "question", "choices", "answer", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])];
+  const row = (o) => HEAD.map((h) => o[h] ?? "");
+  const UNIT = "Đi chợ", LESSON = "Bài 1: Ở chợ";
+  const UNIT_TR = { de: "Auf dem Markt", en: "Going to the Market" };
+  const LESSON_TR = { de: "Lektion 1: Am Markt", en: "Lesson 1: At the Market" };
+  // langCols: gộp nghĩa "vi" hiện tại (map) + (withTitles) tên dịch chủ đề/bài — ngôn ngữ đã cấu hình mà không có
+  // trong map (vd fr/ko/ja nếu bản triển khai dùng) để trống, admin tự điền, KHÔNG bịa.
+  const langCols = (map, withTitles = false) => {
+    const out = {};
+    for (const l of langs) out[l] = map[l] ?? "";
+    if (withTitles) for (const l of langs) { out[`unit_${l}`] = UNIT_TR[l] ?? ""; out[`lesson_${l}`] = LESSON_TR[l] ?? ""; }
+    return out;
   };
-  const exTitle = { de: ["Begrüßung", "Lektion 1: Hallo"], en: ["Greetings", "Lesson 1: Hello"] };
-  const sample = [
-    ["A1", "Chào hỏi", "Bài 1", "dialogue", "A", "Xin chào!", "", "", "", ""],
-    ["A1", "Chào hỏi", "Bài 1", "dialogue", "B", "Xin chào, bạn khoẻ không?", "", "", "", ""],
-    ["A1", "Chào hỏi", "Bài 1", "vocab", "", "con chó", "", "n", "", ""],
-    ["A1", "Chào hỏi", "Bài 1", "grammar", "", "Chào + đại từ", "", "", "Chào bạn.;Chào anh.", ""],
-    ["A1", "Chào hỏi", "Bài 1", "minigame", "", "", "", "", "", "meaning_pick"],
+  const rows = [
+    row({ level: "A2", level_name: "Sơ cấp 2", can_do: "Mua bán đơn giản ở chợ: hỏi giá, hỏi số lượng.",
+      unit: UNIT, unit_emoji: "🛒", lesson: LESSON, lesson_type: "core", step_type: "dialogue", speaker: "A",
+      vi: "Chào cô, táo giá bao nhiêu?", ...langCols({ de: "Hallo, wie viel kosten die Äpfel?", en: "Hello, how much are the apples?" }, true) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "dialogue", speaker: "B",
+      vi: "Táo giá năm mươi nghìn một cân.", ...langCols({ de: "Äpfel kosten fünfzigtausend Dong pro Kilo.", en: "Apples are fifty thousand dong per kilo." }) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "vocab", vi: "táo", pos: "n", ...langCols({ de: "der Apfel", en: "apple" }) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "vocab", vi: "cân", pos: "n", ...langCols({ de: "das Kilo", en: "kilogram" }) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "grammar", vi: "... giá bao nhiêu?", examples: "Táo giá bao nhiêu?;Táo giá năm mươi nghìn một cân.",
+      ...langCols({ de: "Wie viel kostet ...?", en: "How much is ...?" }) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "phonics", vi: "ch", vi2: "tr", examples: "cha - tra" }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "reading",
+      vi: "Ở chợ có nhiều loại trái cây: táo, cam, chuối. Táo giá năm mươi nghìn một cân.",
+      ...langCols({ de: "Auf dem Markt gibt es viel Obst: Äpfel, Orangen, Bananen. Äpfel kosten fünfzigtausend Dong pro Kilo.",
+        en: "At the market there is a lot of fruit: apples, oranges, bananas. Apples are fifty thousand dong per kilo." }) }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "reading",
+      question: "Táo giá bao nhiêu?", choices: "Ba mươi nghìn|Bốn mươi nghìn|Năm mươi nghìn|Sáu mươi nghìn", answer: 3 }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "writing", task_type: "fill", vi: "Điền từ còn thiếu",
+      sentence: "Táo ___ năm mươi nghìn một cân.", answer_text: "giá" }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "minigame", game: "meaning_pick" }),
   ];
-  // unit_<lang>/lesson_<lang> chỉ cần điền ở 1 dòng bất kỳ của chủ đề/bài đó (gộp từ mọi dòng) — mẫu điền ở dòng đầu
-  // cho dễ nhìn, các dòng sau để trống.
-  const lines = [head, ...sample.map((r, i) => [...r, ...langs.map((l) => ex[l]?.[i] ?? ""), ...langs.flatMap((l) => (i === 0 ? [exTitle[l]?.[0] ?? "", exTitle[l]?.[1] ?? ""] : ["", ""]))])];
-  return "﻿" + lines.map((r) => r.map(bbQ).join(",")).join("\r\n") + "\r\n";
+  return "﻿" + [HEAD, ...rows].map((r) => r.map(bbQ).join(",")).join("\r\n") + "\r\n";
 }
 
 export function aiPrompt(langs) {
-  const cols = ["level", "unit", "lesson", "step_type", "speaker", "vi", "vi2", "pos", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])].join(",");
+  const cols = ["level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type", "speaker",
+    "vi", "vi2", "pos", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
+    "question", "choices", "answer", "examples", "game", ...langs, ...langs.flatMap((l) => [`unit_${l}`, `lesson_${l}`])].join(",");
   return `Bạn là giáo viên tiếng Việt cho người lớn/người nước ngoài học tiếng Việt (giáo trình "Tiếng Việt Bài Bản"). Hãy soạn nội dung học về chủ đề: [ĐIỀN CHỦ ĐỀ, ví dụ: "Đi chợ"].
 
 Trả về DUY NHẤT một file CSV (UTF-8, phân cách bằng dấu phẩy, dòng đầu là tiêu đề) với đúng các cột:
@@ -237,11 +263,19 @@ ${cols}
 
 Quy tắc:
 - Mỗi dòng là 1 dòng NỘI DUNG của 1 CHẶNG trong 1 bài (KHÁC khu trẻ em — không phải 1 dòng = 1 từ). level: mã CEFR (A1, A2, B1, B2, C1, C2) hoặc "A0" (tiền-A1, bảng chữ cái/ngữ âm). Mọi dòng cùng chủ đề/bài ghi cùng level/unit/lesson.
-- unit: tên chủ đề (ngắn, tiếng Việt). lesson: tên bài — chia chủ đề thành 2–4 bài từ dễ đến khó, ĐẶT TÊN RÕ (vd "Bài 1: Xin chào").
-- step_type: dialogue (hội thoại, speaker A/B, vi = câu), vocab (từ vựng, vi = từ, pos = loại từ), grammar (công thức, vi = công thức vd "Chào + đại từ", examples = câu ví dụ cách nhau bằng ";"), phonics (cặp âm dễ nhầm THẬT theo vùng miền — ch/tr, s/x, d/gi, d/r, l/n — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh vì đọc giống nhau), minigame (game = meaning_pick | phonics_discrim | sentence_builder, không cần cột nội dung nào khác — chặng này tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp CÙNG BÀI để chơi).
-- Mỗi bài nên có ít nhất: 1 chặng dialogue (3-6 câu), 1 chặng vocab (5-8 từ), 1 chặng grammar (1 công thức + 2-3 ví dụ), 1 chặng minigame.
+- level_name, can_do: CHỈ cần điền ở 1 dòng bất kỳ khi TẠO CẤP MỚI (tên cấp + có thể làm được gì); cấp đã có thì để trống, không đổi lại. unit_emoji: 1 emoji cho chủ đề, chỉ cần ở 1 dòng của chủ đề đó. lesson_type: core (mặc định, để trống cũng được) | review (bài ôn tập cuối chủ đề, tự gộp ôn từ vựng/ngữ pháp/ngữ âm/hội thoại của MỌI bài khác cùng chủ đề — luôn đặt bài review làm bài CUỐI của chủ đề) | reading | writing.
+- unit: tên chủ đề (ngắn, tiếng Việt). lesson: tên bài — chia chủ đề thành 2–4 bài từ dễ đến khó, ĐẶT TÊN RÕ (vd "Bài 1: Xin chào"), bài cuối nên là bài ôn tập (lesson_type=review).
+- step_type — mỗi bài chỉ được 1 chặng/loại qua CSV, nên gộp đủ nội dung của loại đó vào các dòng cùng step_type:
+  - dialogue: hội thoại 3-6 câu, speaker A/B xen kẽ, vi = câu.
+  - vocab: từ vựng 5-8 từ, vi = từ, pos = loại từ (n/v/adj/adv/pron/num/conj/interj…); say CHỈ cần khi chữ ĐỌC khác chữ hiển thị (vd chữ cái "b" đọc "bờ" — dùng cho chuyên đề bảng chữ cái/ngữ âm cấp A0, từ vựng thường để trống).
+  - grammar: 1 công thức + 2-3 ví dụ, vi = công thức (vd "Chào + đại từ"), examples = câu ví dụ cách nhau bằng ";".
+  - phonics: 1 CẶP ÂM DỄ NHẦM THẬT theo vùng miền (ch/tr, s/x, d/gi, d/r, l/n) — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh (chỉ khác cách viết, đọc giống nhau — nếu cần giải thích quy tắc viết thì dùng 1 dòng grammar riêng).
+  - reading: 1 đoạn văn ngắn (dòng có cột question để TRỐNG, vi = đoạn văn) + 2-3 câu hỏi trắc nghiệm (mỗi câu 1 dòng, question = câu hỏi, choices = 2-6 đáp án cách nhau "|", answer = số thứ tự đáp án đúng đếm từ 1).
+  - writing: 1 bài luyện viết, task_type là "fill" (điền từ: vi = đề bài, sentence = câu có chỗ trống "___", answer_text = từ đúng), "order" (xếp câu: vi = đề bài, words = các từ đúng thứ tự cách nhau bằng dấu phẩy) hoặc "write" (viết tự do: vi = đề bài, min_words = số từ tối thiểu, sample = câu mẫu tham khảo, không tự chấm).
+  - minigame: game = meaning_pick (nghe từ đoán nghĩa) | phonics_discrim (nghe âm đoán đúng âm trong cặp phonics) | sentence_builder (xếp lại câu từ hội thoại/ngữ pháp cùng bài) — không cần cột nội dung nào khác, chặng này tự lấy dữ liệu từ vựng/ngữ âm/hội thoại/ngữ pháp CÙNG BÀI để chơi.
+- Mỗi bài (trừ bài ôn tập) nên có ít nhất: 1 chặng dialogue, 1 chặng vocab, 1 chặng grammar, 1 chặng minigame; thêm phonics/reading/writing nếu phù hợp nội dung, không ép đủ mọi loại ở mọi bài.
 - ${langs.map((l) => `Cột "${l}": nghĩa/bản dịch bằng ngôn ngữ mã "${l}", ngắn gọn, đúng nghĩa`).join("\n- ")}
-- ${langs.map((l) => `Cột "unit_${l}"/"lesson_${l}"`).join(", ")}: tên chủ đề/tên bài dịch sang ngôn ngữ đó (chỉ cần điền ở 1 dòng của chủ đề/bài đó, để trống ở các dòng còn lại).
-- KHÔNG bịa cách đọc/ngữ âm nếu không chắc — để trống cột đó.
+- ${langs.map((l) => `Cột "unit_${l}"/"lesson_${l}"`).join(", ")}: tên chủ đề/tên bài dịch sang ngôn ngữ đó (chỉ cần điền ở 1 dòng của chủ đề/bài đó, để trống ở các dòng còn lại) — CHỈ áp dụng khi TẠO MỚI chủ đề/bài, chủ đề/bài đã có sẵn thì sửa tên dịch trực tiếp trong khu quản trị.
+- KHÔNG bịa cách đọc/ngữ âm/nghĩa nếu không chắc — để trống cột đó, người soạn tự điền sau.
 - Ô có dấu phẩy phải đặt trong dấu ngoặc kép. Không thêm lời giải thích ngoài file CSV.`;
 }

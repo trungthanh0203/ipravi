@@ -453,8 +453,24 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   Duyệt cả cấp) rồi vào vai người học chơi hết Bài 2 "Số đếm" (hội thoại → từ vựng → ngữ pháp → ngữ âm → đọc hiểu
   đúng cả 2 câu hỏi → mini-game Xếp câu xáo đúng câu "Táo giá năm nghìn đồng") — cả 4 chủ đề đều hiện đúng
   "DE: … · EN: …" ở admin và 🔊 VI/🔊 DE + tên dịch ở khu học, không lỗi console.
+- **File mẫu CSV/câu lệnh AI của tab Bài Bản chưa khớp cấu trúc dữ liệu (2026-09-28, chủ dự án yêu cầu cập nhật):**
+  `admin/bb-csv.js` `buildTemplate()`/`aiPrompt()` (nút ⬇ Tải file mẫu/📋 Sao chép câu lệnh cho AI) lúc mới làm
+  (xem bullet "CSV Bài Bản thiếu nút…") chỉ demo 4/7 step_type (dialogue/vocab/grammar/minigame) và thiếu HẲN các
+  cột đã có từ lâu trong `validateRows`: `level_name`/`can_do`/`unit_emoji`/`lesson_type` (tầng cấp/chủ đề/bài) và
+  cả bộ cột riêng của `phonics`/`reading`/`writing` (`say`, `task_type`, `sentence`, `answer_text`, `words`,
+  `min_words`, `sample`, `question`, `choices`, `answer`) — admin nhìn file mẫu/câu lệnh AI sẽ không biết cách nhập
+  3 loại chặng đó qua CSV. Viết lại cả 2 hàm để phủ ĐỦ CẢ 7 STEP_TYPE trong 1 bài demo "Bài 1: Ở chợ" (chủ đề "Đi
+  chợ", cấp A2) + đủ mọi cột (`buildTemplate` dùng `row(obj)` map theo tên cột thay vì mảng vị trí như cũ — dễ đọc
+  và khó lệch cột khi thêm dòng, giống cách `r({...})` được dùng trong các script sinh giáo trình thật
+  `scripts/gen-bai-ban-*.mjs`); `aiPrompt` giải thích đủ 7 step_type + vai trò từng cột mới (level_name/can_do chỉ
+  cần khi tạo cấp mới, `say` chỉ cần cho bảng chữ cái/ngữ âm, 3 dạng `task_type` của writing, quy tắc `reading`
+  đoạn văn+câu hỏi). Test mới trong `tests/bb.test.mjs`: file mẫu tự kiểm qua `validateRows`/`buildPlan` (0 lỗi/0
+  cảnh báo, đủ 7 step_type, title_tr chủ đề+bài đúng) + câu lệnh AI có nhắc đủ mọi cột/step_type mới (30 kiểm tra).
+  Đã thử qua ĐÚNG 2 nút trong giao diện thật (mock-sb.js): bấm "Tải file mẫu" → file tải ra đúng 12 dòng đủ cấu
+  trúc mới; bấm "Sao chép câu lệnh cho AI" → clipboard nhận đủ nội dung có nhắc `say`/`writing`/`reading` — console
+  sạch.
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 61 kiểm tra) — không cần cài gì.
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 91 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (225 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (23). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên

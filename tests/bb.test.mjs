@@ -3,7 +3,7 @@
 import { INTERVAL_DAYS, nextBox, dueAfter } from "../public/js/bb/srs.js";
 import { isDue, dueCount, pickSession } from "../public/js/bb/practice-core.js";
 import { SKILLS } from "../public/js/bb/skills.js";
-import { parseCsv, validateRows, buildPlan, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
+import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -181,6 +181,25 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   const { items } = validateRows(parseCsv(csv2([row])), { langs: ["de"] });
   const plan = buildPlan(items, existing);
   ok(plan.newUnits.length === 0 && plan.newLessons.length === 0, "buildPlan: chủ đề/bài đã có → unit_de trong CSV bị bỏ qua, không tạo trùng");
+}
+{
+  // buildTemplate()/aiPrompt() (⬇ Tải file mẫu / 📋 Sao chép câu lệnh cho AI) phải khớp ĐÚNG cấu trúc dữ liệu hiện
+  // có — tự kiểm bằng cách chạy ngược qua validateRows/buildPlan (0 lỗi, 0 cảnh báo) và phải phủ đủ cả 7 step_type.
+  const tpl = buildTemplate(["de", "en"]);
+  const v = validateRows(parseCsv(tpl), { langs: ["de", "en"] });
+  ok(v.errors.length === 0, "buildTemplate: file mẫu không có lỗi", JSON.stringify(v.errors));
+  ok(v.warnings.length === 0, "buildTemplate: file mẫu không có cột thừa/cảnh báo", JSON.stringify(v.warnings));
+  const stepTypesInTemplate = new Set(v.items.map((it) => it.stepType));
+  ok(STEP_TYPES.every((t) => stepTypesInTemplate.has(t)), "buildTemplate: phủ đủ cả 7 step_type", [...stepTypesInTemplate].join(","));
+  const plan = buildPlan(v.items, { levels: [], units: [], lessons: [], steps: [] });
+  ok(plan.newUnits[0]?.title_tr?.de && plan.newUnits[0]?.title_tr?.en, "buildTemplate: chủ đề mẫu mang đúng title_tr de+en");
+  ok(plan.newLessons[0]?.title_tr?.de && plan.newLessons[0]?.title_tr?.en, "buildTemplate: bài mẫu mang đúng title_tr de+en");
+
+  const prompt = aiPrompt(["de", "en"]);
+  for (const col of ["level_name", "can_do", "unit_emoji", "lesson_type", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample", "question", "choices", "answer", "unit_de", "lesson_de", "unit_en", "lesson_en"]) {
+    ok(prompt.includes(col), `aiPrompt: có nhắc cột "${col}"`, prompt.slice(0, 200));
+  }
+  for (const t of STEP_TYPES) ok(prompt.includes(t), `aiPrompt: có giải thích step_type "${t}"`);
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);
