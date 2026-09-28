@@ -2,9 +2,8 @@ import { state } from "../state.js";
 import { render } from "../flow.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
-import { avatarEmoji } from "../data.js";
 import { stopAudio } from "../audio.js";
-import { visual, voiceToggle, titleSpeakers, titleIn, nativeLang } from "../child/media.js";
+import { visual, profileHeader, sessionFooter, titleSpeakers, titleIn, nativeLang } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
@@ -20,13 +19,10 @@ export function mount(root) {
 const child = () => state.children.find((c) => c.id === state.activeChildId);
 
 function shell(root, ...body) {
-  const c = child();
   paint(root, el("div", null,
-    el("div", { class: "row child-header" },
-      el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
-      voiceToggle(),
-      el("button", { class: "btn ghost small", onclick: () => { stopAudio(); api.clearCache(); state.activeChildId = null; render(); } }, T.childExit)),
-    ...body));
+    profileHeader(() => { stopAudio(); api.clearCache(); state.activeChildId = null; render(); }),
+    ...body,
+    sessionFooter()));
 }
 
 // Màn hình chính của bé: 2 nút lớn — 📖 Học (4 chặng, từng bài) và 🎮 Luyện tập (theo kỹ năng, chơi trên mọi nội dung đã duyệt). Hai phần độc lập nhau.

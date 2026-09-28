@@ -2,29 +2,24 @@ import { state } from "../state.js";
 import { render } from "../flow.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
-import { avatarEmoji } from "../data.js";
 import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
 import { showSkills } from "../bb/practice.js";
-import { titleSpeakers, titleIn, nativeLang } from "../bb/media.js";
+import { titleSpeakers, titleIn, nativeLang, profileHeader, sessionFooter } from "../bb/media.js";
 
 // Khu học "Tiếng Việt Bài Bản" (hồ sơ profile_type='learner'): 📖 Học (Level → Unit → Lesson → 7 chặng) | 🎯 Luyện
-// tập (ôn nội dung đã học, GĐ 4) — 2 phần độc lập, cùng cách tổ chức màn hình chính với khu trẻ em
-// (pages/child-home.js). KHÔNG khoá bài — chỉ hiện thứ tự, không cấm chọn bài bất kỳ.
-// Xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 7 Giai đoạn 3–4.
+// tập (ôn nội dung đã học) — 2 phần độc lập, cùng cách tổ chức màn hình chính với khu trẻ em (pages/child-home.js).
+// KHÔNG khoá bài — chỉ hiện thứ tự, không cấm chọn bài bất kỳ.
 export function mount(root) {
   showHome(root);
 }
 
-const learner = () => state.children.find((c) => c.id === state.activeChildId);
-
 function shell(root, ...body) {
-  const c = learner();
+  // Nút Thoát về màn chọn avatar (KHÔNG phải khu phụ huynh) — khớp hành vi khu Trẻ em (pages/child-home.js).
   paint(root, el("div", null,
-    el("div", { class: "row child-header" },
-      el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
-      el("button", { class: "btn ghost small", onclick: () => { state.activeChildId = null; state.parentOpen = true; render(); } }, T.bbHomeBack)),
-    ...body));
+    profileHeader(() => { state.activeChildId = null; render(); }),
+    ...body,
+    sessionFooter()));
 }
 
 function showHome(root) {
@@ -33,7 +28,7 @@ function showHome(root) {
     el("div", { class: "home-cards" },
       el("button", { class: "home-card learn", onclick: () => showLevels(root) },
         el("span", { class: "hc-emoji" }, "📖"), el("b", null, T.bbHomeLearn), el("small", null, T.bbHomeLearnSub)),
-      el("button", { class: "home-card practice", onclick: () => showSkills(root, { childId: state.activeChildId, onBack: () => showHome(root) }) },
+      el("button", { class: "home-card practice", onclick: () => showSkills(root, { childId: state.activeChildId, onBack: () => showHome(root), shell }) },
         el("span", { class: "hc-emoji" }, "🎯"), el("b", null, T.bbHomePractice), el("small", null, T.bbHomePracticeSub))));
 }
 

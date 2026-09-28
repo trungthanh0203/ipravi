@@ -17,13 +17,16 @@ import * as phonicsStep from "./steps/phonics.js";
 const RUN_BY_TYPE = { dialogue: dialogueStep.run, grammar: grammarStep.run, phonics: phonicsStep.run };
 const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${g.color};--soft:${g.soft}`; };
 
-export async function showSkills(root, { childId, onBack }) {
+// `shell`: hàm bọc header/footer dùng chung của khu Bài Bản (pages/bai-ban-home.js) — CHỈ dùng ở màn lưới kỹ năng
+// này (màn điều hướng chính); 1 lượt ôn cụ thể (runReviewList/runVocabReview bên dưới) giữ header riêng (khớp
+// child/practice.js: shell() ở skillsScreen, KHÔNG dùng trong runSession()).
+export async function showSkills(root, { childId, onBack, shell }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   let catalog;
   try {
     catalog = await api.loadReviewCatalog(childId);
   } catch {
-    paint(root, el("div", { class: "card" }, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onBack }, T.back)));
+    shell(root, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onBack }, T.back));
     return;
   }
   const total = SKILLS.reduce((n, s) => n + catalog[s.itemType].length, 0);
@@ -31,15 +34,12 @@ export async function showSkills(root, { childId, onBack }) {
     const items = catalog[s.itemType];
     const n = dueCount(items);
     return el("button", { class: "skill-card" + (items.length === 0 ? " off" : ""), style: colorStyle(s), disabled: items.length === 0,
-      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack }) }) },
+      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack, shell }), shell }) },
       el("span", { class: "sk-emoji" }, s.emoji),
       el("b", null, s.name),
       el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
   };
-  // Bọc trong 1 el("div") trước khi gắn vào paint() (=mount()=replaceChildren gốc): replaceChildren gốc KHÔNG tự
-  // dàn phẳng mảng như el() — truyền GROUPS.map(...) trực tiếp làm 1 tham số rời sẽ ép thành chuỗi
-  // "[object HTMLElement],…" hiện thẳng lên màn hình (đúng lỗi đã gặp + sửa ở admin/bb.js, xem CLAUDE.md).
-  paint(root, el("div", null,
+  shell(root,
     el("button", { class: "btn ghost small", onclick: onBack }, "◀ " + T.back),
     el("h1", { style: "text-align:center" }, T.bbPracticeTitle),
     total === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoReview)) :
@@ -47,7 +47,7 @@ export async function showSkills(root, { childId, onBack }) {
         const list = SKILLS.filter((s) => s.group === g.id);
         return list.length ? el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h2", null, g.name),
           el("div", { class: "skill-grid" }, list.map(card))) : null;
-      })));
+      }));
 }
 
 function runSkill(root, skill, items, ctx) {

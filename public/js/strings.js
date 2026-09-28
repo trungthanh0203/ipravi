@@ -204,6 +204,9 @@ export const T = {
   traceMore: "Con tô kín theo chữ mẫu hơn một chút nhé!",
   traceEnough: "Được rồi, con tập thêm sau nhé!",
   credits: "Hình biểu tượng: Twemoji © Twitter, Inc. và các cộng tác viên, giấy phép CC-BY 4.0. Chữ mẫu tô chữ: Playwrite VN © TypeTogether, SIL Open Font License.",
+  // TODO(chủ dự án điền): thông tin liên hệ hiện ở footer mọi màn chính (giống dòng "Learning content managed
+  // by..." của iLapra) — đổi placeholder dưới đây thành tên/SĐT/email thật trước khi công khai.
+  footerContact: "[Điền tên/SĐT/email liên hệ ở đây — strings.js T.footerContact]",
   instrPickText: "Con nghe rồi chạm vào chữ đúng nhé!",
   instrMatch: "Nối hình với chữ đúng nhé!",
   instrRepeat: "Con nói theo nhé!",
@@ -272,7 +275,6 @@ export const T = {
   bbProfileTag: "🎓 Bài Bản",
   bbHomeTitle: "Tiếng Việt Bài Bản",
   bbHomeGreeting: (name) => `Chào, ${name}!`,
-  bbHomeBack: "Quay lại",
   bbLevelsTitle: "Chọn cấp độ",
   bbNoLevels: "Chưa có cấp độ nào.",
   bbNoUnits: "Chưa có chủ đề nào ở cấp này.",

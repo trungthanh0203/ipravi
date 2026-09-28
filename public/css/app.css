@@ -98,6 +98,9 @@ button { font: inherit; cursor: pointer; }
 /* Khu học của trẻ */
 .child-header { margin-bottom: 8px; }
 .child-header .who { font-size: 22px; font-weight: 700; }
+/* Footer liên hệ dùng chung mọi màn điều hướng chính (child/media.js sessionFooter(), 2026-09-29) — cùng cặp với
+   .child-header (profileHeader()), KHÔNG hiện trong lúc đang chơi 1 bài/1 chặng cụ thể. */
+.session-footer { text-align: center; font-size: 12px; color: var(--text-2); margin: 24px 0 8px; padding-top: 10px; border-top: 1px solid rgba(0, 0, 0, .08); }
 .btn.big { font-size: 24px; padding: 16px 36px; min-height: 64px; }
 .unit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
 .unit-card {

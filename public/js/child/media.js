@@ -8,6 +8,7 @@ import { spoken, spellParts } from "../viet.js";
 import { sayOfPart } from "../sounds.js";
 import { loadSoundBank } from "./api.js";
 import { emojiNodes, graphemes } from "../emoji.js";
+import { avatarEmoji } from "../data.js";
 
 const TTS_LANG = { vi: "vi-VN", de: "de-DE", en: "en-US" };
 
@@ -78,6 +79,26 @@ export function voiceToggle() {
   paint();
   wrap.append(...buttons);
   return wrap;
+}
+
+// Header dùng CHUNG cho mọi màn ĐIỀU HƯỚNG CHÍNH (Trang chủ/Học/Luyện tập) của 1 phiên hồ sơ — avatar + tên hồ sơ
+// đang học, chọn giọng nghe, nút Thoát (về màn chọn avatar). Dùng cho CẢ khu Trẻ em (pages/child-home.js) LẪN
+// "Tiếng Việt Bài Bản" (pages/bai-ban-home.js, qua bb/media.js — 2 khu cùng đọc `child_profiles`, chỉ khác
+// `profile_type`). Màn đang chơi 1 bài/1 chặng/1 lượt cụ thể KHÔNG dùng header này (tự vẽ header riêng: thanh
+// tiến độ + nút thoát lượt đó) để bé tập trung, không bị avatar/giọng làm xao nhãng — xem child/lesson.js,
+// child/practice.js runSession(), bb/runner.js.
+export function profileHeader(onExit) {
+  const c = state.children.find((c) => c.id === state.activeChildId);
+  return el("div", { class: "row child-header" },
+    el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
+    voiceToggle(),
+    el("button", { class: "btn ghost small", onclick: onExit }, T.childExit));
+}
+
+// Footer dùng CHUNG cùng chỗ với profileHeader() — thông tin liên hệ chủ dự án, hiện ở cuối mọi màn điều hướng
+// chính (không hiện trong lúc đang chơi 1 bài/1 chặng, cùng lý do với profileHeader()).
+export function sessionFooter() {
+  return el("footer", { class: "session-footer" }, T.footerContact);
 }
 
 // Phát âm thanh của 1 mục (tiếng Việt hoặc bản ngữ). Luật chọn giọng nằm ở pickAudio().
