@@ -114,20 +114,44 @@ export async function saveStepProgress(childId, stepId) {
   if (error && error.code !== "23505") console.warn("saveStepProgress", error.message);
 }
 
-// Bài đã hoàn thành = MỌI chặng đã duyệt của bài đó đều có trong bb_progress. Dùng để đánh dấu ✓ ở danh sách bài.
+// Chặng nào bé ĐÃ HỌC XONG trong 1 bài cụ thể (dùng cho ✓ ở lưới chọn chặng, bb/runner.js) — trả Set các step_id.
+export async function loadStepProgress(childId, stepIds) {
+  if (!stepIds.length) return new Set();
+  const { data, error } = await sb.from("bb_progress").select("step_id").eq("child_id", childId).in("step_id", stepIds);
+  if (error) throw error;
+  return new Set((data ?? []).map((p) => p.step_id));
+}
+
+// Bài đã hoàn thành = MỌI chặng CÓ DỮ LIỆU THẬT (khớp bb/runner.js hasContent() — chặng rỗng bị ẩn khỏi lưới chọn
+// chặng nên KHÔNG THỂ nào có trong bb_progress, không được tính vào mẫu số) đều đã có trong bb_progress. Dùng để
+// đánh dấu ✓ ở danh sách bài (pages/bai-ban-home.js). Nhẹ hơn hasContent() ở chỗ minigame chỉ cần `config.kind` đã
+// chọn (không tính feasibility theo dữ liệu nguồn — hàm này chạy cho NHIỀU bài 1 lúc, không tải hết nội dung từng
+// bài như lúc vào học 1 bài cụ thể) — sai khác chỉ ở trường hợp hiếm: minigame đã chọn engine nhưng KHÔNG đủ dữ
+// liệu nguồn để chơi (ẩn ở lưới chọn chặng) vẫn được tính vào mẫu số ở đây, khiến bài đó khó đạt ✓ hơn 1 chút.
 export async function loadLessonProgress(childId, lessonIds) {
   if (!lessonIds.length) return new Set();
-  const { data: steps, error } = await sb.from("bb_lesson_steps").select("id, lesson_id").eq("status", "approved").in("lesson_id", lessonIds);
+  const { data: steps, error } = await sb.from("bb_lesson_steps").select("id, lesson_id, step_type, config").eq("status", "approved").in("lesson_id", lessonIds);
   if (error) throw error;
+  const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
+  const [dialogueRows, vocabRows, grammarRows, phonicsRows, readingRows, writingRows] = await Promise.all([
+    fetchByIds("bb_dialogue_lines", idsOf("dialogue")),
+    fetchByIds("bb_vocab", idsOf("vocab")),
+    fetchByIds("bb_grammar", idsOf("grammar")),
+    fetchByIds("bb_phonics_pairs", idsOf("phonics")),
+    fetchByIds("bb_reading_passages", idsOf("reading")),
+    fetchByIds("bb_writing_tasks", idsOf("writing")),
+  ]);
+  const nonEmptyStepIds = new Set([...dialogueRows, ...vocabRows, ...grammarRows, ...phonicsRows, ...readingRows, ...writingRows].map((r) => r.step_id));
+  const visible = (steps ?? []).filter((s) => (s.step_type === "minigame" ? Boolean(s.config?.kind) : nonEmptyStepIds.has(s.id)));
   const totalByLesson = new Map();
-  for (const s of steps ?? []) totalByLesson.set(s.lesson_id, (totalByLesson.get(s.lesson_id) ?? 0) + 1);
-  const stepIds = (steps ?? []).map((s) => s.id);
+  for (const s of visible) totalByLesson.set(s.lesson_id, (totalByLesson.get(s.lesson_id) ?? 0) + 1);
+  const stepIds = visible.map((s) => s.id);
   if (!stepIds.length) return new Set();
   const { data: prog, error: e2 } = await sb.from("bb_progress").select("step_id").eq("child_id", childId).in("step_id", stepIds);
   if (e2) throw e2;
   const doneStepIds = new Set((prog ?? []).map((p) => p.step_id));
   const doneByLesson = new Map();
-  for (const s of steps ?? []) if (doneStepIds.has(s.id)) doneByLesson.set(s.lesson_id, (doneByLesson.get(s.lesson_id) ?? 0) + 1);
+  for (const s of visible) if (doneStepIds.has(s.id)) doneByLesson.set(s.lesson_id, (doneByLesson.get(s.lesson_id) ?? 0) + 1);
   const completed = new Set();
   for (const [lessonId, total] of totalByLesson) if (total > 0 && (doneByLesson.get(lessonId) ?? 0) >= total) completed.add(lessonId);
   return completed;

@@ -279,10 +279,9 @@ export const T = {
   bbNoLessons: "Chưa có bài nào ở chủ đề này.",
   bbLoadError: "Chưa tải được nội dung. Kiểm tra lại mạng rồi thử lại.",
   bbLessonReview: "🏆 Ôn tập",
-  bbStart: "▶ Bắt đầu",
   bbLessonEmpty: "Bài này chưa có chặng nào.",
-  bbLessonDone: "Đã hoàn thành bài học!",
-  bbStepOf: (i, n) => `Chặng ${i}/${n}`,
+  bbLessonDone: "🎉 Đã hoàn thành mọi chặng — con có thể ôn lại chặng bất kỳ.",
+  bbPickStep: "Chọn 1 chặng bên dưới để học:",
 
   bbStepDialogue: "💬 Hội thoại",
   bbStepVocab: "🔤 Từ vựng",

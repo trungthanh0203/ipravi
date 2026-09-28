@@ -616,3 +616,65 @@ mới (tránh tái diễn — sau này thêm cột mà quên cập nhật prompt
 giao diện thật (`mock-sb.js`): chặn `URL.createObjectURL` để đọc nội dung file "Tải file mẫu" (12 dòng, đủ cấu
 trúc mới) và giả `navigator.clipboard.writeText` để đọc nội dung "Sao chép câu lệnh cho AI" (có nhắc đủ
 say/writing/reading) — console sạch.
+
+## 23. Luồng học đổi từ tuần tự sang chọn chặng tự do (2026-09-28)
+
+Chủ dự án: "với mỗi bài có 7 chặng như hiện nay, tôi muốn khi vào học 1 bài nào đó nó sẽ hiện luôn cả 7 chặng để
+người học muốn học chặng nào thì chọn chặng đó chứ không cần phải chạy theo tuần tự như hiện nay, khi làm xong
+chặng nào thì chặng đó sẽ được đánh dấu tick hoàn thành. chú ý chặng nào có dữ liệu thì mới hiện lên, còn không có
+thì sẽ phải ẩn đi". 3 việc rõ ràng: ① không ép tuần tự — cho chọn tự do; ② tick khi xong; ③ ẩn chặng rỗng.
+
+**Trước đó** (`bb/runner.js` GĐ 3, mục 10): `runLesson()` là 1 vòng `for` chạy lần lượt CẢ 7 chặng đã duyệt theo
+đúng `sort_order`, không cho bỏ qua/quay lại, kèm 1 màn "▶ Bắt đầu" gate + thanh tiến trình ngang trên cùng.
+
+**Sau khi sửa:** `runLesson()` không còn vòng lặp — vào bài là thấy NGAY lưới mọi chặng CÓ DỮ LIỆU (tái dùng
+`.unit-grid`/`.unit-card`, thêm class `.bb-step-card` + badge ✓ khi đã xong), chạm chặng nào chạy renderer của
+chặng đó (y nguyên `bb/steps/*.js`, không đổi gì bên trong từng chặng), xong tự quay lại lưới. Bỏ hẳn màn "▶ Bắt
+đầu" — không cần nữa vì khu Bài Bản không có gì tự phát âm thanh (mọi tiếng đều qua nút bấm tay), khác khu trẻ em
+nơi màn hình đó còn có vai trò "mở khoá âm thanh iOS trước khi tự phát".
+
+**Ẩn chặng rỗng (việc khó nhất trong 3 việc):** 6/7 loại chặng dễ — chỉ cần đếm số dòng nội dung (`content.length
+> 0`) hoặc với `reading` là có đoạn văn hay không. Riêng **minigame không có bảng nội dung riêng** (tự lấy từ
+vựng/ngữ pháp/ngữ âm/hội thoại CÙNG BÀI, xem mục 16) nên "có dữ liệu không" phụ thuộc NGƯỠNG của từng engine (vd
+`meaning_pick` cần ≥4 từ có nghĩa đúng ngôn ngữ). Ngưỡng này vốn đã nằm SẴN trong `bb/steps/minigame.js` (mỗi hàm
+`meaningPick`/`phonicsDiscrim`/`sentenceBuilder` tự tính pool rồi so ngưỡng để quyết định chơi hay hiện
+`T.bbMinigameEmpty`) — thay vì viết lại ngưỡng đó 1 lần nữa ở `runner.js` (rồi 2 chỗ lệch nhau khi có ai sửa 1
+chỗ), tách phần tính pool ra hàm `poolForKind(kind, steps, lang)` DÙNG CHUNG, rồi thêm hàm mới `export function
+feasible(step, steps, lang)` mà `runner.js` gọi để quyết định ẩn/hiện. Cả 3 hàm chơi game cũ (`meaningPick`…) đổi
+sang gọi `poolForKind()` thay vì tự tính pool — hành vi lúc CHƠI giữ nguyên y hệt, chỉ gọn lại chỗ tính pool.
+
+**Tác dụng phụ cần sửa kèm (phát hiện khi soát lại, không phải yêu cầu trực tiếp nhưng KHÔNG SỬA thì sai):**
+`pages/bai-ban-home.js` hiện ✓ ở danh sách bài dựa vào `api.loadLessonProgress()` — hàm này tính "bài xong" =
+"MỌI chặng ĐÃ DUYỆT đều có trong `bb_progress`". Chặng rỗng giờ bị ẩn khỏi lưới nên bé KHÔNG CÓ CÁCH nào đánh dấu
+nó xong nữa (không có nút nào để bấm) — nếu giữ nguyên mẫu số cũ, bất kỳ bài nào có 1 chặng rỗng (vd admin duyệt
+nhầm 1 chặng chưa soạn xong) sẽ VĨNH VIỄN không đạt ✓ dù bé đã học hết mọi chặng nhìn thấy được. Sửa mẫu số thành
+"chỉ chặng có dữ liệu" — nhẹ hơn `hasContent()` bên `runner.js` 1 chút (minigame chỉ cần đã chọn `config.kind`,
+KHÔNG tính feasibility theo dữ liệu nguồn, vì hàm này chạy cho NHIỀU bài cùng lúc ở màn danh sách, không tải hết
+nội dung từng bài như lúc vào học 1 bài cụ thể — chấp nhận sai khác nhỏ ở đúng 1 trường hợp hiếm: minigame đã chọn
+engine nhưng không đủ dữ liệu nguồn để chơi thật). Thêm hàm mới `api.loadStepProgress(childId, stepIds)` (Set các
+step_id đã xong của ĐÚNG 1 bài, dùng cho ✓ ở lưới chọn chặng — khác `loadLessonProgress` là tính cho NHIỀU bài).
+
+**Chặn đè tiến độ khi thoát giữa chừng:** mỗi renderer chặng (`bb/steps/*.js`) chỉ `resolve()` khi bé bấm nút
+"Tiếp"/nút tương đương bên trong chính nó — nút "✕ Thoát" mới (nằm NGOÀI, do `runner.js` vẽ) chỉ đơn giản vẽ lại
+lưới, KHÔNG có cách "huỷ" Promise gốc của chặng đang chạy (JS không huỷ được Promise). Nếu bé thoát rồi mở LẠI
+đúng chặng đó và promise CŨ (đã bị bỏ rơi) lỡ resolve về sau — vd chưa từng xảy ra trong thực tế vì mọi resolve()
+đều cần đúng 1 cú bấm cụ thể không còn trong DOM, nhưng vẫn phòng hờ — thì code cũ trong `.then()` của nó sẽ đánh
+dấu hoàn thành + vẽ lại lưới ĐÈ LÊN chặng MỚI bé đang chơi. Chặn bằng 1 biến đếm `token`: tăng mỗi lần vẽ lại lưới
+hoặc vào 1 chặng mới, `.then()` của mỗi lượt chạy chặng tự so token của MÌNH với token HIỆN TẠI trước khi làm gì.
+
+**Dọn theo:** `strings.js` bỏ `bbStart` ("▶ Bắt đầu", không còn màn nào dùng) và `bbStepOf` ("Chặng i/n", số thứ tự
+không còn ý nghĩa khi không còn thứ tự cố định); đổi nghĩa `bbLessonDone` từ thông báo cuối-bài 1 lần
+("Đã hoàn thành bài học!") sang dòng nhắc nhỏ đầu lưới khi MỌI chặng đã ✓ (bé vẫn ở lại lưới, không bị đẩy đi đâu —
+khớp tinh thần "chọn chặng bất kỳ", kể cả sau khi đã xong hết, để ôn lại); thêm `bbPickStep` ("Chọn 1 chặng bên
+dưới để học:").
+
+Test: `tests/bb.test.mjs` +10 kiểm tra cho `minigame.feasible()` (đủ/thiếu dữ liệu từng engine — meaning_pick đủ
+4 từ/thiếu từ/sai ngôn ngữ, phonics_discrim có/không cặp âm, sentence_builder câu đủ dài/quá ngắn/lấy được từ
+chặng ngữ pháp, engine chưa chọn/chưa cài luôn `false`). Đã thử toàn bộ bằng `mock-sb.js`: dựng 1 bài có 4/7 chặng
+có dữ liệu (dialogue/vocab/grammar/minigame — 3 chặng còn lại cố tình để rỗng) → lưới CHỈ hiện đúng 4 chặng; học
+xong 1 chặng → ✓ đúng chặng đó, các chặng khác không đổi; "✕ Thoát" giữa chừng → về lưới, chặng đó KHÔNG bị tính
+xong; học hết cả 4 → hiện "🎉 Đã hoàn thành mọi chặng…"; bấm lại chặng đã ✓ → ôn lại bình thường; bài Boss cuối
+Unit (không có chặng riêng ngoài Mini-game) → Mini-game vẫn hiện + chơi được nhờ `loadUnitPool()` gộp từ vựng từ
+bài khác cùng Chủ đề; bài rỗng hoàn toàn (0/7 có dữ liệu) → đúng thông báo "Bài này chưa có chặng nào."; sửa lại
+`loadLessonProgress()` cho ra đúng ✓ ở danh sách bài dù bài đó có chặng rỗng — không lỗi console ở bất kỳ bước nào.
+**Chưa thử Supabase thật.**

@@ -4,6 +4,7 @@ import { INTERVAL_DAYS, nextBox, dueAfter } from "../public/js/bb/srs.js";
 import { isDue, dueCount, pickSession } from "../public/js/bb/practice-core.js";
 import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
+import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -200,6 +201,22 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
     ok(prompt.includes(col), `aiPrompt: có nhắc cột "${col}"`, prompt.slice(0, 200));
   }
   for (const t of STEP_TYPES) ok(prompt.includes(t), `aiPrompt: có giải thích step_type "${t}"`);
+}
+
+// ---- minigame.feasible(): dùng ở bb/runner.js để ẩn/hiện chặng minigame trong lưới chọn chặng (2026-09-28) ----
+{
+  const vocabStep = (words) => ({ step_type: "vocab", content: words });
+  const words4 = [1, 2, 3, 4].map((id) => ({ id, meaning: { de: "x" } }));
+  ok(minigameFeasible({ config: { kind: "meaning_pick" } }, [vocabStep(words4)], "de") === true, "feasible: meaning_pick đủ 4 từ có nghĩa → chơi được");
+  ok(minigameFeasible({ config: { kind: "meaning_pick" } }, [vocabStep(words4.slice(0, 3))], "de") === false, "feasible: meaning_pick chỉ 3 từ → chưa đủ");
+  ok(minigameFeasible({ config: { kind: "meaning_pick" } }, [vocabStep(words4)], "en") === false, "feasible: meaning_pick đủ từ nhưng SAI ngôn ngữ (không có nghĩa en) → chưa đủ");
+  ok(minigameFeasible({ config: {} }, [vocabStep(words4)], "de") === false, "feasible: chưa chọn engine (config.kind trống) → luôn false (ẩn khỏi lưới)");
+  ok(minigameFeasible({ config: { kind: "hack" } }, [vocabStep(words4)], "de") === false, "feasible: engine lạ/chưa cài → luôn false");
+  ok(minigameFeasible({ config: { kind: "phonics_discrim" } }, [], "de") === false, "feasible: phonics_discrim không có cặp âm nào → chưa đủ");
+  ok(minigameFeasible({ config: { kind: "phonics_discrim" } }, [{ step_type: "phonics", content: [{ sound_a: "ch", sound_b: "tr" }] }], "de") === true, "feasible: phonics_discrim có 1 cặp âm → chơi được");
+  ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "dialogue", content: [{ line_vi: "Xin chào bạn" }] }], "de") === true, "feasible: sentence_builder có câu ≥2 từ → chơi được");
+  ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "dialogue", content: [{ line_vi: "Ừ" }] }], "de") === false, "feasible: sentence_builder câu chỉ 1 từ → chưa đủ để xếp lại");
+  ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "grammar", content: [{ examples: [{ vi: "Chào bạn nhé" }] }] }], "de") === true, "feasible: sentence_builder lấy được câu ví dụ từ chặng ngữ pháp");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

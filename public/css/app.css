@@ -513,4 +513,9 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-fill-sentence { font-size: 18px; font-style: italic; color: var(--text-2); }
 .bb-write-area { width: 100%; font: inherit; font-size: 17px; padding: 12px 14px; border: 2px solid #d7e3f4; border-radius: 12px; background: #fff; color: var(--text); resize: vertical; }
 .bb-write-area:focus { outline: none; border-color: var(--brand); }
+/* Lưới chọn chặng (bb/runner.js, GĐ "7 chặng chọn tự do" 2026-09-28) — tái dùng NGUYÊN .unit-grid/.unit-card, chỉ
+   thêm ✓ hoàn thành (position:relative để đặt badge góc + viền xanh khi đã xong). */
+.bb-step-card { position: relative; }
+.bb-step-card.done { border-color: #2f9e44; }
+.bb-step-check { position: absolute; top: 8px; right: 12px; font-size: 22px; font-weight: 800; color: #2f9e44; }
 .install-note { margin: 8px 0 0; font-size: 14px; }

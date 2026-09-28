@@ -230,7 +230,8 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   dùng tối đa lớp CSS có sẵn của khu trẻ em (`.unit-grid`, `.lesson-list`, `.opt-grid`, `.mic`…), chỉ thêm vài lớp
   `.bb-*` mới cho hình dạng riêng. `tests/browser/mock-sb.js` thêm 11 bảng `bb_*` + nhúng `bb_levels` để thử được
   bằng dữ liệu giả. Đã thử: chạy đủ 7 chặng liên tiếp + chấm điểm client-side (đọc hiểu, điền từ, xếp câu) + thoát
-  giữa chừng + màn rỗng, CHƯA thử Supabase thật.
+  giữa chừng + màn rỗng, CHƯA thử Supabase thật. **`runLesson()` chạy TUẦN TỰ cả 7 chặng theo 1 thứ tự cố định —
+  ĐÃ ĐỔI SANG lưới chọn chặng tự do 2026-09-28, xem bullet "Luồng học đổi từ tuần tự sang chọn chặng tự do" bên dưới.**
   **GĐ 4 (Luyện tập/SRS):** migration `023_bb_progress.sql` (sau `022`) — `bb_progress(child_id, step_id,
   completed_at)` (chặng nào đã đi qua; `bb/runner.js` gọi `api.saveStepProgress()` sau mỗi chặng, KHÔNG `await`;
   dùng để đánh dấu ✓ ở danh sách bài + chặn diện ôn tập chỉ còn mục đã gặp qua) và `bb_srs_state(child_id,
@@ -469,8 +470,44 @@ tài khoản qua app → `update public.accounts set role='admin' where email='.
   Đã thử qua ĐÚNG 2 nút trong giao diện thật (mock-sb.js): bấm "Tải file mẫu" → file tải ra đúng 12 dòng đủ cấu
   trúc mới; bấm "Sao chép câu lệnh cho AI" → clipboard nhận đủ nội dung có nhắc `say`/`writing`/`reading` — console
   sạch.
+- **Luồng học đổi từ tuần tự sang chọn chặng tự do (2026-09-28, chủ dự án yêu cầu):** trước đó `bb/runner.js`
+  `runLesson()` bắt bé đi qua ĐỦ 7 chặng theo ĐÚNG 1 thứ tự cố định (không được bỏ qua/quay lại) — chủ dự án muốn
+  vào 1 bài là thấy NGAY lưới mọi chặng, chạm chặng nào học chặng đó, xong chặng nào chặng đó có ✓, chặng nào KHÔNG
+  có dữ liệu thì ẨN hẳn khỏi lưới (không phải hiện ra rồi báo "chưa có nội dung" như trước).
+  **Viết lại hoàn toàn `runLesson()`:** bỏ vòng lặp tuần tự + màn "▶ Bắt đầu" gate (không cần nữa vì không có
+  audio tự phát ở khu Bài Bản — mọi phát âm đều qua nút bấm tay, xem `bb/steps/*.js`), thay bằng 2 màn con:
+  **lưới chọn chặng** (`showPicker()`, tái dùng NGUYÊN `.unit-grid`/`.unit-card` — chỉ thêm class `.bb-step-card`
+  + badge ✓ góc phải cho chặng đã xong) và **chạy 1 chặng** (`runStep()`, gọi lại renderer cũ của đúng chặng đó,
+  xong tự quay về lưới). Dùng 1 biến đếm `token` tăng dần mỗi lần đổi màn để chặng CŨ lỡ `resolve()` muộn (bấm
+  "✕ Thoát" giữa chừng rồi mở lại đúng chặng đó) không đánh dấu hoàn thành/điều hướng đè lên chặng MỚI đang chạy.
+  **Ẩn chặng không có dữ liệu (yêu cầu chính):** `hasContent(step, pool)` mới — dialogue/vocab/grammar/phonics/
+  writing cần ≥1 dòng nội dung; reading cần có đoạn văn (câu hỏi thì tuỳ chọn); **minigame** cần đã chọn engine
+  (`config.kind`) VÀ đủ dữ liệu nguồn cho engine đó — tách hẳn `bb/steps/minigame.js` thành `poolForKind()`/
+  `MIN_POOL` DÙNG CHUNG giữa lúc chơi thật (3 hàm `meaningPick`/`phonicsDiscrim`/`sentenceBuilder`, không còn tự
+  tính pool riêng nữa) và hàm mới `export function feasible(step, steps, lang)` mà `runner.js` gọi để quyết định
+  ẩn/hiện — tránh 2 nơi lặp lại cùng ngưỡng (4 từ có nghĩa / ≥1 cặp âm / ≥1 câu ≥2 từ) rồi lệch nhau về sau.
+  **Sửa kèm `api.loadLessonProgress()`** (dùng cho ✓ tổng ở danh sách bài, `pages/bai-ban-home.js`): mẫu số cũ là
+  "MỌI chặng đã duyệt" — nay chặng rỗng bị ẩn khỏi lưới nên KHÔNG THỂ nào lọt vào `bb_progress` được nữa, mẫu số cũ
+  sẽ khiến 1 bài có chặng rỗng (admin lỡ duyệt) không bao giờ đạt ✓ dù bé đã học hết mọi chặng NHÌN THẤY ĐƯỢC — sửa
+  mẫu số thành "chỉ chặng có dữ liệu" (kiểm nhẹ hơn `hasContent()`: minigame chỉ cần `config.kind` đã chọn, không
+  tính feasibility theo dữ liệu nguồn, vì hàm này chạy cho NHIỀU bài 1 lúc chứ không tải hết nội dung từng bài như
+  lúc vào học 1 bài cụ thể — sai khác chỉ ở 1 trường hợp hiếm: minigame đã chọn engine nhưng KHÔNG đủ dữ liệu để
+  chơi). Thêm `api.loadStepProgress(childId, stepIds)` mới (Set các step_id đã xong CỦA 1 BÀI, dùng cho ✓ ở lưới).
+  Dọn 2 chuỗi hết dùng trong `strings.js` (`bbStart`, `bbStepOf` — số thứ tự "Chặng i/n" không còn ý nghĩa khi
+  không còn thứ tự cố định), đổi nghĩa `bbLessonDone` (từ "Đã hoàn thành bài học!" hiện 1 lần cuối bài → dòng nhắc
+  nhỏ trên đầu lưới khi mọi chặng đã ✓, bé vẫn ở lại lưới để ôn lại chặng bất kỳ chứ không bị đẩy đi đâu cả), thêm
+  `bbPickStep` ("Chọn 1 chặng bên dưới để học:").
+  Test: `tests/bb.test.mjs` +10 kiểm tra cho `minigame.feasible()` (đủ/thiếu dữ liệu từng engine, sai ngôn ngữ,
+  engine chưa chọn/chưa cài). Đã thử bằng `mock-sb.js`: 1 bài có 4/7 chặng có dữ liệu (dialogue/vocab/grammar/
+  minigame — 3 chặng còn lại rỗng) → lưới CHỈ hiện đúng 4 chặng đó; học xong 1 chặng → ✓ đúng chặng vừa học, các
+  chặng khác không đổi; bấm "✕ Thoát" giữa chừng 1 chặng → quay về lưới, chặng đó KHÔNG bị đánh dấu xong; học hết cả
+  4 chặng → hiện dòng "🎉 Đã hoàn thành mọi chặng…"; bấm lại 1 chặng đã ✓ → chạy lại bình thường (ôn lại được); bài
+  Boss cuối Unit (`lesson_type='review'`, không có chặng nào của riêng nó ngoài Mini-game) → Mini-game vẫn hiện
+  đúng vì `loadUnitPool()` gộp đủ từ vựng từ bài khác cùng Chủ đề, chơi được bình thường; bài rỗng hoàn toàn (0/7
+  chặng có dữ liệu) → hiện đúng "Bài này chưa có chặng nào."; `api.loadLessonProgress()` sau khi sửa trả đúng ✓ cho
+  bài chỉ có 4/7 chặng thật (không bị kẹt vì 3 chặng rỗng không có trong `bb_progress`) — console sạch trong suốt.
 
-- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 91 kiểm tra) — không cần cài gì.
+- **Hàm thuần + Worker + CSV + TTS:** `node tests/unit.test.mjs`, `node tests/admin.test.mjs` (134 kiểm tra), `node tests/practice.test.mjs` (Luyện tập + huy hiệu, 104 kiểm tra), `node tests/autofill.test.mjs` (Thêm nhanh, 43 kiểm tra), `node tests/curriculum.test.mjs` (CSV giáo trình) và `node tests/bb.test.mjs` (Leitner + chọn phiên ôn tập + CSV nhập hàng loạt "Tiếng Việt Bài Bản", 101 kiểm tra) — không cần cài gì.
 - **SQL + RLS chéo vai trò:** `npm i --no-save @electric-sql/pglite` rồi `node supabase/tests/rls.test.mjs` (225 kiểm tra) và
   `node supabase/tests/seed.test.mjs` (23). Chạy MỌI migration theo thứ tự trên Postgres trong bộ nhớ, giả lập auth/role của Supabase
   (`_pg.mjs`). **Mỗi migration/bảng mới phải thêm kiểm tra vào rls.test.mjs.** Không mô phỏng Storage và PostgREST (nhúng bảng, tên

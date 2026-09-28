@@ -11,6 +11,27 @@ import { shuffle, sample } from "../../child/util.js";
 // qua nếu bài không đủ mục phù hợp" của khu trẻ em).
 const poolOf = (steps, type) => (steps ?? []).filter((s) => s.step_type === type).flatMap((s) => s.content ?? []);
 
+// Dữ liệu nguồn thật sự dùng được cho từng engine — DÙNG CHUNG giữa lúc chơi (meaningPick/phonicsDiscrim/
+// sentenceBuilder bên dưới) và lúc bb/runner.js hỏi "chặng này có đủ dữ liệu để hiện lên lưới chọn chặng không"
+// (feasible(), xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 23) — tránh 2 nơi lặp lại cùng ngưỡng rồi lệch nhau.
+function poolForKind(kind, steps, lang) {
+  if (kind === "meaning_pick") return poolOf(steps, "vocab").filter((w) => w.meaning?.[lang]);
+  if (kind === "phonics_discrim") return poolOf(steps, "phonics");
+  if (kind === "sentence_builder") {
+    const dialogueSentences = poolOf(steps, "dialogue").map((d) => d.line_vi);
+    const grammarSentences = poolOf(steps, "grammar").flatMap((g) => (g.examples ?? []).map((e) => e.vi));
+    return [...new Set([...dialogueSentences, ...grammarSentences])].filter((s) => (s ?? "").trim().split(/\s+/).filter(Boolean).length >= 2);
+  }
+  return [];
+}
+const MIN_POOL = { meaning_pick: 4, phonics_discrim: 1, sentence_builder: 1 };
+// Chặng minigame có chơi được không: đã chọn engine (config.kind, admin/bb.js) VÀ đủ dữ liệu nguồn cho engine đó.
+export function feasible(step, steps, lang) {
+  const kind = step.config?.kind;
+  if (!ENGINES[kind]) return false;
+  return poolForKind(kind, steps, lang).length >= (MIN_POOL[kind] ?? 1);
+}
+
 function emptyOut(box, resolve) {
   paint(box, el("p", { class: "muted" }, T.bbMinigameEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
 }
@@ -22,8 +43,8 @@ function doneOut(box, resolve) {
 // cùng bài (dựa theo trò meaning_pick bên khu trẻ em: "nghe từ Việt ↔ nghĩa bản ngữ"). ----
 function meaningPick(box, resolve, steps) {
   const lang = nativeLang();
-  const pool = poolOf(steps, "vocab").filter((w) => w.meaning?.[lang]);
-  if (pool.length < 4) return emptyOut(box, resolve);
+  const pool = poolForKind("meaning_pick", steps, lang);
+  if (pool.length < MIN_POOL.meaning_pick) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 8));
   let i = 0;
   round();
@@ -51,7 +72,7 @@ function meaningPick(box, resolve, steps) {
 // ---- Phân biệt âm: nghe 1 âm trong cặp dễ nhầm (vd ch/tr) → đoán đúng âm nào, nhiễu = âm còn lại của CHÍNH cặp đó
 // (dựa theo trò tone_pair bên khu trẻ em; đúng "phonics discrimination" trong 5-engine gốc). ----
 function phonicsDiscrim(box, resolve, steps) {
-  const pool = poolOf(steps, "phonics");
+  const pool = poolForKind("phonics_discrim", steps);
   if (pool.length === 0) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 8));
   let i = 0;
@@ -83,10 +104,7 @@ function phonicsDiscrim(box, resolve, steps) {
 // soạn riêng cột "words"; hiện thực hoá đúng nhận xét trong tài liệu nguồn "công thức hình họa dễ số hoá thành bài
 // tập kéo-thả" — đúng "sentence builder" trong 5-engine gốc). ----
 function sentenceBuilder(box, resolve, steps) {
-  const dialogueSentences = poolOf(steps, "dialogue").map((d) => d.line_vi);
-  const grammarSentences = poolOf(steps, "grammar").flatMap((g) => (g.examples ?? []).map((e) => e.vi));
-  const pool = [...new Set([...dialogueSentences, ...grammarSentences])]
-    .filter((s) => (s ?? "").trim().split(/\s+/).filter(Boolean).length >= 2);
+  const pool = poolForKind("sentence_builder", steps);
   if (pool.length === 0) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 6));
   let i = 0;
