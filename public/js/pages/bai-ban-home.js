@@ -15,9 +15,10 @@ export function mount(root) {
 }
 
 function shell(root, ...body) {
-  // Nút Thoát về màn chọn avatar (KHÔNG phải khu phụ huynh) — khớp hành vi khu Trẻ em (pages/child-home.js).
+  // Nút Thoát về màn chọn avatar (KHÔNG phải khu phụ huynh) — khớp hành vi khu Trẻ em (pages/child-home.js), kể cả
+  // dọn cache Level/Unit/Lesson (api.clearCache()) khi rời phiên.
   paint(root, el("div", null,
-    profileHeader(() => { state.activeChildId = null; render(); }),
+    profileHeader(() => { api.clearCache(); state.activeChildId = null; render(); }),
     ...body,
     sessionFooter()));
 }

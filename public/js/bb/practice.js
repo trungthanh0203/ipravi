@@ -3,6 +3,7 @@ import { T } from "../strings.js";
 import { mascotHero } from "../emoji.js";
 import * as api from "./api.js";
 import { pickSession, dueCount } from "./practice-core.js";
+import { nextBox, dueAfter } from "./srs.js";
 import { SKILLS, GROUPS, groupById } from "./skills.js";
 import { playPath, imageOf, nativeLang } from "./media.js";
 import { micButton } from "./pron.js";
@@ -20,21 +21,28 @@ const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${
 // `shell`: hàm bọc header/footer dùng chung của khu Bài Bản (pages/bai-ban-home.js) — CHỈ dùng ở màn lưới kỹ năng
 // này (màn điều hướng chính); 1 lượt ôn cụ thể (runReviewList/runVocabReview bên dưới) giữ header riêng (khớp
 // child/practice.js: shell() ở skillsScreen, KHÔNG dùng trong runSession()).
-export async function showSkills(root, { childId, onBack, shell }) {
-  paint(root, el("p", { class: "boot" }, T.loading));
-  let catalog;
-  try {
-    catalog = await api.loadReviewCatalog(childId);
-  } catch {
-    shell(root, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onBack }, T.back));
-    return;
+// `ctx.catalog`: TẢI 1 LẦN cho cả phiên Luyện tập rồi giữ trong bộ nhớ suốt các lượt (không tải lại mỗi khi quay
+// về lưới) — bỏ trống ở lần gọi ĐẦU (từ bai-ban-home.js) để tự tải; các lượt sau tự truyền lại catalog CŨ đã có
+// sẵn (đã được vá tại chỗ sau mỗi lượt ôn, xem runReviewList()/runVocabReview() dưới — khớp cách child/practice.js
+// giữ `ctx.data` suốt 1 phiên, KHÔNG gọi lại loadCatalog() mỗi khi quay về lưới kỹ năng).
+export async function showSkills(root, ctx) {
+  const { childId, onBack, shell } = ctx;
+  let { catalog } = ctx;
+  if (!catalog) {
+    paint(root, el("p", { class: "boot" }, T.loading));
+    try {
+      catalog = await api.loadReviewCatalog(childId);
+    } catch {
+      shell(root, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onBack }, T.back));
+      return;
+    }
   }
   const total = SKILLS.reduce((n, s) => n + catalog[s.itemType].length, 0);
   const card = (s) => {
     const items = catalog[s.itemType];
     const n = dueCount(items);
     return el("button", { class: "skill-card" + (items.length === 0 ? " off" : ""), style: colorStyle(s), disabled: items.length === 0,
-      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack, shell }), shell }) },
+      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack, shell, catalog }), shell, catalog }) },
       el("span", { class: "sk-emoji" }, s.emoji),
       el("b", null, s.name),
       el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
@@ -75,7 +83,12 @@ async function runReviewList(root, skill, items, session, ctx) {
   const box = el("div", { class: "lesson-box" });
   paint(root, el("h2", { style: "text-align:center" }, skill.emoji + " " + skill.name), box);
   await RUN_BY_TYPE[skill.itemType](box, { content: session });
-  api.saveReviewBatch(childId, skill.itemType, session.map((i) => i.id));
+  api.saveReviewBatch(childId, skill.itemType, session); // không await — ghi nền, không chặn hiện kết quả
+  // Vá tại chỗ (session[i] CÙNG object với items[i]/catalog[type][i], không phải bản sao) — quay lại lưới thấy
+  // đúng số "cần ôn" mới NGAY, không cần đợi mạng hay gọi lại api.loadReviewCatalog() — due_at mới tính được
+  // ngay ở trình duyệt vì hoàn toàn xác định (now + REVIEW_AGAIN_DAYS), khớp đúng giá trị api.js sẽ ghi.
+  const due_at = new Date(Date.now() + api.REVIEW_AGAIN_DAYS * 86_400_000).toISOString();
+  session.forEach((i) => { i.due_at = due_at; i.reviewed_count = (i.reviewed_count ?? 0) + 1; });
   resultScreen(root, skill, items, ctx, T.bbReviewedCount(session.length, skill.name));
 }
 
@@ -112,7 +125,12 @@ function runVocabReview(root, skill, items, session, ctx) {
 
     function grade(ok) {
       if (ok) remembered++; else forgot++;
-      api.saveVocabResult(childId, w.id, ok);
+      api.saveVocabResult(childId, w, ok); // không await — ghi nền, không chặn chuyển sang thẻ kế tiếp
+      // Vá tại chỗ để quay lại lưới thấy đúng số "cần ôn" mới ngay (w CÙNG object với items[i]/catalog.vocab[i]) —
+      // nextBox()/dueAfter() thuần nên tính trước ở đây luôn khớp với giá trị api.js sẽ ghi, không cần đợi mạng.
+      w.box = nextBox(w.box, ok);
+      w.due_at = dueAfter(w.box).toISOString();
+      w.reviewed_count = (w.reviewed_count ?? 0) + 1;
       i++;
       showCard();
     }

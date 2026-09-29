@@ -36,6 +36,14 @@ lý do 1 quyết định cũ.
   header riêng — `bai-ban-home.js` thiếu nút chọn giọng, và nút Thoát của nó lỡ đưa về khu phụ
   huynh thay vì màn chọn avatar (khác hẳn `child-home.js`). Tách `profileHeader()`/`sessionFooter()`
   dùng chung trong `child/media.js`, cả 2 khu Trẻ em/Bài Bản đều gọi qua đó — sửa luôn cả 2 lỗi.
+- **2026-09-29 — Bài Bản chậm do thiếu cache + gọi mạng thừa:** `bb/api.js` chưa hề cache
+  Level/Unit/Lesson (khác `child/api.js` đã cache 60s từ lâu) nên bấm qua lại giữa các màn hình
+  luôn chờ mạng lại từ đầu; `bb/practice.js` tải lại NGUYÊN catalog Luyện tập mỗi lần quay về lưới
+  kỹ năng (khác `child/practice.js` giữ `ctx.data` cả phiên); mỗi lần chấm 1 thẻ từ vựng tốn 2
+  round-trip liền (SELECT dò trạng thái cũ rồi mới UPSERT) dù dữ liệu đó caller đã có sẵn. Sửa cả 3:
+  thêm cache giống khu Trẻ em, giữ catalog trong bộ nhớ + tự vá tại chỗ bằng hàm thuần (không chờ
+  mạng), bỏ SELECT thừa. Đo bằng mock: bấm "Kỹ năng khác" sau khi ôn xong → 0 lệnh mạng (trước đó
+  tải lại cả bộ).
 
 **Bẫy lặp lại nhiều lần lúc code (đã gộp thành 1 luật chung trong CLAUDE.md, không kể lại đây nữa):**
 `replaceChildren()` gốc không lọc null/dàn phẳng mảng — gặp ở cả `admin/bb.js` lẫn `bb/practice.js`.

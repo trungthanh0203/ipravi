@@ -7,19 +7,21 @@ import { playPath, nativeLang } from "../media.js";
 export function run(box, step) {
   return new Promise((resolve) => {
     if (!step.content) {
-      paint(box, el("p", { class: "muted" }, T.bbReadingEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
+      paint(box, el("p", { class: "muted" }, T.bbReadingEmpty), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
       return;
     }
     const { passage, questions } = step.content;
     const lang = nativeLang();
     showPassage();
 
+    // Nút cuối chỉ hiện "Hoàn thành" khi BẤM LÀ XONG CẢ CHẶNG (không có câu hỏi nào) — còn có câu hỏi thì vẫn
+    // "Tiếp" vì mới chuyển sang câu hỏi đầu, chưa xong (khớp nút cuối cùng của showQuestion() bên dưới).
     function showPassage() {
       paint(box,
         el("p", { class: "bb-passage" }, passage.passage_vi),
         passage.passage_tr?.[lang] ? el("p", { class: "muted" }, passage.passage_tr[lang]) : null,
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(passage.audio_path, passage.passage_vi) }, T.bbListen),
-        el("button", { class: "btn block", onclick: () => (questions.length ? showQuestion(0) : resolve()) }, T.next));
+        el("button", { class: "btn block", onclick: () => (questions.length ? showQuestion(0) : resolve()) }, questions.length ? T.next : T.bbFinish));
     }
 
     function showQuestion(i) {
@@ -40,7 +42,7 @@ export function run(box, step) {
         el("p", { class: "bb-step-dots" }, T.bbQuestionOf(i + 1, questions.length)),
         el("p", { class: "bb-question" }, q.question_vi),
         el("div", { class: "opt-grid" }, ...opts), feedback,
-        el("button", { class: "btn block", onclick: () => (i + 1 < questions.length ? showQuestion(i + 1) : resolve()) }, T.next));
+        el("button", { class: "btn block", onclick: () => (i + 1 < questions.length ? showQuestion(i + 1) : resolve()) }, i + 1 < questions.length ? T.next : T.bbFinish));
     }
   });
 }

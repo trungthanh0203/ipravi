@@ -98,7 +98,9 @@ export function profileHeader(onExit) {
 // Footer dùng CHUNG cùng chỗ với profileHeader() — thông tin liên hệ chủ dự án, hiện ở cuối mọi màn điều hướng
 // chính (không hiện trong lúc đang chơi 1 bài/1 chặng, cùng lý do với profileHeader()).
 export function sessionFooter() {
-  return el("footer", { class: "session-footer" }, T.footerContact);
+  // T.footerContact có thể nhiều dòng cách nhau "\n" — tách thành <br> vì el() không nhận HTML.
+  const lines = T.footerContact.split("\n");
+  return el("footer", { class: "session-footer" }, ...lines.flatMap((line, i) => (i ? [el("br"), line] : [line])));
 }
 
 // Phát âm thanh của 1 mục (tiếng Việt hoặc bản ngữ). Luật chọn giọng nằm ở pickAudio().

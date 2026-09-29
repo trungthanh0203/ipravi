@@ -104,11 +104,12 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   trong thân trò). Thêm trò mới → `RUNNERS`, `POOLS`, `SKILLS`, SQL `skill_of()`, `TEXT_KINDS`.
 - `state.activeChildId` (sessionStorage) giữ bé đang học qua `SIGNED_IN` lặp lại. Khu admin tải lại
   dùng `beginLoad(box)` (`admin/view.js`) — giữ vị trí cuộn, đừng tự `replaceChildren("Đang tải…")`.
-- **Header/footer dùng chung mọi màn điều hướng chính** (`child/media.js`: `profileHeader(onExit)`
-  avatar+tên+giọng+Thoát, `sessionFooter()` liên hệ — `bb/media.js` re-export cho khu Bài Bản). Nút
-  Thoát LUÔN về `avatars` (`state.activeChildId=null`, KHÔNG set `state.parentOpen`). Màn đang chơi
-  1 bài/1 chặng cụ thể KHÔNG dùng — giữ header riêng (tiến độ + thoát lượt).
-  `audio.js` tải trước NGUYÊN file rồi phát từ bộ nhớ (SW không cache 206/iOS). Đừng để 1 hàm "tải
+- **Header/footer dùng chung mọi màn điều hướng chính, KỂ CẢ lưới chọn chặng và màn chạy 1 chặng**
+  (`child/media.js`: `profileHeader(onExit)` avatar+tên+giọng+Thoát, `sessionFooter()` liên hệ —
+  `bb/media.js` re-export cho khu Bài Bản, `bb/runner.js` dùng ở cả `showPicker()`/`runStep()`). Nút
+  Thoát LUÔN về `avatars` (`state.activeChildId=null`, KHÔNG set `state.parentOpen`). Chỉ màn chơi
+  1 bài cụ thể bên khu Trẻ em (tiến độ + thoát lượt riêng) mới KHÔNG dùng.
+- `audio.js` tải trước NGUYÊN file rồi phát từ bộ nhớ (SW không cache 206/iOS). Đừng để 1 hàm "tải
   dữ liệu" gánh việc ẩn/hiện UI.
 - **`replaceChildren()` gốc (khác `el()`) KHÔNG lọc null/dàn phẳng mảng** → hiện thẳng
   `"null"`/`"[object HTMLDivElement],…"` lên màn hình. LUÔN bọc `el("div", null, ...)` trước khi
@@ -142,6 +143,14 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   A1 (`bai-ban-a1-chao-hoi-gia-dinh.csv`, 4 chủ đề: Chào hỏi/Gia đình/Số đếm/Màu sắc) — cả 2 ở
   `giao-trinh/bai-ban/`. Seed `005_bb_a1_title_translations.sql` chỉ cần cho bản ĐÃ nhập CSV
   trước khi có cột `unit_<lang>`.
+  **Hiệu năng:** `api.js` cache Level/Unit/Lesson 60s (`cached()`, khớp `child/api.js`) —
+  `clearCache()` khi Thoát. `practice.js` giữ `catalog` trong bộ nhớ suốt 1 phiên Luyện tập (không
+  tải lại mỗi khi quay về lưới), tự vá `box`/`due_at` tại chỗ sau khi chấm (dùng `srs.js`
+  `nextBox`/`dueAfter`, KHÔNG chờ mạng) — `saveVocabResult`/`saveReviewBatch` nhận NGUYÊN item thay
+  vì id để bỏ 1 vòng SELECT thừa trước UPSERT. `runLesson()` tải `loadLessonContent`+`loadUnitPool`
+  song song (`Promise.all`) khi cả 2 đều cần (bài Ôn tập). `loadLessonProgress()` cache riêng 5 phút
+  "chặng nào có dữ liệu" theo bộ id bài (`visibleStepsOf()`) + `fetchColOnly()` (select 1 cột thay
+  `*`) — đo được: quay lại danh sách bài từ 8 query/lần còn 1 query.
 
 ## Test + local
 

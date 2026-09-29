@@ -7,7 +7,7 @@ export function run(box, step) {
   return new Promise((resolve) => {
     const points = step.content ?? [];
     if (points.length === 0) {
-      paint(box, el("p", { class: "muted" }, T.bbGrammarEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
+      paint(box, el("p", { class: "muted" }, T.bbGrammarEmpty), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
       return;
     }
     const lang = nativeLang();
@@ -16,6 +16,6 @@ export function run(box, step) {
       g.formula_tr?.[lang] ? el("p", { class: "muted" }, g.formula_tr[lang]) : null,
       (g.examples ?? []).length ? el("ul", { class: "bb-examples" },
         (g.examples ?? []).map((ex) => el("li", null, el("span", null, ex.vi), ex.tr?.[lang] ? el("span", { class: "muted" }, " — " + ex.tr[lang]) : null))) : null));
-    paint(box, ...cards, el("button", { class: "btn block", onclick: resolve }, T.next));
+    paint(box, ...cards, el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }

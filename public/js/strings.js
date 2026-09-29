@@ -204,9 +204,9 @@ export const T = {
   traceMore: "Con tô kín theo chữ mẫu hơn một chút nhé!",
   traceEnough: "Được rồi, con tập thêm sau nhé!",
   credits: "Hình biểu tượng: Twemoji © Twitter, Inc. và các cộng tác viên, giấy phép CC-BY 4.0. Chữ mẫu tô chữ: Playwrite VN © TypeTogether, SIL Open Font License.",
-  // TODO(chủ dự án điền): thông tin liên hệ hiện ở footer mọi màn chính (giống dòng "Learning content managed
-  // by..." của iLapra) — đổi placeholder dưới đây thành tên/SĐT/email thật trước khi công khai.
-  footerContact: "[Điền tên/SĐT/email liên hệ ở đây — strings.js T.footerContact]",
+  // Liên hệ hiện ở footer mọi màn chính (child/media.js sessionFooter()) — 2 dòng cách nhau bằng "\n", tự tách
+  // thành 2 dòng hiển thị (xem sessionFooter()), KHÔNG chèn HTML thẳng (el() không nhận innerHTML).
+  footerContact: "Content managed by Mr.Thanh Tran.\nContact: Tel: +84.0989099454 - Email: trungthanh0203@gmail.com",
   instrPickText: "Con nghe rồi chạm vào chữ đúng nhé!",
   instrMatch: "Nối hình với chữ đúng nhé!",
   instrRepeat: "Con nói theo nhé!",
@@ -295,6 +295,7 @@ export const T = {
 
   bbListen: "🔊 Nghe",
   bbPracticeRead: "🎤 Đọc thử",
+  bbFinish: "✓ Hoàn thành",
   bbDialogueEmpty: "Chặng này chưa có nội dung.",
   bbVocabEmpty: "Chặng này chưa có từ vựng.",
   bbGrammarEmpty: "Chặng này chưa có nội dung ngữ pháp.",

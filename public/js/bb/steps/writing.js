@@ -69,11 +69,11 @@ export function run(box, step) {
   return new Promise((resolve) => {
     const tasks = step.content ?? [];
     if (tasks.length === 0) {
-      paint(box, el("p", { class: "muted" }, T.bbWritingEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
+      paint(box, el("p", { class: "muted" }, T.bbWritingEmpty), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
       return;
     }
     const lang = nativeLang();
     const cards = tasks.map((t) => (t.task_type === "fill" ? fillTask(t, lang) : t.task_type === "order" ? orderTask(t, lang) : writeTask(t, lang)));
-    paint(box, ...cards, el("button", { class: "btn block", onclick: resolve }, T.next));
+    paint(box, ...cards, el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }

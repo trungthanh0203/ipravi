@@ -1,28 +1,43 @@
 import { sb } from "../supabase.js";
 import { nextBox, dueAfter } from "./srs.js";
 
-// Tải dữ liệu "Tiếng Việt Bài Bản" (xem KE_HOACH_TIENG_VIET_BAI_BAN.md). Chỉ tải đúng màn hình đang cần, giống hệt
-// nguyên tắc của khu trẻ em (child/api.js): Level → Unit → Lesson → nội dung 1 bài. RLS tự lọc mục đã duyệt + còn hạn.
+// Tải dữ liệu "Tiếng Việt Bài Bản". Chỉ tải đúng màn hình đang cần, giống hệt nguyên tắc của khu trẻ em
+// (child/api.js): Level → Unit → Lesson → nội dung 1 bài. RLS tự lọc mục đã duyệt + còn hạn.
 
-export async function loadLevels() {
+// Danh sách Level/Unit/Lesson ít đổi → nhớ 1 phút (CÙNG khuôn + TTL với child/api.js) để bé bấm qua lại giữa các
+// màn hình (vd Học → Luyện tập → Học lại) không phải chờ mạng mỗi lần. `loadLessonContent`/`loadUnitPool` (nội
+// dung 1 bài cụ thể) CỐ Ý không cache, giống child/api.js không cache `loadLessonItems` — chỉ vào 1 lần/lượt học.
+const TTL = 60_000;
+const memo = new Map();
+const visibleStepsCache = new Map(); // "chặng nào có dữ liệu" của loadLessonProgress() — xem chỗ dùng bên dưới
+async function cached(key, load) {
+  const hit = memo.get(key);
+  if (hit && Date.now() - hit.t < TTL) return hit.v;
+  const v = await load();
+  memo.set(key, { t: Date.now(), v });
+  return v;
+}
+export const clearCache = () => { memo.clear(); visibleStepsCache.clear(); };
+
+export const loadLevels = () => cached("levels", async () => {
   const { data, error } = await sb.from("bb_levels").select("*").eq("status", "approved").order("sort_order");
   if (error) throw error;
   return data ?? [];
-}
+});
 
 // Nhúng level cha (bb_levels) để màn "Danh sách bài" quay lại đúng level mà không phải tải lại (giống cách
 // admin/billing.js nhúng tuition_plans qua payments).
-export async function loadUnits(levelId) {
+export const loadUnits = (levelId) => cached("units:" + levelId, async () => {
   const { data, error } = await sb.from("bb_units").select("*, bb_levels(id, code, name_vi, can_do)").eq("level_id", levelId).eq("status", "approved").order("sort_order");
   if (error) throw error;
   return data ?? [];
-}
+});
 
-export async function loadLessons(unitId) {
+export const loadLessons = (unitId) => cached("lessons:" + unitId, async () => {
   const { data, error } = await sb.from("bb_lessons").select("*").eq("unit_id", unitId).eq("status", "approved").order("sort_order");
   if (error) throw error;
   return data ?? [];
-}
+});
 
 function groupBy(rows, key) {
   const m = new Map();
@@ -37,6 +52,15 @@ const bySortOrder = (rows) => [...rows].sort((a, b) => (a.sort_order ?? 0) - (b.
 async function fetchByIds(table, ids, col = "step_id") {
   if (!ids.length) return [];
   const { data, error } = await sb.from(table).select("*").in(col, ids);
+  if (error) throw error;
+  return data ?? [];
+}
+
+// Như fetchByIds() nhưng chỉ lấy ĐÚNG 1 CỘT (`col`) — dùng khi chỉ cần biết "có dòng nào không" (ĐÃ CÓ dữ liệu),
+// không cần đọc nội dung — nhẹ hơn nhiều so với select("*") khi bảng có cột to (dialogue/vocab.meaning jsonb…).
+async function fetchColOnly(table, ids, col = "step_id") {
+  if (!ids.length) return [];
+  const { data, error } = await sb.from(table).select(col).in(col, ids);
   if (error) throw error;
   return data ?? [];
 }
@@ -122,27 +146,39 @@ export async function loadStepProgress(childId, stepIds) {
   return new Set((data ?? []).map((p) => p.step_id));
 }
 
-// Bài đã hoàn thành = MỌI chặng CÓ DỮ LIỆU THẬT (khớp bb/runner.js hasContent() — chặng rỗng bị ẩn khỏi lưới chọn
-// chặng nên KHÔNG THỂ nào có trong bb_progress, không được tính vào mẫu số) đều đã có trong bb_progress. Dùng để
-// đánh dấu ✓ ở danh sách bài (pages/bai-ban-home.js). Nhẹ hơn hasContent() ở chỗ minigame chỉ cần `config.kind` đã
-// chọn (không tính feasibility theo dữ liệu nguồn — hàm này chạy cho NHIỀU bài 1 lúc, không tải hết nội dung từng
-// bài như lúc vào học 1 bài cụ thể) — sai khác chỉ ở trường hợp hiếm: minigame đã chọn engine nhưng KHÔNG đủ dữ
-// liệu nguồn để chơi (ẩn ở lưới chọn chặng) vẫn được tính vào mẫu số ở đây, khiến bài đó khó đạt ✓ hơn 1 chút.
-export async function loadLessonProgress(childId, lessonIds) {
-  if (!lessonIds.length) return new Set();
+// "Chặng nào có dữ liệu thật" (khớp bb/runner.js hasContent(), chỉ khác minigame: ở đây không tính feasibility
+// theo dữ liệu nguồn, chỉ cần `config.kind` đã chọn — hàm này chạy cho NHIỀU bài 1 lúc nên không tải hết nội dung
+// từng bài như lúc vào học 1 bài cụ thể) — CHỈ đổi khi ADMIN sửa nội dung, không đổi theo learner, nên cache 5
+// phút (khớp TTL `loadSoundBank` bên child/api.js) để "Quay lại danh sách bài" không phải tính lại từ đầu mỗi lần.
+// `fetchColOnly` (chỉ lấy cột step_id, không lấy `select("*")`) vì ở đây chỉ cần biết CÓ dòng nào không.
+async function visibleStepsOf(lessonIds) {
+  const key = [...lessonIds].sort((a, b) => a - b).join(",");
+  const hit = visibleStepsCache.get(key);
+  if (hit && Date.now() - hit.t < 300_000) return hit.v;
   const { data: steps, error } = await sb.from("bb_lesson_steps").select("id, lesson_id, step_type, config").eq("status", "approved").in("lesson_id", lessonIds);
   if (error) throw error;
   const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
   const [dialogueRows, vocabRows, grammarRows, phonicsRows, readingRows, writingRows] = await Promise.all([
-    fetchByIds("bb_dialogue_lines", idsOf("dialogue")),
-    fetchByIds("bb_vocab", idsOf("vocab")),
-    fetchByIds("bb_grammar", idsOf("grammar")),
-    fetchByIds("bb_phonics_pairs", idsOf("phonics")),
-    fetchByIds("bb_reading_passages", idsOf("reading")),
-    fetchByIds("bb_writing_tasks", idsOf("writing")),
+    fetchColOnly("bb_dialogue_lines", idsOf("dialogue")),
+    fetchColOnly("bb_vocab", idsOf("vocab")),
+    fetchColOnly("bb_grammar", idsOf("grammar")),
+    fetchColOnly("bb_phonics_pairs", idsOf("phonics")),
+    fetchColOnly("bb_reading_passages", idsOf("reading")),
+    fetchColOnly("bb_writing_tasks", idsOf("writing")),
   ]);
   const nonEmptyStepIds = new Set([...dialogueRows, ...vocabRows, ...grammarRows, ...phonicsRows, ...readingRows, ...writingRows].map((r) => r.step_id));
   const visible = (steps ?? []).filter((s) => (s.step_type === "minigame" ? Boolean(s.config?.kind) : nonEmptyStepIds.has(s.id)));
+  visibleStepsCache.set(key, { t: Date.now(), v: visible });
+  return visible;
+}
+
+// Bài đã hoàn thành = MỌI chặng CÓ DỮ LIỆU THẬT (chặng rỗng bị ẩn khỏi lưới chọn chặng nên KHÔNG THỂ nào có trong
+// bb_progress, không được tính vào mẫu số) đều đã có trong bb_progress. Dùng để đánh dấu ✓ ở danh sách bài
+// (pages/bai-ban-home.js). Phần "đã xong chưa" (bb_progress) LUÔN tải mới — đây là phần đổi liên tục theo learner,
+// khác phần "chặng nào có dữ liệu" ở trên (cache được vì hiếm đổi).
+export async function loadLessonProgress(childId, lessonIds) {
+  if (!lessonIds.length) return new Set();
+  const visible = await visibleStepsOf(lessonIds);
   const totalByLesson = new Map();
   for (const s of visible) totalByLesson.set(s.lesson_id, (totalByLesson.get(s.lesson_id) ?? 0) + 1);
   const stepIds = visible.map((s) => s.id);
@@ -180,9 +216,11 @@ export async function loadReviewCatalog(childId) {
     }),
   ]);
   const srsByKey = new Map(srs.map((s) => [`${s.item_type}:${s.item_id}`, s]));
+  // box/due_at/reviewed_count/correct_count đủ để bb/practice.js chấm + tự cập nhật catalog trong bộ nhớ SAU KHI
+  // ôn 1 mục, KHÔNG cần gọi lại loadReviewCatalog()/tự SELECT lại — xem saveVocabResult()/saveReviewBatch() dưới.
   const merge = (rows, type) => rows.map((r) => {
     const s = srsByKey.get(`${type}:${r.id}`);
-    return { ...r, box: s?.box ?? 1, due_at: s?.due_at ?? NEVER, reviewed_count: s?.reviewed_count ?? 0 };
+    return { ...r, box: s?.box ?? 1, due_at: s?.due_at ?? NEVER, reviewed_count: s?.reviewed_count ?? 0, correct_count: s?.correct_count ?? 0 };
   });
   return { vocab: merge(vocab, "vocab"), grammar: merge(grammar, "grammar"), phonics: merge(phonics, "phonics"), dialogue: merge(dialogue, "dialogue") };
 }
@@ -192,33 +230,34 @@ async function upsertSrs(rows) {
   if (error) console.warn("saveSrs", error.message);
 }
 
-// Kết quả 1 thẻ từ vựng (tự đánh giá Nhớ/Quên) — CHỈ 'vocab' dùng box Leitner thật (xem srs.js).
-export async function saveVocabResult(childId, itemId, remembered) {
-  const { data } = await sb.from("bb_srs_state").select("*").eq("child_id", childId).eq("item_type", "vocab").eq("item_id", itemId);
-  const prev = data?.[0];
-  const box = nextBox(prev?.box, remembered);
+// Kết quả 1 thẻ từ vựng (tự đánh giá Nhớ/Quên) — CHỈ 'vocab' dùng box Leitner thật (xem srs.js). Nhận NGUYÊN
+// `item` (từ loadReviewCatalog(), đã có box/reviewed_count/correct_count sẵn) thay vì chỉ `itemId` — tránh 1 vòng
+// SELECT thừa để tự tra lại đúng những gì caller đã có trong tay (mỗi lần chấm 1 thẻ trước đây tốn 2 round-trip
+// mạng liền nhau [SELECT rồi UPSERT], giờ chỉ còn 1). Trả về `{box, due_at}` để caller tự vá lại catalog trong bộ
+// nhớ (không cần gọi lại loadReviewCatalog() để thấy đúng số "cần ôn" mới).
+export async function saveVocabResult(childId, item, remembered) {
+  const box = nextBox(item.box, remembered);
+  const due_at = dueAfter(box).toISOString();
   await upsertSrs([{
-    child_id: childId, item_type: "vocab", item_id: itemId, box,
-    due_at: dueAfter(box).toISOString(),
-    reviewed_count: (prev?.reviewed_count ?? 0) + 1,
-    correct_count: (prev?.correct_count ?? 0) + (remembered ? 1 : 0),
+    child_id: childId, item_type: "vocab", item_id: item.id, box, due_at,
+    reviewed_count: (item.reviewed_count ?? 0) + 1,
+    correct_count: (item.correct_count ?? 0) + (remembered ? 1 : 0),
     updated_at: new Date().toISOString(),
   }]);
+  return { box, due_at };
 }
 
-// Đánh dấu "đã ôn lại" cho 1 lượt ôn hội thoại/ngữ pháp/ngữ âm (không chấm, chỉ đẩy hạn ôn tới — xem GĐ 4 trong kế hoạch).
-const REVIEW_AGAIN_DAYS = 3;
-export async function saveReviewBatch(childId, itemType, itemIds) {
-  if (!itemIds.length) return;
-  const { data } = await sb.from("bb_srs_state").select("*").eq("child_id", childId).eq("item_type", itemType).in("item_id", itemIds);
-  const prevByItem = new Map((data ?? []).map((r) => [r.item_id, r]));
-  const dueAt = new Date(Date.now() + REVIEW_AGAIN_DAYS * 86_400_000).toISOString();
-  await upsertSrs(itemIds.map((id) => {
-    const prev = prevByItem.get(id);
-    return {
-      child_id: childId, item_type: itemType, item_id: id, box: 1, due_at: dueAt,
-      reviewed_count: (prev?.reviewed_count ?? 0) + 1, correct_count: (prev?.correct_count ?? 0) + 1,
-      updated_at: new Date().toISOString(),
-    };
-  }));
+// Đánh dấu "đã ôn lại" cho 1 lượt ôn hội thoại/ngữ pháp/ngữ âm (không chấm, chỉ đẩy hạn ôn tới). Nhận NGUYÊN
+// `items` (không phải `itemIds`) cùng lý do với saveVocabResult() — bỏ 1 vòng SELECT thừa. Trả `due_at` mới để
+// caller vá catalog trong bộ nhớ.
+export const REVIEW_AGAIN_DAYS = 3;
+export async function saveReviewBatch(childId, itemType, items) {
+  if (!items.length) return null;
+  const due_at = new Date(Date.now() + REVIEW_AGAIN_DAYS * 86_400_000).toISOString();
+  await upsertSrs(items.map((item) => ({
+    child_id: childId, item_type: itemType, item_id: item.id, box: 1, due_at,
+    reviewed_count: (item.reviewed_count ?? 0) + 1, correct_count: (item.correct_count ?? 0) + 1,
+    updated_at: new Date().toISOString(),
+  })));
+  return due_at;
 }

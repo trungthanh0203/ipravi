@@ -8,7 +8,7 @@ export function run(box, step) {
   return new Promise((resolve) => {
     const words = step.content ?? [];
     if (words.length === 0) {
-      paint(box, el("p", { class: "muted" }, T.bbVocabEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
+      paint(box, el("p", { class: "muted" }, T.bbVocabEmpty), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
       return;
     }
     const lang = nativeLang();
@@ -26,6 +26,6 @@ export function run(box, step) {
           mic),
         feedback);
     });
-    paint(box, el("div", { class: "bb-vocab-grid" }, ...cards), el("button", { class: "btn block", onclick: resolve }, T.next));
+    paint(box, el("div", { class: "bb-vocab-grid" }, ...cards), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }

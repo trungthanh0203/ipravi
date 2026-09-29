@@ -33,10 +33,10 @@ export function feasible(step, steps, lang) {
 }
 
 function emptyOut(box, resolve) {
-  paint(box, el("p", { class: "muted" }, T.bbMinigameEmpty), el("button", { class: "btn block", onclick: resolve }, T.next));
+  paint(box, el("p", { class: "muted" }, T.bbMinigameEmpty), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
 }
 function doneOut(box, resolve) {
-  paint(box, el("p", { class: "muted", style: "text-align:center" }, T.bbMinigameRoundDone), el("button", { class: "btn block", onclick: resolve }, T.next));
+  paint(box, el("p", { class: "muted", style: "text-align:center" }, T.bbMinigameRoundDone), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
 }
 
 // ---- Ghép nghĩa: nghe 1 từ tiếng Việt → chọn đúng nghĩa (bản ngữ) trong 4 lựa chọn, nhiễu lấy từ CÁC TỪ KHÁC
@@ -142,7 +142,7 @@ export function run(box, step, steps) {
   return new Promise((resolve) => {
     const engine = ENGINES[step.config?.kind];
     if (!engine) {
-      paint(box, el("p", { class: "muted" }, T.bbMinigamePlaceholder), el("button", { class: "btn block", onclick: resolve }, T.next));
+      paint(box, el("p", { class: "muted" }, T.bbMinigamePlaceholder), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
       return;
     }
     engine(box, resolve, steps);
