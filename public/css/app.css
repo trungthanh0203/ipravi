@@ -452,6 +452,9 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .lesson-title { text-align: center; font-weight: 800; font-size: 20px; color: var(--brand-dark); margin: 0 0 8px; }
 .mic.sm { width: 72px; height: 72px; font-size: 34px; margin: 10px auto 4px; }
 .flash .pron-feedback { min-height: 0; text-align: center; }
+/* .mic có margin:auto để tự căn giữa lúc đứng riêng 1 mình (vd .flash) — trong .row-btns (xếp cạnh nút khác, vd
+   Nghe+Đọc thử ở bb/steps/dialogue.js) margin auto đó lại đẩy dạt 2 nút ra xa nhau, nên bỏ margin ngang ở đây. */
+.row-btns .mic { margin-left: 0; margin-right: 0; }
 
 /* ===== Admin: Thêm nhanh / sửa tên ===== */
 .qa-box { background: #fffaf5; border: 2px dashed #f4c9a5; border-radius: 14px; padding: 12px 14px; margin: 10px 0; }
@@ -501,15 +504,19 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-step-dots { text-align: center; color: var(--text-2); font-size: 14px; font-weight: 700; margin: 0 0 4px; }
 .bb-step-body { margin-top: 8px; }
 .bb-line { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
-.bb-line-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.bb-line-head { display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
 .bb-line-vi { font-size: 20px; font-weight: 700; margin: 4px 0; }
-.bb-vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 10px; }
 .bb-vocab-card { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); text-align: center; }
 .bb-vocab-word { font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.bb-vocab-say { font-size: 13px; }
 .bb-grammar-card .bb-formula { font-size: 20px; font-weight: 800; }
 .bb-examples { padding-left: 20px; margin: 8px 0 0; }
 .bb-examples li { margin-bottom: 6px; }
-.bb-phonics-pair { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bb-phonics-pair { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
+.bb-phonics-examples { margin: 8px 0 0; }
+/* Bảng Từ vựng (bb/steps/vocab.js) — tái dùng .table-wrap/.tbl của khu admin; .pron-feedback mặc định cao 70px
+   (dành cho màn tập đọc riêng) quá cao cho 1 dòng bảng, thu gọn lại trong ngữ cảnh này. */
+.tbl .pron-feedback { min-height: 0; font-size: 13px; font-weight: 600; margin-top: 4px; }
 .bb-passage { font-size: 19px; line-height: 1.6; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
 .bb-question { font-size: 20px; font-weight: 700; margin: 10px 0; }
 .bb-task { text-align: left; }

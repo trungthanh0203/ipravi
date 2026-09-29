@@ -4,8 +4,8 @@ import { playPath, nativeLang } from "../media.js";
 import { micButton } from "../pron.js";
 
 // Chặng Hội thoại: hiện cả đoạn hội thoại (mỗi dòng = vai + câu + nghĩa), nghe từng dòng, đọc thử (tái dùng
-// audio.js/pronunciation.js). Nút Nghe + Đọc thử đứng CHUNG 1 hàng (đỡ tốn chiều cao mỗi dòng — trước đây Nghe
-// nằm riêng ở hàng đầu cạnh vai, Đọc thử lại ở hàng dưới cùng).
+// audio.js/pronunciation.js). Tên vai (A/B) căn GIỮA đầu dòng; nút Nghe + Đọc thử đứng SÁT CẠNH nhau (`.row-btns`
+// gộp gọn + căn giữa, khác `.row` vốn kéo giãn 2 đầu) — kết quả đọc thử hiện Ở DÒNG RIÊNG bên dưới.
 export function run(box, step) {
   return new Promise((resolve) => {
     const lines = step.content ?? [];
@@ -21,7 +21,7 @@ export function run(box, step) {
         el("div", { class: "bb-line-head" }, el("span", { class: "pill" }, line.speaker)),
         el("p", { class: "bb-line-vi" }, line.line_vi),
         line.line_tr?.[lang] ? el("p", { class: "muted" }, line.line_tr[lang]) : null,
-        el("div", { class: "row" }, listenBtn, mic, feedback));
+        el("div", { class: "row-btns" }, listenBtn, mic), feedback);
     });
     paint(box, ...rows, el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });

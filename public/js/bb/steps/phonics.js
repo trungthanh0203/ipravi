@@ -11,9 +11,10 @@ export function run(box, step) {
       return;
     }
     const rows = pairs.map((p) => el("div", { class: "bb-phonics-pair" },
-      el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(p.audio_a_path, p.sound_a) }, "🔊 " + p.sound_a),
-      el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(p.audio_b_path, p.sound_b) }, "🔊 " + p.sound_b),
-      (p.examples ?? []).length ? el("p", { class: "muted" }, (p.examples ?? []).join(" · ")) : null));
+      el("div", { class: "row-btns" },
+        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(p.audio_a_path, p.sound_a) }, "🔊 " + p.sound_a),
+        el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(p.audio_b_path, p.sound_b) }, "🔊 " + p.sound_b)),
+      (p.examples ?? []).length ? el("p", { class: "muted bb-phonics-examples" }, (p.examples ?? []).join(" · ")) : null));
     paint(box, ...rows, el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }

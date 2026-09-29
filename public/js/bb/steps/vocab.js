@@ -1,9 +1,10 @@
 import { el, mount as paint } from "../../ui.js";
 import { T } from "../../strings.js";
-import { playPath, imageOf, nativeLang } from "../media.js";
+import { playPath, nativeLang } from "../media.js";
 import { micButton } from "../pron.js";
 
-// Chặng Từ vựng: thẻ chữ + loại từ + nghĩa + hình (nếu có) + nghe + đọc thử, cho từng từ trong chặng.
+// Chặng Từ vựng: bảng danh sách trên-xuống-dưới (mỗi dòng 1 từ: Tiếng Việt | Loại từ | Nghe | Đọc thử | Nghĩa) —
+// khác bản thẻ-lưới trước đây, đỡ tốn chỗ khi bài có nhiều từ (yêu cầu chủ dự án 2026-09-30).
 export function run(box, step) {
   return new Promise((resolve) => {
     const words = step.content ?? [];
@@ -12,20 +13,23 @@ export function run(box, step) {
       return;
     }
     const lang = nativeLang();
-    const cards = words.map((w) => {
-      const img = imageOf(w);
+    const rows = words.map((w) => {
       const spoken = w.say_vi || w.word_vi; // chữ ĐỌC (vd "b" đọc "bờ") — dùng cho cả nghe mẫu và chấm phát âm
       const [mic, feedback] = micButton(spoken);
-      return el("div", { class: "bb-vocab-card" },
-        img ? el("img", { class: "visual", src: img, alt: "" }) : null,
-        el("div", { class: "bb-vocab-word" }, w.word_vi, w.pos ? el("span", { class: "pill" }, w.pos) : null),
-        w.say_vi ? el("p", { class: "muted" }, `Đọc là: “${w.say_vi}”`) : null,
-        w.meaning?.[lang] ? el("p", { class: "muted" }, w.meaning[lang]) : null,
-        el("div", { class: "row" },
-          el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen),
-          mic),
-        feedback);
+      return el("tr", null,
+        el("td", null, w.word_vi, w.say_vi ? el("div", { class: "muted bb-vocab-say" }, `Đọc là: “${w.say_vi}”`) : null),
+        el("td", null, w.pos ? el("span", { class: "pill" }, w.pos) : null),
+        el("td", null, el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen)),
+        el("td", null, mic, feedback),
+        el("td", null, w.meaning?.[lang] ?? ""));
     });
-    paint(box, el("div", { class: "bb-vocab-grid" }, ...cards), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
+    paint(box,
+      el("div", { class: "table-wrap" },
+        el("table", { class: "tbl" },
+          el("thead", null, el("tr", null,
+            el("th", null, T.bbColWord), el("th", null, T.bbColPos), el("th", null, T.bbListen),
+            el("th", null, T.bbPracticeRead), el("th", null, T.bbColMeaning))),
+          el("tbody", null, ...rows))),
+      el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }

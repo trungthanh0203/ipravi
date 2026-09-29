@@ -296,6 +296,9 @@ export const T = {
 
   bbListen: "🔊 Nghe",
   bbPracticeRead: "🎤 Đọc thử",
+  bbColWord: "Tiếng Việt",
+  bbColPos: "Loại từ",
+  bbColMeaning: "Nghĩa",
   bbFinish: "✓ Hoàn thành",
   bbRetry: "↺ Làm lại",
   bbDialogueEmpty: "Chặng này chưa có nội dung.",
