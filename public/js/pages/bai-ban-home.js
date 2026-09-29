@@ -6,34 +6,63 @@ import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
 import { showSkills } from "../bb/practice.js";
 import { titleSpeakers, titleIn, nativeLang, profileHeader, sessionFooter } from "../bb/media.js";
+import { saveNav, clearNav, readNav } from "../bb/nav.js";
 
 // Khu học "Tiếng Việt Bài Bản" (hồ sơ profile_type='learner'): 📖 Học (Level → Unit → Lesson → 7 chặng) | 🎯 Luyện
 // tập (ôn nội dung đã học) — 2 phần độc lập, cùng cách tổ chức màn hình chính với khu trẻ em (pages/child-home.js).
-// KHÔNG khoá bài — chỉ hiện thứ tự, không cấm chọn bài bất kỳ.
+// KHÔNG khoá bài — chỉ hiện thứ tự, không cấm chọn bài bất kỳ. Vị trí đang xem được nhớ qua bb/nav.js (F5/refresh
+// khôi phục đúng chỗ — xem chi tiết ở đó); chỉ nhớ ID, tự tải lại dữ liệu thật lúc khôi phục — id đã bị xoá/hết hạn
+// thì tự lùi về tầng gần nhất còn tải được, không lỗi.
+
 export function mount(root) {
-  showHome(root);
+  restore(root);
+}
+
+async function restore(root) {
+  const nav = readNav();
+  if (!nav) return showHome(root);
+  try {
+    if (nav.mode === "practice") return showSkills(root, { childId: state.activeChildId, onBack: () => showHome(root), shell });
+    if (!nav.levelId) return showHome(root);
+    const level = (await api.loadLevels()).find((l) => l.id === nav.levelId);
+    if (!level) return showHome(root);
+    if (!nav.unitId) return showUnits(root, level);
+    const unit = (await api.loadUnits(level.id)).find((u) => u.id === nav.unitId);
+    if (!unit) return showUnits(root, level);
+    if (!nav.lessonId) return showLessons(root, unit);
+    const lesson = (await api.loadLessons(unit.id)).find((l) => l.id === nav.lessonId);
+    if (!lesson) return showLessons(root, unit);
+    runLesson({ root, lesson, childId: state.activeChildId, onExit: () => showLessons(root, unit) });
+  } catch {
+    showHome(root);
+  }
 }
 
 function shell(root, ...body) {
   // Nút Thoát về màn chọn avatar (KHÔNG phải khu phụ huynh) — khớp hành vi khu Trẻ em (pages/child-home.js), kể cả
-  // dọn cache Level/Unit/Lesson (api.clearCache()) khi rời phiên.
+  // dọn cache Level/Unit/Lesson (api.clearCache()) khi rời phiên. Thoát chủ động thì XOÁ vị trí đã nhớ (khác refresh
+  // ngoài ý muốn) — lần sau chọn lại hồ sơ này vào thẳng Home, không nhảy lại đúng chỗ cũ.
   paint(root, el("div", null,
-    profileHeader(() => { api.clearCache(); state.activeChildId = null; render(); }),
+    profileHeader(() => { api.clearCache(); clearNav(); state.activeChildId = null; render(); }),
     ...body,
     sessionFooter()));
 }
 
 function showHome(root) {
+  clearNav();
   shell(root,
     el("h1", { style: "text-align:center" }, T.bbHomeTitle),
     el("div", { class: "home-cards" },
       el("button", { class: "home-card learn", onclick: () => showLevels(root) },
         el("span", { class: "hc-emoji" }, "📖"), el("b", null, T.bbHomeLearn), el("small", null, T.bbHomeLearnSub)),
-      el("button", { class: "home-card practice", onclick: () => showSkills(root, { childId: state.activeChildId, onBack: () => showHome(root), shell }) },
-        el("span", { class: "hc-emoji" }, "🎯"), el("b", null, T.bbHomePractice), el("small", null, T.bbHomePracticeSub))));
+      el("button", {
+        class: "home-card practice",
+        onclick: () => { saveNav({ mode: "practice" }); showSkills(root, { childId: state.activeChildId, onBack: () => showHome(root), shell }); },
+      }, el("span", { class: "hc-emoji" }, "🎯"), el("b", null, T.bbHomePractice), el("small", null, T.bbHomePracticeSub))));
 }
 
 async function showLevels(root) {
+  saveNav({ mode: "learn" });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
     const levels = await api.loadLevels();
@@ -51,6 +80,7 @@ async function showLevels(root) {
 }
 
 async function showUnits(root, level) {
+  saveNav({ mode: "learn", levelId: level.id });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
     const units = await api.loadUnits(level.id);
@@ -69,6 +99,7 @@ async function showUnits(root, level) {
 }
 
 async function showLessons(root, unit) {
+  saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
     const lessons = await api.loadLessons(unit.id);
@@ -85,7 +116,10 @@ async function showLessons(root, unit) {
           return el("div", { class: "lesson-item" },
             el("button", {
               class: "lesson-btn",
-              onclick: () => runLesson({ root, lesson: l, childId, onExit: () => showLessons(root, unit) }),
+              onclick: () => {
+                saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id, lessonId: l.id });
+                runLesson({ root, lesson: l, childId, onExit: () => showLessons(root, unit) });
+              },
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),
             el("span", { class: "title" }, l.title_vi, l.lesson_type === "review" ? el("span", { class: "lv-tag" }, T.bbLessonReview) : null, native ? el("small", { class: "title-native" }, native) : null)),

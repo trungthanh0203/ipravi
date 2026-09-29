@@ -4,6 +4,7 @@ import { stopAudio } from "../audio.js";
 import { state } from "../state.js";
 import { render } from "../flow.js";
 import { nativeLang, profileHeader, sessionFooter } from "./media.js";
+import { clearNav } from "./nav.js";
 import * as api from "./api.js";
 import * as dialogue from "./steps/dialogue.js";
 import * as vocab from "./steps/vocab.js";
@@ -46,8 +47,9 @@ function hasContent(step, pool) {
 export async function runLesson({ root, lesson, childId, onExit }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   // Thoát cả phiên (nút Thoát trong header) — khác "◀ Quay lại" (chỉ lùi về danh sách bài) và "✕ Thoát bài" (chỉ
-  // lùi về lưới chặng) — giống hệt cách bai-ban-home.js xử lý, dọn cache trước khi rời.
-  const exitSession = () => { api.clearCache(); state.activeChildId = null; render(); };
+  // lùi về lưới chặng) — giống hệt cách bai-ban-home.js xử lý, dọn cache + xoá vị trí đã nhớ trước khi rời (không
+  // xoá thì mở lại hồ sơ này sau sẽ nhảy lại đúng bài đang dở, dù đã chủ động thoát).
+  const exitSession = () => { api.clearCache(); clearNav(); state.activeChildId = null; render(); };
   let steps, pool, doneIds;
   try {
     // loadLessonContent (nội dung riêng của bài) và loadUnitPool (Boss cuối Unit, chỉ khi review) KHÔNG phụ thuộc

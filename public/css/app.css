@@ -517,6 +517,9 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 /* Bảng Từ vựng (bb/steps/vocab.js) — tái dùng .table-wrap/.tbl của khu admin; .pron-feedback mặc định cao 70px
    (dành cho màn tập đọc riêng) quá cao cho 1 dòng bảng, thu gọn lại trong ngữ cảnh này. */
 .tbl .pron-feedback { min-height: 0; font-size: 13px; font-weight: 600; margin-top: 4px; }
+/* Nút "Đọc thử" (.mic.sm dùng chung với khu Trẻ em, 72px) quá to trong Bài Bản — thu nhỏ CHỈ trong body.bb-theme,
+   không đụng .mic.sm gốc (khu Trẻ em vẫn giữ nguyên kích cỡ). */
+body.bb-theme .mic.sm { width: 44px; height: 44px; font-size: 20px; margin: 0; }
 .bb-passage { font-size: 19px; line-height: 1.6; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
 .bb-question { font-size: 20px; font-weight: 700; margin: 10px 0; }
 .bb-task { text-align: left; }

@@ -104,6 +104,9 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   trong thân trò). Thêm trò mới → `RUNNERS`, `POOLS`, `SKILLS`, SQL `skill_of()`, `TEXT_KINDS`.
 - `state.activeChildId` (sessionStorage) giữ bé đang học qua `SIGNED_IN` lặp lại. Khu admin tải lại
   dùng `beginLoad(box)` (`admin/view.js`) — giữ vị trí cuộn, đừng tự `replaceChildren("Đang tải…")`.
+  Bài Bản còn nhớ thêm VỊ TRÍ đang xem (Level/Unit/Lesson/Luyện tập) qua `bb/nav.js` (sessionStorage
+  riêng) để F5 khôi phục đúng chỗ thay vì về Home — `pages/bai-ban-home.js` ghi mỗi lần điều hướng,
+  `bb/runner.js` xoá lúc "Thoát" giữa bài (2 nơi đều phải xoá, tránh nhảy lại bài cũ dù đã thoát chủ động).
 - **Header/footer dùng chung mọi màn điều hướng chính, KỂ CẢ lưới chọn chặng và màn chạy 1 chặng**
   (`child/media.js`: `profileHeader(onExit)` avatar+tên+giọng+Thoát, `sessionFooter()` liên hệ —
   `bb/media.js` re-export cho khu Bài Bản, `bb/runner.js` dùng ở cả `showPicker()`/`runStep()`). Nút
