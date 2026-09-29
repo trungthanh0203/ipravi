@@ -81,7 +81,7 @@ export async function updateLesson(lesson, { title_vi, lesson_type, title_tr, de
 // Chặng (bb_lesson_steps) — 7 loại, cố định lúc tạo (không đổi loại sau khi tạo: đổi loại nghĩa là đổi cả bảng nội
 // dung bên dưới, admin nên xoá chặng rồi tạo lại đúng loại thay vì "đổi loại" nửa vời).
 // ============================================================================
-export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame", "reading", "writing"];
+export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame", "reading", "listening", "writing"];
 export async function createStep(lessonId, stepType, siblings) {
   need(STEP_TYPES.includes(stepType) ? null : "Loại chặng không hợp lệ");
   return checkData(await sb.from("bb_lesson_steps").insert({ lesson_id: lessonId, step_type: stepType, sort_order: nextOrder(siblings), status: "draft" }).select().single());
@@ -158,16 +158,18 @@ async function removeStepFiles(stepIds) {
   if (!stepIds.length) return;
   const paths = [];
   for (const ids of chunk(stepIds)) {
-    const [dl, vo, ph, pa] = await Promise.all([
+    const [dl, vo, ph, pa, la] = await Promise.all([
       sb.from("bb_dialogue_lines").select("audio_path").in("step_id", ids),
       sb.from("bb_vocab").select("audio_path, image_path").in("step_id", ids),
       sb.from("bb_phonics_pairs").select("audio_a_path, audio_b_path").in("step_id", ids),
       sb.from("bb_reading_passages").select("audio_path").in("step_id", ids),
+      sb.from("bb_listening_passages").select("audio_path").in("step_id", ids),
     ].map((p) => p.then(checkData)));
     for (const r of dl) if (r.audio_path) paths.push(r.audio_path);
     for (const r of vo) { if (r.audio_path) paths.push(r.audio_path); if (r.image_path) paths.push(r.image_path); }
     for (const r of ph) { if (r.audio_a_path) paths.push(r.audio_a_path); if (r.audio_b_path) paths.push(r.audio_b_path); }
     for (const r of pa) if (r.audio_path) paths.push(r.audio_path);
+    for (const r of la) if (r.audio_path) paths.push(r.audio_path);
   }
   for (const p of chunk(paths)) if (p.length) await sb.storage.from("content").remove(p);
 }
@@ -310,48 +312,56 @@ export async function deletePhonicsPair(row) {
   check(await sb.from("bb_phonics_pairs").delete().eq("id", row.id));
 }
 
-// ---- Đọc hiểu: đoạn văn + câu hỏi ----
-export async function createPassage(stepId, { passage_vi, passage_tr }) {
-  const vi = clean(passage_vi);
-  need(vi ? null : "Cần nhập đoạn văn");
-  return checkData(await sb.from("bb_reading_passages").insert({ step_id: stepId, passage_vi: vi, passage_tr: only(passage_tr) }).select().single());
+// ---- Đoạn văn + câu hỏi: DÙNG CHUNG cho Đọc hiểu (bb_reading_*) và Luyện nghe (bb_listening_*, migration 026) —
+// 2 bảng CÙNG hình dạng, chỉ khác tên bảng, nên gói thành factory thay vì chép lại y hệt CRUD.
+function passageOps(passageTable, questionTable) {
+  return {
+    async createPassage(stepId, { passage_vi, passage_tr }) {
+      const vi = clean(passage_vi);
+      need(vi ? null : "Cần nhập đoạn văn");
+      return checkData(await sb.from(passageTable).insert({ step_id: stepId, passage_vi: vi, passage_tr: only(passage_tr) }).select().single());
+    },
+    async updatePassage(row, { passage_vi, passage_tr }) {
+      const patch = {};
+      if (passage_vi != null) { need(clean(passage_vi) ? null : "Cần nhập đoạn văn"); patch.passage_vi = clean(passage_vi); }
+      if (passage_tr != null) patch.passage_tr = only(passage_tr);
+      if (Object.keys(patch).length) check(await sb.from(passageTable).update(patch).eq("id", row.id));
+    },
+    async deletePassage(row) {
+      if (row.audio_path) await sb.storage.from("content").remove([row.audio_path]);
+      check(await sb.from(passageTable).delete().eq("id", row.id)); // xoá dây chuyền câu hỏi (ON DELETE CASCADE)
+    },
+    async createQuestion(passageId, { question_vi, choices, answer }, siblings) {
+      const q = clean(question_vi);
+      need(q ? null : "Cần nhập câu hỏi");
+      const opts = String(choices ?? "").split("|").map((c) => c.trim()).filter(Boolean);
+      need(opts.length >= 2 ? null : "Cần ít nhất 2 đáp án, cách nhau bằng dấu |");
+      const ans = Number(answer);
+      need(ans >= 1 && ans <= opts.length ? null : `Đáp án đúng phải từ 1 đến ${opts.length}`);
+      return checkData(await sb.from(questionTable).insert({ passage_id: passageId, question_vi: q, choices: opts, answer: ans, sort_order: nextOrder(siblings) }).select().single());
+    },
+    async updateQuestion(row, { question_vi, choices, answer }) {
+      const patch = {};
+      if (question_vi != null) { need(clean(question_vi) ? null : "Cần nhập câu hỏi"); patch.question_vi = clean(question_vi); }
+      if (choices != null) {
+        const opts = String(choices).split("|").map((c) => c.trim()).filter(Boolean);
+        need(opts.length >= 2 ? null : "Cần ít nhất 2 đáp án, cách nhau bằng dấu |");
+        patch.choices = opts;
+      }
+      if (answer != null) {
+        const opts = patch.choices ?? row.choices;
+        const ans = Number(answer);
+        need(ans >= 1 && ans <= opts.length ? null : `Đáp án đúng phải từ 1 đến ${opts.length}`);
+        patch.answer = ans;
+      }
+      if (Object.keys(patch).length) check(await sb.from(questionTable).update(patch).eq("id", row.id));
+    },
+    deleteQuestion: (id) => sb.from(questionTable).delete().eq("id", id).then(check),
+    passageTable, questionTable,
+  };
 }
-export async function updatePassage(row, { passage_vi, passage_tr }) {
-  const patch = {};
-  if (passage_vi != null) { need(clean(passage_vi) ? null : "Cần nhập đoạn văn"); patch.passage_vi = clean(passage_vi); }
-  if (passage_tr != null) patch.passage_tr = only(passage_tr);
-  if (Object.keys(patch).length) check(await sb.from("bb_reading_passages").update(patch).eq("id", row.id));
-}
-export async function deletePassage(row) {
-  if (row.audio_path) await sb.storage.from("content").remove([row.audio_path]);
-  check(await sb.from("bb_reading_passages").delete().eq("id", row.id)); // xoá dây chuyền câu hỏi (ON DELETE CASCADE)
-}
-export async function createQuestion(passageId, { question_vi, choices, answer }, siblings) {
-  const q = clean(question_vi);
-  need(q ? null : "Cần nhập câu hỏi");
-  const opts = String(choices ?? "").split("|").map((c) => c.trim()).filter(Boolean);
-  need(opts.length >= 2 ? null : "Cần ít nhất 2 đáp án, cách nhau bằng dấu |");
-  const ans = Number(answer);
-  need(ans >= 1 && ans <= opts.length ? null : `Đáp án đúng phải từ 1 đến ${opts.length}`);
-  return checkData(await sb.from("bb_reading_questions").insert({ passage_id: passageId, question_vi: q, choices: opts, answer: ans, sort_order: nextOrder(siblings) }).select().single());
-}
-export async function updateQuestion(row, { question_vi, choices, answer }) {
-  const patch = {};
-  if (question_vi != null) { need(clean(question_vi) ? null : "Cần nhập câu hỏi"); patch.question_vi = clean(question_vi); }
-  if (choices != null) {
-    const opts = String(choices).split("|").map((c) => c.trim()).filter(Boolean);
-    need(opts.length >= 2 ? null : "Cần ít nhất 2 đáp án, cách nhau bằng dấu |");
-    patch.choices = opts;
-  }
-  if (answer != null) {
-    const opts = patch.choices ?? row.choices;
-    const ans = Number(answer);
-    need(ans >= 1 && ans <= opts.length ? null : `Đáp án đúng phải từ 1 đến ${opts.length}`);
-    patch.answer = ans;
-  }
-  if (Object.keys(patch).length) check(await sb.from("bb_reading_questions").update(patch).eq("id", row.id));
-}
-export const deleteQuestion = (id) => sb.from("bb_reading_questions").delete().eq("id", id).then(check);
+export const readingOps = passageOps("bb_reading_passages", "bb_reading_questions");
+export const listeningOps = passageOps("bb_listening_passages", "bb_listening_questions");
 
 // ---- Luyện viết ----
 export async function createWritingTask(stepId, { task_type, prompt_vi, prompt_tr, content }, siblings) {
@@ -393,26 +403,27 @@ async function upsertContentRows(table, stepId, mainCol, rows, buildRow) {
   if (toInsert.length) check(await sb.from(table).insert(toInsert));
 }
 
-// Đoạn văn đọc hiểu: TỐI ĐA 1/chặng — ghi đè nếu đã có, tạo mới nếu chưa. Trả về id để gắn câu hỏi.
-async function upsertPassage(stepId, row) {
-  const existing = checkData(await sb.from("bb_reading_passages").select("id").eq("step_id", stepId));
+// Đoạn văn (đọc hiểu HOẶC nghe — CÙNG hình dạng, khác bảng): TỐI ĐA 1/chặng — ghi đè nếu đã có, tạo mới nếu chưa.
+// Trả về id để gắn câu hỏi.
+async function upsertPassage(passageTable, stepId, row) {
+  const existing = checkData(await sb.from(passageTable).select("id").eq("step_id", stepId));
   const payload = { passage_vi: row.vi, passage_tr: only(row.tr) };
-  if (existing[0]) { check(await sb.from("bb_reading_passages").update(payload).eq("id", existing[0].id)); return existing[0].id; }
-  return checkData(await sb.from("bb_reading_passages").insert({ step_id: stepId, ...payload }).select("id").single()).id;
+  if (existing[0]) { check(await sb.from(passageTable).update(payload).eq("id", existing[0].id)); return existing[0].id; }
+  return checkData(await sb.from(passageTable).insert({ step_id: stepId, ...payload }).select("id").single()).id;
 }
-async function upsertQuestions(passageId, rows) {
+async function upsertQuestions(questionTable, passageId, rows) {
   if (!rows.length) return;
-  const existing = checkData(await sb.from("bb_reading_questions").select("*").eq("passage_id", passageId));
+  const existing = checkData(await sb.from(questionTable).select("*").eq("passage_id", passageId));
   const byKey = new Map(existing.map((r) => [ciKey(r.question_vi), r]));
   let order = nextOrder(existing);
   const toInsert = [];
   for (const row of rows) {
     const payload = { question_vi: row.question, choices: row.choices, answer: row.answer };
     const match = byKey.get(ciKey(row.question));
-    if (match) check(await sb.from("bb_reading_questions").update(payload).eq("id", match.id));
+    if (match) check(await sb.from(questionTable).update(payload).eq("id", match.id));
     else toInsert.push({ passage_id: passageId, sort_order: ++order, ...payload });
   }
-  if (toInsert.length) check(await sb.from("bb_reading_questions").insert(toInsert));
+  if (toInsert.length) check(await sb.from(questionTable).insert(toInsert));
 }
 
 // Thực thi kế hoạch từ bb-csv.buildPlan(). Trả { levels, units, lessons, steps } (số dòng mới tạo ở mỗi tầng) để
@@ -464,12 +475,13 @@ export async function importPlan(plan, existing) {
       await upsertContentRows("bb_phonics_pairs", stepId, "sound_a", g.rows, (r) => ({ sound_a: r.a, sound_b: r.b, examples: r.examples }));
     } else if (g.stepType === "writing") {
       await upsertContentRows("bb_writing_tasks", stepId, "prompt_vi", g.rows, (r) => ({ task_type: r.taskType, prompt_vi: r.vi, prompt_tr: only(r.tr), content: r.taskContent }));
-    } else if (g.stepType === "reading") {
+    } else if (g.stepType === "reading" || g.stepType === "listening") {
+      const ops = g.stepType === "reading" ? readingOps : listeningOps;
       const passageRow = g.rows.find((r) => r.kind === "passage");
       const questionRows = g.rows.filter((r) => r.kind === "question");
       if (passageRow) {
-        const passageId = await upsertPassage(stepId, passageRow);
-        await upsertQuestions(passageId, questionRows);
+        const passageId = await upsertPassage(ops.passageTable, stepId, passageRow);
+        await upsertQuestions(ops.questionTable, passageId, questionRows);
       }
     }
   }

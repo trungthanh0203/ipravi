@@ -3,14 +3,16 @@
 // trong 1 bài — hình dạng cột cần đọc tuỳ theo step_type của dòng đó.
 //
 // Cột LUÔN cần: level (mã CEFR, hoặc "A0" tiền-A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|
-// minigame|reading|writing). Cột tuỳ chọn theo step_type:
+// minigame|reading|listening|writing). Cột tuỳ chọn theo step_type:
 //   - dialogue: speaker (mặc định A), vi (câu)
 //   - vocab: vi (từ), pos (loại từ), say (tuỳ chọn — chữ ĐỌC khi khác chữ hiển thị, vd "b" đọc "bờ"; dùng cho
 //            chuyên đề bảng chữ cái/ngữ âm, migration 024)
 //   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;)
 //   - phonics: vi (âm A), vi2 (âm B), examples (ví dụ, cách nhau bằng ;)
-//   - reading: dòng ĐOẠN VĂN (chỉ 1 dòng đầu tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn);
-//              dòng CÂU HỎI (cột `question` có giá trị) dùng question, choices (cách nhau bằng |), answer (số)
+//   - reading/listening (CÙNG hình dạng cột, khác bảng CSDL — migration 026): dòng ĐOẠN VĂN (chỉ 1 dòng đầu
+//              tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn); dòng CÂU HỎI (cột `question` có giá trị)
+//              dùng question, choices (cách nhau bằng |), answer (số). listening KHÔNG hiện chữ cho người học —
+//              đoạn văn chỉ để admin soạn/tra + sinh audio, người học chỉ nghe.
 //   - minigame: cột game (meaning_pick|phonics_discrim|sentence_builder); không có nội dung riêng (chạy từ Từ vựng/Ngữ âm/
 //              Hội thoại/Ngữ pháp cùng bài) — 1 dòng/bài, dòng này chỉ ghi `config.kind` của chặng
 //   - writing: task_type (fill|order|write), vi (đề bài); fill dùng sentence+answer_text; order dùng words
@@ -24,7 +26,7 @@
 export { parseCsv, keyOf } from "./csv.js";
 import { keyOf } from "./csv.js";
 
-export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame", "reading", "writing"];
+export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame", "reading", "listening", "writing"];
 // Kiểu trò chơi của chặng minigame (cột `game`) — PHẢI khớp ENGINES ở bb/steps/minigame.js + MINIGAME_KINDS ở admin/bb.js.
 export const GAME_KINDS = ["meaning_pick", "phonics_discrim", "sentence_builder"];
 const clean = (s) => String(s ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
@@ -98,18 +100,18 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       const a = get("vi"), b = get("vi2");
       if (!a || !b) problems.push("phonics cần cả vi (âm A) và vi2 (âm B)");
       content = { kind: "phonics", a, b, examples: lines(get("examples"), ";") };
-    } else if (stepType === "reading") {
+    } else if (stepType === "reading" || stepType === "listening") {
       const question = get("question");
       if (question) {
         const choices = lines(get("choices"), "|");
         const answerRaw = get("answer");
         const answer = answerRaw === "" ? null : Number(answerRaw);
-        if (choices.length < 2 || choices.length > 6) problems.push("reading (câu hỏi) cần 2–6 đáp án ở cột choices, cách nhau bằng |");
+        if (choices.length < 2 || choices.length > 6) problems.push(`${stepType} (câu hỏi) cần 2–6 đáp án ở cột choices, cách nhau bằng |`);
         if (!Number.isInteger(answer) || answer < 1 || answer > Math.max(choices.length, 1)) problems.push("answer phải là số thứ tự đáp án đúng");
         content = { kind: "question", question, choices, answer };
       } else {
         const vi = get("vi");
-        if (!vi) problems.push("reading (đoạn văn, cột question để trống) cần cột vi (đoạn văn)");
+        if (!vi) problems.push(`${stepType} (đoạn văn, cột question để trống) cần cột vi (đoạn văn)`);
         content = { kind: "passage", vi, tr };
       }
     } else if (stepType === "minigame") {
@@ -208,10 +210,10 @@ export function buildPlan(items, existing) {
 // tới giờ, phát hiện lúc chủ dự án dùng thử — xem KE_HOACH_TIENG_VIET_BAI_BAN.md).
 // ============================================================================
 const bbQ = (v) => (/[",;\n]/.test(v) ? `"${String(v ?? "").replace(/"/g, '""')}"` : (v ?? ""));
-// Đầy đủ MỌI cột hiện có (khớp `known` ở validateRows) — trước đây chỉ mẫu dialogue/vocab/grammar/minigame, thiếu
-// hẳn phonics/reading/writing/say/level_name/can_do/unit_emoji/lesson_type (2026-09-28, chủ dự án yêu cầu cập nhật
-// theo đúng cấu trúc dữ liệu mới nhất). 1 bài "Bài 1: Ở chợ" demo đủ 7 step_type để admin thấy đúng hình dạng cột
-// từng loại; task_type chỉ demo "fill" (order/write đã có ví dụ đầy đủ trong help text phía trên + câu lệnh AI).
+// Đầy đủ MỌI cột hiện có (khớp `known` ở validateRows). 1 bài "Bài 1: Ở chợ" demo đủ 8 step_type để admin thấy đúng
+// hình dạng cột từng loại; task_type chỉ demo "fill" (order/write đã có ví dụ đầy đủ trong help text phía trên +
+// câu lệnh AI). listening dùng đúng 2 dòng của reading (đoạn văn + câu hỏi) — chỉ đổi step_type, không hiện chữ cho
+// người học (xem bb/steps/listening.js).
 export function buildTemplate(langs) {
   const HEAD = ["level", "level_name", "can_do", "unit", "unit_emoji", "lesson", "lesson_type", "step_type", "speaker",
     "vi", "vi2", "pos", "say", "task_type", "sentence", "answer_text", "words", "min_words", "sample",
@@ -245,6 +247,10 @@ export function buildTemplate(langs) {
         en: "At the market there is a lot of fruit: apples, oranges, bananas. Apples are fifty thousand dong per kilo." }) }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "reading",
       question: "Táo giá bao nhiêu?", choices: "Ba mươi nghìn|Bốn mươi nghìn|Năm mươi nghìn|Sáu mươi nghìn", answer: 3 }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "listening",
+      vi: "Ở chợ có nhiều loại trái cây: táo, cam, chuối. Táo giá năm mươi nghìn một cân." }),
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "listening",
+      question: "Táo giá bao nhiêu?", choices: "Ba mươi nghìn|Bốn mươi nghìn|Năm mươi nghìn|Sáu mươi nghìn", answer: 3 }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "writing", task_type: "fill", vi: "Điền từ còn thiếu",
       sentence: "Táo ___ năm mươi nghìn một cân.", answer_text: "giá" }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "minigame", game: "meaning_pick" }),
@@ -271,6 +277,7 @@ Quy tắc:
   - grammar: 1 công thức + 2-3 ví dụ, vi = công thức (vd "Chào + đại từ"), examples = câu ví dụ cách nhau bằng ";".
   - phonics: 1 CẶP ÂM DỄ NHẦM THẬT theo vùng miền (ch/tr, s/x, d/gi, d/r, l/n) — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh (chỉ khác cách viết, đọc giống nhau — nếu cần giải thích quy tắc viết thì dùng 1 dòng grammar riêng).
   - reading: 1 đoạn văn ngắn (dòng có cột question để TRỐNG, vi = đoạn văn) + 2-3 câu hỏi trắc nghiệm (mỗi câu 1 dòng, question = câu hỏi, choices = 2-6 đáp án cách nhau "|", answer = số thứ tự đáp án đúng đếm từ 1).
+  - listening: CÙNG cột như reading (đoạn văn + câu hỏi) nhưng người học sẽ KHÔNG thấy chữ đoạn văn — chỉ nghe; nên chọn đoạn văn ĐƠN GIẢN, câu ngắn, dễ nghe hiểu hơn đoạn dùng cho reading.
   - writing: 1 bài luyện viết, task_type là "fill" (điền từ: vi = đề bài, sentence = câu có chỗ trống "___", answer_text = từ đúng), "order" (xếp câu: vi = đề bài, words = các từ đúng thứ tự cách nhau bằng dấu phẩy) hoặc "write" (viết tự do: vi = đề bài, min_words = số từ tối thiểu, sample = câu mẫu tham khảo, không tự chấm).
   - minigame: game = meaning_pick (nghe từ đoán nghĩa) | phonics_discrim (nghe âm đoán đúng âm trong cặp phonics) | sentence_builder (xếp lại câu từ hội thoại/ngữ pháp cùng bài) — không cần cột nội dung nào khác, chặng này tự lấy dữ liệu từ vựng/ngữ âm/hội thoại/ngữ pháp CÙNG BÀI để chơi.
 - Mỗi bài (trừ bài ôn tập) nên có ít nhất: 1 chặng dialogue, 1 chặng vocab, 1 chặng grammar, 1 chặng minigame; thêm phonics/reading/writing nếu phù hợp nội dung, không ép đủ mọi loại ở mọi bài.

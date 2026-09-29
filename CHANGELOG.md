@@ -45,5 +45,11 @@ lý do 1 quyết định cũ.
   mạng), bỏ SELECT thừa. Đo bằng mock: bấm "Kỹ năng khác" sau khi ôn xong → 0 lệnh mạng (trước đó
   tải lại cả bộ).
 
+- **026_bb_listening.sql — thêm chặng "Luyện nghe":** `bb_lesson_steps.step_type` nới thêm
+  `'listening'` (8 loại); `bb_listening_passages`/`_questions` mirror ĐÚNG `bb_reading_passages`/
+  `_questions` (khác frontend: không hiện chữ, chỉ nghe — xem CLAUDE.md). Cùng đợt: Đọc hiểu đổi
+  giao diện sang kiểu iLapra (hiện hết câu hỏi + 1 nút "Kiểm tra" thay vì từng câu một, đổi tên
+  "Luyện đọc"), Trò chơi đổi tên "Game học" + thêm nút Trước/Tiếp tự do lùi/tiến qua các vòng.
+
 **Bẫy lặp lại nhiều lần lúc code (đã gộp thành 1 luật chung trong CLAUDE.md, không kể lại đây nữa):**
 `replaceChildren()` gốc không lọc null/dàn phẳng mảng — gặp ở cả `admin/bb.js` lẫn `bb/practice.js`.

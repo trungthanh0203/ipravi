@@ -117,10 +117,12 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
 - **"Tiếng Việt Bài Bản"** (giáo trình cho người lớn/nước ngoài, CÙNG app/tài khoản, không phải
   app riêng; lịch sử/quyết định: `CHANGELOG.md`).
   Schema (`022_bai_ban.sql`, đầu tiên tạo bảng mới sau 001): `bb_levels`(CEFR/A0)→`bb_units`→
-  `bb_lessons`(`lesson_type` core/review/reading/writing)→`bb_lesson_steps`(7 loại: dialogue/vocab/
-  grammar/phonics/minigame/reading/writing)→bảng nội dung riêng (`bb_dialogue_lines`, `bb_vocab`,
-  `bb_grammar`, `bb_phonics_pairs`, `bb_reading_passages`+`_questions`, `bb_writing_tasks`);
-  minigame KHÔNG có bảng riêng, chạy runtime từ 4 loại kia CÙNG BÀI. RLS tái dùng
+  `bb_lessons`(`lesson_type` core/review/reading/writing)→`bb_lesson_steps`(8 loại: dialogue/vocab/
+  grammar/phonics/minigame/reading/listening/writing)→bảng nội dung riêng (`bb_dialogue_lines`,
+  `bb_vocab`, `bb_grammar`, `bb_phonics_pairs`, `bb_reading_passages`+`_questions`,
+  `bb_listening_passages`+`_questions` [migration 026, CÙNG hình dạng bb_reading_* — chỉ khác
+  frontend KHÔNG hiện chữ, xem `bb/steps/listening.js`], `bb_writing_tasks`); minigame KHÔNG có
+  bảng riêng, chạy runtime từ 4 loại kia CÙNG BÀI. RLS tái dùng
   `is_admin()`/`has_access()`. `child_profiles.profile_type`(`child`|`learner`) vào được từ avatar
   như nhau; `decideScreen()` rẽ `bai-ban-home`/`child-home` theo đó.
   Mã (`public/js/bb/`, mirror `child/`): `api.js` (chỉ `approved`), `media.js` (dùng lại
@@ -136,8 +138,15 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   tự kiểm). `api.loadStepProgress()` (✓ trong 1 bài) / `loadLessonProgress()` (✓ tổng ở danh sách —
   mẫu số CHỈ tính chặng có dữ liệu thật).
   Admin: tab "Bài Bản" (`admin/bb.js`+`bb-ops.js`), cây Cấp→Chủ đề→Bài→Chặng, duyệt LAN LÊN/ẩn LAN
-  XUỐNG. CSV (`admin/bb-csv.js`): 1 dòng = 1 dòng nội dung 1 CHẶNG; cột `unit_<lang>`/`lesson_<lang>`
+  XUỐNG. `bb-ops.js passageOps()` gói CRUD đoạn văn+câu hỏi DÙNG CHUNG cho Luyện đọc/Luyện nghe
+  (`readingOps`/`listeningOps`, chỉ khác tên bảng) — admin/bb.js gọi qua `passagePanel(ops, ...)`.
+  CSV (`admin/bb-csv.js`): 1 dòng = 1 dòng nội dung 1 CHẶNG; cột `unit_<lang>`/`lesson_<lang>`
   CHỈ áp dụng lúc TẠO MỚI. TTS ghi `audio_path` phẳng (ghi đè, khác `content_audio` nhiều-dòng).
+  Luyện đọc/Luyện nghe (`bb/steps/reading.js`+`listening.js`+`quiz.js`): hiện HẾT câu hỏi cùng lúc +
+  1 nút "Kiểm tra" chấm hết kiểu iLapra (khác bản trước: từng câu một) — nút cuối LUÔN "✓ Hoàn
+  thành", không còn "Tiếp". Game học (`bb/steps/minigame.js`, đổi tên từ "Trò chơi"): mỗi vòng có
+  thêm nút "◀ Trước"/"Tiếp ▶" (cùng khuôn `child/activities/intro.js`) để tự lùi/tiến, không chỉ tự
+  nhảy vòng sau khi trả lời.
   Nội dung thật (GĐ 7, đang soạn — CHƯA qua người biết tiếng Việt rà): A0
   (`bai-ban-a0-bang-chu-cai-ngu-am-thanh-dieu.csv`, sinh từ `sounds.js`/`viet.js` không tự bịa) +
   A1 (`bai-ban-a1-chao-hoi-gia-dinh.csv`, 4 chủ đề: Chào hỏi/Gia đình/Số đếm/Màu sắc) — cả 2 ở

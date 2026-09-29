@@ -521,4 +521,6 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-step-card { position: relative; }
 .bb-step-card.done { border-color: #2f9e44; }
 .bb-step-check { position: absolute; top: 8px; right: 12px; font-size: 22px; font-weight: 800; color: #2f9e44; }
+/* Khối câu hỏi trắc nghiệm Luyện đọc/Luyện nghe (bb/steps/quiz.js, kiểu iLapra — hiện HẾT câu hỏi + 1 nút Kiểm tra). */
+.bb-quiz-score { text-align: center; font-size: 18px; font-weight: 800; margin: 4px 0; }
 .install-note { margin: 8px 0 0; font-size: 14px; }

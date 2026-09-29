@@ -773,5 +773,43 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.bb_units"))[0].n === beforeUnits, "025: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 28. "Tiếng Việt Bài Bản" — chặng "Luyện nghe" (migration 026, mirror bb_reading_passages/_questions) ----
+{
+  const m026 = readFileSync(new URL("../migrations/026_bb_listening.sql", import.meta.url), "utf8");
+  await db.exec(m026);
+  const P = await uid("p28@x.com");
+
+  let level, unit, lesson, stepApproved, stepDraft, passage;
+  await as(ADM, async () => {
+    level = (await q("insert into public.bb_levels (code, name_vi, status) values ('B2','Trung cấp 2','approved') returning id"))[0].id;
+    unit = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'Nghe','approved') returning id", [level]))[0].id;
+    lesson = (await q("insert into public.bb_lessons (unit_id, title_vi, status) values ($1,'Bài 1','approved') returning id", [unit]))[0].id;
+    stepApproved = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, sort_order, status) values ($1,'listening',1,'approved') returning id", [lesson]))[0].id;
+    stepDraft = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, sort_order, status) values ($1,'listening',2,'draft') returning id", [lesson]))[0].id;
+    passage = (await q("insert into public.bb_listening_passages (step_id, passage_vi) values ($1,'Đoạn nghe ngắn.') returning id", [stepApproved]))[0].id;
+    await db.query("insert into public.bb_listening_passages (step_id, passage_vi) values ($1,'nháp-nghe')", [stepDraft]);
+    await db.query("insert into public.bb_listening_questions (passage_id, question_vi, choices, answer) values ($1,'Câu hỏi?','[\"A\",\"B\"]',1)", [passage]);
+    const bad = await fails("insert into public.bb_lesson_steps (lesson_id, step_type) values ($1,'lạ')", [lesson]);
+    ok(bad && /check/i.test(bad), "026: step_type lạ vẫn bị CHECK chặn (chỉ nới thêm 'listening')", String(bad));
+  });
+
+  await as(P, async () => {
+    ok((await q("select id from public.bb_listening_passages")).length === 1, "026: chỉ thấy đoạn nghe của chặng đã duyệt");
+    ok((await q("select id from public.bb_listening_questions")).length === 1, "026: đọc được câu hỏi (đi qua bảng đoạn nghe tới chặng)");
+    const bad = await fails("insert into public.bb_listening_passages (step_id, passage_vi) values ($1,'lậu')", [stepApproved]);
+    ok(bad && /row-level security/.test(bad), "026: phụ huynh không ghi được vào bb_listening_passages", String(bad));
+  });
+
+  await db.query("update public.accounts set access_until = now() - interval '1 day' where id=$1", [P]);
+  await as(P, async () => ok((await q("select id from public.bb_listening_passages")).length === 0, "026: HẾT HẠN không đọc được đoạn nghe"));
+  await db.query("update public.accounts set access_until = now() + interval '30 day' where id=$1", [P]);
+
+  await as(ADM, async () => ok((await q("select id from public.bb_listening_passages")).length === 2, "026: admin thấy cả đoạn nghe nháp"));
+
+  const beforePassages = (await q("select count(*)::int as n from public.bb_listening_passages"))[0].n;
+  await db.exec(m026);
+  ok((await q("select count(*)::int as n from public.bb_listening_passages"))[0].n === beforePassages, "026: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

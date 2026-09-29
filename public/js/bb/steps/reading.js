@@ -1,9 +1,10 @@
 import { el, mount as paint } from "../../ui.js";
 import { T } from "../../strings.js";
 import { playPath, nativeLang } from "../media.js";
+import { quizBlock } from "./quiz.js";
 
-// Chặng Đọc hiểu: đoạn văn ngắn rồi câu hỏi trắc nghiệm. Chấm ngay tại chỗ (client), KHÔNG lưu kết quả — chưa có
-// bảng tiến độ cho "Tiếng Việt Bài Bản" (GĐ 4). `answer` đếm từ 1 (cùng quy ước content_items.extra Cấp 4).
+// Chặng Luyện đọc: hiện NGUYÊN đoạn văn + TẤT CẢ câu hỏi cùng lúc (kiểu iLapra, xem quiz.js) — KHÔNG lưu kết quả
+// (chưa có bảng tiến độ riêng cho chặng này, xem GĐ 4).
 export function run(box, step) {
   return new Promise((resolve) => {
     if (!step.content) {
@@ -12,37 +13,14 @@ export function run(box, step) {
     }
     const { passage, questions } = step.content;
     const lang = nativeLang();
-    showPassage();
+    render();
 
-    // Nút cuối chỉ hiện "Hoàn thành" khi BẤM LÀ XONG CẢ CHẶNG (không có câu hỏi nào) — còn có câu hỏi thì vẫn
-    // "Tiếp" vì mới chuyển sang câu hỏi đầu, chưa xong (khớp nút cuối cùng của showQuestion() bên dưới).
-    function showPassage() {
+    function render() {
       paint(box,
         el("p", { class: "bb-passage" }, passage.passage_vi),
         passage.passage_tr?.[lang] ? el("p", { class: "muted" }, passage.passage_tr[lang]) : null,
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(passage.audio_path, passage.passage_vi) }, T.bbListen),
-        el("button", { class: "btn block", onclick: () => (questions.length ? showQuestion(0) : resolve()) }, questions.length ? T.next : T.bbFinish));
-    }
-
-    function showQuestion(i) {
-      const q = questions[i];
-      const feedback = el("div", { class: "pron-feedback" });
-      const opts = (q.choices ?? []).map((choice, idx) => {
-        const b = el("button", { class: "opt", type: "button" }, el("span", { class: "opt-text" }, choice));
-        b.addEventListener("click", () => {
-          opts.forEach((o) => (o.disabled = true));
-          const right = idx + 1 === q.answer;
-          b.classList.add(right ? "right" : "wrong");
-          if (!right) opts[q.answer - 1]?.classList.add("right");
-          feedback.textContent = right ? T.bbCorrect : T.bbWrong(q.choices[q.answer - 1] ?? "");
-        });
-        return b;
-      });
-      paint(box,
-        el("p", { class: "bb-step-dots" }, T.bbQuestionOf(i + 1, questions.length)),
-        el("p", { class: "bb-question" }, q.question_vi),
-        el("div", { class: "opt-grid" }, ...opts), feedback,
-        el("button", { class: "btn block", onclick: () => (i + 1 < questions.length ? showQuestion(i + 1) : resolve()) }, i + 1 < questions.length ? T.next : T.bbFinish));
+        ...(questions.length ? quizBlock(questions, resolve, render) : [el("button", { class: "btn block", onclick: resolve }, T.bbFinish)]));
     }
   });
 }

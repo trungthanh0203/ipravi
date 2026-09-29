@@ -68,22 +68,33 @@ async function fetchColOnly(table, ids, col = "step_id") {
 // Toàn bộ chặng ĐÃ DUYỆT của 1 bài (thứ tự sort_order), mỗi chặng kèm `.content` — hình dạng tuỳ `step_type`:
 // dialogue/vocab/grammar/phonics/writing → mảng dòng (sort_order); reading → { passage, questions } hoặc null;
 // minigame → null (không có bảng nội dung riêng, xem GĐ 4 trong kế hoạch).
+// Đọc + gắn { passage, questions } cho 1 loại chặng dạng "đoạn văn + câu hỏi" (reading/listening dùng CHUNG hình
+// dạng, khác bảng CSDL) — tránh lặp lại y hệt logic gộp câu hỏi theo đoạn văn ở 2 nơi.
+async function loadPassageContent(passageTable, questionTable, stepIds) {
+  const passages = await fetchByIds(passageTable, stepIds);
+  const questions = await fetchByIds(questionTable, passages.map((p) => p.id), "passage_id");
+  const questionsByPassage = groupBy(questions, "passage_id");
+  const byStep = new Map(passages.map((p) => [p.step_id, p]));
+  return (stepId) => {
+    const passage = byStep.get(stepId) ?? null;
+    return passage ? { passage, questions: bySortOrder(questionsByPassage.get(passage.id) ?? []) } : null;
+  };
+}
+
 export async function loadLessonContent(lessonId) {
   const { data: steps, error } = await sb.from("bb_lesson_steps").select("*").eq("lesson_id", lessonId).eq("status", "approved").order("sort_order");
   if (error) throw error;
   const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
 
-  const [dialogue, vocab, grammar, phonics, passages, writing] = await Promise.all([
+  const [dialogue, vocab, grammar, phonics, readingOf, listeningOf, writing] = await Promise.all([
     fetchByIds("bb_dialogue_lines", idsOf("dialogue")),
     fetchByIds("bb_vocab", idsOf("vocab")),
     fetchByIds("bb_grammar", idsOf("grammar")),
     fetchByIds("bb_phonics_pairs", idsOf("phonics")),
-    fetchByIds("bb_reading_passages", idsOf("reading")),
+    loadPassageContent("bb_reading_passages", "bb_reading_questions", idsOf("reading")),
+    loadPassageContent("bb_listening_passages", "bb_listening_questions", idsOf("listening")),
     fetchByIds("bb_writing_tasks", idsOf("writing")),
   ]);
-  const questions = await fetchByIds("bb_reading_questions", passages.map((p) => p.id), "passage_id");
-  const questionsByPassage = groupBy(questions, "passage_id");
-  const passageByStep = new Map(passages.map((p) => [p.step_id, p]));
   const dMap = groupBy(dialogue, "step_id"), vMap = groupBy(vocab, "step_id"), gMap = groupBy(grammar, "step_id");
   const phMap = groupBy(phonics, "step_id"), wMap = groupBy(writing, "step_id");
 
@@ -94,10 +105,8 @@ export async function loadLessonContent(lessonId) {
     else if (s.step_type === "grammar") content = bySortOrder(gMap.get(s.id) ?? []);
     else if (s.step_type === "phonics") content = bySortOrder(phMap.get(s.id) ?? []);
     else if (s.step_type === "writing") content = bySortOrder(wMap.get(s.id) ?? []);
-    else if (s.step_type === "reading") {
-      const passage = passageByStep.get(s.id) ?? null;
-      content = passage ? { passage, questions: bySortOrder(questionsByPassage.get(passage.id) ?? []) } : null;
-    }
+    else if (s.step_type === "reading") content = readingOf(s.id);
+    else if (s.step_type === "listening") content = listeningOf(s.id);
     return { ...s, content };
   });
 }
@@ -158,15 +167,16 @@ async function visibleStepsOf(lessonIds) {
   const { data: steps, error } = await sb.from("bb_lesson_steps").select("id, lesson_id, step_type, config").eq("status", "approved").in("lesson_id", lessonIds);
   if (error) throw error;
   const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
-  const [dialogueRows, vocabRows, grammarRows, phonicsRows, readingRows, writingRows] = await Promise.all([
+  const [dialogueRows, vocabRows, grammarRows, phonicsRows, readingRows, listeningRows, writingRows] = await Promise.all([
     fetchColOnly("bb_dialogue_lines", idsOf("dialogue")),
     fetchColOnly("bb_vocab", idsOf("vocab")),
     fetchColOnly("bb_grammar", idsOf("grammar")),
     fetchColOnly("bb_phonics_pairs", idsOf("phonics")),
     fetchColOnly("bb_reading_passages", idsOf("reading")),
+    fetchColOnly("bb_listening_passages", idsOf("listening")),
     fetchColOnly("bb_writing_tasks", idsOf("writing")),
   ]);
-  const nonEmptyStepIds = new Set([...dialogueRows, ...vocabRows, ...grammarRows, ...phonicsRows, ...readingRows, ...writingRows].map((r) => r.step_id));
+  const nonEmptyStepIds = new Set([...dialogueRows, ...vocabRows, ...grammarRows, ...phonicsRows, ...readingRows, ...listeningRows, ...writingRows].map((r) => r.step_id));
   const visible = (steps ?? []).filter((s) => (s.step_type === "minigame" ? Boolean(s.config?.kind) : nonEmptyStepIds.has(s.id)));
   visibleStepsCache.set(key, { t: Date.now(), v: visible });
   return visible;

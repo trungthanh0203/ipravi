@@ -3,9 +3,9 @@ import { T } from "../../strings.js";
 import { playPath, nativeLang } from "../media.js";
 import { shuffle, sample } from "../../child/util.js";
 
-// Chặng Mini-game: KHÔNG có bảng nội dung riêng — mỗi engine tự lấy Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại CÙNG BÀI
+// Chặng Game học: KHÔNG có bảng nội dung riêng — mỗi engine tự lấy Từ vựng/Ngữ pháp/Ngữ âm/Hội thoại CÙNG BÀI
 // (nhận qua tham số `steps` = TOÀN BỘ chặng của bài, do bb/runner.js truyền vào — xem KE_HOACH_TIENG_VIET_BAI_BAN.md
-// mục 3 "5 engine" gốc). Admin chọn engine cho từng chặng Mini-game ở `admin/bb.js` (`config.kind`, cột jsonb có
+// mục 3 "5 engine" gốc). Admin chọn engine cho từng chặng Game học ở `admin/bb.js` (`config.kind`, cột jsonb có
 // sẵn từ migration 022); chưa chọn hoặc chọn engine chưa cài (lật thẻ/đóng vai hội thoại — làm sau) → hiện màn chỗ
 // đứng như trước. Bài không đủ dữ liệu cho engine đã chọn → tự hiện thông báo, KHÔNG lỗi (giống nguyên tắc "tự bỏ
 // qua nếu bài không đủ mục phù hợp" của khu trẻ em).
@@ -25,7 +25,7 @@ function poolForKind(kind, steps, lang) {
   return [];
 }
 const MIN_POOL = { meaning_pick: 4, phonics_discrim: 1, sentence_builder: 1 };
-// Chặng minigame có chơi được không: đã chọn engine (config.kind, admin/bb.js) VÀ đủ dữ liệu nguồn cho engine đó.
+// Chặng Game học có chơi được không: đã chọn engine (config.kind, admin/bb.js) VÀ đủ dữ liệu nguồn cho engine đó.
 export function feasible(step, steps, lang) {
   const kind = step.config?.kind;
   if (!ENGINES[kind]) return false;
@@ -39,6 +39,16 @@ function doneOut(box, resolve) {
   paint(box, el("p", { class: "muted", style: "text-align:center" }, T.bbMinigameRoundDone), el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
 }
 
+// Hàng "Trước/Tiếp" DÙNG CHUNG cho cả 3 engine (cùng khuôn với child/activities/intro.js) — cho tự do lùi/tiến qua
+// các vòng thay vì chỉ tự nhảy vòng sau khi trả lời (yêu cầu chủ dự án 2026-09-29). `goto` là round(idx) của chính
+// engine đang chạy; bấm "Tiếp" ở vòng cuối gọi goto(order.length), rơi đúng vào nhánh doneOut() của round() — giống
+// hệt lúc tự động xong hết mọi vòng.
+function navRow(i, total, goto) {
+  return el("div", { class: "row" },
+    el("button", { class: "btn ghost small", type: "button", disabled: i === 0, onclick: () => goto(i - 1) }, "◀ " + T.prev),
+    el("button", { class: "btn small", type: "button", onclick: () => goto(i + 1) }, T.next + " ▶"));
+}
+
 // ---- Ghép nghĩa: nghe 1 từ tiếng Việt → chọn đúng nghĩa (bản ngữ) trong 4 lựa chọn, nhiễu lấy từ CÁC TỪ KHÁC
 // cùng bài (dựa theo trò meaning_pick bên khu trẻ em: "nghe từ Việt ↔ nghĩa bản ngữ"). ----
 function meaningPick(box, resolve, steps) {
@@ -46,26 +56,25 @@ function meaningPick(box, resolve, steps) {
   const pool = poolForKind("meaning_pick", steps, lang);
   if (pool.length < MIN_POOL.meaning_pick) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 8));
-  let i = 0;
-  round();
-  function round() {
+  round(0);
+  function round(i) {
     if (i >= order.length) return doneOut(box, resolve);
     const target = order[i];
     const choices = shuffle([target, ...sample(pool.filter((w) => w.id !== target.id), 3)]);
-    const feedback = el("p", { class: "pron-feedback" }, " ");
+    const feedback = el("p", { class: "pron-feedback" }, " ");
     const btns = choices.map((c) => el("button", { class: "opt", type: "button" }, el("span", { class: "opt-text" }, c.meaning[lang])));
     btns.forEach((b, idx) => b.addEventListener("click", () => {
       btns.forEach((x) => { x.disabled = true; });
       const c = choices[idx];
       feedback.textContent = c.id === target.id ? T.bbCorrect : T.bbWrong(target.meaning[lang]);
-      setTimeout(() => { i++; round(); }, 900);
+      setTimeout(() => round(i + 1), 900);
     }));
     paint(box,
       el("p", { class: "bb-step-dots" }, T.bbCardOf(i + 1, order.length)),
       el("div", { class: "card", style: "text-align:center" },
         el("div", { class: "bb-vocab-word" }, target.word_vi),
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(target.audio_path, target.say_vi || target.word_vi) }, T.bbListen)),
-      el("div", { class: "row-btns" }, ...btns), feedback);
+      el("div", { class: "row-btns" }, ...btns), feedback, navRow(i, order.length, round));
   }
 }
 
@@ -75,27 +84,26 @@ function phonicsDiscrim(box, resolve, steps) {
   const pool = poolForKind("phonics_discrim", steps);
   if (pool.length === 0) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 8));
-  let i = 0;
-  round();
-  function round() {
+  round(0);
+  function round(i) {
     if (i >= order.length) return doneOut(box, resolve);
     const pair = order[i];
     const playA = Math.random() < 0.5;
     const target = playA ? pair.sound_a : pair.sound_b;
     const path = playA ? pair.audio_a_path : pair.audio_b_path;
-    const feedback = el("p", { class: "pron-feedback" }, " ");
+    const feedback = el("p", { class: "pron-feedback" }, " ");
     const sounds = [pair.sound_a, pair.sound_b];
     const btns = sounds.map((s) => el("button", { class: "btn big", type: "button" }, s));
     btns.forEach((b, idx) => b.addEventListener("click", () => {
       btns.forEach((x) => { x.disabled = true; });
       feedback.textContent = sounds[idx] === target ? T.bbCorrect : T.bbWrong(target);
-      setTimeout(() => { i++; round(); }, 900);
+      setTimeout(() => round(i + 1), 900);
     }));
     paint(box,
       el("p", { class: "bb-step-dots" }, T.bbCardOf(i + 1, order.length)),
       el("div", { class: "card", style: "text-align:center" },
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(path, target) }, T.bbListen)),
-      el("div", { class: "row-btns", style: "justify-content:center" }, ...btns), feedback);
+      el("div", { class: "row-btns", style: "justify-content:center" }, ...btns), feedback, navRow(i, order.length, round));
   }
 }
 
@@ -107,14 +115,13 @@ function sentenceBuilder(box, resolve, steps) {
   const pool = poolForKind("sentence_builder", steps);
   if (pool.length === 0) return emptyOut(box, resolve);
   const order = sample(pool, Math.min(pool.length, 6));
-  let i = 0;
-  round();
-  function round() {
+  round(0);
+  function round(i) {
     if (i >= order.length) return doneOut(box, resolve);
     const words = order[i].trim().split(/\s+/).filter(Boolean);
     const shuffled = shuffle(words);
     const chosen = [];
-    const feedback = el("p", { class: "pron-feedback" }, " ");
+    const feedback = el("p", { class: "pron-feedback" }, " ");
     const chosenRow = el("div", { class: "row-btns" });
     const btns = shuffled.map((w) => {
       const b = el("button", { class: "opt", type: "button" }, el("span", { class: "opt-text" }, w));
@@ -124,13 +131,14 @@ function sentenceBuilder(box, resolve, steps) {
         chosenRow.append(el("span", { class: "pill" }, w));
         if (chosen.length === words.length) {
           feedback.textContent = chosen.join(" ") === words.join(" ") ? T.bbCorrect : T.bbWrong(words.join(" "));
-          setTimeout(() => { i++; round(); }, 1100);
+          setTimeout(() => round(i + 1), 1100);
         }
       });
       return b;
     });
     paint(box, el("p", { class: "bb-step-dots" }, T.bbCardOf(i + 1, order.length)),
-      el("div", { class: "card bb-task" }, el("p", { class: "muted" }, T.bbMinigameSentenceHint), chosenRow, el("div", { class: "row-btns" }, ...btns), feedback));
+      el("div", { class: "card bb-task" }, el("p", { class: "muted" }, T.bbMinigameSentenceHint), chosenRow, el("div", { class: "row-btns" }, ...btns), feedback),
+      navRow(i, order.length, round));
   }
 }
 

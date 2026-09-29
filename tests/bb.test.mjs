@@ -68,11 +68,12 @@ const emptyExisting = { levels: [], units: [], lessons: [], steps: [] };
   const { errors } = validateRows(parseCsv(bad), { langs: ["de"] });
   ok(errors.some((e) => /step_type/.test(e.msg)), "validateRows: step_type lạ bị chặn", JSON.stringify(errors));
 }
-ok(STEP_TYPES.length === 7 && STEP_TYPES.includes("minigame"), "STEP_TYPES: 7 loại nhập được qua CSV (minigame chỉ ghi config.kind, không có bảng nội dung)");
+ok(STEP_TYPES.length === 8 && STEP_TYPES.includes("minigame") && STEP_TYPES.includes("listening"), "STEP_TYPES: 8 loại nhập được qua CSV (minigame chỉ ghi config.kind, không có bảng nội dung)");
 ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.includes("phonics_discrim") && GAME_KINDS.includes("sentence_builder"), "GAME_KINDS khớp 3 engine đã cài");
 
 {
-  // 1 dòng hợp lệ mỗi loại chặng, đủ 6 loại — kiểm hình dạng content parse đúng.
+  // 1 dòng hợp lệ mỗi loại chặng, đủ 7 loại (minigame kiểm riêng ở khối dưới) — kiểm hình dạng content parse đúng.
+  // listening dùng lại ĐÚNG 2 dòng của reading (cùng hình dạng cột, chỉ đổi step_type — migration 026).
   const rows = [
     ["A1", "Chào hỏi", "Bài 1", "dialogue", "A", "Xin chào!", "", "", "", "", "", "", "", "", "", "", "", "", "Hallo!"],
     ["A1", "Chào hỏi", "Bài 1", "vocab", "", "xin chào", "", "thán từ", "", "", "", "", "", "", "", "", "", "", "Hallo"],
@@ -80,32 +81,38 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
     ["A1", "Chào hỏi", "Bài 1", "phonics", "", "ch", "tr", "", "", "", "", "", "", "", "", "", "", "cha - tra", ""],
     ["A1", "Chào hỏi", "Bài 1", "reading", "", "Tôi tên là An.", "", "", "", "", "", "", "", "", "", "", "", "", "Ich heiße An."],
     ["A1", "Chào hỏi", "Bài 1", "reading", "", "", "", "", "", "", "", "", "", "", "Tên là gì?", "An|Bình", "1", "", ""],
+    ["A1", "Chào hỏi", "Bài 1", "listening", "", "Tôi tên là An.", "", "", "", "", "", "", "", "", "", "", "", "", "Ich heiße An."],
+    ["A1", "Chào hỏi", "Bài 1", "listening", "", "", "", "", "", "", "", "", "", "", "Tên là gì?", "An|Bình", "1", "", ""],
     ["A1", "Chào hỏi", "Bài 1", "writing", "", "Điền từ", "", "", "fill", "Xin ___!", "chào", "", "", "", "", "", "", "", ""],
     ["A1", "Chào hỏi", "Bài 1", "writing", "", "Xếp câu", "", "", "order", "", "", "Tôi, là, An", "", "", "", "", "", "", ""],
     ["A1", "Chào hỏi", "Bài 1", "writing", "", "Viết tự do", "", "", "write", "", "", "", "5", "Tôi tên là An.", "", "", "", "", ""],
   ];
   const { items, errors, warnings } = validateRows(parseCsv(csv(rows)), { langs: ["de"] });
-  ok(errors.length === 0, "9 dòng đủ 6 loại chặng: không lỗi", JSON.stringify(errors));
-  ok(items.length === 9, "9 dòng đều được nhận (không dòng nào bị bỏ)", String(items.length));
+  ok(errors.length === 0, "11 dòng đủ 7 loại chặng: không lỗi", JSON.stringify(errors));
+  ok(items.length === 11, "11 dòng đều được nhận (không dòng nào bị bỏ)", String(items.length));
   ok(items[0].content.kind === "dialogue" && items[0].content.speaker === "A" && items[0].content.tr.de === "Hallo!", "dialogue: parse đúng speaker + câu + bản dịch");
   ok(items[1].content.kind === "vocab" && items[1].content.pos === "thán từ", "vocab: parse đúng loại từ");
   ok(items[2].content.kind === "grammar" && items[2].content.examples.length === 2, "grammar: examples tách đúng theo dấu ;");
   ok(items[3].content.kind === "phonics" && items[3].content.a === "ch" && items[3].content.b === "tr", "phonics: parse đúng âm A/B");
   ok(items[4].content.kind === "passage" && items[4].content.vi === "Tôi tên là An.", "reading (đoạn văn): question để trống → kind=passage");
   ok(items[5].content.kind === "question" && items[5].content.choices.length === 2 && items[5].content.answer === 1, "reading (câu hỏi): question có giá trị → kind=question, choices tách đúng theo |");
-  ok(items[6].content.taskContent.sentence === "Xin ___!" && items[6].content.taskContent.answer === "chào", "writing fill: sentence+answer_text");
-  ok(items[7].content.taskContent.words.length === 3, "writing order: words tách đúng theo dấu phẩy");
-  ok(items[8].content.taskContent.min_words === 5 && items[8].content.taskContent.sample === "Tôi tên là An.", "writing write: min_words+sample");
-  ok(warnings.length === 0, "9 dòng hợp lệ không có cảnh báo thừa cột", JSON.stringify(warnings));
+  ok(items[6].content.kind === "passage" && items[6].content.vi === "Tôi tên là An.", "listening (đoạn văn): parse giống hệt reading, chỉ khác step_type");
+  ok(items[7].content.kind === "question" && items[7].content.answer === 1, "listening (câu hỏi): parse giống hệt reading");
+  ok(items[8].content.taskContent.sentence === "Xin ___!" && items[8].content.taskContent.answer === "chào", "writing fill: sentence+answer_text");
+  ok(items[9].content.taskContent.words.length === 3, "writing order: words tách đúng theo dấu phẩy");
+  ok(items[10].content.taskContent.min_words === 5 && items[10].content.taskContent.sample === "Tôi tên là An.", "writing write: min_words+sample");
+  ok(warnings.length === 0, "11 dòng hợp lệ không có cảnh báo thừa cột", JSON.stringify(warnings));
 
   const plan = buildPlan(items, emptyExisting);
   ok(plan.newLevels.length === 1 && plan.newLevels[0].code === "A1", "buildPlan: CSDL trống → 1 cấp mới");
   ok(plan.newUnits.length === 1 && plan.newLessons.length === 1, "buildPlan: 1 chủ đề mới, 1 bài mới");
-  ok(plan.newSteps.length === 6, "buildPlan: 6 chặng mới (đúng số step_type khác nhau)", String(plan.newSteps.length));
-  ok(plan.groups.length === 6, "buildPlan: 6 nhóm nội dung (1 nhóm/chặng)");
+  ok(plan.newSteps.length === 7, "buildPlan: 7 chặng mới (đúng số step_type khác nhau)", String(plan.newSteps.length));
+  ok(plan.groups.length === 7, "buildPlan: 7 nhóm nội dung (1 nhóm/chặng)");
   const readingGroup = plan.groups.find((g) => g.stepType === "reading");
   ok(readingGroup.rows.length === 2, "buildPlan: nhóm reading gộp đúng cả đoạn văn lẫn câu hỏi vào 1 chặng");
-  ok(plan.counts.rows === 9, "buildPlan: đếm đúng tổng số dòng");
+  const listeningGroup = plan.groups.find((g) => g.stepType === "listening");
+  ok(listeningGroup.rows.length === 2, "buildPlan: nhóm listening gộp đúng cả đoạn văn lẫn câu hỏi vào 1 chặng");
+  ok(plan.counts.rows === 11, "buildPlan: đếm đúng tổng số dòng");
 }
 {
   // CSDL đã có sẵn cấp/chủ đề/bài/chặng trùng tên → không tạo mới, chỉ gộp vào nhóm nội dung của chặng đã có.
@@ -185,13 +192,13 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
 }
 {
   // buildTemplate()/aiPrompt() (⬇ Tải file mẫu / 📋 Sao chép câu lệnh cho AI) phải khớp ĐÚNG cấu trúc dữ liệu hiện
-  // có — tự kiểm bằng cách chạy ngược qua validateRows/buildPlan (0 lỗi, 0 cảnh báo) và phải phủ đủ cả 7 step_type.
+  // có — tự kiểm bằng cách chạy ngược qua validateRows/buildPlan (0 lỗi, 0 cảnh báo) và phải phủ đủ cả 8 step_type.
   const tpl = buildTemplate(["de", "en"]);
   const v = validateRows(parseCsv(tpl), { langs: ["de", "en"] });
   ok(v.errors.length === 0, "buildTemplate: file mẫu không có lỗi", JSON.stringify(v.errors));
   ok(v.warnings.length === 0, "buildTemplate: file mẫu không có cột thừa/cảnh báo", JSON.stringify(v.warnings));
   const stepTypesInTemplate = new Set(v.items.map((it) => it.stepType));
-  ok(STEP_TYPES.every((t) => stepTypesInTemplate.has(t)), "buildTemplate: phủ đủ cả 7 step_type", [...stepTypesInTemplate].join(","));
+  ok(STEP_TYPES.every((t) => stepTypesInTemplate.has(t)), "buildTemplate: phủ đủ cả 8 step_type", [...stepTypesInTemplate].join(","));
   const plan = buildPlan(v.items, { levels: [], units: [], lessons: [], steps: [] });
   ok(plan.newUnits[0]?.title_tr?.de && plan.newUnits[0]?.title_tr?.en, "buildTemplate: chủ đề mẫu mang đúng title_tr de+en");
   ok(plan.newLessons[0]?.title_tr?.de && plan.newLessons[0]?.title_tr?.en, "buildTemplate: bài mẫu mang đúng title_tr de+en");

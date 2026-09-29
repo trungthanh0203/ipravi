@@ -11,6 +11,7 @@ import * as grammar from "./steps/grammar.js";
 import * as phonics from "./steps/phonics.js";
 import * as minigame from "./steps/minigame.js";
 import * as reading from "./steps/reading.js";
+import * as listening from "./steps/listening.js";
 import * as writing from "./steps/writing.js";
 
 // 1 renderer riêng cho mỗi loại chặng — mỗi renderer nhận (box, step[, pool]), vẽ vào box, trả Promise resolve khi
@@ -19,12 +20,13 @@ import * as writing from "./steps/writing.js";
 // cầu chủ dự án 2026-09-28, xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 23).
 const STEP_RUNNERS = {
   dialogue: dialogue.run, vocab: vocab.run, grammar: grammar.run, phonics: phonics.run,
-  minigame: minigame.run, reading: reading.run, writing: writing.run,
+  minigame: minigame.run, reading: reading.run, listening: listening.run, writing: writing.run,
 };
 // Chữ hiện trên thẻ chặng — MỖI CHUỖI ĐÃ CÓ SẴN EMOJI ĐẦU (xem strings.js), không cần ghép thêm emoji riêng.
 const STEP_TITLE = {
   dialogue: T.bbStepDialogue, vocab: T.bbStepVocab, grammar: T.bbStepGrammar,
-  phonics: T.bbStepPhonics, minigame: T.bbStepMinigame, reading: T.bbStepReading, writing: T.bbStepWriting,
+  phonics: T.bbStepPhonics, minigame: T.bbStepMinigame, reading: T.bbStepReading,
+  listening: T.bbStepListening, writing: T.bbStepWriting,
 };
 
 // Chặng có dữ liệu THẬT để ẩn/hiện đúng theo yêu cầu chủ dự án: dialogue/vocab/grammar/phonics/writing cần ≥1 dòng
@@ -32,7 +34,7 @@ const STEP_TITLE = {
 // engine đó — DÙNG CHUNG ngưỡng với lúc chơi thật qua `minigame.feasible()` (bb/steps/minigame.js), không tự đặt
 // ngưỡng riêng ở đây kẻo lệch nhau.
 function hasContent(step, pool) {
-  if (step.step_type === "reading") return Boolean(step.content?.passage);
+  if (step.step_type === "reading" || step.step_type === "listening") return Boolean(step.content?.passage);
   if (step.step_type === "minigame") return minigame.feasible(step, pool, nativeLang());
   return (step.content?.length ?? 0) > 0;
 }

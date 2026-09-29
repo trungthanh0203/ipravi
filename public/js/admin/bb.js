@@ -30,7 +30,7 @@ function langBlock(existing = {}, multiline = false) {
   return { fields: langs().map((l) => labeled(l.label, inputs[l.code])), value: () => Object.fromEntries(langs().map((l) => [l.code, inputs[l.code].value])) };
 }
 
-const STEP_LABEL = { dialogue: "💬 Hội thoại", vocab: "🔤 Từ vựng", grammar: "📐 Ngữ pháp", phonics: "🎧 Ngữ âm", minigame: "🎮 Mini-game", reading: "📖 Đọc hiểu", writing: "✍️ Luyện viết" };
+const STEP_LABEL = { dialogue: "💬 Hội thoại", vocab: "🔤 Từ vựng", grammar: "📐 Ngữ pháp", phonics: "🎧 Ngữ âm", minigame: "🎮 Game học", reading: "📖 Luyện đọc", listening: "🎧 Luyện nghe", writing: "✍️ Luyện viết" };
 const LESSON_TYPE_LABEL = { core: "Bài học", review: "🏆 Ôn tập", reading: "Đọc hiểu", writing: "Luyện viết" };
 
 let openLevels = new Set(), openUnits = new Set(), openLessons = new Set(), openSteps = new Set();
@@ -89,11 +89,12 @@ function csvSection(ctx) {
   };
   const preview = el("div");
   const help = el("p", { class: "muted" },
-    "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|minigame|reading|writing). " +
+    "Cột bắt buộc: level (mã CEFR vd A1), unit, lesson, step_type (dialogue|vocab|grammar|phonics|minigame|reading|listening|writing). " +
     "Tuỳ chặng: dialogue dùng speaker+vi · vocab dùng vi+pos · grammar dùng vi (công thức)+examples (cách nhau ;) · " +
     "phonics dùng vi (âm A)+vi2 (âm B)+examples · minigame dùng game (meaning_pick|phonics_discrim|sentence_builder, " +
-    "không cần nội dung riêng — tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp cùng bài) · reading: dòng đoạn văn dùng vi " +
-    "(để trống cột question), dòng câu hỏi dùng question+choices (cách nhau |)+answer (số) · writing dùng task_type " +
+    "không cần nội dung riêng — tự lấy từ vựng/ngữ âm/hội thoại/ngữ pháp cùng bài) · reading/listening: dòng đoạn văn " +
+    "dùng vi (để trống cột question), dòng câu hỏi dùng question+choices (cách nhau |)+answer (số) — listening KHÔNG " +
+    "hiện chữ cho người học, đoạn văn chỉ để soạn/tra + sinh audio · writing dùng task_type " +
     "(fill|order|write)+vi (đề bài), rồi fill dùng sentence+answer_text, order dùng words (cách nhau bằng dấu phẩy), " +
     "write dùng min_words+sample. Cột khác: level_name, can_do, unit_emoji, lesson_type, rồi 1 cột/ngôn ngữ (vd de, en) " +
     "= bản dịch. Mỗi bài chỉ 1 chặng/loại qua CSV — nhập lại không tạo trùng nội dung trong cùng chặng.");
@@ -356,7 +357,8 @@ function loadStepContent(panel, step, say) {
       else if (step.step_type === "vocab") await vocabPanel(panel, step, say, refresh);
       else if (step.step_type === "grammar") await grammarPanel(panel, step, say, refresh);
       else if (step.step_type === "phonics") await phonicsPanel(panel, step, say, refresh);
-      else if (step.step_type === "reading") await readingPanel(panel, step, say, refresh);
+      else if (step.step_type === "reading") await passagePanel(bb.readingOps, panel, step, say, refresh);
+      else if (step.step_type === "listening") await passagePanel(bb.listeningOps, panel, step, say, refresh);
       else if (step.step_type === "writing") await writingPanel(panel, step, say, refresh);
       else if (step.step_type === "minigame") await minigamePanel(panel, step, say, refresh);
       else panel.replaceChildren(el("p", { class: "muted" }, "Loại chặng chưa được hỗ trợ."));
@@ -590,59 +592,61 @@ function phonicsForm(existing, stepId, siblings, onCancel, onSaved) {
     labeled("Ví dụ minh hoạ (mỗi dòng 1 ví dụ)", examples), footer(save, onCancel, err));
 }
 
-// ---- Đọc hiểu: 1 đoạn văn + nhiều câu hỏi ----
-async function readingPanel(panel, step, say, refresh) {
-  const { data: passages, error } = await sb.from("bb_reading_passages").select("*").eq("step_id", step.id);
+// ---- Đoạn văn + câu hỏi: DÙNG CHUNG cho Luyện đọc (bb.readingOps) và Luyện nghe (bb.listeningOps, migration 026)
+// — CÙNG hình dạng bảng, chỉ khác tên bảng (đã gói ở bb-ops.js). `ops.passageTable`/`ops.questionTable` cho
+// audioBtn/moveIn biết bảng nào; CRUD gọi qua `ops.createPassage` v.v. thay vì hàm rời `bb.createPassage`.
+async function passagePanel(ops, panel, step, say, refresh) {
+  const { data: passages, error } = await sb.from(ops.passageTable).select("*").eq("step_id", step.id);
   if (error) throw error;
   const passage = passages[0] ?? null;
   if (!passage) {
     const addSlot = el("div");
     panel.replaceChildren(
       el("p", { class: "muted" }, "Chặng này chưa có đoạn văn."),
-      btn("➕ Thêm đoạn văn", slotToggle(addSlot, (close) => passageForm(null, step.id, close, () => { say("ok", "Đã thêm."); refresh(); })), "btn small"),
+      btn("➕ Thêm đoạn văn", slotToggle(addSlot, (close) => passageForm(ops, null, step.id, close, () => { say("ok", "Đã thêm."); refresh(); })), "btn small"),
       addSlot);
     return;
   }
-  const { data: questions, error: e2 } = await sb.from("bb_reading_questions").select("*").eq("passage_id", passage.id).order("sort_order");
+  const { data: questions, error: e2 } = await sb.from(ops.questionTable).select("*").eq("passage_id", passage.id).order("sort_order");
   if (e2) throw e2;
   const editSlot = el("div"), addQSlot = el("div");
   panel.replaceChildren(
     el("div", { class: "bb-row" },
       rowHead(el("p", { class: "bb-passage" }, passage.passage_vi), trLine(passage.passage_tr)),
-      rowActs(audioBtn("Nghe", "bb_reading_passages", passage, "audio_path", refresh, say, passage.passage_vi),
-        btn("✎", slotToggle(editSlot, (close) => passageForm(passage, step.id, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
-        btn("✕", async () => { if (!confirm("Xoá đoạn văn cùng mọi câu hỏi bên trong?")) return; try { await bb.deletePassage(passage); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost danger"))),
+      rowActs(audioBtn("Nghe", ops.passageTable, passage, "audio_path", refresh, say, passage.passage_vi),
+        btn("✎", slotToggle(editSlot, (close) => passageForm(ops, passage, step.id, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
+        btn("✕", async () => { if (!confirm("Xoá đoạn văn cùng mọi câu hỏi bên trong?")) return; try { await ops.deletePassage(passage); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost danger"))),
     editSlot,
     el("h4", null, "Câu hỏi"),
-    btn("➕ Thêm câu hỏi", slotToggle(addQSlot, (close) => questionForm(null, passage.id, questions, close, () => { say("ok", "Đã thêm."); refresh(); })), "btn small"),
+    btn("➕ Thêm câu hỏi", slotToggle(addQSlot, (close) => questionForm(ops, null, passage.id, questions, close, () => { say("ok", "Đã thêm."); refresh(); })), "btn small"),
     addQSlot,
     ...questions.map((q) => {
       const qEditSlot = el("div");
       return el("div", { class: "bb-row" },
         rowHead(el("b", null, q.question_vi), el("div", { class: "muted" }, q.choices.map((c, i) => (i + 1 === q.answer ? "✓ " : "") + c).join(" · "))),
         rowActs(
-          btn("▲", async () => { try { await moveIn("bb_reading_questions", questions, q, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
-          btn("▼", async () => { try { await moveIn("bb_reading_questions", questions, q, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
-          btn("✎", slotToggle(qEditSlot, (close) => questionForm(q, passage.id, questions, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
-          btn("✕", async () => { if (!confirm("Xoá câu hỏi này?")) return; try { await bb.deleteQuestion(q.id); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost danger")),
+          btn("▲", async () => { try { await moveIn(ops.questionTable, questions, q, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
+          btn("▼", async () => { try { await moveIn(ops.questionTable, questions, q, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
+          btn("✎", slotToggle(qEditSlot, (close) => questionForm(ops, q, passage.id, questions, close, () => { say("ok", "Đã lưu."); refresh(); })), "btn tiny ghost"),
+          btn("✕", async () => { if (!confirm("Xoá câu hỏi này?")) return; try { await ops.deleteQuestion(q.id); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost danger")),
         qEditSlot);
     }));
 }
-function passageForm(existing, stepId, onCancel, onSaved) {
+function passageForm(ops, existing, stepId, onCancel, onSaved) {
   const err = el("div");
   const vi = el("textarea", { class: "cell", rows: "4" }, existing?.passage_vi ?? "");
   const tr = langBlock(existing?.passage_tr, true);
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
-      if (existing) await bb.updatePassage(existing, { passage_vi: vi.value, passage_tr: tr.value() });
-      else await bb.createPassage(stepId, { passage_vi: vi.value, passage_tr: tr.value() });
+      if (existing) await ops.updatePassage(existing, { passage_vi: vi.value, passage_tr: tr.value() });
+      else await ops.createPassage(stepId, { passage_vi: vi.value, passage_tr: tr.value() });
       onSaved();
     } catch (e) { save.disabled = false; fail(err, e); }
   }, "btn small");
   return el("div", { class: "qa-box" }, labeled("Đoạn văn (tiếng Việt)", vi), el("div", { class: "qa-grid" }, tr.fields), footer(save, onCancel, err));
 }
-function questionForm(existing, passageId, siblings, onCancel, onSaved) {
+function questionForm(ops, existing, passageId, siblings, onCancel, onSaved) {
   const err = el("div");
   const q = el("input", { type: "text", class: "cell", value: existing?.question_vi ?? "" });
   const choices = el("input", { type: "text", class: "cell", value: (existing?.choices ?? []).join(" | "), placeholder: "An | Bình | Chi" });
@@ -650,8 +654,8 @@ function questionForm(existing, passageId, siblings, onCancel, onSaved) {
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
-      if (existing) await bb.updateQuestion(existing, { question_vi: q.value, choices: choices.value, answer: answer.value });
-      else await bb.createQuestion(passageId, { question_vi: q.value, choices: choices.value, answer: answer.value }, siblings);
+      if (existing) await ops.updateQuestion(existing, { question_vi: q.value, choices: choices.value, answer: answer.value });
+      else await ops.createQuestion(passageId, { question_vi: q.value, choices: choices.value, answer: answer.value }, siblings);
       onSaved();
     } catch (e) { save.disabled = false; fail(err, e); }
   }, "btn small");
