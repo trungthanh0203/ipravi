@@ -511,7 +511,10 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-vocab-say { font-size: 13px; }
 .bb-grammar-card .bb-formula { font-size: 20px; font-weight: 800; }
 .bb-examples { padding-left: 20px; margin: 8px 0 0; }
-.bb-examples li { margin-bottom: 6px; }
+.bb-examples li { margin-bottom: 12px; }
+.bb-example-vi { font-size: 16px; }
+.bb-example-vi strong { color: var(--brand-dark); }
+.bb-red { color: var(--err); font-weight: 600; }
 .bb-phonics-pair { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
 .bb-phonics-examples { margin: 8px 0 0; }
 /* Bảng Từ vựng (bb/steps/vocab.js) — tái dùng .table-wrap/.tbl của khu admin; .pron-feedback mặc định cao 70px

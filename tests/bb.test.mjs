@@ -5,6 +5,7 @@ import { isDue, dueCount, pickSession } from "../public/js/bb/practice-core.js";
 import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
+import { formatSegments } from "../public/js/bb/format.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -224,6 +225,25 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "dialogue", content: [{ line_vi: "Xin chào bạn" }] }], "de") === true, "feasible: sentence_builder có câu ≥2 từ → chơi được");
   ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "dialogue", content: [{ line_vi: "Ừ" }] }], "de") === false, "feasible: sentence_builder câu chỉ 1 từ → chưa đủ để xếp lại");
   ok(minigameFeasible({ config: { kind: "sentence_builder" } }, [{ step_type: "grammar", content: [{ examples: [{ vi: "Chào bạn nhé" }] }] }], "de") === true, "feasible: sentence_builder lấy được câu ví dụ từ chặng ngữ pháp");
+}
+
+// ---- format.js: formatSegments() — markdown-lite **đậm**/*nghiêng*/!!đỏ!!/xuống dòng cho công thức + câu ví dụ
+// chặng Ngữ pháp (2026-10-01, mở rộng từ boldSegments() chỉ có đậm) ----
+{
+  ok(JSON.stringify(formatSegments("Chào **bạn** nhé")) === JSON.stringify([[{ text: "Chào " }, { text: "bạn", bold: true }, { text: " nhé" }]]),
+    "formatSegments: tách đúng phần đậm ở giữa câu");
+  ok(JSON.stringify(formatSegments("Không có gì đậm")) === JSON.stringify([[{ text: "Không có gì đậm" }]]), "formatSegments: không có ký hiệu nào thì trả nguyên câu, 1 dòng");
+  ok(JSON.stringify(formatSegments("**Cả câu đậm**")) === JSON.stringify([[{ text: "Cả câu đậm", bold: true }]]), "formatSegments: cả câu nằm trong ** thì chỉ 1 đoạn đậm, không có đoạn rỗng thừa");
+  ok(JSON.stringify(formatSegments("**a** và **b**")) === JSON.stringify([[{ text: "a", bold: true }, { text: " và " }, { text: "b", bold: true }]]),
+    "formatSegments: nhiều đoạn đậm trong cùng 1 câu");
+  ok(JSON.stringify(formatSegments("Câu *nghiêng* nhé")) === JSON.stringify([[{ text: "Câu " }, { text: "nghiêng", italic: true }, { text: " nhé" }]]),
+    "formatSegments: *chữ* tách đúng phần nghiêng");
+  ok(JSON.stringify(formatSegments("Câu !!đỏ!! nhé")) === JSON.stringify([[{ text: "Câu " }, { text: "đỏ", red: true }, { text: " nhé" }]]),
+    "formatSegments: !!chữ!! tách đúng phần đỏ");
+  ok(JSON.stringify(formatSegments("Dòng 1\nDòng 2")) === JSON.stringify([[{ text: "Dòng 1" }], [{ text: "Dòng 2" }]]),
+    "formatSegments: xuống dòng (\\n) tách thành nhiều DÒNG riêng, mỗi dòng tự phân đoạn");
+  ok(JSON.stringify(formatSegments("")) === JSON.stringify([[]]), "formatSegments: chuỗi rỗng trả 1 dòng rỗng");
+  ok(JSON.stringify(formatSegments(null)) === JSON.stringify([[]]), "formatSegments: null (thiếu dữ liệu) không lỗi, trả 1 dòng rỗng");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

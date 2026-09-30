@@ -7,7 +7,8 @@
 //   - dialogue: speaker (mặc định A), vi (câu)
 //   - vocab: vi (từ), pos (loại từ), say (tuỳ chọn — chữ ĐỌC khi khác chữ hiển thị, vd "b" đọc "bờ"; dùng cho
 //            chuyên đề bảng chữ cái/ngữ âm, migration 024)
-//   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;)
+//   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;) — markdown-lite trong câu ví dụ: **đậm**,
+//              *nghiêng*, !!đỏ!! để nhấn phần khớp công thức lúc hiển thị (xem bb/format.js)
 //   - phonics: vi (âm A), vi2 (âm B), examples (ví dụ, cách nhau bằng ;)
 //   - reading/listening (CÙNG hình dạng cột, khác bảng CSDL — migration 026): dòng ĐOẠN VĂN (chỉ 1 dòng đầu
 //              tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn); dòng CÂU HỎI (cột `question` có giá trị)
@@ -238,7 +239,7 @@ export function buildTemplate(langs) {
       vi: "Táo giá năm mươi nghìn một cân.", ...langCols({ de: "Äpfel kosten fünfzigtausend Dong pro Kilo.", en: "Apples are fifty thousand dong per kilo." }) }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "vocab", vi: "táo", pos: "n", ...langCols({ de: "der Apfel", en: "apple" }) }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "vocab", vi: "cân", pos: "n", ...langCols({ de: "das Kilo", en: "kilogram" }) }),
-    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "grammar", vi: "... giá bao nhiêu?", examples: "Táo giá bao nhiêu?;Táo giá năm mươi nghìn một cân.",
+    row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "grammar", vi: "... giá bao nhiêu?", examples: "Táo **giá** bao nhiêu?;Táo **giá** năm mươi nghìn một cân.",
       ...langCols({ de: "Wie viel kostet ...?", en: "How much is ...?" }) }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "phonics", vi: "ch", vi2: "tr", examples: "cha - tra" }),
     row({ level: "A2", unit: UNIT, lesson: LESSON, step_type: "reading",
@@ -274,7 +275,7 @@ Quy tắc:
 - step_type — mỗi bài chỉ được 1 chặng/loại qua CSV, nên gộp đủ nội dung của loại đó vào các dòng cùng step_type:
   - dialogue: hội thoại 3-6 câu, speaker A/B xen kẽ, vi = câu.
   - vocab: từ vựng 5-8 từ, vi = từ, pos = loại từ (n/v/adj/adv/pron/num/conj/interj…); say CHỈ cần khi chữ ĐỌC khác chữ hiển thị (vd chữ cái "b" đọc "bờ" — dùng cho chuyên đề bảng chữ cái/ngữ âm cấp A0, từ vựng thường để trống).
-  - grammar: 1 công thức + 2-3 ví dụ, vi = công thức (vd "Chào + đại từ"), examples = câu ví dụ cách nhau bằng ";".
+  - grammar: 1 công thức + 2-3 ví dụ, vi = công thức (vd "Chào + đại từ"), examples = câu ví dụ cách nhau bằng ";" — gõ **đậm**/*nghiêng*/!!đỏ!! quanh phần từ trong câu ví dụ khớp đúng công thức để nhấn mạnh lúc hiển thị (vd "Chào **bạn**, táo giá bao nhiêu?" nếu công thức đang dạy là "Chào + đại từ").
   - phonics: 1 CẶP ÂM DỄ NHẦM THẬT theo vùng miền (ch/tr, s/x, d/gi, d/r, l/n) — vi = âm A, vi2 = âm B, examples = ví dụ cách nhau ";"; KHÔNG dùng cho c/k, g/gh, ng/ngh (chỉ khác cách viết, đọc giống nhau — nếu cần giải thích quy tắc viết thì dùng 1 dòng grammar riêng).
   - reading: 1 đoạn văn ngắn (dòng có cột question để TRỐNG, vi = đoạn văn) + 2-3 câu hỏi trắc nghiệm (mỗi câu 1 dòng, question = câu hỏi, choices = 2-6 đáp án cách nhau "|", answer = số thứ tự đáp án đúng đếm từ 1).
   - listening: CÙNG cột như reading (đoạn văn + câu hỏi) nhưng người học sẽ KHÔNG thấy chữ đoạn văn — chỉ nghe; nên chọn đoạn văn ĐƠN GIẢN, câu ngắn, dễ nghe hiểu hơn đoạn dùng cho reading.

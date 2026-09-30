@@ -130,7 +130,12 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   như nhau; `decideScreen()` rẽ `bai-ban-home`/`child-home` theo đó.
   Mã (`public/js/bb/`, mirror `child/`): `api.js` (chỉ `approved`), `media.js` (dùng lại
   `speakFallback`/`nativeLang`/`titleIn`/`titleSpeakers` từ `child/media.js`), `pron.js` (không
-  lưu), `runner.js` (`runLesson()` = **LƯỚI CHỌN CHẶNG TỰ DO**: vào bài thấy mọi chặng CÓ DỮ LIỆU,
+  lưu), `format.js` (`formatSegments()`/`formatNodes()` — markdown-lite `**đậm**`/`*nghiêng*`/`!!đỏ!!`
+  + xuống dòng cho công thức+câu ví dụ chặng Ngữ pháp; dùng chung `bb/steps/grammar.js` + admin/bb.js
+  preview; công thức nhập qua `<textarea>` nhiều dòng — admin/bb-ops.js `cleanLines()` GIỮ `\n`,
+  khác `clean()` gộp hết khoảng trắng kể cả xuống dòng),
+  `nav.js` (nhớ vị trí Level/Unit/Lesson/Luyện tập qua sessionStorage, F5 khôi phục đúng chỗ — xem
+  mục `state.activeChildId` bên dưới), `runner.js` (`runLesson()` = **LƯỚI CHỌN CHẶNG TỰ DO**: vào bài thấy mọi chặng CÓ DỮ LIỆU,
   chạm chặng nào học chặng đó, xong ✓ tự về lưới; ẩn chặng rỗng qua `hasContent()`, minigame qua
   `minigame.feasible()`), `skills.js` (`GROUPS`/`SKILLS`, 4 kỹ năng — Từ vựng có box Leitner, 3 còn
   lại chỉ "xem lại"), `practice.js` (lưới theo nhóm + `resultScreen()` chung), `srs.js` (Leitner),
@@ -145,6 +150,10 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   (`readingOps`/`listeningOps`, chỉ khác tên bảng) — admin/bb.js gọi qua `passagePanel(ops, ...)`.
   CSV (`admin/bb-csv.js`): 1 dòng = 1 dòng nội dung 1 CHẶNG; cột `unit_<lang>`/`lesson_<lang>`
   CHỈ áp dụng lúc TẠO MỚI. TTS ghi `audio_path` phẳng (ghi đè, khác `content_audio` nhiều-dòng).
+  `audioBtn()` (admin/bb.js) có thêm "🎙️ Có sẵn" → `bb.searchAudio(text)` tìm theo chữ khớp trong
+  CẢ `content_items` (Trẻ em, kể cả ngân hàng âm) LẪN `bb_vocab` khác chặng, chọn 1 kết quả thì
+  `bb.copyAudioFrom()` SAO CHÉP (Storage `.copy()`, không trỏ chung path) thành file riêng của dòng
+  đang sửa — tránh 2 dòng CSDL cùng trỏ 1 file (xoá 1 bên sẽ kéo mất âm bên kia).
   Luyện đọc/Luyện nghe (`bb/steps/reading.js`+`listening.js`+`quiz.js`): hiện HẾT câu hỏi cùng lúc +
   1 nút "Kiểm tra" chấm hết kiểu iLapra (khác bản trước: từng câu một) — nút cuối LUÔN "✓ Hoàn
   thành", không còn "Tiếp". Game học (`bb/steps/minigame.js`, đổi tên từ "Trò chơi"): mỗi vòng có

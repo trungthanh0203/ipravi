@@ -10,6 +10,10 @@ const chunk = (arr, n = 100) => Array.from({ length: Math.ceil(arr.length / n) }
 const check = ({ error }) => { if (error) throw error; };
 const checkData = ({ data, error }) => { if (error) throw error; return data; };
 const clean = (s) => String(s ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
+// Như clean() nhưng GIỮ xuống dòng (chỉ gom khoảng trắng ngang trong từng dòng + bỏ dòng trắng đầu/cuối) — dùng cho
+// ô cho phép nhiều dòng thật (vd công thức ngữ pháp, xem grammarForm admin/bb.js) — clean() thường sẽ gộp \n thành
+// 1 dấu cách, xoá mất định dạng xuống dòng admin vừa gõ.
+const cleanLines = (s) => String(s ?? "").normalize("NFC").split("\n").map((l) => l.replace(/[^\S\n]+/g, " ").trim()).join("\n").trim();
 const only = (obj) => Object.fromEntries(Object.entries(obj ?? {}).map(([k, v]) => [k, clean(v)]).filter(([, v]) => v));
 const need = (msg) => { if (msg) throw new Error(msg); };
 const nextOrder = (rows) => Math.max(0, ...rows.map((r) => r.sort_order ?? 0)) + 1;
@@ -234,6 +238,40 @@ export async function generateAudio(table, row, col, text, lang = "vi", gender =
   return path;
 }
 
+// Tìm âm THANH tiếng Việt ĐÃ CÓ (khớp chữ, không phân biệt hoa/thường/dấu chấm câu ở giữa) để DÙNG LẠI thay vì thu/
+// tải lên lần nữa — gồm cả "ngân hàng âm" (content_items khu Trẻ em, kể cả chủ đề ẩn) lẫn từ vựng Bài Bản ở CHẶNG
+// KHÁC. Trả về danh sách phẳng { label, path, source } để admin/bb.js vẽ 1 danh sách chung.
+export async function searchAudio(query) {
+  const q = clean(query);
+  if (!q) return [];
+  const [childRows, bbRows] = await Promise.all([
+    sb.from("content_items").select("text_vi, content_audio(file_path, lang)").ilike("text_vi", `%${q}%`).limit(30).then(checkData),
+    sb.from("bb_vocab").select("word_vi, audio_path").ilike("word_vi", `%${q}%`).limit(30).then(checkData),
+  ]);
+  const child = childRows
+    .map((r) => ({ label: r.text_vi, path: (r.content_audio ?? []).find((a) => a.lang === "vi")?.file_path, source: "🎙️ Ngân hàng/Trẻ em" }))
+    .filter((r) => r.path);
+  const bb = bbRows
+    .filter((r) => r.audio_path)
+    .map((r) => ({ label: r.word_vi, path: r.audio_path, source: "📖 Bài Bản" }));
+  return [...child, ...bb];
+}
+
+// Sao chép 1 file âm thanh CÓ SẴN (từ searchAudio()) thành file RIÊNG của dòng đang sửa — KHÔNG trỏ chung 1 path
+// giữa 2 dòng CSDL (nếu dòng nguồn bị xoá/đổi âm sau này sẽ kéo theo mất âm ở đây, rất khó dò ra lý do) — copy() là
+// thao tác phía Supabase Storage, không tải xuống/tải lên lại qua trình duyệt.
+export async function copyAudioFrom(table, row, col, sourcePath) {
+  const ext = (sourcePath.split(".").pop() || "mp3").toLowerCase();
+  const path = `bb/audio/${table}-${row.id}-${col}-${Date.now()}.${ext}`;
+  const cp = await sb.storage.from("content").copy(sourcePath, path);
+  if (cp.error) throw new Error("Sao chép âm thanh thất bại: " + cp.error.message);
+  const { error } = await sb.from(table).update({ [col]: path }).eq("id", row.id);
+  if (error) { await sb.storage.from("content").remove([path]); throw error; }
+  if (row[col]) await sb.storage.from("content").remove([row[col]]);
+  row[col] = path;
+  return path;
+}
+
 // ============================================================================
 // Nội dung từng loại chặng — KHÔNG có status riêng, hiện/ẩn theo status của CHẶNG cha.
 // ============================================================================
@@ -280,13 +318,13 @@ export async function deleteVocab(row) {
 
 // ---- Ngữ pháp (examples: MVP chỉ câu vi, chưa hỗ trợ dịch từng ví dụ trong biểu mẫu nhanh — sửa bằng SQL nếu cần) ----
 export async function createGrammar(stepId, { formula, formula_tr, examples }, siblings) {
-  const f = clean(formula);
+  const f = cleanLines(formula);
   need(f ? null : "Cần nhập công thức");
   return checkData(await sb.from("bb_grammar").insert({ step_id: stepId, formula: f, formula_tr: only(formula_tr), examples: lines(examples).map((vi) => ({ vi })), sort_order: nextOrder(siblings) }).select().single());
 }
 export async function updateGrammar(row, { formula, formula_tr, examples }) {
   const patch = {};
-  if (formula != null) { need(clean(formula) ? null : "Cần nhập công thức"); patch.formula = clean(formula); }
+  if (formula != null) { need(cleanLines(formula) ? null : "Cần nhập công thức"); patch.formula = cleanLines(formula); }
   if (formula_tr != null) patch.formula_tr = only(formula_tr);
   if (examples != null) patch.examples = lines(examples).map((vi) => ({ vi }));
   if (Object.keys(patch).length) check(await sb.from("bb_grammar").update(patch).eq("id", row.id));

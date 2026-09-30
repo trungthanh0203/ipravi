@@ -52,6 +52,11 @@ export function installMock(sb, seed = {}) {
     eq(c, v) { this.filters.push((r) => r[c] === v); return this; }
     neq(c, v) { this.filters.push((r) => r[c] !== v); return this; }
     in(c, vs) { this.filters.push((r) => vs.includes(r[c])); return this; }
+    ilike(c, pattern) {
+      const re = new RegExp("^" + String(pattern).replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/%/g, ".*") + "$", "i");
+      this.filters.push((r) => re.test(String(r[c] ?? "")));
+      return this;
+    }
     order(c, o = {}) { this.orders.push([c, o.ascending !== false]); return this; }
     limit(n) { this.lim = n; return this; }
     range(a, b) { this.rng = [a, b]; return this; }
@@ -103,6 +108,7 @@ export function installMock(sb, seed = {}) {
       upload: async (path) => { files.add(path); return { error: null }; },
       remove: async (paths) => { paths.forEach((p) => files.delete(p)); return { error: null }; },
       getPublicUrl: (p) => ({ data: { publicUrl: `/blob/${p}` } }),
+      copy: async (from, to) => { files.add(to); return { data: { path: to }, error: null }; },
     }),
   };
   sb.auth.getSession = async () => ({ data: { session: { access_token: "test-token" } } });

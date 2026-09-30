@@ -7,6 +7,7 @@ import { notice } from "./notice.js";
 import { moveIn } from "./ops.js";
 import * as bb from "./bb-ops.js";
 import * as bbCsv from "./bb-csv.js";
+import { formatNodes } from "../bb/format.js";
 
 // Tab admin "Bài Bản" — soạn nội dung "Tiếng Việt Bài Bản" (xem KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 5).
 // Cây: Cấp (bb_levels) → Chủ đề (bb_units) → Bài (bb_lessons) → Chặng (bb_lesson_steps, 7 loại) → nội dung riêng
@@ -391,13 +392,44 @@ const audioBtn = (label, table, row, col, refresh, say, text) => {
     try { await bb.generateAudio(table, row, col, text); say("ok", "Đã sinh giọng đọc (TTS)."); refresh(); }
     catch (err) { b.disabled = false; say("err", err.message); }
   }, "btn tiny") : null;
-  return el("span", { class: "row-btns", style: "margin:0" },
-    row[col] ? btn("▶ " + label, () => new Audio(contentUrl(row[col])).play(), "btn tiny") : null,
-    ttsBtn,
-    btn(row[col] ? "🔄 Đổi" : "⬆ " + label, () => file.click(), "btn tiny"),
-    row[col] ? btn("✕", async () => { try { await bb.clearAudioPath(table, row, col); say("ok", "Đã gỡ âm thanh."); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost") : null,
-    file);
+  // Chọn lại 1 âm ĐÃ THU ở chỗ khác (ngân hàng âm/Trẻ em hoặc từ vựng Bài Bản khác) thay vì phải thu/tải lên lần
+  // nữa (yêu cầu chủ dự án 2026-10-01) — pickSlot là <div> RIÊNG (không nhét vào .row-btns bên dưới) để danh sách
+  // kết quả tự xuống dòng, không bóp méo hàng nút.
+  const pickSlot = el("div");
+  const pickBtn = btn("🎙️ Có sẵn", slotToggle(pickSlot, (close) => audioPicker(table, row, col, text, say, () => { close(); refresh(); })), "btn tiny");
+  return el("div", null,
+    el("span", { class: "row-btns", style: "margin:0" },
+      row[col] ? btn("▶ " + label, () => new Audio(contentUrl(row[col])).play(), "btn tiny") : null,
+      ttsBtn, pickBtn,
+      btn(row[col] ? "🔄 Đổi" : "⬆ " + label, () => file.click(), "btn tiny"),
+      row[col] ? btn("✕", async () => { try { await bb.clearAudioPath(table, row, col); say("ok", "Đã gỡ âm thanh."); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost") : null,
+      file),
+    pickSlot);
 };
+// text (tuỳ chọn): chữ hiện có của dòng đang sửa — TỰ tìm ngay theo chữ đó lúc mở, đỡ phải gõ lại thứ đã biết.
+function audioPicker(table, row, col, text, say, onDone) {
+  const input = el("input", { type: "text", class: "cell cell-sm", value: text ?? "", placeholder: "Tìm theo chữ…" });
+  const results = el("div");
+  const search = async () => {
+    const q = input.value.trim();
+    if (!q) { results.replaceChildren(); return; }
+    results.replaceChildren(el("p", { class: "muted" }, "Đang tìm…"));
+    try {
+      const found = await bb.searchAudio(q);
+      results.replaceChildren(...(found.length ? found.map((r) => el("div", { class: "row" },
+        el("span", null, r.source, " — ", r.label),
+        el("span", { class: "row-btns", style: "margin:0" },
+          btn("▶", () => new Audio(contentUrl(r.path)).play(), "btn tiny ghost"),
+          btn("Dùng âm này", async (e) => {
+            e.currentTarget.disabled = true;
+            try { await bb.copyAudioFrom(table, row, col, r.path); say("ok", "Đã dùng lại âm có sẵn."); onDone(); }
+            catch (err) { e.currentTarget.disabled = false; say("err", err.message); }
+          }, "btn tiny")))) : [el("p", { class: "muted" }, "Không tìm thấy âm nào khớp.")]));
+    } catch (e) { results.replaceChildren(msg("err", e.message)); }
+  };
+  search();
+  return el("div", { class: "qa-box" }, el("div", { class: "row-btns" }, input, btn("Tìm", search, "btn tiny")), results);
+}
 
 // ---- Hội thoại ----
 async function dialoguePanel(panel, step, say, refresh) {
@@ -497,8 +529,9 @@ async function grammarPanel(panel, step, say, refresh) {
     ...data.map((row) => {
       const editSlot = el("div");
       return el("div", { class: "bb-row" },
-        rowHead(el("b", null, row.formula), trLine(row.formula_tr),
-          (row.examples ?? []).length ? el("ul", { class: "bb-examples" }, row.examples.map((ex) => el("li", null, ex.vi))) : null),
+        rowHead(el("b", null, ...formatNodes(row.formula)), trLine(row.formula_tr),
+          (row.examples ?? []).length ? el("ul", { class: "bb-examples" }, row.examples.map((ex) =>
+            el("li", null, ...formatNodes(ex.vi)))) : null),
         rowActs(
           btn("▲", async () => { try { await moveIn("bb_grammar", data, row, -1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
           btn("▼", async () => { try { await moveIn("bb_grammar", data, row, 1); refresh(); } catch (e) { say("err", e.message); } }, "btn tiny ghost"),
@@ -507,11 +540,14 @@ async function grammarPanel(panel, step, say, refresh) {
         editSlot);
     }));
 }
+// Cú pháp markdown-lite dùng chung công thức + câu ví dụ (xem bb/format.js): **đậm**, *nghiêng*, !!đỏ!!, xuống
+// dòng gõ Enter bình thường (chỉ công thức nhận nhiều dòng — câu ví dụ vẫn 1 dòng/câu trong ô bên dưới).
+const FORMAT_HINT = "**đậm**, *nghiêng*, !!đỏ!! — công thức gõ Enter để xuống dòng";
 function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
   const err = el("div");
-  const formula = el("input", { type: "text", class: "cell", value: existing?.formula ?? "", placeholder: "Chào + đại từ" });
+  const formula = el("textarea", { class: "cell", rows: "3", placeholder: "Chào + đại từ" }, existing?.formula ?? "");
   const tr = langBlock(existing?.formula_tr);
-  const examples = el("textarea", { class: "cell", rows: "3", placeholder: "Chào bạn\nChào cô" }, (existing?.examples ?? []).map((e) => e.vi).join("\n"));
+  const examples = el("textarea", { class: "cell", rows: "6", placeholder: "Chào **bạn**\nChào **cô**" }, (existing?.examples ?? []).map((e) => e.vi).join("\n"));
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
@@ -522,7 +558,8 @@ function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
   }, "btn small");
   return el("div", { class: "qa-box" },
     el("div", { class: "qa-grid" }, labeled("Công thức", formula), tr.fields),
-    labeled("Câu ví dụ (mỗi dòng 1 câu, chỉ tiếng Việt — dịch từng câu chưa hỗ trợ ở đây)", examples), footer(save, onCancel, err));
+    labeled("Câu ví dụ (mỗi dòng 1 câu, chỉ tiếng Việt — dịch từng câu chưa hỗ trợ ở đây)", examples),
+    el("small", { class: "muted" }, FORMAT_HINT), footer(save, onCancel, err));
 }
 
 // ---- Ngữ âm ----
