@@ -63,9 +63,9 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     const stepType = get("step_type").toLowerCase();
     if (!/^(A0|[ABC][12])$/.test(level)) problems.push('level phải dạng CEFR (A1, A2, B1, B2, C1, C2) hoặc "A0" (tiền-A1)');
     if (!unit) problems.push("thiếu chủ đề (unit)");
-    if (unit.length > 60) problems.push("tên chủ đề dài quá 60 ký tự");
+    if (unit.length > 120) problems.push("tên chủ đề dài quá 120 ký tự");
     if (!lesson) problems.push("thiếu bài (lesson)");
-    if (lesson.length > 60) problems.push("tên bài dài quá 60 ký tự");
+    if (lesson.length > 120) problems.push("tên bài dài quá 120 ký tự");
     if (!STEP_TYPES.includes(stepType)) problems.push(`step_type "${stepType}" không hợp lệ (dùng: ${STEP_TYPES.join(", ")})`);
     const lessonType = get("lesson_type").toLowerCase() || "core";
     if (!["core", "review", "reading", "writing"].includes(lessonType)) problems.push(`lesson_type "${lessonType}" không hợp lệ`);
