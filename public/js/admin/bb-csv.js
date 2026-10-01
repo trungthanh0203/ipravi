@@ -7,8 +7,9 @@
 //   - dialogue: speaker (mặc định A), vi (câu)
 //   - vocab: vi (từ), pos (loại từ), say (tuỳ chọn — chữ ĐỌC khi khác chữ hiển thị, vd "b" đọc "bờ"; dùng cho
 //            chuyên đề bảng chữ cái/ngữ âm, migration 024)
-//   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;) — markdown-lite trong câu ví dụ: **đậm**,
-//              *nghiêng*, !!đỏ!! để nhấn phần khớp công thức lúc hiển thị (xem bb/format.js)
+//   - grammar: vi (công thức), examples (câu ví dụ, cách nhau bằng ;) — CẢ 2 cột đều GIỮ NGUYÊN xuống dòng gõ
+//              sẵn trong ô CSV (cell phải đặt trong ngoặc kép mới hợp lệ CSV); markdown-lite: **đậm**, *nghiêng*,
+//              !!đỏ!! để nhấn phần khớp công thức lúc hiển thị (xem bb/format.js)
 //   - phonics: vi (âm A), vi2 (âm B), examples (ví dụ, cách nhau bằng ;)
 //   - reading/listening (CÙNG hình dạng cột, khác bảng CSDL — migration 026): dòng ĐOẠN VĂN (chỉ 1 dòng đầu
 //              tiên/chặng, cột `question` để TRỐNG) dùng vi (đoạn văn); dòng CÂU HỎI (cột `question` có giá trị)
@@ -31,6 +32,11 @@ export const STEP_TYPES = ["dialogue", "vocab", "grammar", "phonics", "minigame"
 // Kiểu trò chơi của chặng minigame (cột `game`) — PHẢI khớp ENGINES ở bb/steps/minigame.js + MINIGAME_KINDS ở admin/bb.js.
 export const GAME_KINDS = ["meaning_pick", "phonics_discrim", "sentence_builder"];
 const clean = (s) => String(s ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
+// Như clean() nhưng GIỮ xuống dòng (chỉ gom khoảng trắng ngang trong từng dòng) — dùng cho cột cho phép nhiều dòng
+// thật (công thức/câu ví dụ ngữ pháp, khớp cleanLines() ở admin/bb-ops.js) — clean() thường sẽ gộp \n thành 1 dấu
+// cách, xoá mất xuống dòng người soạn CSV đã gõ sẵn trong ô (lỗi chủ dự án báo 2026-10-03: mở file text thấy đúng
+// nhiều dòng nhưng nhập vào CSDL lại dính thành 1 dòng).
+const cleanLines = (s) => String(s ?? "").normalize("NFC").split("\n").map((l) => l.replace(/[^\S\n]+/g, " ").trim()).join("\n").trim();
 const lines = (s, sep) => String(s ?? "").split(sep).map((x) => x.trim()).filter(Boolean);
 
 export function validateRows({ headers, rows }, { langs = [] } = {}) {
@@ -56,6 +62,7 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
     const n = idx + 2;
     if (r.every((c) => !String(c ?? "").trim())) return;
     const get = (name) => (col(name) < 0 ? "" : clean(r[col(name)]));
+    const getLines = (name) => (col(name) < 0 ? "" : cleanLines(r[col(name)]));
     const problems = [];
 
     const level = get("level").toUpperCase();
@@ -94,9 +101,9 @@ export function validateRows({ headers, rows }, { langs = [] } = {}) {
       // say (tuỳ chọn, migration 024): chữ ĐỌC khi khác chữ hiển thị (vd "b" đọc "bờ") — dùng cho bảng chữ cái/ngữ âm.
       content = { kind: "vocab", vi, pos: get("pos") || null, say: get("say") || null, tr };
     } else if (stepType === "grammar") {
-      const vi = get("vi");
+      const vi = getLines("vi");
       if (!vi) problems.push("grammar cần cột vi (công thức)");
-      content = { kind: "grammar", vi, tr, examples: lines(get("examples"), ";") };
+      content = { kind: "grammar", vi, tr, examples: lines(getLines("examples"), ";") };
     } else if (stepType === "phonics") {
       const a = get("vi"), b = get("vi2");
       if (!a || !b) problems.push("phonics cần cả vi (âm A) và vi2 (âm B)");

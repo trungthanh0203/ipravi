@@ -116,6 +116,19 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(plan.counts.rows === 11, "buildPlan: đếm đúng tổng số dòng");
 }
 {
+  // Ô CSV (vi/examples chặng grammar) có xuống dòng thật bên trong (phải đặt trong ngoặc kép mới hợp lệ CSV) —
+  // clean() thường sẽ gộp \n thành dấu cách, GIỮ NGUYÊN xuống dòng bằng getLines()/cleanLines() mới (lỗi chủ dự
+  // án báo 2026-10-03: mở file text thấy đúng nhiều dòng nhưng nhập vào CSDL lại dính thành 1 dòng).
+  const multilineVi = "Dòng 1\nDòng 2 **đậm**";
+  const multilineExamples = "Ví dụ dòng 1\nVí dụ dòng 2 !!đỏ!!";
+  const rows = [["A1", "Chào hỏi", "Bài 1", "grammar", "", multilineVi, "", "", "", "", "", "", "", "", "", "", "", multilineExamples, ""]];
+  const { items, errors } = validateRows(parseCsv(csv(rows)), { langs: ["de"] });
+  ok(errors.length === 0, "grammar nhiều dòng trong 1 ô: không lỗi", JSON.stringify(errors));
+  ok(items[0].content.vi === multilineVi, "grammar: cột vi (công thức) GIỮ nguyên xuống dòng từ CSV", JSON.stringify(items[0]?.content?.vi));
+  ok(items[0].content.examples.length === 1 && items[0].content.examples[0] === multilineExamples,
+    "grammar: cột examples (không có ;) GIỮ nguyên xuống dòng, không bị gộp thành 1 dòng", JSON.stringify(items[0]?.content?.examples));
+}
+{
   // CSDL đã có sẵn cấp/chủ đề/bài/chặng trùng tên → không tạo mới, chỉ gộp vào nhóm nội dung của chặng đã có.
   const existing = {
     levels: [{ id: 1, code: "A1", name_vi: "Sơ cấp 1" }],
