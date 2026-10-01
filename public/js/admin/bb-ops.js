@@ -18,6 +18,10 @@ const only = (obj) => Object.fromEntries(Object.entries(obj ?? {}).map(([k, v]) 
 const need = (msg) => { if (msg) throw new Error(msg); };
 const nextOrder = (rows) => Math.max(0, ...rows.map((r) => r.sort_order ?? 0)) + 1;
 const lines = (s) => String(s ?? "").split("\n").map((x) => x.trim()).filter(Boolean);
+// Quy ước xuống dòng cho ô "Câu ví dụ" ngữ pháp (nhiều câu 1 lần, khác ô công thức chỉ 1 câu): DÒNG TRỐNG tách 2
+// câu ví dụ khác nhau; xuống dòng THƯỜNG (Enter 1 lần, không chừa dòng trống) vẫn nằm TRONG cùng 1 câu ví dụ —
+// dùng cleanLines() cho từng khối để giữ nguyên xuống dòng nội bộ đó (xem grammarForm admin/bb.js).
+const exampleBlocks = (s) => String(s ?? "").split(/\n\s*\n/).map(cleanLines).filter(Boolean);
 
 // ============================================================================
 // Cấp (bb_levels)
@@ -320,13 +324,13 @@ export async function deleteVocab(row) {
 export async function createGrammar(stepId, { formula, formula_tr, examples }, siblings) {
   const f = cleanLines(formula);
   need(f ? null : "Cần nhập công thức");
-  return checkData(await sb.from("bb_grammar").insert({ step_id: stepId, formula: f, formula_tr: only(formula_tr), examples: lines(examples).map((vi) => ({ vi })), sort_order: nextOrder(siblings) }).select().single());
+  return checkData(await sb.from("bb_grammar").insert({ step_id: stepId, formula: f, formula_tr: only(formula_tr), examples: exampleBlocks(examples).map((vi) => ({ vi })), sort_order: nextOrder(siblings) }).select().single());
 }
 export async function updateGrammar(row, { formula, formula_tr, examples }) {
   const patch = {};
   if (formula != null) { need(cleanLines(formula) ? null : "Cần nhập công thức"); patch.formula = cleanLines(formula); }
   if (formula_tr != null) patch.formula_tr = only(formula_tr);
-  if (examples != null) patch.examples = lines(examples).map((vi) => ({ vi }));
+  if (examples != null) patch.examples = exampleBlocks(examples).map((vi) => ({ vi }));
   if (Object.keys(patch).length) check(await sb.from("bb_grammar").update(patch).eq("id", row.id));
 }
 export const deleteGrammar = (id) => sb.from("bb_grammar").delete().eq("id", id).then(check);

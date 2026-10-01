@@ -540,14 +540,17 @@ async function grammarPanel(panel, step, say, refresh) {
         editSlot);
     }));
 }
-// Cú pháp markdown-lite dùng chung công thức + câu ví dụ (xem bb/format.js): **đậm**, *nghiêng*, !!đỏ!!, xuống
-// dòng gõ Enter bình thường (chỉ công thức nhận nhiều dòng — câu ví dụ vẫn 1 dòng/câu trong ô bên dưới).
-const FORMAT_HINT = "**đậm**, *nghiêng*, !!đỏ!! — công thức gõ Enter để xuống dòng";
+// Cú pháp markdown-lite dùng chung công thức + câu ví dụ (xem bb/format.js): **đậm**, *nghiêng*, !!đỏ!!.
+// Xuống dòng: công thức gõ Enter bình thường là xuống dòng. Câu ví dụ theo QUY ƯỚC riêng (nhiều câu 1 ô, xem
+// exampleBlocks() admin/bb-ops.js) — chừa 1 DÒNG TRỐNG (Enter 2 lần) giữa 2 câu khác nhau; Enter 1 lần (không
+// chừa dòng trống) vẫn nằm TRONG cùng 1 câu.
+const FORMAT_HINT = "**đậm**, *nghiêng*, !!đỏ!! — xuống dòng: công thức Enter thường; câu ví dụ chừa 1 dòng trống để tách 2 câu khác nhau, Enter thường vẫn ở cùng 1 câu";
 function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
   const err = el("div");
   const formula = el("textarea", { class: "cell", rows: "3", placeholder: "Chào + đại từ" }, existing?.formula ?? "");
   const tr = langBlock(existing?.formula_tr);
-  const examples = el("textarea", { class: "cell", rows: "6", placeholder: "Chào **bạn**\nChào **cô**" }, (existing?.examples ?? []).map((e) => e.vi).join("\n"));
+  const examples = el("textarea", { class: "cell", rows: "8", placeholder: "Chào **bạn**\n\nChào **cô**, dạo này khoẻ không?\nLâu rồi không gặp." },
+    (existing?.examples ?? []).map((e) => e.vi).join("\n\n"));
   const save = btn(A.save, async () => {
     save.disabled = true;
     try {
@@ -558,7 +561,7 @@ function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
   }, "btn small");
   return el("div", { class: "qa-box" },
     el("div", { class: "qa-grid" }, labeled("Công thức", formula), tr.fields),
-    labeled("Câu ví dụ (mỗi dòng 1 câu, chỉ tiếng Việt — dịch từng câu chưa hỗ trợ ở đây)", examples),
+    labeled("Câu ví dụ (chừa 1 dòng trống giữa các câu — dịch từng câu chưa hỗ trợ ở đây)", examples),
     el("small", { class: "muted" }, FORMAT_HINT), footer(save, onCancel, err));
 }
 
