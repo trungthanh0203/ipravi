@@ -509,6 +509,9 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-vocab-card { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); text-align: center; }
 .bb-vocab-word { font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .bb-vocab-say { font-size: 13px; }
+/* .lesson-box (bb/runner.js, dùng CHUNG cho mọi chặng) có text-align:center — ghi đè LẠI thành trái riêng cho thẻ
+   Ngữ pháp vì công thức/ví dụ là văn bản dài, căn giữa khó đọc (khác dialogue/phonics vốn hợp với căn giữa). */
+.bb-grammar-card { text-align: left; }
 .bb-grammar-card .bb-formula { font-size: 20px; font-weight: 800; }
 .bb-examples { padding-left: 20px; margin: 8px 0 0; }
 .bb-examples li { margin-bottom: 12px; }

@@ -294,7 +294,7 @@ export const T = {
   bbStepListening: "🎧 Luyện nghe",
   bbStepWriting: "✍️ Luyện viết",
 
-  bbListen: "🔊 Nghe",
+  bbListen: "🔊",
   bbPracticeRead: "🎤 Đọc thử",
   bbColWord: "Tiếng Việt",
   bbColPos: "Loại từ",
