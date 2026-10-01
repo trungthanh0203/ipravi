@@ -5,20 +5,38 @@ import { el } from "../ui.js";
 // formatSegments() là hàm thuần (test ở tests/bb.test.mjs) — trả mảng DÒNG, mỗi dòng là mảng đoạn chữ
 // {text, bold?, italic?, red?}; formatNodes() mới dựng DOM (KHÔNG dùng innerHTML nên không có nguy cơ XSS dù chữ
 // gõ tự do) — 2 nơi gọi (bb/steps/grammar.js, admin/bb.js) dùng chung để không lặp lại cách render.
-const INLINE_RE = /\*\*(.+?)\*\*|\*(.+?)\*|!!(.+?)!!/g;
+//
+// Quét bằng tay (không dùng 1 regex gộp cả 3 kiểu) vì !!đỏ!! LỒNG trong **đậm**/*nghiêng* (vd "**Táo !!giá!! bao
+// nhiêu**") cần ĐỆ QUY phân tích lại phần chữ bên trong mỗi cặp đậm/nghiêng — 1 regex gộp sẽ nuốt luôn cặp !!...!!
+// bên trong làm chữ thường, hiện trần 2 dấu !! ra màn hình (lỗi chủ dự án báo 2026-10-02).
+const MARKERS = [
+  { open: "**", key: "bold" },
+  { open: "*", key: "italic" },
+  { open: "!!", key: "red" },
+];
 
 function inlineSegments(line) {
   const out = [];
-  let last = 0, m;
-  INLINE_RE.lastIndex = 0;
-  while ((m = INLINE_RE.exec(line))) {
-    if (m.index > last) out.push({ text: line.slice(last, m.index) });
-    if (m[1] !== undefined) out.push({ text: m[1], bold: true });
-    else if (m[2] !== undefined) out.push({ text: m[2], italic: true });
-    else if (m[3] !== undefined) out.push({ text: m[3], red: true });
-    last = INLINE_RE.lastIndex;
+  let i = 0;
+  while (i < line.length) {
+    const hit = MARKERS.find(({ open }) => line.startsWith(open, i) && line.indexOf(open, i + open.length) !== -1);
+    if (hit) {
+      const end = line.indexOf(hit.open, i + hit.open.length);
+      const content = line.slice(i + hit.open.length, end);
+      // Đoạn con nào CHƯA có kiểu riêng (vd chưa phải !!đỏ!! lồng bên trong) mới nhận thêm kiểu ngoài — đoạn đỏ lồng
+      // bên trong giữ nguyên là đỏ, không bị cộng dồn thành vừa đậm vừa đỏ.
+      for (const seg of inlineSegments(content)) out.push(seg.bold || seg.italic || seg.red ? seg : { ...seg, [hit.key]: true });
+      i = end + hit.open.length;
+    } else {
+      let next = line.length;
+      for (const { open } of MARKERS) {
+        const idx = line.indexOf(open, i + 1);
+        if (idx !== -1 && idx < next) next = idx;
+      }
+      out.push({ text: line.slice(i, next) });
+      i = next;
+    }
   }
-  if (last < line.length) out.push({ text: line.slice(last) });
   return out.filter((s) => s.text !== "");
 }
 

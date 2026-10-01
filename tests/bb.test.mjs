@@ -244,6 +244,15 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
     "formatSegments: xuống dòng (\\n) tách thành nhiều DÒNG riêng, mỗi dòng tự phân đoạn");
   ok(JSON.stringify(formatSegments("")) === JSON.stringify([[]]), "formatSegments: chuỗi rỗng trả 1 dòng rỗng");
   ok(JSON.stringify(formatSegments(null)) === JSON.stringify([[]]), "formatSegments: null (thiếu dữ liệu) không lỗi, trả 1 dòng rỗng");
+  // !!đỏ!! LỒNG trong **đậm**/*nghiêng* — lỗi chủ dự án báo 2026-10-02: trước đây !!...!! bên trong bị nuốt làm chữ
+  // thường, hiện trần dấu !! ra màn hình thay vì tô đỏ.
+  ok(JSON.stringify(formatSegments("**Táo !!giá!! bao nhiêu**")) === JSON.stringify([[{ text: "Táo ", bold: true }, { text: "giá", red: true }, { text: " bao nhiêu", bold: true }]]),
+    "formatSegments: !!đỏ!! lồng trong **đậm** vẫn tách ra tô đỏ riêng, 2 đầu còn lại vẫn đậm");
+  ok(JSON.stringify(formatSegments("*nghiêng !!đỏ!! vẫn nghiêng*")) === JSON.stringify([[{ text: "nghiêng ", italic: true }, { text: "đỏ", red: true }, { text: " vẫn nghiêng", italic: true }]]),
+    "formatSegments: !!đỏ!! lồng trong *nghiêng* vẫn tách ra tô đỏ riêng");
+  ok(JSON.stringify(formatSegments("Táo *rất* **ngon** nhưng !!đắt!! quá")) === JSON.stringify([[
+    { text: "Táo " }, { text: "rất", italic: true }, { text: " " }, { text: "ngon", bold: true }, { text: " nhưng " }, { text: "đắt", red: true }, { text: " quá" },
+  ]]), "formatSegments: đậm/nghiêng/đỏ đứng cạnh nhau (không lồng) trong cùng 1 câu vẫn tách đúng từng phần");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);
