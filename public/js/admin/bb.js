@@ -540,9 +540,10 @@ async function grammarPanel(panel, step, say, refresh) {
         editSlot);
     }));
 }
-// Cú pháp markdown-lite dùng chung công thức + câu ví dụ (xem bb/format.js): **đậm**, *nghiêng*, !!đỏ!!. Xuống
-// dòng: công thức gõ Enter bình thường là xuống dòng; câu ví dụ mỗi DÒNG (Enter 1 lần) là 1 câu RIÊNG.
-const FORMAT_HINT = "**đậm**, *nghiêng*, !!đỏ!! — công thức gõ Enter để xuống dòng, mỗi dòng câu ví dụ là 1 câu riêng";
+// Cú pháp markdown-lite dùng chung công thức + câu ví dụ (xem bb/format.js): **đậm**, *nghiêng*, !!đỏ!!, `khối
+// nổi` (badge, phông monospace). Xuống dòng: công thức gõ Enter bình thường là xuống dòng; câu ví dụ mỗi DÒNG
+// (Enter 1 lần) là 1 câu RIÊNG.
+const FORMAT_HINT = "**đậm**, *nghiêng*, !!đỏ!!, `khối nổi` — công thức gõ Enter để xuống dòng, mỗi dòng câu ví dụ là 1 câu riêng";
 function grammarForm(existing, stepId, siblings, onCancel, onSaved) {
   const err = el("div");
   const formula = el("textarea", { class: "cell", rows: "3", placeholder: "Chào + đại từ" }, existing?.formula ?? "");

@@ -266,6 +266,12 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(JSON.stringify(formatSegments("Táo *rất* **ngon** nhưng !!đắt!! quá")) === JSON.stringify([[
     { text: "Táo " }, { text: "rất", italic: true }, { text: " " }, { text: "ngon", bold: true }, { text: " nhưng " }, { text: "đắt", red: true }, { text: " quá" },
   ]]), "formatSegments: đậm/nghiêng/đỏ đứng cạnh nhau (không lồng) trong cùng 1 câu vẫn tách đúng từng phần");
+  // `khối nổi` (code/badge) — thêm 2026-10-02, kiểu thứ 4 cùng khuôn đệ quy với đậm/nghiêng/đỏ.
+  ok(JSON.stringify(formatSegments("Công thức: `Hôm nay / Ngày mai` + là")) === JSON.stringify([[
+    { text: "Công thức: " }, { text: "Hôm nay / Ngày mai", code: true }, { text: " + là" },
+  ]]), "formatSegments: `chữ` tách đúng phần khối nổi (code)");
+  ok(JSON.stringify(formatSegments("**Mẫu: `thứ mấy`**")) === JSON.stringify([[{ text: "Mẫu: ", bold: true }, { text: "thứ mấy", code: true }]]),
+    "formatSegments: `code` lồng trong **đậm** vẫn tách ra riêng (code), không cộng dồn thêm đậm — giống !!đỏ!!");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

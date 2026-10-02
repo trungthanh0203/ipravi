@@ -130,10 +130,11 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
   như nhau; `decideScreen()` rẽ `bai-ban-home`/`child-home` theo đó.
   Mã (`public/js/bb/`, mirror `child/`): `api.js` (chỉ `approved`), `media.js` (dùng lại
   `speakFallback`/`nativeLang`/`titleIn`/`titleSpeakers` từ `child/media.js`), `pron.js` (không
-  lưu), `format.js` (`formatSegments()`/`formatNodes()` — markdown-lite `**đậm**`/`*nghiêng*`/`!!đỏ!!`
-  + xuống dòng cho công thức+câu ví dụ chặng Ngữ pháp; dùng chung `bb/steps/grammar.js` + admin/bb.js
-  preview; công thức nhập qua `<textarea>` nhiều dòng — admin/bb-ops.js `cleanLines()` GIỮ `\n`,
-  khác `clean()` gộp hết khoảng trắng kể cả xuống dòng),
+  lưu), `format.js` (`formatSegments()`/`formatNodes()` — markdown-lite `**đậm**`/`*nghiêng*`/`!!đỏ!!`/
+  `` `khối nổi` `` (badge monospace) + xuống dòng cho công thức+câu ví dụ chặng Ngữ pháp, LỒNG được vào
+  nhau (đệ quy); dùng chung `bb/steps/grammar.js` + admin/bb.js preview; công thức nhập qua `<textarea>`
+  nhiều dòng, câu ví dụ mỗi DÒNG = 1 câu riêng — admin/bb-ops.js + bb-csv.js đều có `cleanLines()` GIỮ
+  `\n` cho công thức (khác `clean()` gộp hết khoảng trắng kể cả xuống dòng, kể cả khi nhập qua CSV),
   `nav.js` (nhớ vị trí Level/Unit/Lesson/Luyện tập qua sessionStorage, F5 khôi phục đúng chỗ — xem
   mục `state.activeChildId` bên dưới), `runner.js` (`runLesson()` = **LƯỚI CHỌN CHẶNG TỰ DO**: vào bài thấy mọi chặng CÓ DỮ LIỆU,
   chạm chặng nào học chặng đó, xong ✓ tự về lưới; ẩn chặng rỗng qua `hasContent()`, minigame qua

@@ -518,6 +518,7 @@ h1 img.lv-mascot-inline { height: 0.85em; width: 0.85em; object-fit: contain; ve
 .bb-example-vi { font-size: 16px; }
 .bb-example-vi strong { color: var(--brand-dark); }
 .bb-red { color: var(--err); font-weight: 600; }
+.bb-code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; background: var(--brand-light); color: var(--brand-dark); padding: 2px 7px; border-radius: 6px; font-size: .92em; font-weight: 700; }
 .bb-phonics-pair { background: #fff; border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; box-shadow: 0 2px 10px rgba(30, 66, 114, .08); }
 .bb-phonics-examples { margin: 8px 0 0; }
 /* Bảng Từ vựng (bb/steps/vocab.js) — tái dùng .table-wrap/.tbl của khu admin; .pron-feedback mặc định cao 70px
