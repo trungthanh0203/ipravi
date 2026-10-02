@@ -5,7 +5,7 @@ import * as api from "./api.js";
 import { pickSession, dueCount } from "./practice-core.js";
 import { nextBox, dueAfter } from "./srs.js";
 import { SKILLS, GROUPS, groupById } from "./skills.js";
-import { playPath, imageOf, nativeLang } from "./media.js";
+import { playPath, imageOf, nativeLang, crumbBar } from "./media.js";
 import { micButton } from "./pron.js";
 import * as dialogueStep from "./steps/dialogue.js";
 import * as grammarStep from "./steps/grammar.js";
@@ -48,7 +48,7 @@ export async function showSkills(root, ctx) {
       el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
   };
   shell(root,
-    el("button", { class: "btn ghost small", onclick: onBack }, "◀ " + T.back),
+    crumbBar(T.bbPracticeTitle, onBack),
     el("h1", { style: "text-align:center" }, T.bbPracticeTitle),
     total === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoReview)) :
       GROUPS.map((g) => {
@@ -68,12 +68,12 @@ function runSkill(root, skill, items, ctx) {
 // phiên MỚI trên CÙNG kỹ năng, gọi lại runSkill với `items` — pool đầy đủ, không phải `session` vừa chơi) + "◀ Kỹ
 // năng khác" (về lưới kỹ năng).
 function resultScreen(root, skill, items, ctx, summary) {
-  paint(root, el("div", { class: "card", style: `text-align:center;${colorStyle(skill)}` },
+  paint(root, el("div", null, crumbBar(`${T.bbPracticeTitle} > ${skill.name}`, ctx.onBack), el("div", { class: "card", style: `text-align:center;${colorStyle(skill)}` },
     mascotHero(),
     el("h1", null, T.bbSessionDone),
     el("p", null, summary),
     el("button", { class: "btn big", style: `background:${groupById(skill.group).color}`, onclick: () => runSkill(root, skill, items, ctx) }, T.bbReviewAgain),
-    el("div", null, el("button", { class: "btn ghost", onclick: ctx.onBack }, T.bbOtherSkill))));
+    el("div", null, el("button", { class: "btn ghost", onclick: ctx.onBack }, T.bbOtherSkill)))));
 }
 
 // Hội thoại/Ngữ pháp/Ngữ âm: tái dùng NGUYÊN renderer của chặng bài học (xem bb/steps/*.js) — chỉ khác là mục lấy
@@ -81,7 +81,7 @@ function resultScreen(root, skill, items, ctx, summary) {
 async function runReviewList(root, skill, items, session, ctx) {
   const { childId } = ctx;
   const box = el("div", { class: "lesson-box" });
-  paint(root, el("h2", { style: "text-align:center" }, skill.emoji + " " + skill.name), box);
+  paint(root, el("div", null, crumbBar(`${T.bbPracticeTitle} > ${skill.name}`, ctx.onBack), el("h2", { style: "text-align:center" }, skill.emoji + " " + skill.name), box));
   await RUN_BY_TYPE[skill.itemType](box, { content: session });
   api.saveReviewBatch(childId, skill.itemType, session); // không await — ghi nền, không chặn hiện kết quả
   // Vá tại chỗ (session[i] CÙNG object với items[i]/catalog[type][i], không phải bản sao) — quay lại lưới thấy
@@ -114,14 +114,15 @@ function runVocabReview(root, skill, items, session, ctx) {
       class: "btn", type: "button",
       onclick: () => { meaning.style.display = ""; gradeRow.style.display = "flex"; reveal.style.display = "none"; },
     }, T.bbReveal);
-    paint(root,
+    paint(root, el("div", null,
+      crumbBar(`${T.bbPracticeTitle} > ${skill.name}`, ctx.onBack),
       el("p", { class: "bb-step-dots" }, T.bbCardOf(i + 1, session.length)),
       el("div", { class: "card bb-vocab-card" },
         img ? el("img", { class: "visual", src: img, alt: "" }) : null,
         el("div", { class: "bb-vocab-word" }, w.word_vi, w.pos ? el("span", { class: "pill" }, w.pos) : null),
         w.say_vi ? el("p", { class: "muted" }, `Đọc là: “${w.say_vi}”`) : null,
         el("button", { class: "btn small ghost", type: "button", onclick: () => playPath(w.audio_path, spoken) }, T.bbListen),
-        mic, feedback, meaning, reveal, gradeRow));
+        mic, feedback, meaning, reveal, gradeRow)));
 
     function grade(ok) {
       if (ok) remembered++; else forgot++;

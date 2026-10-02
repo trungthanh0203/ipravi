@@ -3,7 +3,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
 import { sfx } from "./sfx.js";
-import { say, voiceToggle, prefetchItems, playItem, nativeLang } from "./media.js";
+import { say, voiceToggle, crumbBar, prefetchItems, playItem, nativeLang } from "./media.js";
 import { childAge } from "./util.js";
 import { emojiNodes, prefetchEmoji, mascotHero } from "../emoji.js";
 import { LEVELS } from "../levels.js";
@@ -71,7 +71,7 @@ function skillsScreen(ctx, note = null) {
     icon(skill.emoji), el("b", null, skill.name), ageOf() == null || ageOf() >= 5 ? el("small", null, skill.desc) : null);
   };
   shell(root,
-    el("button", { class: "btn ghost small", onclick: home }, "◀ " + T.back),
+    crumbBar(T.homePractice, home),
     el("h1", { style: "text-align:center" }, T.practiceTitle),
     el("p", { class: "muted", style: "text-align:center" }, T.practiceHint),
     note ? el("p", { class: "note" }, note) : null,
@@ -101,7 +101,7 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
       el("option", { value: "" }, T.scopeUnitPick), units.map((u) => el("option", { value: String(u.id), selected: u.id === scope.unitId }, `${u.emoji ?? ""} ${u.title_vi}`)))
     : null;
   shell(root,
-    el("button", { class: "btn ghost small", onclick: () => skillsScreen(ctx) }, "◀ " + T.back),
+    crumbBar(`${T.homePractice} > ${skill.name}`, () => skillsScreen(ctx)),
     el("div", { class: "skill-hero", style: colorStyle(skill) }, icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc), medals(data, skill.id)),
     el("h2", null, T.scopeTitle),
     el("div", { class: "scope-row" },
@@ -121,7 +121,7 @@ async function start(ctx, skill, scope) {
     const text = planned.reason === "noWeak" ? T.practiceNoWeak : T.practiceNotEnough;
     say(text);
     return ctx.shell(ctx.root,
-      el("button", { class: "btn ghost small", onclick: () => (ageOf() != null && ageOf() < 5 ? skillsScreen(ctx) : scopeScreen(ctx, skill, scope)) }, "◀ " + T.back),
+      crumbBar(`${T.homePractice} > ${skill.name}`, () => (ageOf() != null && ageOf() < 5 ? skillsScreen(ctx) : scopeScreen(ctx, skill, scope))),
       el("div", { class: "card", style: "text-align:center" }, mascotHero(), el("p", null, text),
         scope.type !== "all" ? el("button", { class: "btn", onclick: () => start(ctx, skill, { type: "all" }) }, T.practiceTryAll) : null,
         el("button", { class: "btn ghost", onclick: () => skillsScreen(ctx) }, T.practiceOther)));
@@ -159,10 +159,10 @@ async function runSession(ctx, skill, scope, planned) {
   const box = el("div", { class: "lesson-box" });
   const paintDots = (n) => dots.forEach((d, i) => d.classList.toggle("on", i < n));
   paint(root, el("div", { style: `--c:${g.color};--soft:${g.soft}` },
+    crumbBar(`${T.homePractice} > ${skill.name}`, () => { aborted = true; stopAudio(); abort(); skillsScreen(ctx); }),
     el("div", { class: "row lesson-head" },
       el("div", { class: "ribbon" }, icon(skill.emoji)),
-      voiceToggle(),
-      el("button", { class: "btn ghost small", onclick: () => { aborted = true; stopAudio(); abort(); skillsScreen(ctx); } }, "✕ " + T.quit)),
+      voiceToggle()),
     el("div", { class: "dots-row" }, el("b", { class: "sk-name" }, skill.name), el("span", { class: "tag" }, T.practiceLabel), el("span", { class: "dots" }, dots)),
     box));
 
