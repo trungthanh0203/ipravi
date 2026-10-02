@@ -100,6 +100,14 @@ export function profileHeader(onExit) {
     el("button", { class: "btn ghost small", onclick: onExit }, T.childExit));
 }
 
+// Thanh điều hướng đầu màn (khu Trẻ em LẪN Bài Bản): bên TRÁI là đường dẫn chữ (vd "A0 > Bảng chữ cái"), bên PHẢI là
+// nút Quay lại (yêu cầu chủ dự án 2026-10-03).
+export function crumbBar(text, onBack) {
+  return el("div", { class: "bb-crumb" },
+    el("span", { class: "bb-crumb-text" }, text),
+    el("button", { class: "btn ghost small", type: "button", onclick: onBack }, "◀ " + T.back));
+}
+
 // Footer dùng CHUNG cùng chỗ với profileHeader() — thông tin liên hệ chủ dự án, hiện ở cuối mọi màn điều hướng
 // chính (không hiện trong lúc đang chơi 1 bài/1 chặng, cùng lý do với profileHeader()).
 export function sessionFooter() {

@@ -3,7 +3,7 @@ import { render } from "../flow.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
-import { visual, profileHeader, sessionFooter, titleSpeakers, titleIn, nativeLang } from "../child/media.js";
+import { visual, profileHeader, sessionFooter, crumbBar, titleSpeakers, titleIn, nativeLang } from "../child/media.js";
 import { playLesson, starsFor } from "../child/lesson.js";
 import * as api from "../child/api.js";
 import { LEVELS, levelOf, levelProgress, recommendedLevel, numberUnits } from "../levels.js";
@@ -46,7 +46,7 @@ async function showLevels(root) {
     // Chưa có số liệu (stats lỗi) vẫn dựng được thẻ cấp từ danh sách chủ đề
     const totalWords = progress.reduce((a, p) => a + p.items_mastered, 0);
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showHome(root) }, "◀ " + T.back),
+      crumbBar(T.homeLearn, () => showHome(root)),
       el("h1", { style: "text-align:center" }, T.levelsTitle),
       stats ? el("div", { class: "mini-stats" }, el("span", null, "⭐ ", stats.stars), el("span", null, "🔥 ", stats.streak), el("span", null, "📚 ", totalWords)) : null,
       el("div", { class: "level-grid" }, LEVELS.map((L) => {
@@ -69,7 +69,7 @@ async function showLevels(root) {
 
 function showStats(root, stats) {
   shell(root,
-    el("button", { class: "btn ghost small", onclick: () => showLevels(root) }, "◀ " + T.back),
+    crumbBar(`${T.homeLearn} > ${T.statsTitle}`, () => showLevels(root)),
     el("h1", null, T.statsTitle),
     childStatsView(stats));
 }
@@ -82,7 +82,7 @@ async function showUnits(root, level, all) {
     const units = visible.filter((u) => levelOf(u) === level);
     const L = LEVELS[level - 1];
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showLevels(root) }, "◀ " + T.back),
+      crumbBar(`${T.homeLearn} > Cấp ${L.n} · ${L.name}`, () => showLevels(root)),
       el("h1", { style: "text-align:center" }, L.n === 4 ? mascotIcon("lv-mascot-inline") : L.emoji, ` Cấp ${L.n} · ${L.name}`),
       el("div", { class: "unit-grid" }, units.map((u) =>
         el("button", { class: "unit-card", onclick: () => showLessons(root, u) }, visual(u, "big"), el("span", null, `${nums.get(u.id)}. ${u.title_vi}`)))));
@@ -99,7 +99,7 @@ async function showLessons(root, unit) {
     const scores = await api.loadLessonScores(child().id, lessons.map((l) => l.id));
     const nextId = lessons.find((l) => !scores.has(l.id))?.id;
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showUnits(root, levelOf(unit)) }, "◀ " + T.back),
+      crumbBar(`Cấp ${levelOf(unit)} · ${LEVELS[levelOf(unit) - 1].name} > ${unitNo ? unitNo + ". " : ""}${unit.title_vi}`, () => showUnits(root, levelOf(unit))),
       el("h1", null, visual(unit), " ", unitNo ? `${unitNo}. ` : "", unit.title_vi),
       el("div", { class: "title-line" }, titleSpeakers(unit), titleIn(unit, nativeLang()) ? el("span", { class: "title-native" }, titleIn(unit, nativeLang())) : null),
       unit.description ? el("p", { class: "muted unit-desc" }, unit.description) : null,
