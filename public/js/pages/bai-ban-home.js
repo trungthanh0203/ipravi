@@ -5,7 +5,7 @@ import { T } from "../strings.js";
 import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
 import { showSkills } from "../bb/practice.js";
-import { titleSpeakers, titleIn, nativeLang, profileHeader, sessionFooter } from "../bb/media.js";
+import { titleSpeakers, titleIn, nativeLang, profileHeader, sessionFooter, crumbBar } from "../bb/media.js";
 import { saveNav, clearNav, readNav } from "../bb/nav.js";
 
 // Khu học "Tiếng Việt Bài Bản" (hồ sơ profile_type='learner'): 📖 Học (Level → Unit → Lesson → 7 chặng) | 🎯 Luyện
@@ -17,6 +17,9 @@ import { saveNav, clearNav, readNav } from "../bb/nav.js";
 export function mount(root) {
   restore(root);
 }
+
+// "A0: Tên chủ đề" (không emoji) — đường dẫn chữ ở thanh điều hướng đầu màn (crumbBar).
+const crumbOf = (unit) => (unit.bb_levels?.code ? `${unit.bb_levels.code}: ` : "") + unit.title_vi;
 
 async function restore(root) {
   const nav = readNav();
@@ -32,7 +35,7 @@ async function restore(root) {
     if (!nav.lessonId) return showLessons(root, unit);
     const lesson = (await api.loadLessons(unit.id)).find((l) => l.id === nav.lessonId);
     if (!lesson) return showLessons(root, unit);
-    runLesson({ root, lesson, childId: state.activeChildId, onExit: () => showLessons(root, unit) });
+    runLesson({ root, lesson, childId: state.activeChildId, crumb: `${crumbOf(unit)}: ${lesson.title_vi}`, onExit: () => showLessons(root, unit) });
   } catch {
     showHome(root);
   }
@@ -90,7 +93,7 @@ async function showUnits(root, level) {
   try {
     const units = await api.loadUnits(level.id);
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showLevels(root) }, "◀ " + T.back),
+      crumbBar(`${level.code}: ${level.name_vi}`, () => showLevels(root)),
       el("h1", { style: "text-align:center" }, level.name_vi),
       level.can_do ? el("p", { class: "muted", style: "text-align:center" }, level.can_do) : null,
       units.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoUnits)) :
@@ -111,7 +114,7 @@ async function showLessons(root, unit) {
     const childId = state.activeChildId;
     const completed = await api.loadLessonProgress(childId, lessons.map((l) => l.id)).catch(() => new Set()); // hỏng không chặn xem danh sách bài
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showUnits(root, unit.bb_levels ?? { id: unit.level_id }) }, "◀ " + T.back),
+      crumbBar(crumbOf(unit), () => showUnits(root, unit.bb_levels ?? { id: unit.level_id })),
       el("h1", null, unit.emoji ? unit.emoji + " " : "", unit.title_vi),
       el("div", { class: "title-line" }, titleSpeakers(unit), titleIn(unit, nativeLang()) ? el("span", { class: "title-native" }, titleIn(unit, nativeLang())) : null),
       unit.description ? el("p", { class: "muted" }, unit.description) : null,
@@ -123,7 +126,7 @@ async function showLessons(root, unit) {
               class: "lesson-btn",
               onclick: () => {
                 saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id, lessonId: l.id });
-                runLesson({ root, lesson: l, childId, onExit: () => showLessons(root, unit) });
+                runLesson({ root, lesson: l, childId, crumb: `${crumbOf(unit)}: ${l.title_vi}`, onExit: () => showLessons(root, unit) });
               },
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),

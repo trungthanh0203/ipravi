@@ -3,7 +3,7 @@ import { T } from "../strings.js";
 import { stopAudio } from "../audio.js";
 import { state } from "../state.js";
 import { render } from "../flow.js";
-import { nativeLang, profileHeader, sessionFooter } from "./media.js";
+import { nativeLang, profileHeader, sessionFooter, crumbBar } from "./media.js";
 import { clearNav } from "./nav.js";
 import * as api from "./api.js";
 import * as dialogue from "./steps/dialogue.js";
@@ -44,7 +44,7 @@ function hasContent(step, pool) {
 // lại lưới. `onExit` gọi khi bấm "◀ Quay lại" ở lưới (thoát cả bài, về danh sách bài — giống playLesson() bên khu
 // trẻ em). Mỗi chặng xong được đánh dấu vào bb_progress (childId) — dùng cho ✓ ở lưới này LẪN ✓ tổng ở danh sách
 // bài (pages/bai-ban-home.js, `api.loadLessonProgress`) LẪN diện ôn tập (GĐ 4, xem bb/practice.js).
-export async function runLesson({ root, lesson, childId, onExit }) {
+export async function runLesson({ root, lesson, childId, crumb = lesson.title_vi, onExit }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   // Thoát cả phiên (nút Thoát trong header) — khác "◀ Quay lại" (chỉ lùi về danh sách bài) và "✕ Thoát bài" (chỉ
   // lùi về lưới chặng) — giống hệt cách bai-ban-home.js xử lý, dọn cache + xoá vị trí đã nhớ trước khi rời (không
@@ -85,7 +85,7 @@ export async function runLesson({ root, lesson, childId, onExit }) {
     const allDone = steps.every((s) => doneIds.has(s.id));
     paint(root, el("div", null,
       profileHeader(exitSession),
-      el("button", { class: "btn ghost small", onclick: onExit }, "◀ " + T.back),
+      crumbBar(crumb, onExit),
       el("h1", { style: "text-align:center" }, lesson.title_vi),
       lesson.description ? el("p", { class: "muted", style: "text-align:center" }, lesson.description) : null,
       el("p", { class: "muted", style: "text-align:center" }, allDone ? T.bbLessonDone : T.bbPickStep),
@@ -106,9 +106,8 @@ export async function runLesson({ root, lesson, childId, onExit }) {
     const box = el("div", { class: "lesson-box" });
     paint(root, el("div", null,
       profileHeader(exitSession),
-      el("div", { class: "row lesson-head" },
-        el("div", { class: "ribbon" }, STEP_TITLE[step.step_type]),
-        el("button", { class: "btn ghost small", onclick: () => { stopAudio(); showPicker(); } }, "✕ " + T.quit)),
+      el("div", { class: "lesson-head" },
+        crumbBar(`${crumb}: ${STEP_TITLE[step.step_type].replace(/^[^\p{L}\p{N}]+/u, "")}`, () => { stopAudio(); showPicker(); })),
       box,
       sessionFooter()));
     STEP_RUNNERS[step.step_type](box, step, pool).then(() => {

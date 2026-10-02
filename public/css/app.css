@@ -540,6 +540,9 @@ body.bb-theme .mic.sm { width: 44px; height: 44px; font-size: 20px; margin: 0; }
 .bb-step-check { position: absolute; top: 8px; right: 12px; font-size: 22px; font-weight: 800; color: #2f9e44; }
 /* Khối câu hỏi trắc nghiệm Luyện đọc/Luyện nghe (bb/steps/quiz.js, kiểu iLapra — hiện HẾT câu hỏi + 1 nút Kiểm tra). */
 .bb-quiz-score { text-align: center; font-size: 18px; font-weight: 800; margin: 4px 0; }
+.bb-crumb { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 8px; }
+.bb-crumb-text { font-weight: 800; font-size: 17px; color: var(--brand-dark); min-width: 0; overflow-wrap: anywhere; }
+.bb-crumb .btn { flex: none; margin-top: 0; }
 /* Thẻ chọn cấp độ (pages/bai-ban-home.js showLevels) — mượn kiểu thẻ "Kỳ thi chứng chỉ" của iLapra: dải màu gradient
    nền chấm bi + vòng tròn trắng chứa mã cấp (hover phóng to + nghiêng), thân thẻ có mô tả + nút, hover nảy lên. */
 .bb-level-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 14px; }
