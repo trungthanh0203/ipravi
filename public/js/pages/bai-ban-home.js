@@ -70,10 +70,15 @@ async function showLevels(root) {
       el("button", { class: "btn ghost small", onclick: () => showHome(root) }, "◀ " + T.back),
       el("h1", { style: "text-align:center" }, T.bbLevelsTitle),
       levels.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoLevels)) :
-        el("div", { class: "unit-grid" }, levels.map((lv) =>
-          el("button", { class: "unit-card", onclick: () => showUnits(root, lv) },
-            el("span", { class: "visual emoji" }, lv.code),
-            el("span", null, lv.name_vi)))));
+        el("div", { class: "bb-level-grid" }, levels.map((lv) =>
+          el("button", { class: "bb-level-card", type: "button", onclick: () => showUnits(root, lv) },
+            el("div", { class: `bb-level-media lv-${lv.code}` },
+              el("span", { class: "bb-level-code" }, lv.code),
+              el("span", { class: "bb-level-tag" }, T.bbLevelTag)),
+            el("div", { class: "bb-level-body" },
+              el("b", null, lv.name_vi),
+              lv.can_do ? el("small", null, lv.can_do) : null,
+              el("span", { class: "bb-level-cta" }, T.bbLevelPick))))));
   } catch {
     shell(root, msg("err", T.bbLoadError));
   }

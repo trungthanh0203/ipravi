@@ -276,6 +276,8 @@ export const T = {
   bbHomeTitle: "Tiếng Việt Bài Bản",
   bbHomeGreeting: (name) => `Chào, ${name}!`,
   bbLevelsTitle: "Chọn cấp độ",
+  bbLevelPick: "Vào học →",
+  bbLevelTag: "Cấp độ",
   bbNoLevels: "Chưa có cấp độ nào.",
   bbNoUnits: "Chưa có chủ đề nào ở cấp này.",
   bbNoLessons: "Chưa có bài nào ở chủ đề này.",
