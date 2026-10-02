@@ -44,7 +44,7 @@ function hasContent(step, pool) {
 // lại lưới. `onExit` gọi khi bấm "◀ Quay lại" ở lưới (thoát cả bài, về danh sách bài — giống playLesson() bên khu
 // trẻ em). Mỗi chặng xong được đánh dấu vào bb_progress (childId) — dùng cho ✓ ở lưới này LẪN ✓ tổng ở danh sách
 // bài (pages/bai-ban-home.js, `api.loadLessonProgress`) LẪN diện ôn tập (GĐ 4, xem bb/practice.js).
-export async function runLesson({ root, lesson, childId, crumb = lesson.title_vi, onExit }) {
+export async function runLesson({ root, lesson, childId, crumb = "", onExit }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   // Thoát cả phiên (nút Thoát trong header) — khác "◀ Quay lại" (chỉ lùi về danh sách bài) và "✕ Thoát bài" (chỉ
   // lùi về lưới chặng) — giống hệt cách bai-ban-home.js xử lý, dọn cache + xoá vị trí đã nhớ trước khi rời (không
@@ -107,7 +107,8 @@ export async function runLesson({ root, lesson, childId, crumb = lesson.title_vi
     paint(root, el("div", null,
       profileHeader(exitSession),
       el("div", { class: "lesson-head" },
-        crumbBar(`${crumb} > ${STEP_TITLE[step.step_type].replace(/^[^\p{L}\p{N}]+/u, "")}`, () => { stopAudio(); showPicker(); })),
+        crumbBar(crumb ? `${crumb} > ${lesson.title_vi}` : lesson.title_vi, () => { stopAudio(); showPicker(); }),
+        el("h1", { class: "bb-step-title", style: "text-align:center" }, STEP_TITLE[step.step_type])),
       box,
       sessionFooter()));
     STEP_RUNNERS[step.step_type](box, step, pool).then(() => {

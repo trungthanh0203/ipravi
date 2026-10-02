@@ -18,7 +18,7 @@ export function mount(root) {
   restore(root);
 }
 
-// "A0: Tên chủ đề" (không emoji) — đường dẫn chữ ở thanh điều hướng đầu màn (crumbBar).
+// "A0 > Tên chủ đề" (không emoji) — đường dẫn chữ ở thanh điều hướng đầu màn (crumbBar).
 const crumbOf = (unit) => (unit.bb_levels?.code ? `${unit.bb_levels.code} > ` : "") + unit.title_vi;
 
 async function restore(root) {
@@ -35,7 +35,7 @@ async function restore(root) {
     if (!nav.lessonId) return showLessons(root, unit);
     const lesson = (await api.loadLessons(unit.id)).find((l) => l.id === nav.lessonId);
     if (!lesson) return showLessons(root, unit);
-    runLesson({ root, lesson, childId: state.activeChildId, crumb: `${crumbOf(unit)} > ${lesson.title_vi}`, onExit: () => showLessons(root, unit) });
+    runLesson({ root, lesson, childId: state.activeChildId, crumb: crumbOf(unit), onExit: () => showLessons(root, unit) });
   } catch {
     showHome(root);
   }
@@ -126,7 +126,7 @@ async function showLessons(root, unit) {
               class: "lesson-btn",
               onclick: () => {
                 saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id, lessonId: l.id });
-                runLesson({ root, lesson: l, childId, crumb: `${crumbOf(unit)} > ${l.title_vi}`, onExit: () => showLessons(root, unit) });
+                runLesson({ root, lesson: l, childId, crumb: crumbOf(unit), onExit: () => showLessons(root, unit) });
               },
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),
