@@ -19,7 +19,7 @@ export function mount(root) {
 }
 
 // "A0: Tên chủ đề" (không emoji) — đường dẫn chữ ở thanh điều hướng đầu màn (crumbBar).
-const crumbOf = (unit) => (unit.bb_levels?.code ? `${unit.bb_levels.code}: ` : "") + unit.title_vi;
+const crumbOf = (unit) => (unit.bb_levels?.code ? `${unit.bb_levels.code} > ` : "") + unit.title_vi;
 
 async function restore(root) {
   const nav = readNav();
@@ -35,7 +35,7 @@ async function restore(root) {
     if (!nav.lessonId) return showLessons(root, unit);
     const lesson = (await api.loadLessons(unit.id)).find((l) => l.id === nav.lessonId);
     if (!lesson) return showLessons(root, unit);
-    runLesson({ root, lesson, childId: state.activeChildId, crumb: `${crumbOf(unit)}: ${lesson.title_vi}`, onExit: () => showLessons(root, unit) });
+    runLesson({ root, lesson, childId: state.activeChildId, crumb: `${crumbOf(unit)} > ${lesson.title_vi}`, onExit: () => showLessons(root, unit) });
   } catch {
     showHome(root);
   }
@@ -93,7 +93,7 @@ async function showUnits(root, level) {
   try {
     const units = await api.loadUnits(level.id);
     shell(root,
-      crumbBar(`${level.code}: ${level.name_vi}`, () => showLevels(root)),
+      crumbBar(`${level.code} > ${level.name_vi}`, () => showLevels(root)),
       el("h1", { style: "text-align:center" }, level.name_vi),
       level.can_do ? el("p", { class: "muted", style: "text-align:center" }, level.can_do) : null,
       units.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoUnits)) :
@@ -126,7 +126,7 @@ async function showLessons(root, unit) {
               class: "lesson-btn",
               onclick: () => {
                 saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id, lessonId: l.id });
-                runLesson({ root, lesson: l, childId, crumb: `${crumbOf(unit)}: ${l.title_vi}`, onExit: () => showLessons(root, unit) });
+                runLesson({ root, lesson: l, childId, crumb: `${crumbOf(unit)} > ${l.title_vi}`, onExit: () => showLessons(root, unit) });
               },
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),

@@ -90,7 +90,12 @@ export function voiceToggle() {
 export function profileHeader(onExit) {
   const c = state.children.find((c) => c.id === state.activeChildId);
   return el("div", { class: "row child-header" },
-    el("span", { class: "who" }, avatarEmoji(c?.avatar_id), " ", c?.nickname ?? ""),
+    el("div", { class: "who-wrap" },
+      el("span", { class: "who-avatar" }, avatarEmoji(c?.avatar_id)),
+      el("div", { class: "who-text" },
+        el("span", { class: "who" }, c?.nickname ?? ""),
+        // who-sub (nhãn "Tiếng Việt Bài Bản") chỉ có với hồ sơ learner, chỉ HIỆN trong body.bb-theme (app.css).
+        c?.profile_type === "learner" ? el("span", { class: "who-sub" }, T.bbHomeTitle) : null)),
     voiceToggle(),
     el("button", { class: "btn ghost small", onclick: onExit }, T.childExit));
 }

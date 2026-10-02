@@ -107,7 +107,7 @@ export async function runLesson({ root, lesson, childId, crumb = lesson.title_vi
     paint(root, el("div", null,
       profileHeader(exitSession),
       el("div", { class: "lesson-head" },
-        crumbBar(`${crumb}: ${STEP_TITLE[step.step_type].replace(/^[^\p{L}\p{N}]+/u, "")}`, () => { stopAudio(); showPicker(); })),
+        crumbBar(`${crumb} > ${STEP_TITLE[step.step_type].replace(/^[^\p{L}\p{N}]+/u, "")}`, () => { stopAudio(); showPicker(); })),
       box,
       sessionFooter()));
     STEP_RUNNERS[step.step_type](box, step, pool).then(() => {

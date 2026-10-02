@@ -98,6 +98,22 @@ button { font: inherit; cursor: pointer; }
 /* Khu học của trẻ */
 .child-header { margin-bottom: 8px; }
 .child-header .who { font-size: 22px; font-weight: 700; }
+.child-header .who-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.child-header .who-text { display: flex; flex-direction: column; min-width: 0; }
+.child-header .who-sub { display: none; }
+/* Header Bài Bản — dải gradient xanh nền chấm bi như header iLapra: avatar trong vòng tròn trắng (hover nghiêng),
+   tên + nhãn "Tiếng Việt Bài Bản", chọn giọng dạng kính mờ, nút Thoát viền trắng. Chỉ trong body.bb-theme. */
+body.bb-theme .child-header { position: relative; overflow: hidden; flex-wrap: wrap; gap: 10px 14px; padding: 12px 16px; margin-bottom: 14px; color: #fff; border-radius: var(--radius); background: linear-gradient(120deg, #17365f 0%, #2b5fa8 60%, #3d7bd1 100%); box-shadow: 0 8px 22px rgba(30, 66, 114, .28); }
+body.bb-theme .child-header::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(255, 255, 255, .15) 1.6px, transparent 1.6px); background-size: 16px 16px; }
+body.bb-theme .child-header > * { position: relative; }
+body.bb-theme .child-header .who-avatar { width: 50px; height: 50px; flex: none; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 0 0 3px rgba(255, 255, 255, .35), 0 6px 14px rgba(0, 0, 0, .28); transition: transform .22s ease; }
+body.bb-theme .child-header:hover .who-avatar { transform: rotate(-8deg) scale(1.08); }
+body.bb-theme .child-header .who { color: #fff; font-size: 20px; font-weight: 800; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.bb-theme .child-header .who-sub { display: inline-block; align-self: flex-start; margin-top: 4px; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: rgba(255, 255, 255, .2); padding: 2px 10px; border-radius: 999px; }
+body.bb-theme .child-header .voice-toggle { background: rgba(255, 255, 255, .16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35); }
+body.bb-theme .child-header .vt-btn.on { background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+body.bb-theme .child-header .btn.ghost { margin-top: 0; color: #fff; background: rgba(255, 255, 255, .14); border: 2px solid rgba(255, 255, 255, .7); transition: background .15s, color .15s; }
+body.bb-theme .child-header .btn.ghost:hover { background: #fff; color: #1e4272; }
 /* Footer liên hệ dùng chung mọi màn điều hướng chính (child/media.js sessionFooter(), 2026-09-29) — cùng cặp với
    .child-header (profileHeader()), KHÔNG hiện trong lúc đang chơi 1 bài/1 chặng cụ thể. */
 .session-footer { text-align: center; font-size: 12px; color: var(--text-2); margin: 24px 0 8px; padding-top: 10px; border-top: 1px solid rgba(0, 0, 0, .08); }
