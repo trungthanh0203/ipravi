@@ -10,6 +10,8 @@ import { micButton } from "./pron.js";
 import * as dialogueStep from "./steps/dialogue.js";
 import * as grammarStep from "./steps/grammar.js";
 import * as phonicsStep from "./steps/phonics.js";
+import { gamesSection } from "./practice-games.js";
+import { buildPracticeData } from "./adapter.js";
 
 // Màn "Luyện tập" của người học: SRS từ vựng kiểu Leitner (tự đánh giá Nhớ/Quên) + ôn hội thoại/ngữ pháp/ngữ âm
 // (chỉ xem lại, không chấm) — xem KE_HOACH_TIENG_VIET_BAI_BAN.md GĐ 4. Chỉ ôn mục ĐÃ GẶP QUA (bb_progress); chưa
@@ -21,28 +23,37 @@ const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${
 // `shell`: hàm bọc header/footer dùng chung của khu Bài Bản (pages/bai-ban-home.js) — CHỈ dùng ở màn lưới kỹ năng
 // này (màn điều hướng chính); 1 lượt ôn cụ thể (runReviewList/runVocabReview bên dưới) giữ header riêng (khớp
 // child/practice.js: shell() ở skillsScreen, KHÔNG dùng trong runSession()).
-// `ctx.catalog`: TẢI 1 LẦN cho cả phiên Luyện tập rồi giữ trong bộ nhớ suốt các lượt (không tải lại mỗi khi quay
-// về lưới) — bỏ trống ở lần gọi ĐẦU (từ bai-ban-home.js) để tự tải; các lượt sau tự truyền lại catalog CŨ đã có
-// sẵn (đã được vá tại chỗ sau mỗi lượt ôn, xem runReviewList()/runVocabReview() dưới — khớp cách child/practice.js
-// giữ `ctx.data` suốt 1 phiên, KHÔNG gọi lại loadCatalog() mỗi khi quay về lưới kỹ năng).
+// `ctx.data`: TẢI 1 LẦN cho cả phiên Luyện tập rồi giữ trong bộ nhớ suốt các lượt (không tải lại mỗi khi quay về lưới)
+// — bỏ trống ở lần gọi ĐẦU (từ bai-ban-home.js) để tự tải; các lượt sau tự truyền lại data CŨ (đã được vá tại chỗ sau mỗi
+// lượt ôn/chơi — khớp cách child/practice.js giữ `ctx.data`). data = { review (ôn tập kiểu cũ), + bb/adapter.js
+// buildPracticeData (catalog/byId/progress… cho trò chơi mượn từ khu Trẻ em), skillGood (huy hiệu) }.
+// Bố cục: 🎮 Trò chơi luyện tập (mượn khu Trẻ em, bb/practice-games.js) TRƯỚC, rồi 🔁 Ôn tập từ đã học (4 kỹ năng riêng của Bài Bản).
+async function loadAll(childId) {
+  const [done, skillGood] = await Promise.all([api.loadDoneContent(childId), api.loadSkillGood(childId).catch(() => new Map())]); // chưa có migration 028 → không huy hiệu, vẫn chơi
+  const structure = done.steps.length ? await api.loadStructure(done) : { lessons: [], units: [], levels: [], readingQuestions: [], listeningQuestions: [] };
+  return { ...buildPracticeData(done, structure), review: api.mergeReview(done), skillGood };
+}
+
 export async function showSkills(root, ctx) {
   const { childId, onBack, shell } = ctx;
-  let { catalog } = ctx;
-  if (!catalog) {
+  let { data } = ctx;
+  if (!data) {
     paint(root, el("p", { class: "boot" }, T.loading));
     try {
-      catalog = await api.loadReviewCatalog(childId);
+      data = await loadAll(childId);
     } catch {
       shell(root, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onBack }, T.back));
       return;
     }
   }
+  const catalog = data.review;
+  const toSkills = () => showSkills(root, { childId, onBack, shell, data });
   const total = SKILLS.reduce((n, s) => n + catalog[s.itemType].length, 0);
   const card = (s) => {
     const items = catalog[s.itemType];
     const n = dueCount(items);
     return el("button", { class: "skill-card" + (items.length === 0 ? " off" : ""), style: colorStyle(s), disabled: items.length === 0,
-      onclick: () => runSkill(root, s, items, { childId, onBack: () => showSkills(root, { childId, onBack, shell, catalog }), shell, catalog }) },
+      onclick: () => runSkill(root, s, items, { childId, onBack: toSkills, shell, data }) },
       el("span", { class: "sk-emoji" }, s.emoji),
       el("b", null, s.name),
       el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
@@ -50,12 +61,14 @@ export async function showSkills(root, ctx) {
   shell(root,
     crumbBar(T.bbPracticeTitle, onBack),
     el("h1", { style: "text-align:center" }, T.bbPracticeTitle),
-    total === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoReview)) :
-      GROUPS.map((g) => {
+    total === 0 && !data.listenLessons.length ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoReview)) : [
+      ...gamesSection({ root, shell, data, childId, toSkills }),
+      el("h2", { style: "text-align:center;margin-top:24px" }, T.bbReviewTitle),
+      ...GROUPS.map((g) => {
         const list = SKILLS.filter((s) => s.group === g.id);
-        return list.length ? el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h2", null, g.name),
+        return list.length ? el("section", { class: "skill-group", style: `--c:${g.color}` }, el("h3", null, g.name),
           el("div", { class: "skill-grid" }, list.map(card))) : null;
-      }));
+      })]);
 }
 
 function runSkill(root, skill, items, ctx) {

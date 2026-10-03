@@ -49,11 +49,16 @@ function groupBy(rows, key) {
 }
 const bySortOrder = (rows) => [...rows].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
+// Chia lô 100 id/lần: .in() dồn cả trăm id vào URL, quá dài sẽ bị cắt/từ chối khi người học đã xong nhiều chặng.
 async function fetchByIds(table, ids, col = "step_id") {
   if (!ids.length) return [];
-  const { data, error } = await sb.from(table).select("*").in(col, ids);
-  if (error) throw error;
-  return data ?? [];
+  const out = [];
+  for (let i = 0; i < ids.length; i += 100) {
+    const { data, error } = await sb.from(table).select("*").in(col, ids.slice(i, i + 100));
+    if (error) throw error;
+    out.push(...(data ?? []));
+  }
+  return out;
 }
 
 // Như fetchByIds() nhưng chỉ lấy ĐÚNG 1 CỘT (`col`) — dùng khi chỉ cần biết "có dòng nào không" (ĐÃ CÓ dữ liệu),
@@ -206,33 +211,79 @@ export async function loadLessonProgress(childId, lessonIds) {
 // Mọi mục (4 loại chặng) mà người học ĐÃ GẶP QUA (thuộc 1 chặng có trong bb_progress) kèm trạng thái ôn tập
 // (box/due_at/reviewed_count — chưa ôn lần nào thì due_at ở rất xa trong quá khứ = đến hạn ngay). Dùng cho màn
 // Luyện tập (bb/practice.js); chọn phiên bằng hàm thuần practice-core.js, không tính ở đây.
-export async function loadReviewCatalog(childId) {
+// Toàn bộ nội dung các chặng người học ĐÃ HỌC XONG (bb_progress) + trạng thái ôn (bb_srs_state) — nguồn CHUNG cho ôn
+// tập kiểu cũ (loadReviewCatalog) lẫn trò Luyện tập mượn từ khu Trẻ em (loadPracticeData). Mỗi dòng nội dung có sẵn step_id.
+export async function loadDoneContent(childId) {
   const { data: prog, error } = await sb.from("bb_progress").select("step_id").eq("child_id", childId);
   if (error) throw error;
   const stepIds = (prog ?? []).map((p) => p.step_id);
-  if (!stepIds.length) return { vocab: [], grammar: [], phonics: [], dialogue: [] };
-  const { data: steps, error: e2 } = await sb.from("bb_lesson_steps").select("id, step_type").in("id", stepIds);
-  if (e2) throw e2;
-  const idsOf = (type) => (steps ?? []).filter((s) => s.step_type === type).map((s) => s.id);
-
-  const [vocab, grammar, phonics, dialogue, srs] = await Promise.all([
+  const empty = { steps: [], vocab: [], grammar: [], phonics: [], dialogue: [], reading: [], listening: [], srs: [] };
+  if (!stepIds.length) return empty;
+  const steps = await fetchByIds("bb_lesson_steps", stepIds, "id");
+  const idsOf = (type) => steps.filter((s) => s.step_type === type).map((s) => s.id);
+  const [vocab, grammar, phonics, dialogue, reading, listening, srs] = await Promise.all([
     fetchByIds("bb_vocab", idsOf("vocab")),
     fetchByIds("bb_grammar", idsOf("grammar")),
     fetchByIds("bb_phonics_pairs", idsOf("phonics")),
     fetchByIds("bb_dialogue_lines", idsOf("dialogue")),
+    fetchByIds("bb_reading_passages", idsOf("reading")),
+    fetchByIds("bb_listening_passages", idsOf("listening")),
     sb.from("bb_srs_state").select("*").eq("child_id", childId).then(({ data, error: e3 }) => {
       if (e3) throw e3;
       return data ?? [];
     }),
   ]);
-  const srsByKey = new Map(srs.map((s) => [`${s.item_type}:${s.item_id}`, s]));
-  // box/due_at/reviewed_count/correct_count đủ để bb/practice.js chấm + tự cập nhật catalog trong bộ nhớ SAU KHI
-  // ôn 1 mục, KHÔNG cần gọi lại loadReviewCatalog()/tự SELECT lại — xem saveVocabResult()/saveReviewBatch() dưới.
+  return { steps, vocab, grammar, phonics, dialogue, reading, listening, srs };
+}
+
+// box/due_at/reviewed_count/correct_count đủ để bb/practice.js chấm + tự cập nhật catalog trong bộ nhớ SAU KHI
+// ôn 1 mục, KHÔNG cần gọi lại loadReviewCatalog()/tự SELECT lại — xem saveVocabResult()/saveReviewBatch() dưới.
+export function mergeReview(done) {
+  const srsByKey = new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s]));
   const merge = (rows, type) => rows.map((r) => {
     const s = srsByKey.get(`${type}:${r.id}`);
     return { ...r, box: s?.box ?? 1, due_at: s?.due_at ?? NEVER, reviewed_count: s?.reviewed_count ?? 0, correct_count: s?.correct_count ?? 0 };
   });
-  return { vocab: merge(vocab, "vocab"), grammar: merge(grammar, "grammar"), phonics: merge(phonics, "phonics"), dialogue: merge(dialogue, "dialogue") };
+  return { vocab: merge(done.vocab, "vocab"), grammar: merge(done.grammar, "grammar"), phonics: merge(done.phonics, "phonics"), dialogue: merge(done.dialogue, "dialogue") };
+}
+export const loadReviewCatalog = async (childId) => mergeReview(await loadDoneContent(childId));
+
+// Chủ đề/cấp/bài chứa các chặng đã học + câu hỏi của đoạn đọc/nghe — để gắn "đang ở cấp/chủ đề nào" cho từng mục luyện tập.
+export async function loadStructure(done) {
+  const lessonIds = [...new Set(done.steps.map((s) => s.lesson_id))];
+  const lessons = await fetchByIds("bb_lessons", lessonIds, "id");
+  const units = await fetchByIds("bb_units", [...new Set(lessons.map((l) => l.unit_id))], "id");
+  const levels = await fetchByIds("bb_levels", [...new Set(units.map((u) => u.level_id))], "id");
+  const passageIds = [...done.reading, ...done.listening].length;
+  const [rq, lq] = passageIds ? await Promise.all([
+    fetchByIds("bb_reading_questions", done.reading.map((p) => p.id), "passage_id"),
+    fetchByIds("bb_listening_questions", done.listening.map((p) => p.id), "passage_id"),
+  ]) : [[], []];
+  return { lessons, units, levels, readingQuestions: rq, listeningQuestions: lq };
+}
+
+// ---- Nhật ký phiên Luyện tập (bb_practice_log, migration 028) → huy hiệu theo kỹ năng ----
+export async function saveGameLogs(rows) {
+  const { error } = await sb.from("bb_practice_log").insert(rows);
+  if (error) console.warn("saveGameLogs", error.message);
+}
+// Map kỹ năng → { sessions, good } (phiên "tốt" = dòng tổng kind='practice' từ 85 điểm trở lên).
+export async function loadSkillGood(childId, goodScore = 85) {
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from("bb_practice_log").select("skill, score").eq("child_id", childId).eq("kind", "practice").order("id").range(from, from + 999);
+    if (error) throw error;
+    rows.push(...(data ?? []));
+    if ((data ?? []).length < 1000) break;
+  }
+  const by = new Map();
+  for (const r of rows) {
+    const e = by.get(r.skill) ?? { skill: r.skill, sessions: 0, good: 0 };
+    e.sessions++;
+    if ((r.score ?? 0) >= goodScore) e.good++;
+    by.set(r.skill, e);
+  }
+  return by;
 }
 
 async function upsertSrs(rows) {
@@ -260,6 +311,12 @@ export async function saveVocabResult(childId, item, remembered) {
 // Đánh dấu "đã ôn lại" cho 1 lượt ôn hội thoại/ngữ pháp/ngữ âm (không chấm, chỉ đẩy hạn ôn tới). Nhận NGUYÊN
 // `items` (không phải `itemIds`) cùng lý do với saveVocabResult() — bỏ 1 vòng SELECT thừa. Trả `due_at` mới để
 // caller vá catalog trong bộ nhớ.
+// Ghi 1 đáp án của trò Luyện tập mượn từ khu Trẻ em lên bb_srs_state (hộp Leitner dùng làm "mức thuộc" của mục) — `row` là
+// kết quả adapter.srsAfter(); chỉ 4 loại có bảng ôn (vocab/grammar/phonics/dialogue) mới ghi, đoạn đọc/nghe thì bỏ qua.
+export async function saveSrsAnswer(childId, itemType, itemId, row) {
+  await upsertSrs([{ child_id: childId, item_type: itemType, item_id: itemId, ...row }]);
+}
+
 export const REVIEW_AGAIN_DAYS = 3;
 export async function saveReviewBatch(childId, itemType, items) {
   if (!items.length) return null;

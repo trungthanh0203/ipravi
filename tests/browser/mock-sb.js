@@ -8,7 +8,7 @@ const TABLES = ["units", "lessons", "content_items", "translations", "content_au
   // "Tiếng Việt Bài Bản" (migration 022) — xem KE_HOACH_TIENG_VIET_BAI_BAN.md
   "bb_levels", "bb_units", "bb_lessons", "bb_lesson_steps", "bb_dialogue_lines", "bb_vocab", "bb_grammar",
   "bb_phonics_pairs", "bb_reading_passages", "bb_reading_questions", "bb_listening_passages", "bb_listening_questions",
-  "bb_writing_tasks", "bb_progress", "bb_srs_state"];
+  "bb_writing_tasks", "bb_progress", "bb_srs_state", "bb_practice_log"];
 const DEFAULT_STATUS = { units: "draft", lessons: "draft", content_items: "draft", activities: "draft", payments: "pending" };
 
 export function installMock(sb, seed = {}) {

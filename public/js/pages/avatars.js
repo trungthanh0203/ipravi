@@ -13,7 +13,7 @@ import { emojiNodes, mascotHero } from "../emoji.js";
 // qua khu phụ huynh mới vào được gây khó hiểu). Hồ sơ learner vẫn vào thêm được từ khu phụ huynh (thẻ "Hồ sơ học
 // bài bản" trong parent.js) — tiện cho trường hợp phụ huynh tự học, không cần nhớ avatar.
 export function mount(root) {
-  const feedback = el("div", { style: "text-align:center;min-height:52px" });
+  const feedback = el("div", { style: "text-align:center" });
 
   const grid = el(
     "div", { class: "avatar-grid" },

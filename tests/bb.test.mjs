@@ -6,6 +6,9 @@ import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
 import { formatSegments } from "../public/js/bb/format.js";
+import { idOf, plainText, vocabItem, dialogueItem, grammarItems, phonicsItems, storyOf, buildPracticeData, srsAfter, progressMap, scopeBb } from "../public/js/bb/adapter.js";
+import { planPractice, weightOf } from "../public/js/child/practice-core.js";
+import { SKILLS as CHILD_SKILLS } from "../public/js/child/skills.js";
 
 let pass = 0, fail = 0;
 const ok = (c, n, x = "") => { (c ? pass++ : fail++); console.log(`${c ? "ok  " : "FAIL"} ${n}${c ? "" : "  <-- " + x}`); };
@@ -272,6 +275,50 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ]]), "formatSegments: `chữ` tách đúng phần khối nổi (code)");
   ok(JSON.stringify(formatSegments("**Mẫu: `thứ mấy`**")) === JSON.stringify([[{ text: "Mẫu: ", bold: true }, { text: "thứ mấy", code: true }]]),
     "formatSegments: `code` lồng trong **đậm** vẫn tách ra riêng (code), không cộng dồn thêm đậm — giống !!đỏ!!");
+}
+
+// ---- adapter.js: nội dung Bài Bản → mục khu Trẻ em để dùng lại trò Luyện tập (2026-10-04) ----
+{
+  ok(idOf("vocab", 5) !== idOf("dialogue", 5) && idOf("grammar", 5, 1) !== idOf("grammar", 5, 2), "adapter.idOf: id ghép không trùng giữa các bảng/chỉ số con");
+  ok(plainText("Hỏi: **Hôm nay** !!là thứ mấy!!?\n*(What day?)*") === "Hỏi: Hôm nay là thứ mấy? (What day?)", "adapter.plainText: bỏ ký hiệu markdown-lite + gộp xuống dòng");
+  const where = { unit: { id: 7, title_vi: "Chào hỏi", emoji: null }, bbLevel: 3 };
+  const v = vocabItem({ id: 1, word_vi: "chào", meaning: { de: "Hallo", en: "" }, audio_path: "bb/a.mp3" }, where);
+  ok(v.item_type === "word" && v.translations.length === 1 && v.translations[0].lang === "de" && v.content_audio[0].file_path === "bb/a.mp3" && v.bbLevel === 3 && v.level === 2,
+    "adapter.vocabItem: từ → mục word, bản dịch trống bị bỏ, âm thanh thành content_audio, level cổng lọc = 2", JSON.stringify(v));
+  ok(vocabItem({ id: 2, word_vi: "b", say_vi: "bờ", meaning: {} }, where).item_type === "letter", "adapter.vocabItem: chữ cái có chữ đọc → letter");
+  ok(vocabItem({ id: 3, word_vi: "xin chào", meaning: {} }, where).item_type === "phrase", "adapter.vocabItem: nhiều từ → phrase");
+  ok(dialogueItem({ id: 4, speaker: "A", line_vi: "Chào **bạn**!", line_tr: { de: "Hallo!" } }, where).text_vi === "Chào bạn!", "adapter.dialogueItem: câu hội thoại thành chữ thường");
+  const gi = grammarItems({ id: 9, examples: [{ vi: "Táo **giá** bao nhiêu?", tr: { de: "x" } }, { vi: "" }, { vi: "Câu hai." }] }, where);
+  ok(gi.length === 2 && gi[0].text_vi === "Táo giá bao nhiêu?" && gi[0].src.type === "grammar" && gi[0].id !== gi[1].id, "adapter.grammarItems: mỗi ví dụ 1 mục câu, bỏ ví dụ rỗng, cùng src với điểm ngữ pháp");
+  const pi = phonicsItems({ id: 6, sound_a: "ch", sound_b: "tr", audio_a_path: "a.mp3", examples: ["cha - tra", "chào - trào"] }, where);
+  ok(pi.filter((i) => i.item_type === "syllable").length === 2 && pi.filter((i) => i.item_type === "word").length === 4 && pi[0].content_audio.length === 1, "adapter.phonicsItems: 2 âm + từng từ ví dụ tách riêng");
+  const st = storyOf({ id: 2, passage_vi: "Tôi là An. Tôi học tiếng Việt.", audio_path: null }, [{ id: 8, question_vi: "Ai?", choices: ["An", "Bình"], answer: 1 }], where);
+  ok(st.itemIds.length === 2 && st.questionIds.length === 1 && st.questions[0].extra.answer === 1, "adapter.storyOf: đoạn tách câu, câu hỏi giữ choices/answer (đếm từ 1)");
+  ok(srsAfter({ box: 2, reviewed_count: 1, correct_count: 1 }, true).box === 3 && srsAfter({ box: 4, reviewed_count: 3, correct_count: 3 }, false).box === 1, "adapter.srsAfter: đúng tăng hộp, sai về hộp 1");
+  const pm = progressMap([{ item_type: "vocab", item_id: 1, box: 2, reviewed_count: 4, correct_count: 1, updated_at: "2026-01-01" }], [v]);
+  ok(pm.get(v.id).mastery === 2 && pm.get(v.id).wrong_count === 3, "adapter.progressMap: hộp = mức thuộc, ôn − đúng = số lần sai");
+
+  const done = {
+    steps: [{ id: 1, lesson_id: 1, step_type: "vocab" }, { id: 2, lesson_id: 1, step_type: "dialogue" }, { id: 3, lesson_id: 1, step_type: "reading" }],
+    vocab: [1, 2, 3, 4].map((n) => ({ id: n, step_id: 1, word_vi: "từ" + n, meaning: { de: "w" + n } })),
+    dialogue: [1, 2, 3, 4].map((n) => ({ id: n, step_id: 2, speaker: n % 2 ? "A" : "B", line_vi: "Câu " + n + ".", sort_order: n })),
+    grammar: [], phonics: [], listening: [], srs: [{ item_type: "vocab", item_id: 1, box: 1, reviewed_count: 2, correct_count: 0 }],
+    reading: [{ id: 5, step_id: 3, passage_vi: "Một. Hai. Ba." }],
+  };
+  const structure = { lessons: [{ id: 1, unit_id: 10 }], units: [{ id: 10, level_id: 20, title_vi: "Chủ đề", emoji: "🔤" }], levels: [{ id: 20, code: "A1", name_vi: "Sơ cấp 1" }],
+    readingQuestions: [{ id: 1, passage_id: 5, question_vi: "Mấy?", choices: ["1", "2"], answer: 2, sort_order: 1 }], listeningQuestions: [] };
+  const data = buildPracticeData(done, structure);
+  ok(data.catalog.length === 8 && data.levels.length === 1 && data.levels[0].code === "A1", "adapter.buildPracticeData: 4 từ + 4 câu hội thoại vào catalog, cấp có nội dung được liệt kê");
+  ok(data.storyLessons.length === 1 && data.listenLessons.length === 1 && data.dialogueLessons.length === 1, "adapter.buildPracticeData: đoạn đọc có câu hỏi + hội thoại ≥ 4 dòng thành 'bài'");
+  ok(data.byId.has(data.storyLessons[0].questionIds[0]) && data.progress.get(data.catalog[0].id).wrong_count === 2, "adapter.buildPracticeData: byId có cả câu hỏi; tiến độ lấy từ bb_srs_state");
+  ok(scopeBb(data.catalog, { type: "level", level: 20 }, data.progress).length === 8 && scopeBb(data.catalog, { type: "level", level: 99 }, data.progress).length === 0, "adapter.scopeBb: lọc theo cấp Bài Bản");
+  ok(scopeBb(data.catalog, { type: "weak" }, data.progress).length === 1, "adapter.scopeBb: 'từ hay sai' chỉ lấy mục sai & chưa thuộc");
+
+  // Chạy THẬT lõi kế hoạch của khu Trẻ em trên dữ liệu Bài Bản: kỹ năng "Hiểu nghĩa" (từ có bản dịch) phải lập được phiên.
+  const meaning = CHILD_SKILLS.find((x) => x.id === "meaning");
+  const plan = planPractice(meaning, data.catalog, { type: "all" }, data.progress, { lang: "de", target: 7 });
+  ok(plan.ok && plan.plan[0].kind === "meaning_pick" && plan.plan[0].items.length >= 3, "Luyện tập mượn khu Trẻ em: planPractice() lập được phiên 'Hiểu nghĩa' từ dữ liệu Bài Bản", JSON.stringify(plan).slice(0, 120));
+  ok(weightOf(data.progress.get(data.catalog[0].id)) > weightOf({ mastery: 5, wrong_count: 0, last_seen_at: new Date().toISOString() }), "Luyện tập mượn: mục sai nhiều có trọng số ôn cao hơn mục đã thuộc");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

@@ -833,5 +833,33 @@ await as(A, async () => {
   });
 }
 
+// ---- 30. nhật ký phiên Luyện tập Bài Bản (migration 028) ----
+{
+  const m028 = readFileSync(new URL("../migrations/028_bb_practice_log.sql", import.meta.url), "utf8");
+  await db.exec(m028);
+  const P = await uid("p30@x.com"), P2 = await uid("p30b@x.com");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'Cô Lan','cat','learner') returning id", [P]))[0].id;
+  await as(P, async () => {
+    await db.query("insert into public.bb_practice_log (child_id, skill, kind, score) values ($1,'meaning','practice',90)", [kid]);
+    ok((await q("select id from public.bb_practice_log")).length === 1, "028: phụ huynh ghi + đọc được nhật ký phiên của con mình");
+    const bad = await fails("insert into public.bb_practice_log (child_id, skill, kind, score) values ($1,'meaning','practice',140)", [kid]);
+    ok(bad && /check/i.test(bad), "028: điểm ngoài 0–100 bị CHECK chặn", String(bad));
+  });
+  await as(P2, async () => {
+    ok((await q("select id from public.bb_practice_log")).length === 0, "028: phụ huynh khác không đọc được nhật ký của con người khác");
+    const e = await fails("insert into public.bb_practice_log (child_id, skill, kind, score) values ($1,'meaning','practice',50)", [kid]);
+    ok(e && /row-level security/.test(e), "028: phụ huynh khác không ghi được vào con người khác", String(e));
+  });
+  await db.query("update public.accounts set access_until = now() - interval '1 day' where id=$1", [P]);
+  await as(P, async () => {
+    const e = await fails("insert into public.bb_practice_log (child_id, skill, kind, score) values ($1,'meaning','practice',60)", [kid]);
+    ok(e && /row-level security/.test(e), "028: HẾT HẠN không ghi được nhật ký mới", String(e));
+    ok((await q("select id from public.bb_practice_log")).length === 1, "028: HẾT HẠN vẫn đọc được nhật ký cũ");
+  });
+  await as(ADM, async () => ok((await q("select id from public.bb_practice_log")).length === 1, "028: admin xem được nhật ký"));
+  await db.exec(m028);
+  ok((await q("select count(*)::int as n from public.bb_practice_log"))[0].n === 1, "028: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);
