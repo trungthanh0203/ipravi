@@ -6,7 +6,7 @@ import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
 import { formatSegments } from "../public/js/bb/format.js";
-import { idOf, plainText, vocabItem, dialogueItem, grammarItems, phonicsItems, storyOf, buildPracticeData, srsAfter, progressMap, scopeBb } from "../public/js/bb/adapter.js";
+import { idOf, plainText, vocabItem, dialogueItem, grammarItems, phonicsItems, storyOf, buildPracticeData, srsAfter, progressMap, scopeBb, scopeReview, isWeakReview } from "../public/js/bb/adapter.js";
 import { planPractice, weightOf } from "../public/js/child/practice-core.js";
 import { SKILLS as CHILD_SKILLS } from "../public/js/child/skills.js";
 
@@ -319,6 +319,18 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   const plan = planPractice(meaning, data.catalog, { type: "all" }, data.progress, { lang: "de", target: 7 });
   ok(plan.ok && plan.plan[0].kind === "meaning_pick" && plan.plan[0].items.length >= 3, "Luyện tập mượn khu Trẻ em: planPractice() lập được phiên 'Hiểu nghĩa' từ dữ liệu Bài Bản", JSON.stringify(plan).slice(0, 120));
   ok(weightOf(data.progress.get(data.catalog[0].id)) > weightOf({ mastery: 5, wrong_count: 0, last_seen_at: new Date().toISOString() }), "Luyện tập mượn: mục sai nhiều có trọng số ôn cao hơn mục đã thuộc");
+}
+
+{
+  const rows = [
+    { id: 1, bbLevel: 1, unit_id: 10, box: 1, reviewed_count: 3, correct_count: 1 },
+    { id: 2, bbLevel: 1, unit_id: 11, box: 4, reviewed_count: 3, correct_count: 3 },
+    { id: 3, bbLevel: 2, unit_id: 20, box: 1, reviewed_count: 0, correct_count: 0 },
+  ];
+  ok(scopeReview(rows, { type: "all" }).length === 3, "Ôn tập: phạm vi tất cả");
+  ok(scopeReview(rows, { type: "level", level: 1 }).length === 2, "Ôn tập: phạm vi theo cấp");
+  ok(scopeReview(rows, { type: "unit", unitId: 20 }).map((r) => r.id).join() === "3", "Ôn tập: phạm vi theo chủ đề");
+  ok(scopeReview(rows, { type: "weak" }).map((r) => r.id).join() === "1" && !isWeakReview(rows[1]) && !isWeakReview(rows[2]), "Ôn tập: hay sai = sai nhiều hơn đúng và chưa thuộc");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

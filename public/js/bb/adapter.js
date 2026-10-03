@@ -108,6 +108,18 @@ export function scopeBb(catalog, scope, progress = new Map()) {
   }
 }
 
+// Phạm vi cho 4 kỹ năng ÔN TẬP riêng của Bài Bản (từ vựng/ngữ pháp/ngữ âm/hội thoại): dòng ôn có unit_id/bbLevel (gắn ở
+// practice.js từ stepWhere) + box/reviewed_count/correct_count (api.mergeReview). "Hay sai" = từng ôn sai nhiều hơn đúng và chưa thuộc.
+export const isWeakReview = (r) => (r.reviewed_count ?? 0) > (r.correct_count ?? 0) && (r.box ?? 1) < 3;
+export function scopeReview(items, scope) {
+  switch (scope?.type) {
+    case "level": return items.filter((i) => i.bbLevel === scope.level);
+    case "unit": return items.filter((i) => i.unit_id === scope.unitId);
+    case "weak": return items.filter(isWeakReview);
+    default: return items;
+  }
+}
+
 // Ghép MỌI thứ Luyện tập cần từ nội dung đã học (done, api.loadDoneContent) + cấu trúc cấp/chủ đề (st, api.loadStructure):
 // catalog (mục rời), byId (cả mục của đoạn/câu hỏi), progress, 3 nguồn "bài" (đọc nhớ/nghe nhớ/hội thoại) + danh sách cấp.
 export function buildPracticeData(done, st) {
@@ -144,6 +156,6 @@ export function buildPracticeData(done, st) {
   const levels = st.levels.filter((l) => levelIds.has(l.id)).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id);
   return {
     catalog, byId, progress: progressMap(done.srs, catalog), storyLessons: readStories, listenLessons: [...listenOnly, ...readStories],
-    dialogueLessons, levels, units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null, level_id: u.level_id, sort_order: u.sort_order ?? 0 }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
+    dialogueLessons, levels, stepWhere: new Map(done.steps.map((s) => { const w = whereOf(s.id); return [s.id, { unit_id: w.unit?.id ?? null, bbLevel: w.bbLevel }]; })), units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null, level_id: u.level_id, sort_order: u.sort_order ?? 0 }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
   };
 }

@@ -10,7 +10,8 @@ import { GROUPS, SKILLS, BADGES, GOOD_SCORE, groupById, badgeOf, badgeProgress }
 import { skillPlayable, planPractice, storySkillPlayable, planStoryPractice } from "../child/practice-core.js";
 import { starsFor } from "../child/lesson.js";
 import * as api from "./api.js";
-import { srsAfter, progressRow, scopeBb } from "./adapter.js";
+import { groupById as reviewGroupById } from "./skills.js";
+import { srsAfter, progressRow, scopeBb, scopeReview, isWeakReview } from "./adapter.js";
 
 // "Trò chơi luyện tập" của Tiếng Việt Bài Bản — MƯỢN NGUYÊN các trò Luyện tập của khu Trẻ em (child/runners.js, pools.js,
 // practice-core.js, skills.js: toàn hàm thuần/trò chỉ cần "mục" {id, text_vi, translations, content_audio…}) chạy trên nội
@@ -20,8 +21,9 @@ import { srsAfter, progressRow, scopeBb } from "./adapter.js";
 // chưa có ảnh. Luồng: lưới kỹ năng (bb/practice.js) → chọn phạm vi → phiên 6–8 lượt → kết quả. `ctx` = { root, shell,
 // data (api + adapter.buildPracticeData), childId, toSkills }.
 
-const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${g.color};--soft:${g.soft}`; };
-const btnStyle = (skill) => `background:${groupById(skill.group).color}`;
+const groupOf = (skill) => groupById(skill.group) ?? reviewGroupById(skill.group); // nhóm trò mượn (child/skills.js) hoặc nhóm ôn tập riêng (bb/skills.js)
+const colorStyle = (skill) => { const g = groupOf(skill); return `--c:${g.color};--soft:${g.soft}`; };
+const btnStyle = (skill) => `background:${groupOf(skill).color}`;
 const icon = (emoji) => el("span", { class: "sk-emoji" }, ...emojiNodes(emoji));
 const crumbOf = (skill) => `${T.bbPracticeTitle} > ${skill.name}`;
 const goodOf = (data, id) => data.skillGood?.get(id)?.good ?? 0;
@@ -57,11 +59,34 @@ export function gamesSection(ctx) {
 
 // ---- Chọn phạm vi ----
 function scopeScreen(ctx, skill, scope = { type: "all" }) {
+  const { data } = ctx;
+  scopeView(ctx, skill, scope, {
+    weak: skill.story ? 0 : scopeBb(data.catalog, { type: "weak" }, data.progress).length,
+    unitIds: skill.story ? [...new Set(storiesOf(skill, data).map((g) => g.unitId))] : [...new Set(data.catalog.map((i) => i.unit_id))],
+    medals: medals(data, skill.id), pick: (s) => scopeScreen(ctx, skill, s), play: (s) => start(ctx, skill, s),
+  });
+}
+
+// 4 kỹ năng ÔN TẬP riêng (Từ vựng/Ngữ pháp/Hội thoại/Ngữ âm): cũng hỏi "Bạn muốn luyện gì?" trước khi ôn; `items` = dòng ôn
+// (api.mergeReview + unit_id/bbLevel), `play(scopedItems)` chạy phiên ôn (bb/practice.js runSkill).
+export function reviewScopeScreen(ctx, skill, items, scope = { type: "all" }, play) {
+  scopeView(ctx, skill, scope, {
+    weak: items.filter(isWeakReview).length,
+    unitIds: [...new Set(items.map((i) => i.unit_id))],
+    count: (s) => scopeReview(items, s).length,
+    pick: (s) => reviewScopeScreen(ctx, skill, items, s, play),
+    play: (s) => play(scopeReview(items, s)),
+  });
+}
+
+// Màn "Bạn muốn luyện gì?" dùng chung: chip Tất cả/Cấp/Hay sai/Chủ đề (chủ đề xếp theo cấp) + nút chơi.
+// o = { weak, unitIds, medals?, count?(scope), pick(scope), play(scope) }.
+function scopeView(ctx, skill, scope, o) {
   const { root, shell, data } = ctx;
-  const weak = skill.story ? 0 : scopeBb(data.catalog, { type: "weak" }, data.progress).length;
+  const { weak, unitIds } = o;
   const same = (a, b) => a.type === b.type && a.level === b.level && a.unitId === b.unitId;
-  const chip = (label, s, disabled = false) => el("button", { class: "chip-btn" + (same(scope, s) ? " on" : ""), disabled, onclick: () => scopeScreen(ctx, skill, s) }, label);
-  const unitIds = skill.story ? [...new Set(storiesOf(skill, data).map((g) => g.unitId))] : [...new Set(data.catalog.map((i) => i.unit_id))];
+  const chip = (label, s, disabled = false) => el("button", { class: "chip-btn" + (same(scope, s) ? " on" : ""), disabled, onclick: () => o.pick(s) }, label);
+  const n = o.count?.(scope);
   // Chủ đề xếp theo từng Cấp (đúng thứ tự cấp + thứ tự chủ đề như màn Học), mỗi cấp 1 nhóm.
   const have = new Set(unitIds);
   const unitSel = scope.type === "unit"
@@ -74,15 +99,16 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
     : null;
   shell(root,
     crumbBar(crumbOf(skill), ctx.toSkills),
-    el("div", { class: "skill-hero", style: colorStyle(skill) }, icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc), medals(data, skill.id)),
+    el("div", { class: "skill-hero", style: colorStyle(skill) }, icon(skill.emoji), el("h1", null, skill.name), skill.desc ? el("p", { class: "muted" }, skill.desc) : null, o.medals ?? null),
     el("h2", null, T.bbScopeTitle),
     el("div", { class: "scope-row" },
       chip("🌍 " + T.bbScopeAll, { type: "all" }),
       data.levels.map((L) => chip(T.bbScopeLevel(L.code), { type: "level", level: L.id })),
-      skill.story ? null : chip("🎯 " + T.bbScopeWeak(weak), { type: "weak" }, weak === 0),
+      weak == null || skill.story ? null : chip("🎯 " + T.bbScopeWeak(weak), { type: "weak" }, weak === 0),
       chip("🗺️ " + T.bbScopeUnit, { type: "unit", unitId: scope.type === "unit" ? scope.unitId : undefined })),
     unitSel,
-    el("div", { style: "text-align:center" }, el("button", { class: "btn big", style: btnStyle(skill), disabled: scope.type === "unit" && scope.unitId == null, onclick: () => start(ctx, skill, scope) }, "▶ " + T.bbPlay)));
+    n != null ? el("p", { class: "muted", style: "text-align:center" }, T.bbScopeCount(n)) : null,
+    el("div", { style: "text-align:center" }, el("button", { class: "btn big", style: btnStyle(skill), disabled: (scope.type === "unit" && scope.unitId == null) || n === 0, onclick: () => o.play(scope) }, "▶ " + T.bbPlay)));
 }
 
 // ---- Lập phiên + chạy ----

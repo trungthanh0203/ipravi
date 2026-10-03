@@ -167,7 +167,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`028_bb_practice_
   A1 (`bai-ban-a1-chao-hoi-gia-dinh.csv`, 4 chủ đề: Chào hỏi/Gia đình/Số đếm/Màu sắc) — cả 2 ở
   `giao-trinh/bai-ban/`. Seed `005_bb_a1_title_translations.sql` chỉ cần cho bản ĐÃ nhập CSV
   trước khi có cột `unit_<lang>`.
-  **Luyện tập mượn khu Trẻ em:** `bb/adapter.js` (hàm thuần) đổi nội dung đã học sang hình dạng mục của `child/` (id ghép `idOf()`, `level` cố định 2, `src` trỏ về dòng thật) để chạy NGUYÊN `child/practice-core|pools|runners|skills`; `bb/practice-games.js` = lưới trò + chọn phạm vi (Tất cả/Cấp/Chủ đề/Hay sai) + ghi `bb_srs_state` & `bb_practice_log` (028, huy hiệu từ phiên ≥85đ). Trò cần hình tự ẩn khi từ vựng chưa có ảnh. Thử nhanh: `tests/browser/bb-practice-seed.js`.
+  **Luyện tập mượn khu Trẻ em:** `bb/adapter.js` (hàm thuần) đổi nội dung đã học sang hình dạng mục của `child/` (id ghép `idOf()`, `level` cố định 2, `src` trỏ về dòng thật) để chạy NGUYÊN `child/practice-core|pools|runners|skills`; `bb/practice-games.js` = lưới trò + chọn phạm vi (Tất cả/Cấp/Chủ đề/Hay sai) + ghi `bb_srs_state` & `bb_practice_log` (028, huy hiệu từ phiên ≥85đ). 4 kỹ năng ôn riêng (Từ vựng/Ngữ pháp/Hội thoại/Ngữ âm) cũng qua màn "Bạn muốn luyện gì?" (`reviewScopeScreen`, dòng ôn gắn `unit_id/bbLevel` từ `stepWhere`). Trò cần hình tự ẩn khi từ vựng chưa có ảnh. Thử nhanh: `tests/browser/bb-practice-seed.js`.
   **Hiệu năng:** `api.js` cache Level/Unit/Lesson 60s (`cached()`, khớp `child/api.js`) —
   `clearCache()` khi Thoát. `practice.js` giữ `catalog` trong bộ nhớ suốt 1 phiên Luyện tập (không
   tải lại mỗi khi quay về lưới), tự vá `box`/`due_at` tại chỗ sau khi chấm (dùng `srs.js`

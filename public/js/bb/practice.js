@@ -10,7 +10,7 @@ import { micButton } from "./pron.js";
 import * as dialogueStep from "./steps/dialogue.js";
 import * as grammarStep from "./steps/grammar.js";
 import * as phonicsStep from "./steps/phonics.js";
-import { gamesSection } from "./practice-games.js";
+import { gamesSection, reviewScopeScreen } from "./practice-games.js";
 import { buildPracticeData } from "./adapter.js";
 
 // Màn "Luyện tập" của người học: SRS từ vựng kiểu Leitner (tự đánh giá Nhớ/Quên) + ôn hội thoại/ngữ pháp/ngữ âm
@@ -38,7 +38,10 @@ async function loadAll(childId) {
 async function loadFresh(childId) {
   const [done, skillGood] = await Promise.all([api.loadDoneContent(childId), api.loadSkillGood(childId).catch(() => new Map())]); // chưa có migration 028 → không huy hiệu, vẫn chơi
   const structure = done.steps.length ? await api.loadStructure(done) : { lessons: [], units: [], levels: [], readingQuestions: [], listeningQuestions: [] };
-  return { ...buildPracticeData(done, structure), review: api.mergeReview(done), skillGood };
+  const built = buildPracticeData(done, structure);
+  const review = api.mergeReview(done);
+  for (const rows of Object.values(review)) for (const r of rows) Object.assign(r, built.stepWhere.get(r.step_id) ?? { unit_id: null, bbLevel: null }); // để lọc theo cấp/chủ đề
+  return { ...built, review, skillGood };
 }
 
 export async function showSkills(root, ctx) {
@@ -60,7 +63,7 @@ export async function showSkills(root, ctx) {
     const items = catalog[s.itemType];
     const n = dueCount(items);
     return el("button", { class: "skill-card" + (items.length === 0 ? " off" : ""), style: colorStyle(s), disabled: items.length === 0,
-      onclick: () => runSkill(root, s, items, { childId, onBack: toSkills, shell, data }) },
+      onclick: () => reviewScopeScreen({ root, shell, data, childId, toSkills }, s, items, undefined, (scoped) => runSkill(root, s, scoped, { childId, onBack: toSkills, shell, data })) },
       el("span", { class: "sk-emoji" }, s.emoji),
       el("b", null, s.name),
       el("small", null, n > 0 ? T.bbDueCount(n) : T.bbNoDue));
@@ -108,7 +111,7 @@ async function runReviewList(root, skill, items, session, ctx) {
   // đúng số "cần ôn" mới NGAY, không cần đợi mạng hay gọi lại api.loadReviewCatalog() — due_at mới tính được
   // ngay ở trình duyệt vì hoàn toàn xác định (now + REVIEW_AGAIN_DAYS), khớp đúng giá trị api.js sẽ ghi.
   const due_at = new Date(Date.now() + api.REVIEW_AGAIN_DAYS * 86_400_000).toISOString();
-  session.forEach((i) => { i.due_at = due_at; i.reviewed_count = (i.reviewed_count ?? 0) + 1; });
+  session.forEach((i) => { i.due_at = due_at; i.reviewed_count = (i.reviewed_count ?? 0) + 1; i.correct_count = (i.correct_count ?? 0) + 1; }); // khớp api.saveReviewBatch
   resultScreen(root, skill, items, ctx, T.bbReviewedCount(session.length, skill.name));
 }
 
@@ -152,6 +155,7 @@ function runVocabReview(root, skill, items, session, ctx) {
       w.box = nextBox(w.box, ok);
       w.due_at = dueAfter(w.box).toISOString();
       w.reviewed_count = (w.reviewed_count ?? 0) + 1;
+      w.correct_count = (w.correct_count ?? 0) + (ok ? 1 : 0); // khớp api.saveVocabResult (không có dòng này "Mục hay sai" đếm sai cho tới khi tải lại)
       i++;
       showCard();
     }

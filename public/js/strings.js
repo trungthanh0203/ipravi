@@ -342,6 +342,7 @@ export const T = {
   bbScopeLevel: (code) => "Cấp " + code,
   bbScopeWeak: (n) => "Mục hay sai (" + n + ")",
   bbScopeUnit: "Chọn chủ đề",
+  bbScopeCount: (n) => (n === 0 ? "Chưa có mục nào trong phạm vi này." : `${n} mục trong phạm vi này`),
   bbPlay: "Chơi nào!",
   bbPlayAgain: "Chơi tiếp",
   bbOtherGame: "Chọn trò khác",
