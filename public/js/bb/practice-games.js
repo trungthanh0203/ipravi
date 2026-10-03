@@ -62,10 +62,15 @@ function scopeScreen(ctx, skill, scope = { type: "all" }) {
   const same = (a, b) => a.type === b.type && a.level === b.level && a.unitId === b.unitId;
   const chip = (label, s, disabled = false) => el("button", { class: "chip-btn" + (same(scope, s) ? " on" : ""), disabled, onclick: () => scopeScreen(ctx, skill, s) }, label);
   const unitIds = skill.story ? [...new Set(storiesOf(skill, data).map((g) => g.unitId))] : [...new Set(data.catalog.map((i) => i.unit_id))];
+  // Chủ đề xếp theo từng Cấp (đúng thứ tự cấp + thứ tự chủ đề như màn Học), mỗi cấp 1 nhóm.
+  const have = new Set(unitIds);
   const unitSel = scope.type === "unit"
-    ? el("select", { "aria-label": T.bbScopeUnit, onchange: (e) => scopeScreen(ctx, skill, { type: "unit", unitId: Number(e.target.value) }) },
-      el("option", { value: "" }, T.bbScopeUnit),
-      unitIds.filter((id) => data.units.has(id)).map((id) => el("option", { value: String(id), selected: id === scope.unitId }, `${data.units.get(id).emoji ?? ""} ${data.units.get(id).title_vi}`.trim())))
+    ? el("div", { class: "scope-units" }, ...data.levels.map((L) => {
+      const list = [...data.units.values()].filter((u) => u.level_id === L.id && have.has(u.id)).sort((a, b) => a.sort_order - b.sort_order || a.id - b.id);
+      return list.length ? el("section", { class: "scope-level" },
+        el("h3", null, `${L.code}${L.name_vi ? " · " + L.name_vi : ""}`),
+        el("div", { class: "scope-row" }, list.map((u) => chip(`${u.emoji ?? ""} ${u.title_vi}`.trim(), { type: "unit", unitId: u.id })))) : null;
+    }))
     : null;
   shell(root,
     crumbBar(crumbOf(skill), ctx.toSkills),

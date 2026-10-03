@@ -141,9 +141,9 @@ export function buildPracticeData(done, st) {
   for (const g of dialogueLessons) for (const it of g.items) byId.set(it.id, it);
 
   const levelIds = new Set([...catalog, ...readStories, ...listenOnly].map((x) => x.bbLevel ?? x.level));
-  const levels = st.levels.filter((l) => levelIds.has(l.id)).sort((a, b) => a.id - b.id);
+  const levels = st.levels.filter((l) => levelIds.has(l.id)).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id);
   return {
     catalog, byId, progress: progressMap(done.srs, catalog), storyLessons: readStories, listenLessons: [...listenOnly, ...readStories],
-    dialogueLessons, levels, units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
+    dialogueLessons, levels, units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null, level_id: u.level_id, sort_order: u.sort_order ?? 0 }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
   };
 }
