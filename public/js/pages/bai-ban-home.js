@@ -76,8 +76,8 @@ async function showLevels(root) {
         el("div", { class: "bb-level-grid" }, levels.map((lv) =>
           el("button", { class: "bb-level-card", type: "button", onclick: () => showUnits(root, lv) },
             el("div", { class: `bb-level-media lv-${lv.code}` },
-              el("span", { class: "bb-level-code" }, lv.code),
-              el("span", { class: "bb-level-tag" }, T.bbLevelTag)),
+              el("span", { class: "bb-level-tag" }, T.bbLevelTag),
+              el("span", { class: "bb-level-code" }, lv.code)),
             el("div", { class: "bb-level-body" },
               el("b", null, lv.name_vi),
               lv.can_do ? el("small", null, lv.can_do) : null,

@@ -51,7 +51,6 @@ export function mount(root) {
 
   paint(root, el("div", { class: "avatar-screen" },
     header,
-    mascotHero(),
-    el("h1", { style: "text-align:center" }, T.avatarWhoAreYou),
+    el("div", { class: "avatar-hero" }, mascotHero(), el("h1", null, T.avatarWhoAreYou)),
     feedback, grid, corner));
 }
