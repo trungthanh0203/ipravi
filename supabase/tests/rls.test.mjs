@@ -811,5 +811,27 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.bb_listening_passages"))[0].n === beforePassages, "026: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 29. đăng ký "làm phụ huynh" (migration 027) ----
+{
+  const m027 = readFileSync(new URL("../migrations/027_parent_signup.sql", import.meta.url), "utf8");
+  await db.exec(m027);
+  const PS = await uid("ps29@x.com", { parent_signup: "true", role: "admin" });
+  const NS = await uid("ns29@x.com");
+  const rowOf = async (id) => (await q("select role, parent_signup from public.accounts where id=$1", [id]))[0];
+  ok((await rowOf(PS)).parent_signup === true && (await rowOf(PS)).role === "parent", "027: đăng ký tick phụ huynh -> parent_signup=true, role vẫn 'parent' (không tự phong admin)");
+  ok((await rowOf(NS)).parent_signup === false, "027: đăng ký thường -> parent_signup=false");
+  const kid = (await q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé Z','owl') returning id", [NS]))[0].id;
+  await as(PS, async () => {
+    const r = await q("update public.child_profiles set parent_id=$1 where id=$2 returning id", [PS, kid]);
+    ok(r.length === 0, "027: phụ huynh tự nhận hồ sơ con của người khác -> không được (RLS)");
+  });
+  await as(ADM, async () => {
+    const r = await q("update public.child_profiles set parent_id=$1 where id=$2 returning id", [PS, kid]);
+    ok(r.length === 1, "027: admin gán được hồ sơ con cho phụ huynh");
+    const ov = (await q("select parent_signup, children from public.admin_parent_overview() where id=$1", [PS]))[0];
+    ok(ov.parent_signup === true && ov.children === 1, "027: tổng quan admin có parent_signup + số con sau khi gán", JSON.stringify(ov));
+  });
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

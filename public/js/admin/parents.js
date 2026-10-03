@@ -23,14 +23,15 @@ export async function mount(box) {
       sb.from("tuition_plans").select("*").eq("active", true).order("sort_order").then(check),
       sb.from("settings").select("extra_child_percent, max_children").eq("id", 1).single().then(check),
     ]);
-    render(box, rows, plans, settings);
+    const kids = check(await sb.from("child_profiles").select("id, nickname, avatar_id, parent_id").order("created_at"));
+    render(box, rows, plans, settings, kids);
   } catch (e) {
     box.replaceChildren(msg("err", A.loadError + e.message));
   }
   done();
 }
 
-function render(box, rows, plans, settings) {
+function render(box, rows, plans, settings, kids) {
   const reload = () => mount(box);
   const flash = el("div");
   const say = (kind, t) => flash.replaceChildren(msg(kind, t));
@@ -46,7 +47,7 @@ function render(box, rows, plans, settings) {
     const [label, tone] = statusOf(p);
     const planSel = el("select", { class: "cell" }, plans.map((pl) => el("option", { value: pl.id }, `${pl.name} — ${pl.price} ${pl.currency}`)));
     return el("tr", null,
-      el("td", null, el("b", null, p.email ?? "(không có email)"), el("div", { class: "muted" }, `${p.content_language.toUpperCase()} · đăng ký ${dt(p.created_at)}`)),
+      el("td", null, el("b", null, p.email ?? "(không có email)"), p.parent_signup ? el("span", { class: "pill good", style: "margin-left:6px" }, "Phụ huynh") : null, el("div", { class: "muted" }, `${p.content_language.toUpperCase()} · đăng ký ${dt(p.created_at)}`)),
       el("td", null, el("span", { class: `pill ${tone}` }, label), el("div", { class: "muted" }, `đến ${dt(p.access_until)}`)),
       el("td", null, `${p.children}/${p.child_slots}`),
       el("td", null, String(p.words_learned)),
@@ -75,7 +76,7 @@ function render(box, rows, plans, settings) {
           }, "Đã cập nhật trạng thái.") }, p.access_status === "suspended" ? "Mở khoá" : "Tạm khoá"))));
   };
 
-  box.replaceChildren(flash, el("div", { class: "card" },
+  box.replaceChildren(flash, unassignedCard(rows, kids, run), el("div", { class: "card" },
     el("h2", null, `Phụ huynh (${rows.length})`),
     rows.length
       ? el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
@@ -83,4 +84,33 @@ function render(box, rows, plans, settings) {
         el("tbody", null, rows.map(tr))))
       : el("p", { class: "muted" }, "Chưa có phụ huynh nào đăng ký."),
     el("p", { class: "muted" }, "“Từ đã thuộc” = số từ đạt mức thuộc từ 3/5 trở lên, cộng dồn các bé của tài khoản. Chưa có phần xem chi tiết từng bé (sẽ làm sau).")));
+}
+
+// Thống kê "Phụ huynh đăng ký chưa gán con": tài khoản tick "Đăng ký làm phụ huynh" mà chưa có hồ sơ con nào. Admin chọn
+// 1 hồ sơ học sinh (của tài khoản khác, không phải tài khoản đăng ký phụ huynh) rồi gán — đổi child_profiles.parent_id
+// sang phụ huynh đó (admin đã có quyền qua RLS child_profiles_all; hồ sơ con theo phụ huynh như hiện nay).
+function unassignedCard(rows, kids, run) {
+  const waiting = rows.filter((p) => p.parent_signup && p.children === 0);
+  const emailOf = new Map(rows.map((p) => [p.id, p.email]));
+  const parentIds = new Set(rows.filter((p) => p.parent_signup).map((p) => p.id));
+  const candidates = kids.filter((k) => !parentIds.has(k.parent_id));
+  const line = (p) => {
+    const sel = el("select", { class: "cell" }, el("option", { value: "" }, "— chọn học sinh —"),
+      candidates.map((k) => el("option", { value: k.id }, `${k.nickname} (${emailOf.get(k.parent_id) ?? "?"})`)));
+    return el("tr", null,
+      el("td", null, el("b", null, p.email ?? "(không có email)"), el("div", { class: "muted" }, `đăng ký ${dt(p.created_at)}`)),
+      el("td", null, sel),
+      el("td", null, el("button", { class: "btn small", onclick: run(async () => {
+        if (!sel.value) throw new Error("Đã huỷ (cần chọn học sinh)");
+        const { error } = await sb.from("child_profiles").update({ parent_id: p.id }).eq("id", sel.value);
+        if (error) throw new Error(/duplicate|unique/i.test(error.message) ? "Phụ huynh này đã có hồ sơ dùng cùng hình đại diện." : error.message);
+      }, "Đã gán học sinh cho phụ huynh.") }, "Gán")));
+  };
+  return el("div", { class: "card" },
+    el("h2", null, `Phụ huynh đăng ký chưa gán con (${waiting.length})`),
+    waiting.length
+      ? el("div", { class: "table-wrap" }, el("table", { class: "tbl" },
+        el("thead", null, el("tr", null, ["Phụ huynh", "Học sinh sẽ gán", ""].map((h) => el("th", null, h)))),
+        el("tbody", null, waiting.map(line))))
+      : el("p", { class: "muted" }, "Không có phụ huynh nào đang chờ gán con."));
 }

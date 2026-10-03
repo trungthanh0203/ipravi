@@ -8,6 +8,7 @@ export const T = {
   password: "Mật khẩu",
   passwordHint: "Ít nhất 8 ký tự",
   myLanguage: "Ngôn ngữ của bố mẹ (bé nghe nghĩa bằng tiếng này)",
+  parentSignup: "Đăng ký làm phụ huynh (của một học sinh)",
   consent: "Tôi đồng ý cho người dạy (admin) xem tiến độ học của con tôi.",
   registerOk: "Đã gửi email xác nhận. Hãy mở email, bấm vào liên kết rồi quay lại đăng nhập.",
   trialInfo: "Dùng thử miễn phí 1 tuần, đầy đủ nội dung.",

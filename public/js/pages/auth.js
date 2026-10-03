@@ -16,6 +16,7 @@ function view(root) {
   const password = el("input", { type: "password", autocomplete: tab === "login" ? "current-password" : "new-password", minlength: "8", required: true });
   const lang = el("select", null, CONFIG.languages.map((l) => el("option", { value: l.code }, l.label)));
   const consent = el("input", { type: "checkbox", id: "consent" });
+  const parentBox = el("input", { type: "checkbox", id: "parent-signup" });
   const submit = el("button", { class: "btn block", type: "submit" }, tab === "login" ? T.login : T.register);
 
   const form = el(
@@ -24,6 +25,7 @@ function view(root) {
     el("label", null, T.password), password,
     tab === "register" && [
       el("label", null, T.myLanguage), lang,
+      el("label", { for: "parent-signup", style: "font-weight:400;margin-top:14px" }, parentBox, " ", T.parentSignup),
       el("label", { for: "consent", style: "font-weight:400;margin-top:14px" }, consent, " ", T.consent),
       el("p", { class: "muted" }, T.trialInfo),
     ],
@@ -43,7 +45,7 @@ function view(root) {
         const { data, error } = await sb.auth.signUp({
           email: email.value.trim(),
           password: password.value,
-          options: { data: { content_language: lang.value } },
+          options: { data: { content_language: lang.value, ...(parentBox.checked ? { parent_signup: "true" } : {}) } },
         });
         if (error) feedback.replaceChildren(msg("err", T.registerError));
         else if (!data.session) feedback.replaceChildren(msg("ok", T.registerOk));

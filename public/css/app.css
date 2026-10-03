@@ -64,6 +64,8 @@ button { font: inherit; cursor: pointer; }
 
 /* Chọn avatar */
 .avatar-screen { min-height: 100vh; position: relative; padding-top: 24px; }
+.avatar-header { margin: -8px 0 6px; }
+.avatar-header .who { font-size: 16px !important; max-width: 52vw; }
 .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
 @media (min-width: 560px) { .avatar-grid { grid-template-columns: repeat(4, 1fr); } }
 .avatar-btn {

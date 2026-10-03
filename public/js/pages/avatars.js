@@ -1,4 +1,5 @@
 import { state } from "../state.js";
+import { sb } from "../supabase.js";
 import { render } from "../flow.js";
 import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
@@ -40,7 +41,16 @@ export function mount(root) {
     },
   }, "🔒");
 
+  // Header: trái = tên/email phụ huynh đang đăng nhập, phải = Thoát (đăng xuất tài khoản). Thoát PHẢI nhập PIN phụ huynh
+  // (như màn hết hạn, expired.js) — màn này là màn của trẻ, không để trẻ bấm nhầm đăng xuất cả tài khoản.
+  const header = el("div", { class: "row child-header avatar-header" },
+    el("div", { class: "who-wrap" },
+      el("span", { class: "who-avatar" }, "👪"),
+      el("div", { class: "who-text" }, el("span", { class: "who" }, state.account?.email ?? state.session?.user?.email ?? ""))),
+    el("button", { class: "btn ghost small", onclick: async () => { if (await askPin()) sb.auth.signOut(); } }, T.childExit));
+
   paint(root, el("div", { class: "avatar-screen" },
+    header,
     mascotHero(),
     el("h1", { style: "text-align:center" }, T.avatarWhoAreYou),
     feedback, grid, corner));

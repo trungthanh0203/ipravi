@@ -42,7 +42,7 @@ Không có `center_id` ở bảng nào.
 cột thừa chỉ cảnh báo. Thêm ngôn ngữ mới: cột CSV + `seed/002_title_translations.sql` +
 `tts.js DEFAULT_VOICES` nếu cần TTS; `admin/dict.js` không tự có — admin gõ tay (không bịa).
 
-Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_title_tr.sql` theo thứ tự → đăng ký
+Dựng bản mới: Supabase mới → chạy `001_init.sql`…`027_parent_signup.sql` theo thứ tự → đăng ký
 1 tài khoản → `update accounts set role='admin' where email='...'` → biến Cloudflare (+`TTS_PROVIDER`/
 `TTS_KEY`/`TTS_REGION` nếu dùng TTS) → deploy. Mẫu tuỳ chọn: `seed/001_sample_content.sql`.
 
@@ -60,6 +60,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`025_bb_unit_titl
 - `accounts.child_slots` (mặc định 1) ép bằng TRIGGER; trần `settings.max_children` (6), chỉ admin
   tăng (qua `payments`). Phụ huynh không sửa `role/access_*/child_slots` (`accounts_guard`).
   `accounts.phone`/`address` (tuỳ chọn) hỏi ở `setup-pin.js`, sửa ở khu phụ huynh.
+- Đăng ký tick "làm phụ huynh" → `accounts.parent_signup` (mig. 027, role vẫn `parent`); admin tab Phụ huynh gán hồ sơ học sinh bằng đổi `child_profiles.parent_id`.
 - Hết hạn (`isExpired()`) → chỉ còn màn gia hạn + đăng xuất. RLS: học/ghi tiến độ cần
   `has_access()`; đọc dữ liệu con thì không.
 - `payments`: phụ huynh chỉ tạo `pending` (giá từ `tuition_plans`, trigger); admin xác nhận →
