@@ -334,9 +334,9 @@ export const T = {
   bbHomePracticeSub: "Ôn từ vựng, hội thoại, ngữ pháp, ngữ âm",
   // Luyện tập kiểu trò chơi của Bài Bản (mượn trò khu Trẻ em, bb/practice-games.js) — giọng dành cho người lớn ("bạn")
   bbGamesTitle: "🎮 Trò chơi luyện tập",
-  bbGamesHint: "Chơi để nhớ lâu — chỉ dùng nội dung bạn đã học xong.",
-  bbNoGames: "Học xong vài chặng rồi quay lại đây để chơi nhé.",
-  bbReviewTitle: "🔁 Ôn tập từ đã học",
+  bbGamesHint: "Chơi để nhớ lâu — dùng nội dung của mọi cấp và chủ đề.",
+  bbNoGames: "Chưa có nội dung nào được duyệt để chơi.",
+  bbReviewTitle: "🔁 Ôn tập (hộp nhớ)",
   bbScopeTitle: "Bạn muốn luyện gì?",
   bbScopeAll: "Tất cả đã học",
   bbScopeLevel: (code) => "Cấp " + code,

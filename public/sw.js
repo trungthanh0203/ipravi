@@ -1,7 +1,7 @@
 // Service worker: mạng trước (luôn lấy bản mới của trang/JS), rơi về cache khi mất mạng;
 // hình + âm thanh nội dung (Supabase Storage bucket "content") cache trước để phát tức thì.
 // Đổi VERSION để xoá cache cũ.
-const VERSION = "v8"; // đổi khi tải lại public/vendor/ (vendor được cache-trước); v8: thêm hình linh vật gà trống thật (vendor/mascot/rooster.png)
+const VERSION = "v9"; // đổi khi tải lại public/vendor/ (vendor được cache-trước); v9: mạng-trước có hạn chờ 4s; v8: thêm hình linh vật gà trống thật (vendor/mascot/rooster.png)
 const SHELL = `shell-${VERSION}`;
 const MEDIA = `media-${VERSION}`;
 
@@ -36,9 +36,15 @@ self.addEventListener("fetch", (e) => {
 async function networkFirst(req, cacheName) {
   const cache = await caches.open(cacheName);
   try {
-    const res = await fetch(req);
-    if (res.ok) cache.put(req, res.clone());
-    return res;
+    // Mạng chậm/chập chờn: quá 4 giây mà đã có bản trong cache thì dùng cache (vẫn tải ngầm để cập nhật cho lần sau).
+    const net = fetch(req).then((res) => {
+      if (res.ok) cache.put(req, res.clone());
+      return res;
+    });
+    const cached = await cache.match(req);
+    if (!cached) return await net;
+    net.catch(() => {});
+    return await Promise.race([net, new Promise((resolve) => setTimeout(() => resolve(cached), 4000))]);
   } catch (err) {
     const hit = await cache.match(req);
     if (hit) return hit;

@@ -22,6 +22,23 @@ export function decideScreen() {
   return "avatars";
 }
 
+// modulepreload SONG SONG mọi module của 1 màn (danh sách sinh bởi scripts/gen-preload.mjs) — bỏ chuỗi 3–5 lượt chờ
+// mạng nối tiếp khi trình duyệt tự khám phá từng tầng import. Lỗi/map cũ chỉ mất tối ưu, không ảnh hưởng chạy.
+let preloadMap = null;
+const preloaded = new Set();
+const mapReady = fetch("/js/preload-map.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => (preloadMap = m));
+export async function preloadScreen(screen) {
+  const urls = (preloadMap ?? (await mapReady))[screen] ?? [];
+  for (const href of urls) {
+    if (preloaded.has(href)) continue;
+    preloaded.add(href);
+    const link = document.createElement("link");
+    link.rel = "modulepreload";
+    link.href = href;
+    document.head.append(link);
+  }
+}
+
 let renderToken = 0;
 
 export async function render() {
@@ -34,6 +51,7 @@ export async function render() {
     mount(root, el("p", { class: "boot" }, T.loading));
     return;
   }
+  await preloadScreen(screen);
   const page = await import(`./pages/${screen}.js`);
   if (token !== renderToken) return; // có lượt render mới hơn, bỏ lượt cũ
   page.mount(root);

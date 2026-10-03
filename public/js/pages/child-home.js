@@ -94,8 +94,8 @@ async function showUnits(root, level, all) {
 async function showLessons(root, unit) {
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const lessons = await api.loadLessons(unit.id);
-    const unitNo = numberUnits(await api.loadUnits()).get(unit.id); // số của chủ đề trong cấp (units đã được nhớ 1 phút)
+    const [lessons, allUnits] = await Promise.all([api.loadLessons(unit.id), api.loadUnits()]); // song song (units thường đã có trong bộ nhớ)
+    const unitNo = numberUnits(allUnits).get(unit.id); // số của chủ đề trong cấp (units đã được nhớ 1 phút)
     const scores = await api.loadLessonScores(child().id, lessons.map((l) => l.id));
     const nextId = lessons.find((l) => !scores.has(l.id))?.id;
     shell(root,

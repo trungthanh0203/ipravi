@@ -113,6 +113,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`028_bb_practice_
   `bb/media.js` re-export cho khu Bài Bản, `bb/runner.js` dùng ở cả `showPicker()`/`runStep()`). Nút
   Thoát LUÔN về `avatars` (`state.activeChildId=null`, KHÔNG set `state.parentOpen`). Chỉ màn chơi
   1 bài cụ thể bên khu Trẻ em (tiến độ + thoát lượt riêng) mới KHÔNG dùng.
+- **Tốc độ nạp:** không build nên mỗi màn nạp chuỗi import 3–5 tầng; `flow.js preloadScreen()` modulepreload song song theo `js/preload-map.json` — SAU KHI thêm/bớt `import` chạy `node scripts/gen-preload.mjs` (`--check` để kiểm; map cũ chỉ mất tối ưu). `config.js` dùng bản cấu hình lưu localStorage rồi làm mới ngầm. `sw.js` mạng-trước có hạn 4s.
 - `audio.js` tải trước NGUYÊN file rồi phát từ bộ nhớ (SW không cache 206/iOS). Đừng để 1 hàm "tải
   dữ liệu" gánh việc ẩn/hiện UI.
 - **`replaceChildren()` gốc (khác `el()`) KHÔNG lọc null/dàn phẳng mảng** → hiện thẳng

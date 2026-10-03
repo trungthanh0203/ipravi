@@ -214,12 +214,25 @@ export async function loadLessonProgress(childId, lessonIds) {
 // Toàn bộ nội dung các chặng người học ĐÃ HỌC XONG (bb_progress) + trạng thái ôn (bb_srs_state) — nguồn CHUNG cho ôn
 // tập kiểu cũ (loadReviewCatalog) lẫn trò Luyện tập mượn từ khu Trẻ em (loadPracticeData). Mỗi dòng nội dung có sẵn step_id.
 export async function loadDoneContent(childId) {
-  const { data: prog, error } = await sb.from("bb_progress").select("step_id").eq("child_id", childId);
-  if (error) throw error;
-  const stepIds = (prog ?? []).map((p) => p.step_id);
   const empty = { steps: [], vocab: [], grammar: [], phonics: [], dialogue: [], reading: [], listening: [], srs: [] };
-  if (!stepIds.length) return empty;
-  const steps = await fetchByIds("bb_lesson_steps", stepIds, "id");
+  // Luyện tập lấy MỌI chặng đã duyệt (cấp/chủ đề/bài/chặng đều approved), không cần đã học — chip phạm vi hiện đủ A0, A1, A2…
+  const all = async (table, cols = "*") => {
+    const out = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await sb.from(table).select(cols).eq("status", "approved").order("id").range(from, from + 999);
+      if (error) throw error;
+      out.push(...(data ?? []));
+      if ((data ?? []).length < 1000) return out;
+    }
+  };
+  const [lv, un, ls, st] = await Promise.all([all("bb_levels"), all("bb_units"), all("bb_lessons"), all("bb_lesson_steps")]);
+  const okLevel = new Set(lv.map((x) => x.id));
+  const okUnit = new Set(un.filter((u) => okLevel.has(u.level_id)).map((u) => u.id));
+  const okLesson = new Set(ls.filter((l) => okUnit.has(l.unit_id)).map((l) => l.id));
+  const steps = st.filter((x) => okLesson.has(x.lesson_id));
+  if (!steps.length) return empty;
+  // cấu trúc đã tải sẵn → loadStructure() không phải gọi lại
+  const structure = { levels: lv, units: un.filter((u) => okUnit.has(u.id)), lessons: ls.filter((l) => okLesson.has(l.id)) };
   const idsOf = (type) => steps.filter((s) => s.step_type === type).map((s) => s.id);
   const [vocab, grammar, phonics, dialogue, reading, listening, srs] = await Promise.all([
     fetchByIds("bb_vocab", idsOf("vocab")),
@@ -233,7 +246,7 @@ export async function loadDoneContent(childId) {
       return data ?? [];
     }),
   ]);
-  return { steps, vocab, grammar, phonics, dialogue, reading, listening, srs };
+  return { steps, vocab, grammar, phonics, dialogue, reading, listening, srs, structure };
 }
 
 // box/due_at/reviewed_count/correct_count đủ để bb/practice.js chấm + tự cập nhật catalog trong bộ nhớ SAU KHI
@@ -250,10 +263,7 @@ export const loadReviewCatalog = async (childId) => mergeReview(await loadDoneCo
 
 // Chủ đề/cấp/bài chứa các chặng đã học + câu hỏi của đoạn đọc/nghe — để gắn "đang ở cấp/chủ đề nào" cho từng mục luyện tập.
 export async function loadStructure(done) {
-  const lessonIds = [...new Set(done.steps.map((s) => s.lesson_id))];
-  const lessons = await fetchByIds("bb_lessons", lessonIds, "id");
-  const units = await fetchByIds("bb_units", [...new Set(lessons.map((l) => l.unit_id))], "id");
-  const levels = await fetchByIds("bb_levels", [...new Set(units.map((u) => u.level_id))], "id");
+  const { lessons, units, levels } = done.structure ?? { lessons: [], units: [], levels: [] };
   const passageIds = [...done.reading, ...done.listening].length;
   const [rq, lq] = passageIds ? await Promise.all([
     fetchByIds("bb_reading_questions", done.reading.map((p) => p.id), "passage_id"),
