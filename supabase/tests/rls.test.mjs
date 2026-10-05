@@ -861,5 +861,21 @@ await as(A, async () => {
   ok((await q("select count(*)::int as n from public.bb_practice_log"))[0].n === 1, "028: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 31. điện thoại/địa chỉ lúc đăng ký (migration 029) ----
+{
+  const m029 = readFileSync(new URL("../migrations/029_signup_contact.sql", import.meta.url), "utf8");
+  await db.exec(m029);
+  const C1 = await uid("c31a@x.com", { phone: "  +84 912 345 678 ", address: "12 Lê Lợi, Hà Nội" });
+  const C2 = await uid("c31b@x.com", { phone: "   ", address: "x".repeat(500) });
+  const C3 = await uid("c31c@x.com");
+  const rowOf = async (id) => (await q("select phone, address, role from public.accounts where id=$1", [id]))[0];
+  const r1 = await rowOf(C1), r2 = await rowOf(C2), r3 = await rowOf(C3);
+  ok(r1.phone === "+84 912 345 678" && r1.address === "12 Lê Lợi, Hà Nội" && r1.role === "parent", "029: đăng ký có điện thoại/địa chỉ -> lưu (cắt khoảng trắng)", JSON.stringify(r1));
+  ok(r2.phone === null && r2.address.length === 300, "029: điện thoại rỗng -> NULL; địa chỉ quá dài bị cắt 300 ký tự");
+  ok(r3.phone === null && r3.address === null, "029: không gửi metadata -> NULL (tương thích form cũ)");
+  await db.exec(m029);
+  ok((await rowOf(C1)).phone === "+84 912 345 678", "029: chạy lại migration không mất dữ liệu");
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

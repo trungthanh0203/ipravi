@@ -116,6 +116,10 @@
   "/js/pin.js"
  ],
  "parent": [
+  "/js/bb/adapter.js",
+  "/js/bb/format.js",
+  "/js/bb/srs.js",
+  "/js/bb/stats.js",
   "/js/child/skills.js",
   "/js/child/util.js",
   "/js/data.js",

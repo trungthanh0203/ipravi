@@ -15,7 +15,8 @@ function view(root) {
   const email = el("input", { type: "email", autocomplete: "email", required: true });
   const password = el("input", { type: "password", autocomplete: tab === "login" ? "current-password" : "new-password", minlength: "8", required: true });
   const lang = el("select", null, CONFIG.languages.map((l) => el("option", { value: l.code }, l.label)));
-  const consent = el("input", { type: "checkbox", id: "consent" });
+  const phone = el("input", { type: "tel", autocomplete: "tel", maxlength: "40" });
+  const address = el("input", { type: "text", autocomplete: "street-address", maxlength: "300" });
   const parentBox = el("input", { type: "checkbox", id: "parent-signup" });
   const submit = el("button", { class: "btn block", type: "submit" }, tab === "login" ? T.login : T.register);
 
@@ -26,8 +27,10 @@ function view(root) {
     tab === "register" && [
       el("label", null, T.myLanguage), lang,
       el("label", { for: "parent-signup", style: "font-weight:400;margin-top:14px" }, parentBox, " ", T.parentSignup),
-      el("label", { for: "consent", style: "font-weight:400;margin-top:14px" }, consent, " ", T.consent),
+      el("label", null, T.contactPhone), phone,
+      el("label", null, T.contactAddress), address,
       el("p", { class: "muted" }, T.trialInfo),
+      el("p", { class: "muted", style: "font-size:13px" }, T.consentNote),
     ],
     feedback, submit
   );
@@ -35,7 +38,6 @@ function view(root) {
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     feedback.replaceChildren();
-    if (tab === "register" && !consent.checked) return; // bắt buộc đồng ý
     submit.disabled = true;
     try {
       if (tab === "login") {
@@ -45,7 +47,7 @@ function view(root) {
         const { data, error } = await sb.auth.signUp({
           email: email.value.trim(),
           password: password.value,
-          options: { data: { content_language: lang.value, ...(parentBox.checked ? { parent_signup: "true" } : {}) } },
+          options: { data: { content_language: lang.value, phone: phone.value.trim(), address: address.value.trim(), ...(parentBox.checked ? { parent_signup: "true" } : {}) } },
         });
         if (error) feedback.replaceChildren(msg("err", T.registerError));
         else if (!data.session) feedback.replaceChildren(msg("ok", T.registerOk));

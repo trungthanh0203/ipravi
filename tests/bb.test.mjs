@@ -6,6 +6,7 @@ import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
 import { formatSegments } from "../public/js/bb/format.js";
+import { summarizeBb } from "../public/js/bb/stats.js";
 import { idOf, plainText, vocabItem, dialogueItem, grammarItems, phonicsItems, storyOf, buildPracticeData, srsAfter, progressMap, scopeBb, scopeReview, isWeakReview } from "../public/js/bb/adapter.js";
 import { planPractice, weightOf } from "../public/js/child/practice-core.js";
 import { SKILLS as CHILD_SKILLS } from "../public/js/child/skills.js";
@@ -331,6 +332,23 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(scopeReview(rows, { type: "level", level: 1 }).length === 2, "Ôn tập: phạm vi theo cấp");
   ok(scopeReview(rows, { type: "unit", unitId: 20 }).map((r) => r.id).join() === "3", "Ôn tập: phạm vi theo chủ đề");
   ok(scopeReview(rows, { type: "weak" }).map((r) => r.id).join() === "1" && !isWeakReview(rows[1]) && !isWeakReview(rows[2]), "Ôn tập: hay sai = sai nhiều hơn đúng và chưa thuộc");
+}
+
+{
+  const now = new Date("2026-10-05T10:00:00Z");
+  const iso = (daysAgo) => new Date(now.getTime() - daysAgo * 86400000).toISOString();
+  const st = summarizeBb({
+    now, tz: "UTC", totalSteps: 10,
+    progress: [{ step_id: 1, completed_at: iso(0) }, { step_id: 2, completed_at: iso(1) }, { step_id: 2, completed_at: iso(1) }, { step_id: 3, completed_at: iso(5) }],
+    srs: [{ box: 4, due_at: iso(-3), reviewed_count: 3, correct_count: 3 }, { box: 1, due_at: iso(1), reviewed_count: 3, correct_count: 1 }],
+    log: [{ skill: "meaning", kind: "meaning_pick", score: 80 }, { skill: "meaning", kind: "practice", score: 90, duration_seconds: 120, created_at: iso(0) }, { skill: "meaning", kind: "practice", score: 70, duration_seconds: 60, created_at: iso(2) }],
+  });
+  ok(st.stepsDone === 3 && st.totalSteps === 10, "Thống kê Bài Bản: đếm chặng xong theo step_id khác nhau");
+  ok(st.learned === 1 && st.reviewing === 1 && st.dueNow === 1 && st.weak === 1, "Thống kê Bài Bản: thuộc/đang ôn/đến hạn/hay sai", JSON.stringify(st));
+  ok(st.sessions === 2 && st.avgScore === 80 && st.minutes === 3, "Thống kê Bài Bản: chỉ tính dòng tổng kind='practice'");
+  ok(st.skills.length === 1 && st.skills[0].sessions === 2 && st.skills[0].good === 1, "Thống kê Bài Bản: theo kỹ năng + số phiên tốt");
+  ok(st.streak === 3 && st.series.length === 14 && st.series[13].count === 2, "Thống kê Bài Bản: chuỗi ngày + chuỗi 14 ngày", JSON.stringify([st.streak, st.series[13]]));
+  ok(summarizeBb({}).streak === 0 && summarizeBb({}).avgScore === null, "Thống kê Bài Bản: chưa có dữ liệu không lỗi");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

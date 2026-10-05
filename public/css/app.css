@@ -604,3 +604,12 @@ body.bb-theme .mic.sm { width: 44px; height: 44px; font-size: 20px; margin: 0; }
 .bb-level-media.lv-C1 { background: linear-gradient(135deg, #1f2937, #4b5563); }
 .bb-level-media.lv-C2 { background: linear-gradient(135deg, #111827, #374151); }
 .install-note { margin: 8px 0 0; font-size: 14px; }
+
+/* Khu phụ huynh: nhóm "Thông tin chung" + mỗi con 1 thẻ gập */
+.group-title { margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 3px solid var(--brand-light, #fff1e6); }
+.child-section > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; font-size: 18px; }
+.child-section > summary::-webkit-details-marker { display: none; }
+.child-section > summary::after { content: "▾"; color: var(--brand); margin-left: auto; }
+.child-section[open] > summary::after { content: "▴"; }
+.child-section .who { display: flex; align-items: center; gap: 6px; }
+.child-section[open] > summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f0ddc9; }

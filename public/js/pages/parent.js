@@ -8,6 +8,7 @@ import { pronunciationSupported } from "../pronunciation.js";
 import { requestExtraChild, myPayments } from "../payments.js";
 import { loadStats, loadSkillStats, loadPronReport, parentStatsView } from "../stats.js";
 import { childAge } from "../child/util.js";
+import { loadBbStats, bbStatsView } from "../bb/stats.js";
 
 // Giọng nghe mặc định cho các bé (bé nào tự đổi bằng nút 👩/👨 thì theo lựa chọn của bé đó).
 function voiceCard() {
@@ -115,35 +116,34 @@ function pronunciationToggle() {
     feedback);
 }
 
-// Tiến độ học: chọn bé (nếu có nhiều bé) → thống kê từ RPC child_stats. CHỈ hồ sơ 'child' — RPC này gắn với dữ liệu
-// khu trẻ em (content_items/child_progress/activity_log), không biết gì về bb_progress/bb_srs_state của "Tiếng Việt
-// Bài Bản" nên hồ sơ 'learner' sẽ chỉ ra toàn số 0, gây hiểu lầm "chưa học gì" dù có thể đã học — ẩn hẳn khỏi đây
-// thay vì hiện sai. Tiến độ Bài Bản xem sau (chưa làm — 2 giáo trình có hình dạng thống kê khác nhau, không gộp
-// chung được 1 view). Xem KE_HOACH_TIENG_VIET_BAI_BAN.md.
-function progressCard() {
-  const kids = state.children.filter((c) => c.profile_type !== "learner");
-  const body = el("div");
-  const picker = el("div", { class: "child-select" });
-  let current = kids[0]?.id;
-  async function show(id) {
-    current = id;
-    [...picker.children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
-    body.replaceChildren(el("p", { class: "muted" }, T.loading));
+// Tổng kết TỪNG CON riêng (mỗi con 1 thẻ, có thể gập): hồ sơ 'child' (khu Trẻ em) dùng RPC child_stats + kỹ năng + đánh giá đọc;
+// hồ sơ 'learner' (Tiếng Việt Bài Bản) dùng bb/stats.js (chặng xong, hộp nhớ, luyện tập) — 2 giáo trình có hình dạng thống kê
+// khác nhau nên không gộp chung 1 view, nhưng cùng nằm dưới tên + nhãn giáo trình của từng bé. Tải song song, lỗi 1 bé không ảnh hưởng bé khác.
+function childSection(kid, open) {
+  const learner = kid.profile_type === "learner";
+  const body = el("div", { class: "child-stats" }, el("p", { class: "muted" }, T.loading));
+  (async () => {
     try {
-      // Phần theo kỹ năng + đánh giá đọc tải song song; lỗi ở đó (vd chưa chạy migration 017) không làm mất thống kê chính.
-      const [stats, skills, pron] = await Promise.all([loadStats(id), loadSkillStats(id).catch(() => null), loadPronReport(id).catch(() => null)]);
-      const kid = kids.find((c) => c.id === id);
-      if (current === id) body.replaceChildren(parentStatsView(stats, { skills, pron, pronEnabled: Boolean(state.account?.pronunciation_enabled), age: childAge(kid) }));
+      if (learner) return body.replaceChildren(bbStatsView(await loadBbStats(kid.id)));
+      const [stats, skills, pron] = await Promise.all([loadStats(kid.id), loadSkillStats(kid.id).catch(() => null), loadPronReport(kid.id).catch(() => null)]);
+      body.replaceChildren(parentStatsView(stats, { skills, pron, pronEnabled: Boolean(state.account?.pronunciation_enabled), age: childAge(kid) }));
     } catch {
-      if (current === id) body.replaceChildren(msg("err", T.statsError));
+      body.replaceChildren(msg("err", T.statsError));
     }
-  }
-  if (kids.length > 1) {
-    picker.replaceChildren(...kids.map((c) => el("button", { type: "button", "data-id": c.id, onclick: () => show(c.id) }, avatarEmoji(c.avatar_id), " ", c.nickname)));
-  }
-  if (current) show(current);
-  else body.replaceChildren(el("p", { class: "muted" }, T.parentNoChild));
-  return el("div", { class: "card" }, el("h2", null, T.parentStatsTitle), picker, body);
+  })();
+  const d = el("details", { class: "card child-section" },
+    el("summary", null, el("span", { class: "who" }, avatarEmoji(kid.avatar_id), " ", el("b", null, kid.nickname)),
+      el("span", { class: "pill" + (learner ? "" : " good") }, learner ? T.parentCurrBb : T.parentCurrKid)),
+    body);
+  d.open = open;
+  return d;
+}
+
+function childrenSection() {
+  const kids = state.children;
+  if (!kids.length) return el("div", { class: "card" }, el("h2", null, T.parentStatsTitle), el("p", { class: "muted" }, T.parentNoChild));
+  return el("div", null, el("h2", { class: "group-title" }, T.parentStatsTitle), el("p", { class: "muted" }, T.parentStatsHelp),
+    ...kids.map((k) => childSection(k, kids.length <= 2 || k.id === (state.activeChildId ?? kids[0].id))));
 }
 
 // TODO: dashboard theo từng con (tiến độ, điểm phát âm), chế độ cùng học (từ Việt 🔊 + nghĩa 🔊),
@@ -154,24 +154,23 @@ export function mount(root) {
   const canAddProfile = state.children.length < a.child_slots;
   paint(root, el("div", null,
     el("h1", null, T.parentTitle),
+    el("h2", { class: "group-title" }, T.parentGeneral),
     el("div", { class: "card" },
       el("p", null, `${T.accessStatus}: `, el("span", { class: "pill good" }, status)),
       el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
       // Cùng 1 danh sách cho mọi hồ sơ (con lẫn người học bài bản) — vào lại đều bấm avatar ở màn hình đầu như
-      // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây nữa (bản trước có, gây khó hiểu vì tách biệt
-      // không rõ lý do — xem KE_HOACH_TIENG_VIET_BAI_BAN.md mục 8 "Sửa lại sau khi dùng thật"). Chỉ gắn thêm nhãn
-      // nhỏ để phân biệt loại hồ sơ.
+      // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây. Chỉ gắn nhãn nhỏ để phân biệt loại hồ sơ.
       state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname,
         c.profile_type === "learner" ? el("span", { class: "pill", style: "margin-left:6px" }, T.bbProfileTag) : null)),
       canAddProfile ? el("button", {
         class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
       }, T.addProfileBtn) : null),
-    progressCard(),
+    contactCard(),
     voiceCard(),
     pronunciationToggle(),
-    contactCard(),
     addChildCard(),
+    childrenSection(),
     el("p", { class: "muted" }, T.soon),
     el("p", { class: "muted", style: "font-size:12px" }, T.credits),
     el("button", { class: "btn", onclick: () => { state.parentOpen = false; render(); } }, T.parentBack),
