@@ -984,5 +984,54 @@ await as(A, async () => {
   await db.exec(m032);
 }
 
+// ---- 35. bộ tải nhanh khu Trẻ em (migration 033) ----
+{
+  const m033 = readFileSync(new URL("../migrations/033_child_fast_loaders.sql", import.meta.url), "utf8");
+  await db.exec(m033);
+  const P = await uid("p35@x.com"), P2 = await uid("p35b@x.com");
+  const kid = (await as(P, () => q("insert into public.child_profiles (parent_id, nickname, avatar_id) values ($1,'Bé35','owl') returning id", [P])))[0].id;
+  let u1, uh, l1, l2, lh, w1, w2, qn, d1, d2;
+  await as(ADM, async () => {
+    u1 = (await q("insert into public.units (title_vi, status) values ('ĐL35','approved') returning id"))[0].id;
+    uh = (await q("insert into public.units (title_vi, status, hidden) values ('Ngân hàng 35','approved', true) returning id"))[0].id;
+    l1 = (await q("insert into public.lessons (unit_id, title_vi, status, sort_order) values ($1,'B1','approved',1) returning id", [u1]))[0].id;
+    l2 = (await q("insert into public.lessons (unit_id, title_vi, status, sort_order) values ($1,'B2 nháp','draft',2) returning id", [u1]))[0].id;
+    lh = (await q("insert into public.lessons (unit_id, title_vi, status) values ($1,'Âm','approved') returning id", [uh]))[0].id;
+    w1 = (await q("insert into public.content_items (lesson_id, item_type, text_vi, status, sort_order) values ($1,'word','con mèo','approved',2) returning id", [l1]))[0].id;
+    w2 = (await q("insert into public.content_items (lesson_id, item_type, text_vi, status, sort_order) values ($1,'word','con chó','approved',1) returning id", [l1]))[0].id;
+    qn = (await q("insert into public.content_items (lesson_id, item_type, text_vi, status, extra) values ($1,'question','Con gì?','approved','{\"choices\":[\"a\",\"b\"],\"answer\":1}') returning id", [l1]))[0].id;
+    await q("insert into public.content_items (lesson_id, item_type, text_vi, status) values ($1,'word','nháp','draft')", [l1]); // mục nháp → không vào Luyện tập
+    await q("insert into public.content_items (lesson_id, item_type, text_vi, status) values ($1,'word','bài nháp','approved')", [l2]); // bài nháp → không vào
+    const hw = (await q("insert into public.content_items (lesson_id, item_type, text_vi, status) values ($1,'syllable','ba','approved') returning id", [lh]))[0].id;
+    await q("insert into public.translations (item_id, lang, meaning) values ($1,'de','Katze')", [w1]);
+    await q("insert into public.content_audio (item_id, lang, file_path) values ($1,'vi','a/b.mp3')", [w1]);
+    await q("insert into public.content_audio (item_id, lang, file_path) values ($1,'vi','ba.mp3')", [hw]);
+    await q("insert into public.activities (lesson_id, kind, status, sort_order) values ($1,'dialogue','approved',1)", [l1]);
+  });
+  await db.query("insert into public.child_progress (child_id, item_id, mastery) values ($1,$2,3)", [kid, w1]);
+  await db.query("insert into public.activity_log (child_id, lesson_id, kind, score) values ($1,$2,'lesson',70), ($1,$2,'lesson',90), ($1,$2,'practice',99)", [kid, l1]);
+  await as(P, async () => {
+    const b = (await q("select public.child_lesson_bundle($1,$2) as j", [l1, kid]))[0].j;
+    ok(b.items.length === 3 && b.items.map((x) => x.text_vi).join() === "Con gì?,con chó,con mèo", "033: bundle bài: chỉ mục đã duyệt (RLS), theo sort_order", JSON.stringify(b.items.map((x) => x.text_vi)));
+    const cat = b.items.find((x) => x.text_vi === "con mèo");
+    ok(cat.translations.length === 1 && cat.translations[0].meaning === "Katze" && cat.content_audio.length === 1, "033: bundle bài: kèm nghĩa + âm thanh");
+    ok(b.activities.length === 1 && b.progress.length === 1 && b.progress[0].mastery === 3, "033: bundle bài: hoạt động + tiến độ các mục");
+    const sc = await q("select * from public.child_lesson_scores($1,$2)", [kid, u1]);
+    ok(sc.length === 1 && Number(sc[0].lesson_id) === Number(l1) && Number(sc[0].score) === 90, "033: điểm cao nhất của bài (chỉ kind='lesson')", JSON.stringify(sc));
+    const pd = (await q("select public.child_practice_data() as j"))[0].j;
+    const mine = pd.lessons.map((x) => Number(x.id));
+    ok(pd.items.length === 2 && pd.questions.length === 1 && mine.includes(Number(l1)) && !mine.includes(Number(l2)) && !mine.includes(Number(lh)), "033: practice: chỉ mục/bài đã duyệt, không ẩn, câu hỏi tách riêng", JSON.stringify([pd.items.length, pd.questions.length, mine]));
+    ok(pd.items.find((x) => x.text_vi === "con mèo").translations[0].lang === "de" && pd.dialogue_lessons.length === 1, "033: practice: có nghĩa + bài giao tiếp");
+    const sb = (await q("select public.child_sound_bank() as j"))[0].j;
+    ok(sb.length === 1 && sb[0].text_vi === "ba" && sb[0].content_audio.length === 1, "033: ngân hàng âm chỉ lấy chủ đề ẩn, kèm âm thanh");
+  });
+  await as(P2, async () => {
+    const b = (await q("select public.child_lesson_bundle($1,$2) as j", [l1, kid]))[0].j;
+    ok(b.progress.length === 0, "033: không lộ tiến độ của con người khác (RLS child_progress)");
+    ok((await q("select * from public.child_lesson_scores($1,$2)", [kid, u1])).length === 0, "033: không lộ điểm của con người khác (RLS activity_log)");
+  });
+  await db.exec(m033);
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

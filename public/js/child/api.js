@@ -21,11 +21,15 @@ async function cached(key, load) {
   memo.set(key, { t: Date.now(), v });
   return v;
 }
-export const clearCache = () => memo.clear();
+let pbundle = null; // { t, p } — Promise của practiceBundle() (xem dưới), lưu Promise để 3 hàm tải gọi cùng lúc chỉ tải 1 lần
+export const clearCache = () => { memo.clear(); pbundle = null; };
 
 // Ngân hàng âm (chủ đề ẨN): Map chữ → mục (kèm âm thanh) để đánh vần theo phần. Chưa chạy migration 010 / chưa tạo ngân hàng → Map rỗng (dùng giọng trình duyệt).
 export const loadSoundBank = () => cachedFor("bank", 300_000, async () => {
   try {
+    // Đường chính: RPC child_sound_bank (migration 033, 1 lượt); lỗi/chưa có → cách cũ (3 truy vấn nối tiếp).
+    const r = await sb.rpc("child_sound_bank");
+    if (!r.error && Array.isArray(r.data)) return new Map(r.data.map((i) => [i.text_vi, i]));
     const units = (await sb.from("units").select("id").eq("hidden", true)).data ?? [];
     if (!units.length) return new Map();
     const lessons = (await sb.from("lessons").select("id").in("unit_id", units.map((u) => u.id))).data ?? [];
@@ -60,6 +64,14 @@ export async function loadLessonItems(lessonId) {
   return data ?? [];
 }
 
+// Vào 1 bài: mục + hoạt động + tiến độ các mục. Đường chính: RPC child_lesson_bundle (1 lượt); lỗi/chưa có migration 033 → 3 truy vấn cũ.
+export async function loadLessonBundle(lessonId, childId) {
+  const { data, error } = await sb.rpc("child_lesson_bundle", { p_lesson: lessonId, p_child: childId });
+  if (!error && data && Array.isArray(data.items)) return { items: data.items, activities: data.activities ?? [], progress: new Map((data.progress ?? []).map((r) => [r.item_id, r])) };
+  const [items, activities] = await Promise.all([loadLessonItems(lessonId), loadActivities(lessonId)]);
+  return { items, activities, progress: await loadProgress(childId, items.map((i) => i.id)) };
+}
+
 export async function loadActivities(lessonId) {
   const { data, error } = await sb.from("activities").select("*").eq("lesson_id", lessonId).order("sort_order");
   if (error) throw error;
@@ -80,7 +92,7 @@ async function fetchAll(build) {
 
 // Danh mục mục học ĐÃ DUYỆT (nhẹ: không kèm âm thanh) để chọn phiên luyện tập ở phía trình duyệt. Mỗi mục gắn unit/level của nó.
 // Không có chủ đề ẩn (ngân hàng âm), không có câu hỏi đọc hiểu. Nhớ 5 phút; clearCache() khi bé thoát.
-export const loadCatalog = () => cachedFor("catalog", 300_000, async () => {
+const loadCatalogSlow = () => cachedFor("catalog-slow", 300_000, async () => {
   const units = (await loadUnits()).filter((u) => u.status === "approved");
   const unitById = new Map(units.map((u) => [u.id, u]));
   const lessons = await fetchAll((a, b) => sb.from("lessons").select("id, unit_id").eq("status", "approved").order("id").range(a, b));
@@ -98,7 +110,7 @@ export const loadCatalog = () => cachedFor("catalog", 300_000, async () => {
 // đoạn văn = MỌI mục còn lại của cùng bài đó (như lesson.js/runQuiz vẫn dùng, không riêng item_type 'story'). Tận dụng
 // nguyên giáo trình đã có, không cần soạn nội dung riêng. Chỉ id (nhẹ, đủ để chọn 1 bài trước khi vào phiên); nội dung
 // đầy đủ tải sau bằng loadItemsByIds() như mọi trò khác. Nhớ 5 phút; clearCache() khi bé thoát.
-export const loadStoryLessons = () => cachedFor("stories", 300_000, async () => {
+const loadStoryLessonsSlow = () => cachedFor("stories-slow", 300_000, async () => {
   const units = (await loadUnits()).filter((u) => u.status === "approved");
   const unitById = new Map(units.map((u) => [u.id, u]));
   const lessons = await fetchAll((a, b) => sb.from("lessons").select("id, unit_id").eq("status", "approved").order("id").range(a, b));
@@ -130,7 +142,7 @@ export const loadStoryLessons = () => cachedFor("stories", 300_000, async () => 
 // 019) — đây là dấu hiệu DUY NHẤT để nhận ra bài giao tiếp (không có item_type riêng). itemIds = MỌI mục của bài, ĐÚNG
 // THỨ TỰ (vai trò hệ thống hỏi/bé đọc suy theo vị trí lẻ/chẵn lúc chạy, xem activities/dialogue.js). questionIds luôn rỗng
 // (không dùng) — chỉ giữ để cùng hình dạng với loadStoryLessons() cho planStoryPractice() dùng chung.
-export const loadDialogueLessons = () => cachedFor("dialogues", 300_000, async () => {
+const loadDialogueLessonsSlow = () => cachedFor("dialogues-slow", 300_000, async () => {
   const units = (await loadUnits()).filter((u) => u.status === "approved");
   const unitById = new Map(units.map((u) => [u.id, u]));
   const lessons = await fetchAll((a, b) => sb.from("lessons").select("id, unit_id").eq("status", "approved").order("id").range(a, b));
@@ -151,6 +163,51 @@ export const loadDialogueLessons = () => cachedFor("dialogues", 300_000, async (
   }).filter((g) => g.itemIds.length >= 4); // ít nhất 2 lượt hỏi-đáp (runDialogue tự bỏ qua nếu vẫn thiếu)
 });
 
+// ---- Luyện tập trong 1 lượt: RPC child_practice_data (migration 033) → dựng cả 3 danh mục (catalog/bài đọc nhớ/bài giao tiếp) ở trình duyệt ----
+// Trả null nếu RPC lỗi/chưa có → 3 hàm công khai rơi về cách cũ (loadXxxSlow). Nhớ 5 phút; clearCache() khi bé thoát.
+function practiceBundle() {
+  if (pbundle && Date.now() - pbundle.t < 300_000) return pbundle.p;
+  const p = buildPracticeBundle();
+  const mine = { t: Date.now(), p };
+  pbundle = mine;
+  p.catch(() => { if (pbundle === mine) pbundle = null; });
+  return p;
+}
+async function buildPracticeBundle() {
+  const [units, rpc] = await Promise.all([loadUnits(), sb.rpc("child_practice_data")]);
+  const d = rpc.data;
+  if (rpc.error || !d || !Array.isArray(d.items)) return null;
+  const unitById = new Map(units.filter((u) => u.status === "approved").map((u) => [u.id, u]));
+  const unitOfLesson = new Map(d.lessons.filter((l) => unitById.has(l.unit_id)).map((l) => [l.id, unitById.get(l.unit_id)]));
+  const byLesson = new Map(); // lesson_id -> mục (không phải câu hỏi) theo sort_order
+  for (const r of d.items) {
+    if (!unitOfLesson.has(r.lesson_id)) continue;
+    if (!byLesson.has(r.lesson_id)) byLesson.set(r.lesson_id, []);
+    byLesson.get(r.lesson_id).push(r);
+  }
+  for (const list of byLesson.values()) list.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id);
+  const catalog = d.items.filter((r) => unitOfLesson.has(r.lesson_id)).map((r) => {
+    const u = unitOfLesson.get(r.lesson_id);
+    return { ...r, unit_id: u.id, level: levelOf(u), unit: { id: u.id, title_vi: u.title_vi, emoji: u.emoji, image_path: u.image_path } };
+  });
+  const qIds = new Map();
+  for (const q of d.questions) {
+    if (!unitOfLesson.has(q.lesson_id)) continue;
+    if (!qIds.has(q.lesson_id)) qIds.set(q.lesson_id, []);
+    qIds.get(q.lesson_id).push(q.id);
+  }
+  const lessonGroup = (lessonId, questionIds) => {
+    const u = unitOfLesson.get(lessonId);
+    return { lessonId, unitId: u.id, level: levelOf(u), itemIds: (byLesson.get(lessonId) ?? []).map((r) => r.id), questionIds };
+  };
+  const stories = [...qIds].map(([lessonId, ids]) => lessonGroup(lessonId, ids)).filter((g) => g.itemIds.length >= 3);
+  const dialogues = [...new Set(d.dialogue_lessons)].filter((id) => unitOfLesson.has(id)).map((id) => lessonGroup(id, [])).filter((g) => g.itemIds.length >= 4);
+  return { catalog, stories, dialogues };
+}
+export const loadCatalog = async () => (await practiceBundle())?.catalog ?? loadCatalogSlow();
+export const loadStoryLessons = async () => (await practiceBundle())?.stories ?? loadStoryLessonsSlow();
+export const loadDialogueLessons = async () => (await practiceBundle())?.dialogues ?? loadDialogueLessonsSlow();
+
 // Tiến độ của bé trên MỌI mục: Map item_id → { mastery, wrong_count, last_seen_at, ... } (dùng làm độ ưu tiên + "từ hay sai").
 export async function loadAllProgress(childId) {
   const rows = await fetchAll((a, b) => sb.from("child_progress").select("*").eq("child_id", childId).order("id").range(a, b));
@@ -163,6 +220,14 @@ export async function loadItemsByIds(ids) {
   const { data, error } = await sb.from("content_items").select("*, translations(lang, meaning, example), content_audio(*)").in("id", ids);
   if (error) throw error;
   return data ?? [];
+}
+
+// Điểm cao nhất từng bài của 1 chủ đề (sao ở danh sách bài). Đường chính: RPC child_lesson_scores (1 lượt, chạy SONG SONG với danh sách bài);
+// lỗi/chưa có migration 033 → loadLessonScores cũ (cần danh sách id bài: `lessonIds()` trả Promise mảng id).
+export async function loadScoresInUnit(childId, unitId, lessonIds) {
+  const { data, error } = await sb.rpc("child_lesson_scores", { p_child: childId, p_unit: unitId });
+  if (!error && Array.isArray(data)) return new Map(data.map((r) => [r.lesson_id, Number(r.score ?? 0)]));
+  return loadLessonScores(childId, await lessonIds());
 }
 
 // Điểm cao nhất (0-100) từng bài đã hoàn thành: Map lesson_id → score.

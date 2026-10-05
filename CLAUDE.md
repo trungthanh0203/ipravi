@@ -42,7 +42,7 @@ Không có `center_id` ở bảng nào.
 cột thừa chỉ cảnh báo. Thêm ngôn ngữ mới: cột CSV + `seed/002_title_translations.sql` +
 `tts.js DEFAULT_VOICES` nếu cần TTS; `admin/dict.js` không tự có — admin gõ tay (không bịa).
 
-Dựng bản mới: Supabase mới → chạy `001_init.sql`…`032_bb_fast_loaders.sql` theo thứ tự → đăng ký
+Dựng bản mới: Supabase mới → chạy `001_init.sql`…`033_child_fast_loaders.sql` theo thứ tự → đăng ký
 1 tài khoản → `update accounts set role='admin' where email='...'` → biến Cloudflare (+`TTS_PROVIDER`/
 `TTS_KEY`/`TTS_REGION` nếu dùng TTS) → deploy. Mẫu tuỳ chọn: `seed/001_sample_content.sql`.
 
@@ -104,6 +104,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`032_bb_fast_load
   độc lập, chơi trên MỌI nội dung đã duyệt. `child/skills.js GROUPS/SKILLS`; 3 kỹ năng
   `story:true` (1 lượt = cả 1 bài). Lọc mục ở `child/pools.js POOLS/feasible` (sửa ở đó, đừng lọc
   trong thân trò). Thêm trò mới → `RUNNERS`, `POOLS`, `SKILLS`, SQL `skill_of()`, `TEXT_KINDS`.
+- Khu Trẻ em tải qua RPC 1 lượt (mig. 033: `child_lesson_bundle`, `child_lesson_scores`, `child_practice_data`, `child_sound_bank`), mỗi RPC có đường lùi cách cũ trong `child/api.js`; `practiceBundle()` lưu Promise (3 hàm tải danh mục chỉ gọi 1 RPC); Home nạp sẵn lúc rảnh. Đổi schema `content_items/lessons/units/activities` → rà cả hàm SQL lẫn đường lùi.
 - `state.activeChildId` (sessionStorage) giữ bé đang học qua `SIGNED_IN` lặp lại. Khu admin tải lại
   dùng `beginLoad(box)` (`admin/view.js`) — giữ vị trí cuộn, đừng tự `replaceChildren("Đang tải…")`.
   Bài Bản còn nhớ thêm VỊ TRÍ đang xem (Level/Unit/Lesson/Luyện tập) qua `bb/nav.js` (sessionStorage

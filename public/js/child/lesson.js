@@ -18,8 +18,7 @@ export async function playLesson({ root, lesson, child, account, onExit }) {
   paint(root, el("p", { class: "boot" }, T.loading));
   let items, activities, progress;
   try {
-    [items, activities] = await Promise.all([api.loadLessonItems(lesson.id), api.loadActivities(lesson.id)]);
-    progress = await api.loadProgress(child.id, items.map((i) => i.id));
+    ({ items, activities, progress } = await api.loadLessonBundle(lesson.id, child.id)); // mục + hoạt động + tiến độ trong 1 lượt
   } catch {
     paint(root, el("div", { class: "card" }, msg("err", T.loadError), el("button", { class: "btn", onclick: onExit }, T.back)));
     return;

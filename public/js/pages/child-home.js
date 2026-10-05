@@ -27,6 +27,12 @@ function shell(root, ...body) {
 
 // Màn hình chính của bé: 2 nút lớn — 📖 Học (4 chặng, từng bài) và 🎮 Luyện tập (theo kỹ năng, chơi trên mọi nội dung đã duyệt). Hai phần độc lập nhau.
 function showHome(root) {
+  // Rảnh thì nạp sẵn dữ liệu 2 nhánh (chủ đề; danh mục Luyện tập + ngân hàng âm) → bấm vào là hiện ngay (đều có cache trong api.js).
+  const idle = window.requestIdleCallback ?? ((f) => setTimeout(f, 300));
+  idle(() => {
+    const quiet = (p) => p.catch(() => {});
+    quiet(api.loadUnits()); quiet(api.loadCatalog()); quiet(api.loadStoryLessons()); quiet(api.loadDialogueLessons()); quiet(api.loadSoundBank());
+  });
   shell(root,
     el("h1", { style: "text-align:center" }, T.homeTitle),
     el("div", { class: "home-cards" },
@@ -94,9 +100,10 @@ async function showUnits(root, level, all) {
 async function showLessons(root, unit) {
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const [lessons, allUnits] = await Promise.all([api.loadLessons(unit.id), api.loadUnits()]); // song song (units thường đã có trong bộ nhớ)
+    const lessonsP = api.loadLessons(unit.id);
+    // Bài + chủ đề + điểm từng bài tải SONG SONG (trước đây điểm phải chờ danh sách bài xong mới gọi)
+    const [lessons, allUnits, scores] = await Promise.all([lessonsP, api.loadUnits(), api.loadScoresInUnit(child().id, unit.id, async () => (await lessonsP).map((l) => l.id))]);
     const unitNo = numberUnits(allUnits).get(unit.id); // số của chủ đề trong cấp (units đã được nhớ 1 phút)
-    const scores = await api.loadLessonScores(child().id, lessons.map((l) => l.id));
     const nextId = lessons.find((l) => !scores.has(l.id))?.id;
     shell(root,
       crumbBar(`Cấp ${levelOf(unit)} · ${LEVELS[levelOf(unit) - 1].name} > ${unitNo ? unitNo + ". " : ""}${unit.title_vi}`, () => showUnits(root, levelOf(unit))),
