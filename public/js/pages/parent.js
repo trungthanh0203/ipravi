@@ -30,18 +30,19 @@ function voiceCard() {
   return el("div", { class: "card" }, el("h2", null, T.voiceTitle), el("p", { class: "muted" }, T.voiceHelp), el("div", { class: "tabs" }, buttons), feedback);
 }
 
-// Điện thoại/địa chỉ: không bắt buộc, hỏi lúc đặt PIN nhưng sửa lại được ở đây bất cứ lúc nào.
+// Điện thoại/địa chỉ: bắt buộc từ lúc đăng ký (auth.js), sửa lại được ở đây bất cứ lúc nào.
 function contactCard() {
   const a = state.account;
   const feedback = el("div");
-  const phone = el("input", { type: "tel", autocomplete: "tel", value: a.phone ?? "" });
-  const address = el("input", { type: "text", autocomplete: "street-address", value: a.address ?? "" });
+  const phone = el("input", { type: "tel", autocomplete: "tel", maxlength: "40", required: true, value: a.phone ?? "" });
+  const address = el("input", { type: "text", autocomplete: "street-address", maxlength: "300", required: true, value: a.address ?? "" });
   const btn = el("button", { class: "btn small", type: "submit" }, T.save);
   const form = el("form", null, el("label", null, T.contactPhone), phone, el("label", null, T.contactAddress), address, feedback, btn);
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     btn.disabled = true;
-    const next = { phone: phone.value.trim() || null, address: address.value.trim() || null };
+    const next = { phone: phone.value.trim(), address: address.value.trim() };
+    if (!next.phone || !next.address) { btn.disabled = false; return feedback.replaceChildren(msg("err", T.contactRequired)); }
     const { error } = await sb.from("accounts").update(next).eq("id", a.id);
     btn.disabled = false;
     if (error) return feedback.replaceChildren(msg("err", error.message));
@@ -49,6 +50,27 @@ function contactCard() {
     feedback.replaceChildren(msg("ok", T.contactSaved));
   });
   return el("div", { class: "card" }, el("h2", null, T.contactTitle), form);
+}
+
+// Đổi mật khẩu (phiên đang đăng nhập nên không cần mật khẩu cũ — khu này đã có PIN bảo vệ).
+function passwordCard() {
+  const feedback = el("div");
+  const p1 = el("input", { type: "password", autocomplete: "new-password", minlength: "8", required: true });
+  const p2 = el("input", { type: "password", autocomplete: "new-password", minlength: "8", required: true });
+  const btn = el("button", { class: "btn small", type: "submit" }, T.save);
+  const form = el("form", null, el("label", null, T.passwordNew), p1, el("label", null, T.passwordConfirm), p2, feedback, btn);
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    if (p1.value.length < 8) return feedback.replaceChildren(msg("err", T.passwordShort));
+    if (p1.value !== p2.value) return feedback.replaceChildren(msg("err", T.passwordMismatch));
+    btn.disabled = true;
+    const { error } = await sb.auth.updateUser({ password: p1.value });
+    btn.disabled = false;
+    if (error) return feedback.replaceChildren(msg("err", T.passwordError));
+    form.reset();
+    feedback.replaceChildren(msg("ok", T.passwordSaved));
+  });
+  return el("div", { class: "card" }, el("h2", null, T.passwordTitle), form);
 }
 
 // Thêm con: mặc định 1 con/tài khoản; muốn thêm phải xin + trả phí cho người dạy, người dạy xác nhận thì được cấp.
@@ -167,6 +189,7 @@ export function mount(root) {
         class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
       }, T.addProfileBtn) : null),
     contactCard(),
+    passwordCard(),
     voiceCard(),
     pronunciationToggle(),
     addChildCard(),
