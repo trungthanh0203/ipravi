@@ -68,27 +68,39 @@ async function showLevels(root) {
   saveNav({ mode: "learn" });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const [levels, stats] = await Promise.all([api.loadLevels(), api.loadLevelStats(state.activeChildId).catch(() => null)]); // số liệu hỏng không chặn việc học
-    // Gợi ý "bạn đang ở đây": cấp đầu tiên còn chặng chưa học (không khoá cấp — chỉ gợi ý, khớp khu Trẻ em).
-    const rec = stats ? levels.find((lv) => stats[lv.id]?.steps > 0 && stats[lv.id].done < stats[lv.id].steps)?.id : null;
+    // Danh sách cấp hiện NGAY (1 truy vấn, có cache); số liệu tiến độ (1 RPC) đến sau thì điền vào tại chỗ — không bắt người học chờ.
+    const levels = await api.loadLevels();
+    const statsP = api.loadLevelStats(state.activeChildId).catch(() => null); // số liệu hỏng không chặn việc học
+    const cards = levels.map((lv) => {
+      const tag = el("span", { class: "lv-tag", hidden: true });
+      const bar = el("div", { class: "meter-fill", style: "width:0%" });
+      const meta = el("span", { class: "muted" }, "…");
+      const btn = el("button", { class: "level-card", type: "button", onclick: () => showUnits(root, lv) },
+        el("span", { class: "lv-emoji" }, el("span", { class: `bb-code-badge lv-${lv.code}` }, lv.code)),
+        el("span", { class: "lv-body" },
+          el("div", { class: "lv-name" }, `${lv.code} · ${lv.name_vi}`, tag),
+          lv.can_do ? el("div", { class: "muted" }, lv.can_do) : null,
+          el("div", { class: "meter" }, bar), meta));
+      return { lv, btn, tag, bar, meta };
+    });
     shell(root,
       crumbBar(T.bbHomeLearn, () => showHome(root)),
       el("h1", { style: "text-align:center" }, T.bbLevelsTitle),
       levels.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoLevels)) :
-        el("div", { class: "level-grid" }, levels.map((lv) => {
-          const st = stats?.[lv.id];
-          const usable = !stats || st?.units > 0;
-          const pct = st?.steps ? Math.round((100 * st.done) / st.steps) : 0;
-          return el("button", { class: "level-card" + (lv.id === rec ? " rec" : ""), type: "button", disabled: !usable, onclick: () => showUnits(root, lv) },
-            el("span", { class: "lv-emoji" }, el("span", { class: `bb-code-badge lv-${lv.code}` }, lv.code)),
-            el("span", { class: "lv-body" },
-              el("div", { class: "lv-name" }, `${lv.code} · ${lv.name_vi}`, lv.id === rec ? el("span", { class: "lv-tag" }, T.bbLevelHere) : null),
-              lv.can_do ? el("div", { class: "muted" }, lv.can_do) : null,
-              usable && st?.steps ? [
-                el("div", { class: "meter" }, el("div", { class: "meter-fill", style: `width:${pct}%` })),
-                el("span", { class: "muted" }, T.bbLevelMeta(st.units, st.lessons, st.done, st.steps))]
-                : usable && st ? el("span", { class: "muted" }, T.bbLevelUnits(st.units)) : !usable ? el("span", { class: "muted" }, T.levelSoon) : null));
-        })));
+        el("div", { class: "level-grid" }, cards.map((c) => c.btn)));
+    statsP.then((stats) => {
+      if (!stats || !cards.length || !cards[0].btn.isConnected) return cards.forEach((c) => c.meta.replaceChildren());
+      // Gợi ý "bạn đang ở đây": cấp đầu tiên còn chặng chưa học (không khoá cấp — chỉ gợi ý, khớp khu Trẻ em).
+      const rec = levels.find((lv) => stats[lv.id]?.steps > 0 && stats[lv.id].done < stats[lv.id].steps)?.id;
+      for (const { lv, btn, tag, bar, meta } of cards) {
+        const st = stats[lv.id] ?? { units: 0, lessons: 0, steps: 0, done: 0 };
+        bar.style.width = (st.steps ? Math.round((100 * st.done) / st.steps) : 0) + "%";
+        meta.textContent = T.bbLevelMeta(st.units, st.lessons, st.done, st.steps);
+        // Cấp chưa có chủ đề: vẫn hiện đủ thông tin như các cấp khác, chỉ mờ đi + nhãn "Sắp có".
+        if (st.units === 0) { btn.disabled = true; tag.textContent = T.levelSoon; tag.hidden = false; }
+        else if (lv.id === rec) { btn.classList.add("rec"); tag.textContent = T.bbLevelHere; tag.hidden = false; }
+      }
+    });
   } catch {
     shell(root, msg("err", T.bbLoadError));
   }

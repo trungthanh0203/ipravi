@@ -898,5 +898,43 @@ await as(A, async () => {
   await db.exec(m030);
 }
 
+// ---- 33. số liệu từng Cấp trong 1 lượt (migration 031) ----
+{
+  const m031 = readFileSync(new URL("../migrations/031_bb_level_stats.sql", import.meta.url), "utf8");
+  await db.exec(m031);
+  const P = await uid("p33@x.com"), P2 = await uid("p33b@x.com");
+  const kid = (await as(P, () => q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'HV33','owl','learner') returning id", [P])))[0].id;
+  const kid2 = (await as(P2, () => q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'HV33b','cat','learner') returning id", [P2])))[0].id;
+  let lv, doneStep;
+  await as(ADM, async () => {
+    lv = (await q("insert into public.bb_levels (code, name_vi, status, sort_order) values ('C1','Cấp 33','approved', 330) returning id"))[0].id;
+    await q("insert into public.bb_levels (code, name_vi, status, sort_order) values ('C2','Nháp 33','draft', 331)");
+    const u = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'ĐL33','approved') returning id", [lv]))[0].id;
+    await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'ĐL33 nháp','draft')", [lv]);
+    const l = (await q("insert into public.bb_lessons (unit_id, title_vi, status) values ($1,'BL33','approved') returning id", [u]))[0].id;
+    doneStep = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status) values ($1,'vocab','approved') returning id", [l]))[0].id;
+    await q("insert into public.bb_vocab (step_id, word_vi) values ($1,'xin chào')", [doneStep]);
+    await q("insert into public.bb_lesson_steps (lesson_id, step_type, status) values ($1,'dialogue','approved')", [l]); // rỗng → không tính
+    await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, config) values ($1,'minigame','approved','{\"kind\":\"flashcard_srs\"}')", [l]);
+    await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, config) values ($1,'minigame','approved','{}')", [l]); // chưa chọn kind → không tính
+    const dr = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status) values ($1,'vocab','draft') returning id", [l]))[0].id;
+    await q("insert into public.bb_vocab (step_id, word_vi) values ($1,'nháp')", [dr]); // nháp → không tính
+  });
+  await db.query("insert into public.bb_progress (child_id, step_id) values ($1,$2)", [kid, doneStep]);
+  const rowFor = async (child) => (await q("select * from public.bb_level_stats($1) where level_id=$2", [child, lv]))[0];
+  await as(P, async () => {
+    const r = await rowFor(kid);
+    ok(r && r.units === 1 && r.lessons === 1 && r.steps === 2 && r.done === 1, "031: đếm chủ đề/bài/chặng có dữ liệu + chặng đã xong (bỏ nháp, bỏ chặng rỗng)", JSON.stringify(r));
+    ok((await q("select * from public.bb_level_stats($1)", [kid])).every((x) => x.level_id !== null) && !(await q("select 1 from public.bb_level_stats($1) x join public.bb_levels b on b.id=x.level_id where b.status='draft'", [kid])).length, "031: cấp nháp không xuất hiện");
+  });
+  await as(P2, async () => {
+    const r = await rowFor(kid2);
+    ok(r.steps === 2 && r.done === 0, "031: người học khác chưa xong chặng nào → done = 0", JSON.stringify(r));
+    const peek = await rowFor(kid);
+    ok(peek.done === 0, "031: không đọc được tiến độ của con người khác (RLS bb_progress)", JSON.stringify(peek));
+  });
+  await db.exec(m031);
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

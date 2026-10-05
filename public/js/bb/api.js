@@ -148,6 +148,7 @@ const NEVER = "1970-01-01T00:00:00.000Z";
 // Đánh dấu 1 chặng đã đi qua (gọi ở bb/runner.js khi chặng đó xong) — chỉ ghi LẦN ĐẦU, các lần học lại sau không
 // đổi `completed_at` (mã lỗi 23505 = đã có dòng, coi là bình thường, không phải lỗi thật).
 export async function saveStepProgress(childId, stepId) {
+  for (const k of memo.keys()) if (k.startsWith("levelstats:")) memo.delete(k); // số liệu cấp độ đã cũ
   const { error } = await sb.from("bb_progress").insert({ child_id: childId, step_id: stepId });
   if (error && error.code !== "23505") console.warn("saveStepProgress", error.message);
 }
@@ -208,9 +209,17 @@ export async function loadLessonProgress(childId, lessonIds) {
   return completed;
 }
 
-// Số liệu từng Cấp cho màn "Chọn cấp độ": { [levelId]: { units, lessons, steps, done } } — steps = chặng CÓ DỮ LIỆU (visibleStepsOf, cache
-// 5 phút), done = chặng người học đã xong. Chỉ phục vụ hiển thị: lỗi thì nơi gọi bỏ qua, màn vẫn dựng được từ danh sách cấp.
-export async function loadLevelStats(childId) {
+// Số liệu từng Cấp cho màn "Chọn cấp độ": { [levelId]: { units, lessons, steps, done } } — steps = chặng CÓ DỮ LIỆU, done = chặng
+// người học đã xong. Đường chính: RPC bb_level_stats (migration 031) = 1 lượt gọi; chưa chạy migration thì rơi về cách cũ
+// (nhiều truy vấn, chậm hơn nhưng cùng kết quả). Cache 60s, xoá khi lưu tiến độ chặng. Chỉ phục vụ hiển thị: lỗi thì nơi gọi bỏ qua.
+export const loadLevelStats = (childId) => cached("levelstats:" + childId, async () => {
+  const { data, error } = await sb.rpc("bb_level_stats", { p_child: childId });
+  if (!error && Array.isArray(data)) return Object.fromEntries(data.map((r) => [r.level_id, { units: r.units, lessons: r.lessons, steps: r.steps, done: r.done }]));
+  return loadLevelStatsSlow(childId);
+});
+
+// Cách cũ (không cần migration 031) — giữ làm đường lùi.
+async function loadLevelStatsSlow(childId) {
   const [{ data: units, error: e1 }, { data: lessons, error: e2 }] = await Promise.all([
     sb.from("bb_units").select("id, level_id").eq("status", "approved"),
     sb.from("bb_lessons").select("id, unit_id").eq("status", "approved"),
