@@ -15,7 +15,11 @@ export async function requestExtraChild() {
 // Phụ huynh tự huỷ yêu cầu còn "pending" của mình (RPC cancel_my_payment, migration 030).
 export async function cancelPayment(id) {
   const { error } = await sb.rpc("cancel_my_payment", { p_id: id });
-  if (error) throw error;
+  if (error) {
+    // PGRST202 / 42883: hàm chưa có trên Supabase (chưa chạy migration 030) → báo rõ cách xử lý thay vì lỗi kỹ thuật.
+    if (error.code === "PGRST202" || error.code === "42883" || /schema cache/i.test(error.message)) throw new Error("Chưa hủy được: máy chủ chưa cài chức năng này. Hãy nhờ quản trị chạy migration 030_cancel_payment.sql.");
+    throw error;
+  }
 }
 
 export async function myPayments() {

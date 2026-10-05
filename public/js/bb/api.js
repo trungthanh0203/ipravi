@@ -208,6 +208,36 @@ export async function loadLessonProgress(childId, lessonIds) {
   return completed;
 }
 
+// Số liệu từng Cấp cho màn "Chọn cấp độ": { [levelId]: { units, lessons, steps, done } } — steps = chặng CÓ DỮ LIỆU (visibleStepsOf, cache
+// 5 phút), done = chặng người học đã xong. Chỉ phục vụ hiển thị: lỗi thì nơi gọi bỏ qua, màn vẫn dựng được từ danh sách cấp.
+export async function loadLevelStats(childId) {
+  const [{ data: units, error: e1 }, { data: lessons, error: e2 }] = await Promise.all([
+    sb.from("bb_units").select("id, level_id").eq("status", "approved"),
+    sb.from("bb_lessons").select("id, unit_id").eq("status", "approved"),
+  ]);
+  if (e1) throw e1;
+  if (e2) throw e2;
+  const levelOfUnit = new Map((units ?? []).map((u) => [u.id, u.level_id]));
+  const own = (lessons ?? []).filter((l) => levelOfUnit.has(l.unit_id));
+  const stats = {};
+  const at = (lv) => (stats[lv] ??= { units: 0, lessons: 0, steps: 0, done: 0 });
+  for (const u of units ?? []) at(u.level_id).units++;
+  const levelOfLesson = new Map(own.map((l) => [l.id, levelOfUnit.get(l.unit_id)]));
+  for (const l of own) at(levelOfLesson.get(l.id)).lessons++;
+  if (!own.length) return stats;
+  const visible = await visibleStepsOf(own.map((l) => l.id));
+  for (const s of visible) at(levelOfLesson.get(s.lesson_id)).steps++;
+  const stepIds = visible.map((s) => s.id);
+  const doneIds = new Set();
+  for (let i = 0; i < stepIds.length; i += 100) {
+    const { data, error } = await sb.from("bb_progress").select("step_id").eq("child_id", childId).in("step_id", stepIds.slice(i, i + 100));
+    if (error) throw error;
+    for (const p of data ?? []) doneIds.add(p.step_id);
+  }
+  for (const s of visible) if (doneIds.has(s.id)) at(levelOfLesson.get(s.lesson_id)).done++;
+  return stats;
+}
+
 // Mọi mục (4 loại chặng) mà người học ĐÃ GẶP QUA (thuộc 1 chặng có trong bb_progress) kèm trạng thái ôn tập
 // (box/due_at/reviewed_count — chưa ôn lần nào thì due_at ở rất xa trong quá khứ = đến hạn ngay). Dùng cho màn
 // Luyện tập (bb/practice.js); chọn phiên bằng hàm thuần practice-core.js, không tính ở đây.

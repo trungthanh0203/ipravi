@@ -68,20 +68,27 @@ async function showLevels(root) {
   saveNav({ mode: "learn" });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const levels = await api.loadLevels();
+    const [levels, stats] = await Promise.all([api.loadLevels(), api.loadLevelStats(state.activeChildId).catch(() => null)]); // số liệu hỏng không chặn việc học
+    // Gợi ý "bạn đang ở đây": cấp đầu tiên còn chặng chưa học (không khoá cấp — chỉ gợi ý, khớp khu Trẻ em).
+    const rec = stats ? levels.find((lv) => stats[lv.id]?.steps > 0 && stats[lv.id].done < stats[lv.id].steps)?.id : null;
     shell(root,
-      el("button", { class: "btn ghost small", onclick: () => showHome(root) }, "◀ " + T.back),
+      crumbBar(T.bbHomeLearn, () => showHome(root)),
       el("h1", { style: "text-align:center" }, T.bbLevelsTitle),
       levels.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoLevels)) :
-        el("div", { class: "bb-level-grid" }, levels.map((lv) =>
-          el("button", { class: "bb-level-card", type: "button", onclick: () => showUnits(root, lv) },
-            el("div", { class: `bb-level-media lv-${lv.code}` },
-              el("span", { class: "bb-level-tag" }, T.bbLevelTag),
-              el("span", { class: "bb-level-code" }, lv.code)),
-            el("div", { class: "bb-level-body" },
-              el("b", null, lv.name_vi),
-              lv.can_do ? el("small", null, lv.can_do) : null,
-              el("span", { class: "bb-level-cta" }, T.bbLevelPick))))));
+        el("div", { class: "level-grid" }, levels.map((lv) => {
+          const st = stats?.[lv.id];
+          const usable = !stats || st?.units > 0;
+          const pct = st?.steps ? Math.round((100 * st.done) / st.steps) : 0;
+          return el("button", { class: "level-card" + (lv.id === rec ? " rec" : ""), type: "button", disabled: !usable, onclick: () => showUnits(root, lv) },
+            el("span", { class: "lv-emoji" }, el("span", { class: `bb-code-badge lv-${lv.code}` }, lv.code)),
+            el("span", { class: "lv-body" },
+              el("div", { class: "lv-name" }, `${lv.code} · ${lv.name_vi}`, lv.id === rec ? el("span", { class: "lv-tag" }, T.bbLevelHere) : null),
+              lv.can_do ? el("div", { class: "muted" }, lv.can_do) : null,
+              usable && st?.steps ? [
+                el("div", { class: "meter" }, el("div", { class: "meter-fill", style: `width:${pct}%` })),
+                el("span", { class: "muted" }, T.bbLevelMeta(st.units, st.lessons, st.done, st.steps))]
+                : usable && st ? el("span", { class: "muted" }, T.bbLevelUnits(st.units)) : !usable ? el("span", { class: "muted" }, T.levelSoon) : null));
+        })));
   } catch {
     shell(root, msg("err", T.bbLoadError));
   }

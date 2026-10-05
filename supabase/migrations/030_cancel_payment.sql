@@ -14,3 +14,6 @@ begin
 end $$;
 revoke all on function public.cancel_my_payment(bigint) from public;
 grant execute on function public.cancel_my_payment(bigint) to authenticated;
+
+-- Báo PostgREST nạp lại schema ngay (không thì hàm mới có thể báo "not found in the schema cache" tới khi cache tự làm mới).
+notify pgrst, 'reload schema';
