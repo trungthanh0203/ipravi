@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tôi luyện tiếng Việt — Học tiếng Việt vui mỗi ngày cho bé gốc Việt</title>
-<meta name="description" content="Ứng dụng học tiếng Việt cho trẻ gốc Việt 3–8 tuổi: học từ vựng, học vần, tập viết, chấm phát âm và luyện tập qua trò chơi — cùng chú gà trống nhỏ.">
+<title>Tôi luyện tiếng Việt — Hai lộ trình: Bé học Việt & Tiếng Việt Bài Bản</title>
+<meta name="description" content="Một ứng dụng, hai lộ trình học tiếng Việt: khu cho bé gốc Việt 3–8 tuổi (học qua trò chơi, tô chữ, chấm phát âm) và khu Tiếng Việt Bài Bản cho người lớn, người nước ngoài (hội thoại, ngữ pháp, ôn tập thông minh). Phụ huynh theo dõi tiến độ của con.">
 <meta name="theme-color" content="#e8590c">
+<meta property="og:title" content="Tôi luyện tiếng Việt — Học tiếng Việt cho bé và cho người lớn">
+<meta property="og:description" content="Hai lộ trình trong một ứng dụng: Bé học Việt (3–8 tuổi) và Tiếng Việt Bài Bản (người lớn, người nước ngoài).">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <style>
   :root {
@@ -16,6 +18,9 @@
     --text: #2b1d14;
     --text-2: #6b5646;
     --ok: #2f9e44;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --blue-light: #e7f0ff;
     --radius: 20px;
   }
   * { box-sizing: border-box; }
@@ -23,27 +28,33 @@
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.5; -webkit-tap-highlight-color: transparent;
+    line-height: 1.55; -webkit-tap-highlight-color: transparent;
   }
   a { color: var(--brand-dark); }
   img, svg { max-width: 100%; }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
   h1, h2, h3 { line-height: 1.25; margin: 0 0 10px; }
-  h2 { font-size: 28px; }
+  h2 { font-size: 30px; }
   h3 { font-size: 19px; }
   p { margin: 0 0 12px; }
   .muted { color: var(--text-2); }
   .center { text-align: center; }
-  section { padding: 56px 0; }
+  section { padding: 60px 0; }
+  .sec-head { text-align: center; max-width: 720px; margin: 0 auto 34px; }
+  .eyebrow { display: inline-block; background: var(--brand-light); color: var(--brand-dark); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 14px; }
+  .eyebrow.blue { background: var(--blue-light); color: var(--blue-dark); }
 
   /* Nút */
   .btn {
     display: inline-flex; align-items: center; gap: 8px; background: var(--brand); color: #fff;
     border: 0; border-radius: 14px; padding: 15px 26px; font-weight: 700; font-size: 17px;
-    text-decoration: none; box-shadow: 0 6px 18px rgba(232, 89, 12, .28); cursor: pointer;
+    text-decoration: none; box-shadow: 0 6px 18px rgba(232, 89, 12, .28); cursor: pointer; transition: transform .15s;
   }
+  .btn:hover { transform: translateY(-2px); }
   .btn:active { background: var(--brand-dark); }
   .btn.ghost { background: #fff; color: var(--brand-dark); border: 2px solid var(--brand); box-shadow: none; }
+  .btn.blue { background: var(--blue); box-shadow: 0 6px 18px rgba(37, 99, 235, .28); }
+  .btn.blue.ghost { background: #fff; color: var(--blue-dark); border-color: var(--blue); box-shadow: none; }
   .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
   .center .btn-row { justify-content: center; }
 
@@ -52,11 +63,11 @@
   .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
   .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; text-decoration: none; color: var(--text); }
   .logo .badge { width: 38px; height: 38px; border-radius: 12px; flex: none; display: block; }
-  .nav-links { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
+  .nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
   .nav-links a { color: var(--text-2); text-decoration: none; font-weight: 600; font-size: 15px; }
   .nav-links a:hover { color: var(--brand-dark); }
   .nav .btn { padding: 10px 18px; font-size: 15px; white-space: nowrap; }
-  @media (max-width: 720px) { .nav-links { display: none; } }
+  @media (max-width: 860px) { .nav-links { display: none; } }
   @media (max-width: 420px) {
     .logo { font-size: 16px; }
     .logo .badge { width: 32px; height: 32px; }
@@ -64,70 +75,129 @@
   }
 
   /* Hero */
-  .hero { padding: 52px 0 40px; overflow: hidden; }
+  .hero { padding: 52px 0 30px; overflow: hidden; background: radial-gradient(circle at 85% 20%, #ffe3cc 0, transparent 45%), radial-gradient(circle at 5% 90%, #e7f0ff 0, transparent 40%); }
   .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
   @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
-  .eyebrow { display: inline-block; background: var(--brand-light); color: var(--brand-dark); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 14px; }
-  .hero h1 { font-size: 40px; }
+  .hero h1 { font-size: 42px; }
+  .hero h1 em { font-style: normal; color: var(--brand); }
   @media (max-width: 480px) { .hero h1 { font-size: 32px; } }
-  .hero p.lead { font-size: 18px; color: var(--text-2); max-width: 46ch; }
+  .hero p.lead { font-size: 18px; color: var(--text-2); max-width: 50ch; }
   .trust-row { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 26px; font-size: 14px; color: var(--text-2); }
   .trust-row span { display: flex; align-items: center; gap: 6px; }
 
   .hero-art { position: relative; display: flex; align-items: center; justify-content: center; min-height: 320px; }
-  .mascot-circle { width: 260px; height: 260px; object-fit: contain; filter: drop-shadow(0 16px 30px rgba(232, 89, 12, .35)); }
-  .floaty { position: absolute; background: #fff; border-radius: 18px; box-shadow: 0 10px 24px rgba(80, 40, 10, .14); padding: 10px 14px; font-size: 22px; display: flex; align-items: center; gap: 6px; }
+  .mascot-circle { width: 250px; height: 250px; object-fit: contain; filter: drop-shadow(0 16px 30px rgba(232, 89, 12, .35)); animation: bob 4s ease-in-out infinite; }
+  .floaty { position: absolute; background: #fff; border-radius: 18px; box-shadow: 0 10px 24px rgba(80, 40, 10, .14); padding: 10px 14px; font-size: 20px; display: flex; align-items: center; gap: 6px; animation: bob 5s ease-in-out infinite; }
   .floaty small { font-size: 12px; font-weight: 700; color: var(--text-2); }
-  .f1 { top: 4%; left: 2%; }
-  .f2 { bottom: 10%; left: -2%; }
-  .f3 { top: 8%; right: 0%; }
-  .f4 { bottom: 2%; right: 6%; }
+  .f1 { top: 2%; left: 0; animation-delay: -1s; }
+  .f2 { bottom: 8%; left: -2%; animation-delay: -2s; }
+  .f3 { top: 6%; right: 0; background: var(--blue-light); animation-delay: -3s; }
+  .f4 { bottom: 2%; right: 2%; background: var(--blue-light); animation-delay: -1.5s; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
   @media (max-width: 480px) { .floaty { display: none; } }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 34px; }
+  .stat { background: #fff; border-radius: 16px; padding: 14px 10px; text-align: center; box-shadow: 0 3px 12px rgba(80, 40, 10, .07); }
+  .stat b { display: block; font-size: 26px; color: var(--brand-dark); }
+  .stat span { font-size: 13px; color: var(--text-2); }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 
   /* Card chung */
   .card { background: #fff; border-radius: var(--radius); padding: 22px; box-shadow: 0 4px 16px rgba(80, 40, 10, .08); }
   .grid { display: grid; gap: 18px; }
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
   .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
   .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 860px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; } }
-
+  @media (max-width: 640px) { .grid.cols-2, .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; } }
   .icon-box { width: 52px; height: 52px; border-radius: 14px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; }
+  .icon-box.blue { background: var(--blue-light); }
+  img.mascot-icon { height: 1.1em; width: 1.1em; object-fit: contain; vertical-align: -0.2em; }
 
-  /* Hình gà trống dùng chung: lật ngang cho đầu quay sang phải (giống hướng chữ đọc) */
-  .rooster { display: inline-block; transform: scaleX(-1); }
-
-  /* Lộ trình cấp độ */
-  .level-card { text-align: center; position: relative; }
-  .level-card .emoji { font-size: 44px; }
-  .level-card .emoji img.mascot-icon { height: 44px; width: 44px; object-fit: contain; vertical-align: middle; }
-  .level-card .age { display: inline-block; margin-top: 8px; background: var(--brand-light); color: var(--brand-dark); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
-  .level-arrow { display: none; }
-  @media (min-width: 561px) {
-    .level-row { display: flex; align-items: center; gap: 6px; }
-    .level-row .level-card { flex: 1; }
-    .level-row .level-arrow { display: block; color: var(--brand); font-size: 22px; }
-  }
-
-  /* Khu phụ huynh */
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; }
-  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
-  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  /* Hai lộ trình */
+  .path { position: relative; overflow: hidden; padding: 28px; border-top: 6px solid var(--brand); }
+  .path.adult { border-top-color: var(--blue); }
+  .path h3 { font-size: 22px; }
+  .path .who { display: inline-block; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; background: var(--brand-light); color: var(--brand-dark); margin-bottom: 12px; }
+  .path.adult .who { background: var(--blue-light); color: var(--blue-dark); }
+  .path .big { position: absolute; right: -6px; top: -6px; font-size: 70px; opacity: .13; }
+  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
   .check-list li { display: flex; gap: 10px; align-items: flex-start; }
   .check-list .dot { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .adult .check-list .dot, .check-list.blue .dot { background: var(--blue-light); color: var(--blue-dark); }
+  .same-account { margin-top: 22px; background: #fff; border: 2px dashed #f0b88c; border-radius: 18px; padding: 16px 20px; text-align: center; }
+
+  /* Bảng so sánh */
+  .table-wrap { overflow-x: auto; margin-top: 26px; }
+  table.cmp { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 16px rgba(80, 40, 10, .08); min-width: 560px; }
+  .cmp th, .cmp td { padding: 13px 16px; text-align: left; font-size: 15px; border-bottom: 1px solid #f3e6d8; vertical-align: top; }
+  .cmp thead th { background: var(--brand); color: #fff; font-size: 16px; }
+  .cmp thead th:last-child { background: var(--blue); }
+  .cmp tbody th { width: 22%; color: var(--text-2); background: #fffaf5; }
+  .cmp tr:last-child th, .cmp tr:last-child td { border-bottom: 0; }
+
+  /* Tab */
+  .tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
+  .tab { border: 2px solid var(--brand); background: #fff; color: var(--brand-dark); font-weight: 700; font-size: 16px; border-radius: 999px; padding: 11px 22px; cursor: pointer; }
+  .tab[aria-selected="true"] { background: var(--brand); color: #fff; }
+  .tab.blue { border-color: var(--blue); color: var(--blue-dark); }
+  .tab.blue[aria-selected="true"] { background: var(--blue); color: #fff; }
+  .panel[hidden] { display: none; }
+  .panel { animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .feat h3 { margin-bottom: 6px; }
+  .feat p { margin: 0; color: var(--text-2); font-size: 15px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .3px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: #e6f6ea; color: #1f7a35; margin-left: 6px; vertical-align: middle; }
+  .tag.soon { background: #fff3cd; color: #8a6100; }
+
+  /* Học dễ hiểu – nhớ lâu – dễ luyện */
+  .pillar { text-align: center; padding: 28px 22px; }
+  .pillar .num { width: 56px; height: 56px; border-radius: 50%; background: var(--brand); color: #fff; font-size: 26px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+  .pillar:nth-child(2) .num { background: #7c3aed; }
+  .pillar:nth-child(3) .num { background: var(--ok); }
+  .pillar ul { text-align: left; margin: 14px 0 0; padding-left: 20px; color: var(--text-2); font-size: 15px; }
+  .pillar li { margin-bottom: 6px; }
+
+  /* Hộp nhớ */
+  .leitner { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin: 22px 0 6px; }
+  .box { width: 52px; background: linear-gradient(180deg, #ffd7b8, var(--brand)); border-radius: 10px 10px 4px 4px; color: #fff; font-weight: 800; font-size: 13px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; }
+
+  /* Demo thanh điệu */
+  .demo { background: linear-gradient(135deg, #fff, #fff1e6); border-radius: 28px; padding: 34px 24px; text-align: center; box-shadow: 0 8px 28px rgba(80, 40, 10, .1); }
+  .tones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 18px 0 8px; }
+  .tone { border: 0; border-radius: 18px; background: #fff; box-shadow: 0 4px 12px rgba(80, 40, 10, .15); padding: 14px 20px; font-size: 30px; font-weight: 800; cursor: pointer; color: var(--text); min-width: 78px; transition: transform .12s, background .12s; }
+  .tone small { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); }
+  .tone:hover { transform: translateY(-3px); }
+  .tone.on { background: var(--brand); color: #fff; }
+  .tone.on small { color: #ffe3cc; }
+  #toneNote { min-height: 22px; font-size: 14px; }
+
+  /* Trò chơi */
+  .game { text-align: center; padding: 18px 12px; }
+  .game .em { font-size: 32px; }
+  .game b { display: block; margin-top: 4px; }
+  .game span { font-size: 13px; color: var(--text-2); }
 
   /* Mô phỏng màn hình app */
-  .phone { width: 220px; background: #1f1410; border-radius: 34px; padding: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, .22); }
-  .phone .screen { background: var(--bg); border-radius: 22px; padding: 16px 14px; min-height: 360px; }
+  .phone { width: 230px; background: #1f1410; border-radius: 34px; padding: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, .22); }
+  .phone .screen { background: var(--bg); border-radius: 22px; padding: 16px 14px; min-height: 380px; }
+  .phone.blue .screen { background: #f4f8ff; }
   .phone .dot-bar { width: 44px; height: 5px; border-radius: 999px; background: #4a352a; margin: 0 auto 10px; }
-  .phone-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .mock-title { font-weight: 800; font-size: 14px; margin-bottom: 10px; }
-  .mock-chip { background: #fff; border-radius: 12px; padding: 8px 10px; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(80, 40, 10, .1); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .mock-title { font-weight: 800; font-size: 14px; margin-bottom: 10px; text-align: left; }
+  .mock-chip { background: #fff; border-radius: 12px; padding: 8px 10px; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(80, 40, 10, .1); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; text-align: left; }
   .mock-star { color: #f5a623; }
   .mock-progress { height: 10px; border-radius: 999px; background: #f0ddc9; overflow: hidden; margin: 6px 0 14px; }
   .mock-progress i { display: block; height: 100%; background: var(--brand); }
+  .phone.blue .mock-progress { background: #d6e4ff; }
+  .phone.blue .mock-progress i { background: var(--blue); }
   .mock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .mock-tile { aspect-ratio: 1; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 2px 6px rgba(80, 40, 10, .1); }
+  .mock-bars { display: flex; align-items: flex-end; gap: 4px; height: 70px; margin: 6px 0 12px; }
+  .mock-bars i { flex: 1; background: var(--brand); border-radius: 4px 4px 0 0; opacity: .85; }
+  .mock-done { background: #e6f6ea; color: #1f7a35; }
+  .split { display: grid; grid-template-columns: 1fr auto; gap: 36px; align-items: center; }
+  .split.rev { grid-template-columns: auto 1fr; }
+  @media (max-width: 860px) { .split, .split.rev { grid-template-columns: 1fr; } .split .center { order: -1; } }
 
   /* Hỏi đáp */
   details { background: #fff; border-radius: 16px; padding: 16px 18px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(80, 40, 10, .06); }
@@ -140,12 +210,22 @@
   /* Banner CTA cuối */
   .cta-banner { background: linear-gradient(135deg, var(--brand), #ff8a3d); border-radius: 28px; padding: 46px 30px; color: #fff; text-align: center; }
   .cta-banner h2 { color: #fff; }
-  .cta-banner p { color: rgba(255, 255, 255, .9); }
+  .cta-banner p { color: rgba(255, 255, 255, .92); }
   .cta-banner .btn { background: #fff; color: var(--brand-dark); }
+  .cta-banner .btn.blue { background: var(--blue-dark); color: #fff; }
 
   footer { padding: 30px 0 40px; color: var(--text-2); font-size: 14px; }
   .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: center; }
   footer a { color: var(--text-2); }
+
+  /* Hiện dần khi cuộn */
+  .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .rv.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { opacity: 1; transform: none; transition: none; }
+    .mascot-circle, .floaty, .panel { animation: none; }
+    html { scroll-behavior: auto; }
+  }
 </style>
 </head>
 <body>
@@ -154,8 +234,9 @@
   <div class="wrap nav">
     <a class="logo" href="#top"><img class="badge" src="/icons/icon.svg" alt=""> Tôi luyện tiếng Việt</a>
     <ul class="nav-links">
+      <li><a href="#hai-lo-trinh">Hai lộ trình</a></li>
       <li><a href="#tinh-nang">Tính năng</a></li>
-      <li><a href="#cap-do">Lộ trình học</a></li>
+      <li><a href="#hoc-hieu-nho">Học hiệu quả</a></li>
       <li><a href="#phu-huynh">Phụ huynh</a></li>
       <li><a href="#hoi-dap">Hỏi đáp</a></li>
     </ul>
@@ -167,135 +248,322 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">🐣 Dành cho trẻ gốc Việt 3–8 tuổi</span>
-        <h1>Cùng chú gà trống nhỏ,<br>giữ tiếng Việt trong lòng con</h1>
-        <p class="lead">Ứng dụng học tiếng Việt vui nhộn qua trò chơi: nghe, nói, đọc, viết — được thiết kế riêng cho các bạn nhỏ lớn lên xa quê, không cần biết chữ trước khi bắt đầu.</p>
-        <div class="btn-row">
-          <a class="btn" href="/app/">🚀 Bắt đầu miễn phí</a>
-          <a class="btn ghost" href="#tinh-nang">Xem tính năng</a>
-        </div>
-        <div class="trust-row">
-          <span>🔒 Không quảng cáo bên thứ ba</span>
-          <span>🌍 Giải thích thêm bằng ngôn ngữ ở nhà</span>
-          <span>📶 Học được cả khi mạng yếu</span>
-          <span>👨‍👩‍👧 Phụ huynh luôn theo dõi được</span>
-        </div>
-      </div>
-      <div class="hero-art">
-        <div class="floaty f1">🥚 <small>Trứng</small></div>
-        <div class="floaty f2">🐣 <small>Gà con</small></div>
-        <div class="floaty f3">🐥 <small>Gà choai</small></div>
-        <div class="floaty f4">⭐⭐⭐</div>
-        <img class="mascot-circle" src="/vendor/mascot/rooster.png" alt="Chú gà trống nhỏ">
-      </div>
-    </div>
-  </section>
-
-  <!-- Vì sao chọn -->
-  <section>
     <div class="wrap">
-      <div class="center" style="margin-bottom:30px">
-        <h2>Vì sao ba mẹ chọn "Tôi luyện tiếng Việt"?</h2>
-        <p class="muted">Không phải học thuộc lòng — là chơi mỗi ngày một chút, để tiếng Việt trở thành thói quen tự nhiên của con.</p>
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">🇻🇳 Một ứng dụng · Hai lộ trình học tiếng Việt</span>
+          <h1>Tiếng Việt cho <em>bé</em> và cho <em style="color:var(--blue)">người lớn</em> — trong cùng một ứng dụng</h1>
+          <p class="lead">Bé gốc Việt 3–8 tuổi học qua trò chơi cùng chú gà trống nhỏ. Người lớn, người nước ngoài học bài bản từ phát âm, hội thoại đến ngữ pháp. Phụ huynh theo dõi được quá trình học của con.</p>
+          <div class="btn-row">
+            <a class="btn" href="/app/">🐣 Bé học tiếng Việt</a>
+            <a class="btn blue" href="/app/">📘 Học Tiếng Việt Bài Bản</a>
+          </div>
+          <div class="trust-row">
+            <span>🔒 Không quảng cáo bên thứ ba</span>
+            <span>🌍 Giải nghĩa bằng ngôn ngữ của bạn</span>
+            <span>📶 Cài như ứng dụng, mạng yếu vẫn học</span>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="floaty f1">🥚 <small>Bé: Trứng → Gà trống</small></div>
+          <div class="floaty f2">⭐⭐⭐</div>
+          <div class="floaty f3">🗣️ <small>Hội thoại A1</small></div>
+          <div class="floaty f4">🔁 <small>Ôn tập thông minh</small></div>
+          <img class="mascot-circle" src="/vendor/mascot/rooster.png" alt="Chú gà trống nhỏ — linh vật của ứng dụng">
+        </div>
       </div>
-      <div class="grid cols-4">
-        <div class="card">
-          <div class="icon-box">🎯</div>
-          <h3>Đúng theo lứa tuổi</h3>
-          <p class="muted">Nội dung chia theo độ tuổi, đối chiếu chương trình tiếng Việt trong nước — không quá sức, không quá dễ.</p>
-        </div>
-        <div class="card">
-          <div class="icon-box">🎮</div>
-          <h3>Học qua chơi</h3>
-          <p class="muted">Mỗi bài là chuỗi trò chơi nghe – nhìn – chạm ngắn gọn, giữ bé hứng thú mà không thấy như "phải học".</p>
-        </div>
-        <div class="card">
-          <div class="icon-box">🎙️</div>
-          <h3>Sửa phát âm tại chỗ</h3>
-          <p class="muted">Bé đọc thử, app lắng nghe và gợi ý tiếng nào cần luyện lại — luôn động viên, không bao giờ chê "sai".</p>
-        </div>
-        <div class="card">
-          <div class="icon-box">👨‍👩‍👧</div>
-          <h3>Phụ huynh an tâm</h3>
-          <p class="muted">Khu quản lý riêng có PIN bảo vệ, theo dõi tiến độ học của từng con mà không xáo trộn lúc bé đang học.</p>
-        </div>
+      <div class="stats">
+        <div class="stat"><b>2</b><span>lộ trình: Bé & Bài Bản</span></div>
+        <div class="stat"><b>4</b><span>cấp độ cho bé: 🥚🐣🐥🐓</span></div>
+        <div class="stat"><b>8</b><span>loại chặng học Bài Bản</span></div>
+        <div class="stat"><b>12+</b><span>trò luyện tập kỹ năng</span></div>
       </div>
     </div>
   </section>
 
-  <!-- Tính năng -->
+  <!-- Hai lộ trình -->
+  <section id="hai-lo-trinh">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Vì sao có hai lộ trình?</span>
+        <h2>Mỗi người học một cách khác nhau — nên mỗi lộ trình được thiết kế riêng</h2>
+        <p class="muted">Trẻ nhỏ học bằng chơi, hình ảnh và âm thanh. Người lớn học bằng hiểu quy tắc, tình huống giao tiếp thật và ôn lại đúng lúc. Một cách học không thể vừa cho cả hai, nên ứng dụng tách hai khu học riêng nhưng chung một tài khoản.</p>
+      </div>
+      <div class="grid cols-2">
+        <div class="card path rv">
+          <div class="big">🐣</div>
+          <span class="who">Dành cho trẻ gốc Việt 3–8 tuổi</span>
+          <h3>🐣 Bé học tiếng Việt</h3>
+          <p class="muted">Học như đang chơi: nhìn hình, nghe giọng, chạm, ghép, tô chữ — không cần biết chữ trước khi bắt đầu.</p>
+          <ul class="check-list">
+            <li><span class="dot">🎮</span><span>Bài học là chuỗi trò chơi ngắn, vui, có sao và huy hiệu khích lệ</span></li>
+            <li><span class="dot">🥚</span><span>4 cấp độ: học vần → từ vựng → câu ngắn → đọc hiểu</span></li>
+            <li><span class="dot">✍️</span><span>Tô chữ, đánh vần, phân biệt dấu thanh</span></li>
+            <li><span class="dot">🔊</span><span>Bé tự bấm avatar để vào học, không phải gõ mật khẩu</span></li>
+          </ul>
+        </div>
+        <div class="card path adult rv">
+          <div class="big">📘</div>
+          <span class="who">Dành cho người lớn & người nước ngoài</span>
+          <h3>📘 Tiếng Việt Bài Bản</h3>
+          <p class="muted">Giáo trình có hệ thống theo khung năng lực (A0, A1…): đi từ bảng chữ cái – thanh điệu đến hội thoại, ngữ pháp, đọc – nghe – viết.</p>
+          <ul class="check-list">
+            <li><span class="dot">🗣️</span><span>Học qua hội thoại tình huống thật: chào hỏi, gia đình, số đếm, màu sắc…</span></li>
+            <li><span class="dot">📐</span><span>Ngữ pháp có công thức rõ ràng, câu ví dụ, chữ đậm – đỏ nhấn đúng chỗ cần chú ý</span></li>
+            <li><span class="dot">🔁</span><span>Ôn tập thông minh: từ nào quên thì xuất hiện lại sớm hơn</span></li>
+            <li><span class="dot">🌐</span><span>Nghĩa và tên chủ đề hiển thị bằng ngôn ngữ mẹ đẻ của bạn</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-wrap rv">
+        <table class="cmp">
+          <thead><tr><th></th><th>🐣 Bé học tiếng Việt</th><th>📘 Tiếng Việt Bài Bản</th></tr></thead>
+          <tbody>
+            <tr><th>Đối tượng</th><td>Trẻ gốc Việt 3–8 tuổi, lớn lên xa quê</td><td>Người lớn, người nước ngoài, thành viên gia đình muốn học cùng con</td></tr>
+            <tr><th>Cách học</th><td>Trò chơi nghe – nhìn – chạm, câu ngắn, thưởng sao</td><td>Hội thoại, ngữ pháp, luyện đọc – nghe – viết; tự chọn chặng muốn học</td></tr>
+            <tr><th>Lộ trình</th><td>🥚 Trứng → 🐣 Gà con → 🐥 Gà choai → 🐓 Gà trống</td><td>Cấp A0 → A1 → … theo từng Chủ đề và Bài</td></tr>
+            <tr><th>Ghi nhớ</th><td>Lặp lại qua nhiều trò, huy hiệu Đồng – Bạc – Vàng</td><td>Hộp nhớ Leitner: ôn đúng lúc sắp quên + huy hiệu</td></tr>
+            <tr><th>Không khoá cấp</th><td colspan="2">Cả hai đều không khoá bài: người học tự chọn bài hợp với mình, ứng dụng chỉ gợi ý</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="same-account rv">
+        👨‍👩‍👧 <b>Một tài khoản, nhiều hồ sơ.</b> Phụ huynh tạo hồ sơ cho con <i>và</i> hồ sơ học Bài Bản cho chính mình (hoặc người thân) — mỗi người một avatar, tiến độ riêng, học song song mà không lẫn vào nhau.
+      </div>
+    </div>
+  </section>
+
+  <!-- Tính năng từng giáo trình -->
   <section id="tinh-nang" style="background:#fff">
     <div class="wrap">
-      <div class="center" style="margin-bottom:30px">
-        <h2>Mọi kỹ năng tiếng Việt, trong một ứng dụng</h2>
-        <p class="muted">Từ những từ đầu tiên đến đọc hiểu cả câu chuyện.</p>
+      <div class="sec-head rv">
+        <h2>Tính năng nổi bật của từng giáo trình</h2>
+        <p class="muted">Chọn một lộ trình để xem điều gì giúp người học dễ hiểu, nhớ lâu và chịu khó luyện tập.</p>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-kid" aria-selected="true" aria-controls="panel-kid">🐣 Bé học tiếng Việt</button>
+        <button class="tab blue" role="tab" id="tab-adult" aria-selected="false" aria-controls="panel-adult">📘 Tiếng Việt Bài Bản</button>
+      </div>
+
+      <div class="panel" id="panel-kid" role="tabpanel" aria-labelledby="tab-kid">
+        <div class="split">
+          <div class="grid cols-2">
+            <div class="card feat"><div class="icon-box">🖼️</div><h3>Học từ bằng hình</h3><p>Mỗi từ có hình minh hoạ, giọng đọc và câu ví dụ. Bé chạm để nghe, nhìn hình rồi ghép — nhớ bằng cả mắt lẫn tai.</p></div>
+            <div class="card feat"><div class="icon-box">🔤</div><h3>4 cấp độ rõ ràng</h3><p>Học vần → từ vựng → câu ngắn → đọc hiểu. Không khoá cấp, ứng dụng chỉ nhẹ nhàng gợi ý "con đang ở đây".</p></div>
+            <div class="card feat"><div class="icon-box">✍️</div><h3>Tô chữ & đánh vần</h3><p>Tô theo chữ mẫu, đánh vần từng phần, phân biệt chữ hoa – thường và 6 dấu thanh (ma – má – mà – mả – mã – mạ).</p></div>
+            <div class="card feat"><div class="icon-box">🎤</div><h3>Gợi ý phát âm</h3><p>Bé đọc thử, ứng dụng so từng tiếng và gợi ý tiếng nào nên luyện lại — luôn động viên, không chấm điểm hay chê bé. <small class="muted">(Tính năng tham khảo, không thay giáo viên.)</small></p></div>
+            <div class="card feat"><div class="icon-box">🏅</div><h3>Sao, chuỗi ngày & huy hiệu</h3><p>Mỗi lượt chơi ngắn kiếm sao, giữ chuỗi ngày học liên tiếp và mở huy hiệu Đồng – Bạc – Vàng cho từng kỹ năng.</p></div>
+            <div class="card feat"><div class="icon-box">👧</div><h3>Chọn giọng nữ / nam</h3><p>Bé chọn giọng đọc mình thích. Nhiều nội dung dùng giọng người thật thu âm, nghe tự nhiên hơn máy đọc.</p></div>
+          </div>
+          <div class="center">
+            <div class="phone">
+              <div class="screen">
+                <div class="dot-bar"></div>
+                <div class="mock-title">🐥 Chủ đề: Con vật</div>
+                <div class="mock-grid">
+                  <div class="mock-tile">🐶</div><div class="mock-tile">🐱</div><div class="mock-tile">🐔</div>
+                  <div class="mock-tile">🐷</div><div class="mock-tile">🐮</div><div class="mock-tile">🐟</div>
+                </div>
+                <div class="mock-progress" style="margin-top:14px"><i style="width:60%"></i></div>
+                <div class="mock-chip"><span class="mock-star">⭐⭐⭐</span> Hay quá!</div>
+                <div class="mock-chip">🔊 con mèo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-adult" role="tabpanel" aria-labelledby="tab-adult" hidden>
+        <div class="split rev">
+          <div class="center">
+            <div class="phone blue">
+              <div class="screen">
+                <div class="dot-bar"></div>
+                <div class="mock-title">📘 A1 · Chào hỏi</div>
+                <div class="mock-chip mock-done">✓ 🗣️ Hội thoại</div>
+                <div class="mock-chip mock-done">✓ 🔤 Từ vựng</div>
+                <div class="mock-chip">📐 Ngữ pháp</div>
+                <div class="mock-chip">🎧 Luyện nghe</div>
+                <div class="mock-chip">📖 Luyện đọc</div>
+                <div class="mock-progress"><i style="width:40%"></i></div>
+                <div class="mock-chip">🎮 Game học</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <div class="card feat"><div class="icon-box blue">🧭</div><h3>Lưới chặng tự do</h3><p>Mỗi bài gồm tới 8 loại chặng: hội thoại, từ vựng, ngữ pháp, ngữ âm, game học, luyện đọc, luyện nghe, luyện viết. Muốn học chặng nào thì chạm vào, xong là có dấu ✓.</p></div>
+            <div class="card feat"><div class="icon-box blue">🗣️</div><h3>Hội thoại tình huống</h3><p>Nghe và nói theo đoạn hội thoại thật. Bấm nghe từng câu, đọc thử, xem nghĩa bằng ngôn ngữ của bạn.</p></div>
+            <div class="card feat"><div class="icon-box blue">📐</div><h3>Ngữ pháp dễ nhìn</h3><p>Công thức hiển thị rõ ràng, chữ đậm – màu đỏ – khối nổi giúp nhìn ra cấu trúc câu ngay, kèm câu ví dụ để bắt chước.</p></div>
+            <div class="card feat"><div class="icon-box blue">🎧</div><h3>Nghe – Đọc – Viết riêng</h3><p>Luyện nghe không hiện chữ để rèn tai; luyện đọc có câu hỏi kiểm tra ngay; luyện viết theo mẫu — chấm một lượt cho cả bài.</p></div>
+            <div class="card feat"><div class="icon-box blue">🔁</div><h3>Ôn tập thông minh</h3><p>Hộp nhớ Leitner: từ nhớ tốt thì cách xa dần, từ quên thì quay lại sớm. Ôn đúng lúc để nhớ lâu, không phải học lại từ đầu.</p></div>
+            <div class="card feat"><div class="icon-box blue">🎮</div><h3>Luyện tập mượn trò của bé</h3><p>Hơn 10 trò chơi luyện kỹ năng (nghe – đọc – chính tả – ghép chữ…) chạy trên nội dung bạn đã chọn: tất cả, theo cấp, theo chủ đề hoặc chỉ các từ hay sai.</p></div>
+          </div>
+        </div>
+        <p class="center muted" style="margin-top:20px">🛠️ Nội dung Bài Bản đang được soạn và mở rộng dần: hiện có cấp <b>A0</b> (chữ cái – âm – thanh điệu) và <b>A1</b> (chào hỏi, gia đình, số đếm, màu sắc); các cấp tiếp theo sẽ ra mắt từng bước.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dễ hiểu - nhớ lâu - dễ luyện -->
+  <section id="hoc-hieu-nho">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Học hiệu quả</span>
+        <h2>Dễ hiểu · Nhớ lâu · Dễ luyện tập</h2>
+        <p class="muted">Ba điều mà người học cần nhất — và là lý do ứng dụng được thiết kế như thế này.</p>
       </div>
       <div class="grid cols-3">
-        <div class="card"><div class="icon-box">📖</div><h3>Học từ vựng bằng hình</h3><p class="muted">Mỗi từ có hình minh hoạ, âm thanh và câu ví dụ — bé chạm để nghe, ghép và ghi nhớ.</p></div>
-        <div class="card"><div class="icon-box">🎤</div><h3>Chấm phát âm thông minh</h3><p class="muted">Bé đọc thử từng câu, app so sánh từng tiếng và gợi ý luyện lại — chỉ mang tính tham khảo, không thay giáo viên.</p></div>
-        <div class="card"><div class="icon-box">🐥</div><h3>4 cấp độ rõ ràng</h3><p class="muted">🥚 Trứng → 🐣 Gà con → 🐥 Gà choai → <img src="/vendor/mascot/rooster.png" alt="" style="height:1em;width:1em;vertical-align:-0.15em"> Gà trống — lộ trình từ làm quen chữ cái tới đọc hiểu, không hề bị khoá cấp.</p></div>
-        <div class="card"><div class="icon-box">✍️</div><h3>Học vần & tập viết</h3><p class="muted">Đánh vần từng phần, phân biệt chữ hoa – thường, tô chữ theo mẫu chữ thảo chuẩn tiểu học.</p></div>
-        <div class="card"><div class="icon-box">🏅</div><h3>Luyện tập theo kỹ năng</h3><p class="muted">12 kỹ năng từ nghe – nói tới trí nhớ – chính tả, mỗi lượt chơi ngắn khoảng 5 phút, có huy hiệu khích lệ.</p></div>
-        <div class="card"><div class="icon-box">🌍</div><h3>Song ngữ thân thiện</h3><p class="muted">Nghĩa của từ được giải thích thêm bằng ngôn ngữ ở nhà, giúp bé hiểu nhanh hơn khi vốn tiếng Việt còn ít.</p></div>
-        <div class="card"><div class="icon-box">🔐</div><h3>Khu phụ huynh riêng</h3><p class="muted">Có PIN bảo vệ, tách biệt hoàn toàn với khu học của bé; quản lý hồ sơ cho nhiều con.</p></div>
-        <div class="card"><div class="icon-box">📱</div><h3>Cài như một ứng dụng</h3><p class="muted">Thêm vào màn hình chính điện thoại/máy tính bảng, mở nhanh, không cần tải lại mỗi lần.</p></div>
-        <div class="card"><div class="icon-box">🚫</div><h3>Không quảng cáo</h3><p class="muted">Không quảng cáo bên thứ ba, không nội dung ngoài chương trình học — an toàn cho trẻ nhỏ.</p></div>
+        <div class="card pillar rv">
+          <div class="num">💡</div><h3>Dễ hiểu</h3>
+          <ul>
+            <li>Hình minh hoạ + giọng đọc cho mọi từ</li>
+            <li>Nghĩa giải thích bằng ngôn ngữ ở nhà (Đức, Anh, Pháp, Hàn, Nhật…)</li>
+            <li>Giọng người thật thu âm, có giọng nữ và nam</li>
+            <li>Ngữ pháp trình bày bằng công thức và màu sắc</li>
+          </ul>
+        </div>
+        <div class="card pillar rv">
+          <div class="num">🧠</div><h3>Nhớ lâu</h3>
+          <ul>
+            <li>Hộp nhớ Leitner: ôn lại đúng lúc sắp quên</li>
+            <li>Một từ được gặp lại qua nhiều trò: nghe, nhìn, ghép, viết</li>
+            <li>Huy hiệu Đồng – Bạc – Vàng khích lệ ôn đều</li>
+            <li>Chuỗi ngày học liên tiếp tạo thói quen</li>
+          </ul>
+          <div class="leitner" aria-hidden="true">
+            <div class="box" style="height:30px">1</div><div class="box" style="height:44px">2</div><div class="box" style="height:58px">3</div><div class="box" style="height:72px">4</div><div class="box" style="height:86px">5</div>
+          </div>
+        </div>
+        <div class="card pillar rv">
+          <div class="num">🎯</div><h3>Dễ luyện tập</h3>
+          <ul>
+            <li>Mỗi lượt chơi ngắn, chọn trò theo kỹ năng muốn rèn</li>
+            <li>Chọn phạm vi: tất cả, theo cấp, theo chủ đề, hoặc chỉ từ hay sai</li>
+            <li>Kết quả cuối lượt chỉ ra mục nên luyện lại</li>
+            <li>Học lúc nào cũng được, cài như ứng dụng trên điện thoại</li>
+          </ul>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Thử ngay: thanh điệu -->
+  <section style="background:#fff">
+    <div class="wrap">
+      <div class="demo rv">
+        <span class="eyebrow">Thử ngay tại đây</span>
+        <h2>Sáu dấu thanh — một âm "ma"</h2>
+        <p class="muted">Tiếng Việt có 6 thanh điệu, mỗi thanh cho ra một nghĩa khác nhau. Trong ứng dụng, đây là một trong những trò luyện tập được yêu thích. Bấm vào từng thanh để nghe thử.</p>
+        <div class="tones" id="tones">
+          <button class="tone" data-w="ma" data-m="ngang · ma (ma quỷ)">ma<small>ngang</small></button>
+          <button class="tone" data-w="má" data-m="sắc · má (má / mẹ)">má<small>sắc</small></button>
+          <button class="tone" data-w="mà" data-m="huyền · mà (nhưng mà)">mà<small>huyền</small></button>
+          <button class="tone" data-w="mả" data-m="hỏi · mả (mồ mả)">mả<small>hỏi</small></button>
+          <button class="tone" data-w="mã" data-m="ngã · mã (con ngựa)">mã<small>ngã</small></button>
+          <button class="tone" data-w="mạ" data-m="nặng · mạ (cây lúa non)">mạ<small>nặng</small></button>
+        </div>
+        <p class="muted" id="toneNote">Giọng đọc do trình duyệt của bạn phát (nếu máy có hỗ trợ tiếng Việt).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trò luyện tập -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>Hơn 10 trò luyện tập, một tập nội dung</h2>
+        <p class="muted">Cùng một từ, một câu có thể được luyện bằng nhiều kiểu trò chơi — nên vừa không chán, vừa nhớ chắc.</p>
+      </div>
+      <div class="grid cols-4">
+        <div class="card game rv"><div class="em">✏️</div><b>Tô chữ</b><span>Tô theo chữ mẫu</span></div>
+        <div class="card game rv"><div class="em">🧩</div><b>Ghép chữ</b><span>Ghép âm, vần thành từ</span></div>
+        <div class="card game rv"><div class="em">📖</div><b>Đọc</b><span>Đọc chữ, chọn hình, điền từ</span></div>
+        <div class="card game rv"><div class="em">🔠</div><b>Viết hoa</b><span>Chữ hoa và dấu câu</span></div>
+        <div class="card game rv"><div class="em">✅</div><b>Chính tả</b><span>Chọn cách viết đúng</span></div>
+        <div class="card game rv"><div class="em">💭</div><b>Hiểu nghĩa</b><span>Từ này nghĩa là gì?</span></div>
+        <div class="card game rv"><div class="em">🎵</div><b>Thanh điệu</b><span>Phân biệt ma – má – mà…</span></div>
+        <div class="card game rv"><div class="em">🗣️</div><b>Đánh vần & hội thoại</b><span>Đánh vần từng phần, nói theo câu</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phụ huynh -->
+  <section id="phu-huynh" style="background:#fff">
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <span class="eyebrow">Dành cho phụ huynh</span>
+          <h2>Con học vui — ba mẹ nắm rõ con đã học gì, tiến bộ ra sao</h2>
+          <p class="muted">Khu phụ huynh tách biệt hoàn toàn với khu học của bé, mở bằng PIN riêng. Ba mẹ không cần ngồi cạnh vẫn biết con học đều đặn đến đâu.</p>
+          <ul class="check-list">
+            <li><span class="dot">📊</span><span><b>Tiến độ học của từng con:</b> số sao, chuỗi ngày học liên tiếp và hoạt động 14 ngày gần nhất.</span></li>
+            <li><span class="dot">🎯</span><span><b>Kỹ năng cần luyện thêm:</b> thấy ngay con đang mạnh – yếu ở kỹ năng nào để cùng con luyện.</span></li>
+            <li><span class="dot">🎧</span><span><b>Đánh giá đọc to định kỳ:</b> mức độ, lỗi hay gặp và gợi ý luyện tập tiếp theo (bật khi ba mẹ đồng ý).</span></li>
+            <li><span class="dot">👶</span><span><b>Quản lý nhiều hồ sơ:</b> mỗi con một avatar riêng; thêm hồ sơ học Bài Bản cho chính ba mẹ.</span></li>
+            <li><span class="dot">🔊</span><span><b>Tuỳ chỉnh:</b> chọn giọng nữ/nam cho con, cập nhật thông tin liên hệ, theo dõi hạn sử dụng và gói học.</span></li>
+            <li><span class="dot">🔐</span><span><b>An toàn:</b> PIN 4 số, tự khoá tạm sau nhiều lần nhập sai; không quảng cáo bên thứ ba.</span></li>
+          </ul>
+        </div>
+        <div class="center">
+          <div class="phone">
+            <div class="screen">
+              <div class="dot-bar"></div>
+              <div class="mock-title">👦 Tiến độ của Bin</div>
+              <div class="mock-chip"><span class="mock-star">⭐⭐⭐</span> 128 sao</div>
+              <div class="mock-chip">🔥 Chuỗi 6 ngày liên tiếp</div>
+              <div class="mock-title" style="margin-bottom:0">14 ngày gần nhất</div>
+              <div class="mock-bars" aria-hidden="true">
+                <i style="height:30%"></i><i style="height:55%"></i><i style="height:20%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:45%"></i><i style="height:90%"></i>
+              </div>
+              <div class="mock-title">Kỹ năng cần luyện</div>
+              <div class="mock-grid">
+                <div class="mock-tile">🎤</div><div class="mock-tile">🎵</div><div class="mock-tile">✏️</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="center muted" style="margin-top:26px">Với người học Bài Bản, tiến độ hiện ngay trong ứng dụng: dấu ✓ cho từng chặng và từng bài, kết quả mỗi lượt luyện tập và huy hiệu theo kỹ năng.</p>
     </div>
   </section>
 
   <!-- Lộ trình cấp độ -->
   <section id="cap-do">
     <div class="wrap">
-      <div class="center" style="margin-bottom:30px">
-        <h2>Lộ trình 4 cấp độ cùng chú gà trống nhỏ</h2>
-        <p class="muted">Bé có thể chọn học bất kỳ chủ đề nào — app chỉ nhẹ nhàng gợi ý "Con đang ở đây".</p>
+      <div class="sec-head rv">
+        <h2>Lộ trình của bé: 4 cấp độ cùng chú gà trống</h2>
+        <p class="muted">Bé có thể chọn học bất kỳ chủ đề nào — ứng dụng chỉ nhẹ nhàng gợi ý "con đang ở đây".</p>
       </div>
-      <div class="level-row">
-        <div class="card level-card"><div class="emoji">🥚</div><h3>Trứng</h3><p class="muted">Làm quen: nghe – nhìn – chạm với những từ đầu tiên.</p><span class="age">3–4 tuổi</span></div>
-        <span class="level-arrow">➜</span>
-        <div class="card level-card"><div class="emoji">🐣</div><h3>Gà con</h3><p class="muted">Mở rộng vốn từ theo từng chủ đề quen thuộc quanh bé.</p><span class="age">4–6 tuổi</span></div>
-        <span class="level-arrow">➜</span>
-        <div class="card level-card"><div class="emoji">🐥</div><h3>Gà choai</h3><p class="muted">Học vần, nhận mặt chữ, ghép câu và tập viết.</p><span class="age">5–7 tuổi</span></div>
-        <span class="level-arrow">➜</span>
-        <div class="card level-card"><div class="emoji"><img class="mascot-icon" src="/vendor/mascot/rooster.png" alt=""></div><h3>Gà trống</h3><p class="muted">Đọc hiểu câu chuyện, trả lời câu hỏi, luyện chính tả.</p><span class="age">6–8 tuổi</span></div>
+      <div class="grid cols-4">
+        <div class="card center rv"><div style="font-size:44px">🥚</div><h3>Trứng · Học vần</h3><p class="muted">Làm quen chữ cái, âm và dấu thanh bằng nghe – nhìn – chạm.</p></div>
+        <div class="card center rv"><div style="font-size:44px">🐣</div><h3>Gà con · Từ vựng</h3><p class="muted">Mở rộng vốn từ theo chủ đề quen thuộc quanh bé.</p></div>
+        <div class="card center rv"><div style="font-size:44px">🐥</div><h3>Gà choai · Câu ngắn</h3><p class="muted">Ghép từ thành câu, nhận mặt chữ, tập viết.</p></div>
+        <div class="card center rv"><div style="font-size:44px"><img class="mascot-icon" src="/vendor/mascot/rooster.png" alt="" style="height:1em;width:1em"></div><h3>Gà trống · Đọc hiểu</h3><p class="muted">Đọc đoạn ngắn, trả lời câu hỏi, luyện chính tả.</p></div>
+      </div>
+      <div class="card center rv" style="margin-top:22px;border-top:6px solid var(--blue)">
+        <h3>Lộ trình Bài Bản: A0 → A1 → …</h3>
+        <p class="muted" style="margin:0">Mỗi cấp gồm nhiều <b>Chủ đề</b>, mỗi chủ đề gồm nhiều <b>Bài</b>, mỗi bài gồm các <b>chặng</b> hội thoại – từ vựng – ngữ pháp – ngữ âm – game – đọc – nghe – viết. Cuối chủ đề có bài ôn tổng hợp.</p>
       </div>
     </div>
   </section>
 
-  <!-- Khu phụ huynh -->
-  <section id="phu-huynh" style="background:#fff">
-    <div class="wrap split">
-      <div>
-        <span class="eyebrow">Dành cho phụ huynh</span>
-        <h2>Con học vui, ba mẹ vẫn nắm rõ mọi thứ</h2>
-        <p class="muted">Khu phụ huynh tách biệt hoàn toàn khỏi khu học của bé, mở bằng PIN riêng.</p>
-        <ul class="check-list">
-          <li><span class="dot">🔐</span><span>PIN 4 số riêng để vào khu quản lý — bé không tự ý vào được.</span></li>
-          <li><span class="dot">📊</span><span>Theo dõi sao, chuỗi ngày học, 14 ngày gần nhất và các kỹ năng cần luyện thêm.</span></li>
-          <li><span class="dot">🎧</span><span>Đánh giá đọc to định kỳ: mức độ, lỗi hay gặp, gợi ý luyện tập tiếp theo.</span></li>
-          <li><span class="dot">👶</span><span>Quản lý hồ sơ cho nhiều con, mỗi bé một avatar riêng của mình.</span></li>
-          <li><span class="dot">🚫</span><span>Không quảng cáo, không thu thập dữ liệu ngoài mục đích học tập.</span></li>
-        </ul>
+  <!-- Trung tâm -->
+  <section style="background:#fff">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow blue">Dành cho trung tâm & giáo viên</span>
+        <h2>Một ứng dụng riêng cho trung tâm của bạn</h2>
+        <p class="muted">Mỗi trung tâm có bản riêng với tên, màu sắc và ngôn ngữ giải nghĩa riêng; giáo viên quản trị nội dung ngay trên trình duyệt.</p>
       </div>
-      <div class="center">
-        <div class="phone" style="margin:0 auto">
-          <div class="screen">
-            <div class="dot-bar"></div>
-            <div class="mock-title">👦 Tiến độ của Bin</div>
-            <div class="mock-chip"><span class="mock-star">⭐⭐⭐</span> 128 sao</div>
-            <div class="mock-chip">🔥 Chuỗi 6 ngày liên tiếp</div>
-            <div class="mock-progress"><i style="width:70%"></i></div>
-            <div class="mock-title">Kỹ năng cần luyện</div>
-            <div class="mock-grid">
-              <div class="mock-tile">🎤</div>
-              <div class="mock-tile">🎵</div>
-              <div class="mock-tile">✏️</div>
-            </div>
-          </div>
-        </div>
+      <div class="grid cols-3">
+        <div class="card feat rv"><div class="icon-box blue">📄</div><h3>Nhập bài hàng loạt bằng CSV</h3><p>Soạn giáo trình trên bảng tính rồi nhập một lần; nhập lại không bị trùng, dữ liệu mới luôn ở dạng nháp để duyệt trước khi bé thấy.</p></div>
+        <div class="card feat rv"><div class="icon-box blue">🎙️</div><h3>Thu giọng người thật & giọng đọc tự động</h3><p>Thu âm ngay trong ứng dụng hoặc tạo giọng đọc tự động; thư viện âm có sẵn có thể dùng lại cho nhiều bài.</p></div>
+        <div class="card feat rv"><div class="icon-box blue">🌍</div><h3>Đa ngôn ngữ giải nghĩa</h3><p>Cấu hình danh sách ngôn ngữ (Đức, Anh, Pháp, Hàn, Nhật…) cho từng trung tâm; nghĩa và tên chủ đề hiện đúng ngôn ngữ của người học.</p></div>
+        <div class="card feat rv"><div class="icon-box blue">✅</div><h3>Duyệt trước khi phát hành</h3><p>Nội dung chỉ hiện cho người học khi đã được duyệt, nên bài đang soạn dở không lọt tới học viên.</p></div>
+        <div class="card feat rv"><div class="icon-box blue">👥</div><h3>Quản lý phụ huynh & học phí</h3><p>Xem danh sách phụ huynh, hồ sơ con, xác nhận thanh toán và gia hạn; phụ huynh gửi yêu cầu, trung tâm xác nhận.</p></div>
+        <div class="card feat rv"><div class="icon-box blue">🛡️</div><h3>Dữ liệu tách biệt</h3><p>Mỗi trung tâm dùng hệ thống dữ liệu riêng, không lẫn với trung tâm khác.</p></div>
       </div>
     </div>
   </section>
@@ -303,28 +571,40 @@
   <!-- Hỏi đáp -->
   <section id="hoi-dap">
     <div class="wrap" style="max-width:760px">
-      <div class="center" style="margin-bottom:26px">
+      <div class="sec-head" style="margin-bottom:22px">
         <h2>Câu hỏi thường gặp</h2>
       </div>
       <details open>
+        <summary>Con tôi đã lớn / tôi là người lớn, nên chọn khu nào?</summary>
+        <p>Người lớn và người nước ngoài chọn <b>Tiếng Việt Bài Bản</b>. Trẻ gốc Việt 3–8 tuổi chọn <b>Bé học tiếng Việt</b>. Một tài khoản phụ huynh có thể tạo cả hai loại hồ sơ.</p>
+      </details>
+      <details>
         <summary>Bé có cần tự đăng nhập không?</summary>
-        <p>Không. Bé chỉ cần chọn avatar của riêng mình để vào học — tài khoản đăng ký là của phụ huynh, avatar đóng vai trò như "mật khẩu bằng hình" cho bé.</p>
+        <p>Không. Bé chỉ cần chọn avatar của riêng mình để vào học — tài khoản đăng ký là của phụ huynh, avatar đóng vai trò như "mật khẩu bằng hình".</p>
+      </details>
+      <details>
+        <summary>Phụ huynh xem được những gì về con?</summary>
+        <p>Khu phụ huynh (có PIN) cho thấy số sao, chuỗi ngày học, hoạt động 14 ngày gần nhất, kỹ năng cần luyện thêm và đánh giá đọc to định kỳ của từng bé học ở khu Bé học tiếng Việt. Người học Bài Bản xem tiến độ (dấu ✓, kết quả luyện tập, huy hiệu) ngay trong ứng dụng.</p>
+      </details>
+      <details>
+        <summary>Ôn tập thông minh hoạt động thế nào?</summary>
+        <p>Mỗi từ, câu có một "hộp nhớ" từ 1 đến 5. Trả lời đúng thì lên hộp cao hơn và xuất hiện thưa dần; trả lời sai thì về hộp 1 và quay lại sớm. Nhờ vậy bạn ôn nhiều hơn ở chỗ còn yếu.</p>
       </details>
       <details>
         <summary>App có dùng được khi không có mạng không?</summary>
-        <p>Sau khi cài vào máy, những bài đã mở trước đó vẫn dùng lại được khi mạng yếu. Một số phần cần tải nội dung mới thì vẫn cần kết nối mạng.</p>
+        <p>Ứng dụng cài như app trên điện thoại/máy tính bảng. Khi mạng yếu, những phần đã mở trước đó vẫn dùng lại được; các phần cần tải nội dung mới thì vẫn cần kết nối mạng.</p>
       </details>
       <details>
         <summary>Việc chấm phát âm có chính xác tuyệt đối không?</summary>
-        <p>Đây là công cụ gợi ý giúp bé luyện tập thường xuyên hơn, không đo được các yếu tố như ngữ điệu hay ngắt nghỉ, và không thay thế đánh giá của giáo viên hay chuyên gia ngôn ngữ.</p>
+        <p>Đây là công cụ gợi ý giúp luyện tập thường xuyên hơn, không đo được ngữ điệu hay ngắt nghỉ, và không thay thế đánh giá của giáo viên hoặc chuyên gia ngôn ngữ.</p>
       </details>
       <details>
-        <summary>Ứng dụng có hỗ trợ ngôn ngữ nào khác ngoài tiếng Việt không?</summary>
-        <p>Nghĩa của từ mới được giải thích thêm bằng ngôn ngữ mà gia đình đang dùng ở nhà, giúp bé dễ hiểu hơn trong lúc vốn tiếng Việt còn ít.</p>
+        <summary>Ứng dụng hỗ trợ ngôn ngữ giải nghĩa nào?</summary>
+        <p>Nghĩa của từ và tên chủ đề được hiển thị bằng ngôn ngữ mà gia đình hoặc trung tâm cấu hình (ví dụ Đức, Anh, Pháp, Hàn, Nhật), giúp người học hiểu nhanh hơn khi vốn tiếng Việt còn ít.</p>
       </details>
       <details>
         <summary>Học phí thế nào?</summary>
-        <p>Gói học phí do trung tâm quản lý và hiển thị minh bạch ngay trong khu phụ huynh trước khi thanh toán. Vui lòng liên hệ trung tâm bạn đang theo học để biết chi tiết.</p>
+        <p>Gói học phí do trung tâm quản lý và hiển thị minh bạch trong khu phụ huynh trước khi thanh toán. Vui lòng liên hệ trung tâm bạn đang theo học để biết chi tiết.</p>
       </details>
     </div>
   </section>
@@ -332,11 +612,12 @@
   <!-- CTA cuối -->
   <section>
     <div class="wrap">
-      <div class="cta-banner">
-        <h2>Sẵn sàng cùng con giữ gìn tiếng Việt?</h2>
-        <p>Chỉ mất vài phút để tạo hồ sơ đầu tiên cho bé.</p>
+      <div class="cta-banner rv">
+        <h2>Sẵn sàng bắt đầu hành trình tiếng Việt?</h2>
+        <p>Chỉ mất vài phút để tạo tài khoản và hồ sơ đầu tiên — cho bé, cho bạn, hoặc cho cả nhà.</p>
         <div class="btn-row" style="justify-content:center">
-          <a class="btn" href="/app/"><img src="/vendor/mascot/rooster.png" alt="" style="height:1.2em;width:1.2em;vertical-align:-0.3em"> Vào học ngay</a>
+          <a class="btn" href="/app/"><img src="/vendor/mascot/rooster.png" alt="" style="height:1.2em;width:1.2em;vertical-align:-0.3em"> Bé học tiếng Việt</a>
+          <a class="btn blue" href="/app/">📘 Học Tiếng Việt Bài Bản</a>
         </div>
       </div>
     </div>
@@ -353,8 +634,43 @@
       <a href="/app/">Vào ứng dụng</a>
     </span>
   </div>
-  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
 </footer>
+
+<script>
+  document.getElementById("y").textContent = new Date().getFullYear();
+
+  // Tab giữa 2 lộ trình
+  const tabs = [...document.querySelectorAll(".tab")];
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute("aria-selected", String(on));
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+  }));
+
+  // Hiện dần khi cuộn tới
+  const rv = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+    rv.forEach((n) => io.observe(n));
+  } else rv.forEach((n) => n.classList.add("in"));
+
+  // Thử nghe 6 thanh điệu bằng giọng trình duyệt (nếu có)
+  const note = document.getElementById("toneNote");
+  document.getElementById("tones").addEventListener("click", (e) => {
+    const b = e.target.closest(".tone");
+    if (!b) return;
+    document.querySelectorAll(".tone").forEach((x) => x.classList.toggle("on", x === b));
+    note.textContent = "Thanh " + b.dataset.m;
+    if ("speechSynthesis" in window) {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(b.dataset.w);
+      u.lang = "vi-VN"; u.rate = .7;
+      speechSynthesis.speak(u);
+    }
+  });
+</script>
 
 </body>
 </html>
