@@ -877,5 +877,26 @@ await as(A, async () => {
   ok((await rowOf(C1)).phone === "+84 912 345 678", "029: chạy lại migration không mất dữ liệu");
 }
 
+// ---- 32. phụ huynh tự huỷ yêu cầu đang chờ (migration 030) ----
+{
+  const m030 = readFileSync(new URL("../migrations/030_cancel_payment.sql", import.meta.url), "utf8");
+  await db.exec(m030);
+  const P1 = await uid("c32a@x.com"), P2 = await uid("c32b@x.com");
+  let pid;
+  await as(P1, async () => { pid = (await q("insert into public.payments (kind, extra_children) values ('extra_child', 1) returning id"))[0].id; });
+  const eOther = await as(P2, () => fails("select public.cancel_my_payment($1)", [pid]));
+  ok(Boolean(eOther), "030: người khác không huỷ được yêu cầu của mình");
+  await as(P1, () => q("select public.cancel_my_payment($1)", [pid]));
+  ok((await q("select status from public.payments where id=$1", [pid]))[0].status === "cancelled", "030: chủ yêu cầu huỷ được khi còn pending");
+  const eAgain = await as(P1, () => fails("select public.cancel_my_payment($1)", [pid]));
+  ok(Boolean(eAgain), "030: huỷ lại yêu cầu đã chốt báo lỗi");
+  let pid2;
+  await as(P1, async () => { pid2 = (await q("insert into public.payments (kind, extra_children) values ('extra_child', 1) returning id"))[0].id; });
+  await db.query("update public.payments set amount=5, status='confirmed' where id=$1", [pid2]);
+  const eDone = await as(P1, () => fails("select public.cancel_my_payment($1)", [pid2]));
+  ok(Boolean(eDone) && (await q("select status from public.payments where id=$1", [pid2]))[0].status === "confirmed", "030: yêu cầu đã xác nhận không huỷ được");
+  await db.exec(m030);
+}
+
 console.log(`\n${pass} đạt, ${fail} lỗi`);
 process.exit(fail ? 1 : 0);

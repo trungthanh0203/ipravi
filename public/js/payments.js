@@ -12,6 +12,12 @@ export async function requestExtraChild() {
   if (error) throw error;
 }
 
+// Phụ huynh tự huỷ yêu cầu còn "pending" của mình (RPC cancel_my_payment, migration 030).
+export async function cancelPayment(id) {
+  const { error } = await sb.rpc("cancel_my_payment", { p_id: id });
+  if (error) throw error;
+}
+
 export async function myPayments() {
   const { data, error } = await sb.from("payments")
     .select("id, kind, status, amount, currency, extra_children, created_at, confirmed_at, tuition_plans(name)")

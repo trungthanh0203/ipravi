@@ -5,7 +5,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import { avatarEmoji } from "../data.js";
 import { pronunciationSupported } from "../pronunciation.js";
-import { requestExtraChild, myPayments } from "../payments.js";
+import { requestExtraChild, myPayments, cancelPayment } from "../payments.js";
 import { loadStats, loadSkillStats, loadPronReport, parentStatsView } from "../stats.js";
 import { childAge } from "../child/util.js";
 import { loadBbStats, bbStatsView } from "../bb/stats.js";
@@ -53,7 +53,7 @@ function passwordCard() {
   return el("div", { class: "card" }, el("h2", null, T.passwordTitle), form);
 }
 
-// Thêm con: mặc định 1 con/tài khoản; muốn thêm phải xin + trả phí cho người dạy, người dạy xác nhận thì được cấp.
+// Thêm tài khoản học: mặc định 1/tài khoản; muốn thêm phải xin + trả phí cho Admin, Admin xác nhận thì được cấp. Yêu cầu đang chờ huỷ được.
 function addChildCard() {
   const a = state.account;
   const feedback = el("div");
@@ -80,7 +80,23 @@ function addChildCard() {
     list.replaceChildren(...rows.map((p) =>
       el("p", { class: "muted" }, `${new Date(p.created_at).toLocaleDateString("vi-VN")} · ${p.kind === "tuition" ? `${T.payKindTuition} ${p.tuition_plans?.name ?? ""}` : T.payKindChild} · `,
         el("span", { class: `pill ${p.status === "confirmed" ? "good" : p.status === "cancelled" ? "bad" : ""}` },
-          p.status === "confirmed" ? T.payConfirmed : p.status === "cancelled" ? T.payCancelled : T.payPending))));
+          p.status === "confirmed" ? T.payConfirmed : p.status === "cancelled" ? T.payCancelled : T.payPending),
+        p.status === "pending" ? [" ", el("button", { class: "btn small ghost", type: "button", onclick: (ev) => cancel(p, ev.currentTarget) }, T.payCancel)] : null)));
+  }
+  async function cancel(p, button) {
+    if (!confirm(T.payCancelConfirm)) return;
+    button.disabled = true;
+    feedback.replaceChildren();
+    try {
+      await cancelPayment(p.id);
+      feedback.replaceChildren(msg("ok", T.payCancelled2));
+      btn.disabled = false; // huỷ xong thì xin lại được (nếu chưa chạm trần — kiểm ở lần tải sau)
+      await refresh();
+    } catch (e) {
+      button.disabled = false;
+      feedback.replaceChildren(msg("err", e.message));
+      await refresh().catch(() => {});
+    }
   }
   refresh().catch(() => {});
   return el("div", { class: "card" }, el("h2", null, T.addChildTitle), help,
@@ -116,6 +132,22 @@ function pronunciationToggle() {
     el("label", { for: "pron", style: "font-weight:700" }, box, " ", T.parentPron),
     el("p", { class: "muted" }, pronunciationSupported() ? T.parentPronHelp : T.parentPronUnsupported),
     feedback);
+}
+
+// Thanh tab cho nhóm "Thông tin chung" (các card cũ xếp dọc → mỗi card 1 tab cho gọn). defs = [[id, nhãn, node]]; nhớ tab đang mở
+// trong lần mở trang này (tabNow) để tải lại màn hình không nhảy về tab đầu.
+let tabNow = "account";
+function tabPanels(defs) {
+  const bar = el("div", { class: "tabs", role: "tablist" });
+  const body = el("div");
+  const show = (id) => {
+    tabNow = id;
+    [...bar.children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
+    body.replaceChildren(defs.find((d) => d[0] === id)[2]);
+  };
+  bar.replaceChildren(...defs.map(([id, label]) => el("button", { type: "button", role: "tab", "data-id": id, onclick: () => show(id) }, label)));
+  show(defs.some((d) => d[0] === tabNow) ? tabNow : defs[0][0]);
+  return el("div", null, bar, body);
 }
 
 // Tổng kết TỪNG CON riêng (mỗi con 1 thẻ, có thể gập): hồ sơ 'child' (khu Trẻ em) dùng RPC child_stats + kỹ năng + đánh giá đọc;
@@ -154,25 +186,28 @@ export function mount(root) {
   const a = state.account;
   const status = a.access_status === "trial" ? T.statusTrial : T.statusActive;
   const canAddProfile = state.children.length < a.child_slots;
+  const accountPanel = el("div", { class: "card" },
+    el("p", null, `${T.accessStatus}: `, el("span", { class: "pill good" }, status)),
+    el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
+    el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
+    // Cùng 1 danh sách cho mọi hồ sơ (con lẫn người học bài bản) — vào lại đều bấm avatar ở màn hình đầu như
+    // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây. Chỉ gắn nhãn nhỏ để phân biệt loại hồ sơ.
+    state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", el("b", null, c.nickname),
+      el("span", { class: "pill" + (c.profile_type === "learner" ? "" : " good"), style: "margin-left:6px" }, c.profile_type === "learner" ? T.parentCurrBb : T.parentCurrKid))),
+    canAddProfile ? el("button", {
+      class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
+    }, T.addProfileBtn) : null,
+    el("hr", { class: "soft-hr" }),
+    pronunciationToggle());
   paint(root, el("div", null,
     el("h1", null, T.parentTitle),
     el("h2", { class: "group-title" }, T.parentGeneral),
-    el("div", { class: "card" },
-      el("p", null, `${T.accessStatus}: `, el("span", { class: "pill good" }, status)),
-      el("p", null, `${T.accessUntil}: ${new Date(a.access_until).toLocaleDateString("vi-VN")}`),
-      el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
-      // Cùng 1 danh sách cho mọi hồ sơ (con lẫn người học bài bản) — vào lại đều bấm avatar ở màn hình đầu như
-      // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây. Chỉ gắn nhãn nhỏ để phân biệt loại hồ sơ.
-      state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", el("b", null, c.nickname),
-        el("span", { class: "pill" + (c.profile_type === "learner" ? "" : " good"), style: "margin-left:6px" }, c.profile_type === "learner" ? T.parentCurrBb : T.parentCurrKid))),
-      canAddProfile ? el("button", {
-        class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
-      }, T.addProfileBtn) : null,
-      el("hr", { class: "soft-hr" }),
-      pronunciationToggle()),
-    contactCard(),
-    passwordCard(),
-    addChildCard(),
+    tabPanels([
+      ["account", T.parentTabAccount, accountPanel],
+      ["contact", T.parentTabContact, contactCard()],
+      ["password", T.parentTabPassword, passwordCard()],
+      ["slots", T.parentTabSlots, addChildCard()],
+    ]),
     childrenSection(),
     el("p", { class: "muted" }, T.soon),
     el("p", { class: "muted", style: "font-size:12px" }, T.credits),
