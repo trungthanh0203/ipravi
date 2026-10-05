@@ -42,7 +42,7 @@ Không có `center_id` ở bảng nào.
 cột thừa chỉ cảnh báo. Thêm ngôn ngữ mới: cột CSV + `seed/002_title_translations.sql` +
 `tts.js DEFAULT_VOICES` nếu cần TTS; `admin/dict.js` không tự có — admin gõ tay (không bịa).
 
-Dựng bản mới: Supabase mới → chạy `001_init.sql`…`031_bb_level_stats.sql` theo thứ tự → đăng ký
+Dựng bản mới: Supabase mới → chạy `001_init.sql`…`032_bb_fast_loaders.sql` theo thứ tự → đăng ký
 1 tài khoản → `update accounts set role='admin' where email='...'` → biến Cloudflare (+`TTS_PROVIDER`/
 `TTS_KEY`/`TTS_REGION` nếu dùng TTS) → deploy. Mẫu tuỳ chọn: `seed/001_sample_content.sql`.
 
@@ -170,6 +170,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`031_bb_level_sta
   trước khi có cột `unit_<lang>`.
   **Luyện tập mượn khu Trẻ em:** `bb/adapter.js` (hàm thuần) đổi nội dung đã học sang hình dạng mục của `child/` (id ghép `idOf()`, `level` cố định 2, `src` trỏ về dòng thật) để chạy NGUYÊN `child/practice-core|pools|runners|skills`; `bb/practice-games.js` = lưới trò + chọn phạm vi (Tất cả/Cấp/Chủ đề/Hay sai) + ghi `bb_srs_state` & `bb_practice_log` (028, huy hiệu từ phiên ≥85đ). 4 kỹ năng ôn riêng (Từ vựng/Ngữ pháp/Hội thoại/Ngữ âm) cũng qua màn "Bạn muốn luyện gì?" (`reviewScopeScreen`, dòng ôn gắn `unit_id/bbLevel` từ `stepWhere`). Trò cần hình tự ẩn khi từ vựng chưa có ảnh. Thử nhanh: `tests/browser/bb-practice-seed.js`.
   Màn "Chọn cấp độ" (`bai-ban-home.js showLevels`): danh sách hiện NGAY, số liệu từng cấp đến sau từ RPC `bb_level_stats` (mig. 031, 1 lượt; chưa chạy migration thì `loadLevelStatsSlow` tự lùi về nhiều truy vấn).
+  Mọi màn Bài Bản tải qua RPC 1 lượt (mig. 031/032: `bb_level_stats`, `bb_completed_lessons`, `bb_lesson_content`, `bb_practice_content`), mỗi RPC có đường lùi về cách cũ trong `api.js` khi chưa chạy migration; Home nạp sẵn (idle) cấp độ + Luyện tập (`warmPractice`). Sửa schema bb_* → rà cả hàm SQL lẫn đường lùi JS.
   **Hiệu năng:** `api.js` cache Level/Unit/Lesson 60s (`cached()`, khớp `child/api.js`) —
   `clearCache()` khi Thoát. `practice.js` giữ `catalog` trong bộ nhớ suốt 1 phiên Luyện tập (không
   tải lại mỗi khi quay về lưới), tự vá `box`/`due_at` tại chỗ sau khi chấm (dùng `srs.js`

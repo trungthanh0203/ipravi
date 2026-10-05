@@ -54,13 +54,14 @@ export async function runLesson({ root, lesson, childId, crumb = "", onExit }) {
   try {
     // loadLessonContent (nội dung riêng của bài) và loadUnitPool (Boss cuối Unit, chỉ khi review) KHÔNG phụ thuộc
     // nhau — chạy song song thay vì tuần tự để đỡ 1 vòng round-trip mạng (bossPool tải lỗi thì KHÔNG chặn cả bài).
-    const [all, bossPool] = await Promise.all([
-      api.loadLessonContent(lesson.id),
+    const [bundle, bossPool] = await Promise.all([
+      api.loadLessonBundle(lesson.id, childId), // nội dung + chặng đã xong trong 1 lượt (RPC bb_lesson_content)
       lesson.lesson_type === "review" ? api.loadUnitPool(lesson.unit_id, lesson.id).catch(() => []) : Promise.resolve([]),
     ]);
+    const all = bundle.steps;
     pool = [...all, ...bossPool];
     steps = all.filter((s) => STEP_RUNNERS[s.step_type] && hasContent(s, pool));
-    doneIds = await api.loadStepProgress(childId, steps.map((s) => s.id)).catch(() => new Set());
+    doneIds = bundle.done;
   } catch {
     paint(root, el("div", null, profileHeader(exitSession),
       el("div", { class: "card" }, msg("err", T.bbLoadError), el("button", { class: "btn", onclick: onExit }, T.back)), sessionFooter()));

@@ -4,7 +4,7 @@ import { el, mount as paint, msg } from "../ui.js";
 import { T } from "../strings.js";
 import * as api from "../bb/api.js";
 import { runLesson } from "../bb/runner.js";
-import { showSkills } from "../bb/practice.js";
+import { showSkills, warmPractice } from "../bb/practice.js";
 import { titleSpeakers, titleIn, nativeLang, profileHeader, sessionFooter, crumbBar } from "../bb/media.js";
 import { saveNav, clearNav, readNav } from "../bb/nav.js";
 
@@ -53,6 +53,9 @@ function shell(root, ...body) {
 
 function showHome(root) {
   clearNav();
+  // Rảnh thì nạp sẵn dữ liệu 2 nhánh (Học → cấp độ + số liệu; Luyện tập) để bấm vào là hiện ngay.
+  const idle = window.requestIdleCallback ?? ((f) => setTimeout(f, 300));
+  idle(() => { api.loadLevels().catch(() => {}); api.loadLevelStats(state.activeChildId).catch(() => {}); warmPractice(state.activeChildId); });
   shell(root,
     el("h1", { style: "text-align:center" }, T.bbHomeTitle),
     el("div", { class: "home-cards" },
@@ -129,9 +132,13 @@ async function showLessons(root, unit) {
   saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
-    const lessons = await api.loadLessons(unit.id);
     const childId = state.activeChildId;
-    const completed = await api.loadLessonProgress(childId, lessons.map((l) => l.id)).catch(() => new Set()); // hỏng không chặn xem danh sách bài
+    const lessonsP = api.loadLessons(unit.id);
+    // Danh sách bài + bài nào đã xong tải SONG SONG (trước đây nối tiếp, tốn thêm 2–3 lượt chờ mạng)
+    const [lessons, completed] = await Promise.all([
+      lessonsP,
+      api.loadCompletedInUnit(childId, unit.id, async () => (await lessonsP).map((l) => l.id)).catch(() => new Set()), // hỏng không chặn xem danh sách bài
+    ]);
     shell(root,
       crumbBar(crumbOf(unit), () => showUnits(root, unit.bb_levels ?? { id: unit.level_id })),
       el("h1", null, unit.emoji ? unit.emoji + " " : "", unit.title_vi),

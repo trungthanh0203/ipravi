@@ -141,6 +141,23 @@ export async function loadUnitPool(unitId, excludeLessonId) {
   return (steps ?? []).map((s) => ({ ...s, content: bySortOrder(contentOf[s.step_type].get(s.id) ?? []) }));
 }
 
+// Vào 1 bài: các chặng + nội dung + chặng đã xong. Đường chính: RPC bb_lesson_content (1 lượt); lỗi/chưa có migration 032 → 2 bước cũ.
+export async function loadLessonBundle(lessonId, childId) {
+  const { data, error } = await sb.rpc("bb_lesson_content", { p_lesson: lessonId, p_child: childId });
+  if (!error && data && Array.isArray(data.steps)) return { steps: data.steps, done: new Set(data.done ?? []) };
+  const steps = await loadLessonContent(lessonId);
+  const done = await loadStepProgress(childId, steps.map((s) => s.id)).catch(() => new Set());
+  return { steps, done };
+}
+
+// Bài nào của 1 chủ đề đã xong (✓ ở danh sách bài). Đường chính: RPC bb_completed_lessons (1 lượt, chạy SONG SONG với danh sách bài);
+// lỗi/chưa có migration → cách cũ (cần danh sách id bài: `lessonIds()` trả Promise mảng id).
+export async function loadCompletedInUnit(childId, unitId, lessonIds) {
+  const { data, error } = await sb.rpc("bb_completed_lessons", { p_child: childId, p_unit: unitId });
+  if (!error && Array.isArray(data)) return new Set(data.map((x) => (typeof x === "object" && x !== null ? Object.values(x)[0] : x)));
+  return loadLessonProgress(childId, await lessonIds());
+}
+
 // Mục nào chưa từng gặp thì "đến hạn ngay" (mốc thời gian rất xa trong quá khứ) — ôn tập chỉ chặn mục đã gặp qua
 // bằng bb_progress, không cần đánh dấu riêng "chưa gặp" ở đây.
 const NEVER = "1970-01-01T00:00:00.000Z";
@@ -253,6 +270,30 @@ async function loadLevelStatsSlow(childId) {
 // Toàn bộ nội dung các chặng người học ĐÃ HỌC XONG (bb_progress) + trạng thái ôn (bb_srs_state) — nguồn CHUNG cho ôn
 // tập kiểu cũ (loadReviewCatalog) lẫn trò Luyện tập mượn từ khu Trẻ em (loadPracticeData). Mỗi dòng nội dung có sẵn step_id.
 export async function loadDoneContent(childId) {
+  // Đường chính: RPC bb_practice_content (migration 032) = TOÀN BỘ nội dung đã duyệt trong 1 lượt (song song với bb_srs_state);
+  // chưa chạy migration → rơi về cách cũ (~3 tầng truy vấn).
+  const [rpc, srs] = await Promise.all([sb.rpc("bb_practice_content"), allSrs(childId)]);
+  const d = rpc.data;
+  if (rpc.error || !d || !Array.isArray(d.steps)) return loadDoneContentSlow(childId);
+  if (!d.steps.length) return { steps: [], vocab: [], grammar: [], phonics: [], dialogue: [], reading: [], listening: [], srs };
+  return {
+    steps: d.steps, vocab: d.vocab, grammar: d.grammar, phonics: d.phonics, dialogue: d.dialogue, reading: d.reading, listening: d.listening, srs,
+    structure: { levels: d.levels, units: d.units, lessons: d.lessons },
+    questions: { reading: d.readingQuestions, listening: d.listeningQuestions },
+  };
+}
+
+async function allSrs(childId) {
+  const out = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from("bb_srs_state").select("*").eq("child_id", childId).order("id").range(from, from + 999);
+    if (error) throw error;
+    out.push(...(data ?? []));
+    if ((data ?? []).length < 1000) return out;
+  }
+}
+
+async function loadDoneContentSlow(childId) {
   const empty = { steps: [], vocab: [], grammar: [], phonics: [], dialogue: [], reading: [], listening: [], srs: [] };
   // Luyện tập lấy MỌI chặng đã duyệt (cấp/chủ đề/bài/chặng đều approved), không cần đã học — chip phạm vi hiện đủ A0, A1, A2…
   const all = async (table, cols = "*") => {
@@ -302,6 +343,7 @@ export const loadReviewCatalog = async (childId) => mergeReview(await loadDoneCo
 
 // Chủ đề/cấp/bài chứa các chặng đã học + câu hỏi của đoạn đọc/nghe — để gắn "đang ở cấp/chủ đề nào" cho từng mục luyện tập.
 export async function loadStructure(done) {
+  if (done.questions) return { ...done.structure, readingQuestions: done.questions.reading, listeningQuestions: done.questions.listening }; // đã có từ RPC
   const { lessons, units, levels } = done.structure ?? { lessons: [], units: [], levels: [] };
   const passageIds = [...done.reading, ...done.listening].length;
   const [rq, lq] = passageIds ? await Promise.all([

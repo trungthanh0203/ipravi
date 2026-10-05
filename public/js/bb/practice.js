@@ -28,13 +28,17 @@ const colorStyle = (skill) => { const g = groupById(skill.group); return `--c:${
 // lượt ôn/chơi — khớp cách child/practice.js giữ `ctx.data`). data = { review (ôn tập kiểu cũ), + bb/adapter.js
 // buildPracticeData (catalog/byId/progress… cho trò chơi mượn từ khu Trẻ em), skillGood (huy hiệu) }.
 // Bố cục: 🎮 Trò chơi luyện tập (mượn khu Trẻ em, bb/practice-games.js) TRƯỚC, rồi 🔁 Ôn tập từ đã học (4 kỹ năng riêng của Bài Bản).
-let loaded = null; // { childId, at, data } — giữ 5 phút để vào/ra Luyện tập không tải lại (data được vá tại chỗ sau mỗi lượt chơi)
-async function loadAll(childId) {
-  if (loaded && loaded.childId === childId && Date.now() - loaded.at < 300000) return loaded.data;
-  const data = await loadFresh(childId);
-  loaded = { childId, at: Date.now(), data };
-  return data;
+let loaded = null; // { childId, at, promise } — giữ 5 phút để vào/ra Luyện tập không tải lại (data được vá tại chỗ sau mỗi lượt chơi); lưu PROMISE nên 2 nơi gọi cùng lúc (warmPractice + mở màn) chỉ tải 1 lần
+function loadAll(childId) {
+  if (loaded && loaded.childId === childId && Date.now() - loaded.at < 300000) return loaded.promise;
+  const promise = loadFresh(childId);
+  const mine = { childId, at: Date.now(), promise };
+  loaded = mine;
+  promise.catch(() => { if (loaded === mine) loaded = null; }); // lỗi thì lần sau tải lại
+  return promise;
 }
+// Nạp sẵn dữ liệu Luyện tập lúc rảnh (gọi ở màn Home) → bấm "Luyện tập" là hiện ngay.
+export const warmPractice = (childId) => { loadAll(childId).catch(() => {}); };
 async function loadFresh(childId) {
   const [done, skillGood] = await Promise.all([api.loadDoneContent(childId), api.loadSkillGood(childId).catch(() => new Map())]); // chưa có migration 028 → không huy hiệu, vẫn chơi
   const structure = done.steps.length ? await api.loadStructure(done) : { lessons: [], units: [], levels: [], readingQuestions: [], listeningQuestions: [] };

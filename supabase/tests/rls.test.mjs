@@ -934,6 +934,54 @@ await as(A, async () => {
     ok(peek.done === 0, "031: không đọc được tiến độ của con người khác (RLS bb_progress)", JSON.stringify(peek));
   });
   await db.exec(m031);
+  await db.query("delete from public.bb_levels where code in ('C1','C2')"); // trả lại mã cấp cho các test sau
+}
+
+// ---- 34. bộ tải nhanh Bài Bản (migration 032) ----
+{
+  const m032 = readFileSync(new URL("../migrations/032_bb_fast_loaders.sql", import.meta.url), "utf8");
+  await db.exec(m032);
+  const P = await uid("p34@x.com"), P2 = await uid("p34b@x.com");
+  const kid = (await as(P, () => q("insert into public.child_profiles (parent_id, nickname, avatar_id, profile_type) values ($1,'HV34','owl','learner') returning id", [P])))[0].id;
+  let lv, unit, l1, l2, sV, sD, sR;
+  await as(ADM, async () => {
+    lv = (await q("insert into public.bb_levels (code, name_vi, status, sort_order) values ('C2','Cấp 34','approved', 340) returning id"))[0].id;
+    unit = (await q("insert into public.bb_units (level_id, title_vi, status) values ($1,'ĐL34','approved') returning id", [lv]))[0].id;
+    l1 = (await q("insert into public.bb_lessons (unit_id, title_vi, status, sort_order) values ($1,'L1','approved',1) returning id", [unit]))[0].id;
+    l2 = (await q("insert into public.bb_lessons (unit_id, title_vi, status, sort_order) values ($1,'L2','approved',2) returning id", [unit]))[0].id;
+    sV = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, sort_order) values ($1,'vocab','approved',1) returning id", [l1]))[0].id;
+    sD = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, sort_order) values ($1,'dialogue','approved',2) returning id", [l1]))[0].id;
+    sR = (await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, sort_order) values ($1,'reading','approved',3) returning id", [l1]))[0].id;
+    await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, sort_order) values ($1,'grammar','approved',4)", [l1]); // rỗng
+    await q("insert into public.bb_lesson_steps (lesson_id, step_type, status, sort_order) values ($1,'vocab','approved',1)", [l2]); // L2 chỉ có chặng rỗng
+    await q("insert into public.bb_vocab (step_id, word_vi, sort_order) values ($1,'b',2), ($1,'a',1)", [sV]);
+    await q("insert into public.bb_dialogue_lines (step_id, speaker, line_vi, sort_order) values ($1,'A','Xin chào',1)", [sD]);
+    const pid = (await q("insert into public.bb_reading_passages (step_id, passage_vi) values ($1,'Tôi là An.') returning id", [sR]))[0].id;
+    await q("insert into public.bb_reading_questions (passage_id, question_vi, choices, answer, sort_order) values ($1,'Ai?', '[\"An\",\"Bình\"]'::jsonb, 1, 1)", [pid]);
+  });
+  for (const st of [sV, sD, sR]) await db.query("insert into public.bb_progress (child_id, step_id) values ($1,$2)", [kid, st]);
+  await as(P, async () => {
+    const c = await q("select * from public.bb_completed_lessons($1,$2) as id", [kid, unit]);
+    ok(c.length === 1 && Number(c[0].id) === Number(l1), "032: bài đã xong = mọi chặng CÓ DỮ LIỆU đều xong (chặng rỗng không cản; bài chỉ có chặng rỗng không tính)", JSON.stringify(c));
+    const j = (await q("select public.bb_lesson_content($1,$2) as j", [l1, kid]))[0].j;
+    ok(j.steps.length === 4 && j.steps.map((x) => x.step_type).join() === "vocab,dialogue,reading,grammar", "032: bb_lesson_content: đủ chặng theo sort_order", JSON.stringify(j.steps.map((x) => x.step_type)));
+    ok(j.steps[0].content.map((x) => x.word_vi).join() === "a,b", "032: nội dung dòng sắp theo sort_order");
+    ok(j.steps[2].content.passage.passage_vi === "Tôi là An." && j.steps[2].content.questions.length === 1 && j.steps[2].content.questions[0].answer === 1, "032: reading = {passage, questions}");
+    ok(Array.isArray(j.steps[3].content) && j.steps[3].content.length === 0, "032: chặng rỗng = mảng rỗng");
+    ok(j.done.length === 3 && j.done.map(Number).sort().join() === [sV, sD, sR].map(Number).sort().join(), "032: done = chặng đã xong của p_child", JSON.stringify(j.done));
+    const pc = (await q("select public.bb_practice_content() as j"))[0].j;
+    ok(pc.levels.some((x) => x.code === "C2") && pc.vocab.length >= 2 && pc.readingQuestions.length >= 1 && Array.isArray(pc.listening), "032: bb_practice_content có cấp/từ vựng/câu hỏi đọc");
+  });
+  await as(P2, async () => {
+    const j = (await q("select public.bb_lesson_content($1,$2) as j", [l1, kid]))[0].j;
+    ok(j.done.length === 0, "032: không lộ tiến độ của con người khác (RLS bb_progress)");
+  });
+  await as(ADM, async () => {
+    await q("update public.bb_lessons set status='draft' where id=$1", [l2]);
+    const pc = (await q("select public.bb_practice_content() as j"))[0].j;
+    ok(!pc.lessons.some((x) => Number(x.id) === Number(l2)), "032: bài nháp không vào bb_practice_content");
+  });
+  await db.exec(m032);
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);
