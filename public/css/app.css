@@ -613,3 +613,4 @@ body.bb-theme .mic.sm { width: 44px; height: 44px; font-size: 20px; margin: 0; }
 .child-section[open] > summary::after { content: "▴"; }
 .child-section .who { display: flex; align-items: center; gap: 6px; }
 .child-section[open] > summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f0ddc9; }
+.soft-hr { border: 0; border-top: 1px solid #f0ddc9; margin: 14px 0; }

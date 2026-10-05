@@ -10,26 +10,6 @@ import { loadStats, loadSkillStats, loadPronReport, parentStatsView } from "../s
 import { childAge } from "../child/util.js";
 import { loadBbStats, bbStatsView } from "../bb/stats.js";
 
-// Giọng nghe mặc định cho các bé (bé nào tự đổi bằng nút 👩/👨 thì theo lựa chọn của bé đó).
-function voiceCard() {
-  const a = state.account;
-  const feedback = el("div");
-  const current = () => a.voice_pref?.gender ?? "female";
-  const opts = [["female", "👩 " + T.voiceFemale], ["male", "👨 " + T.voiceMale]];
-  const buttons = opts.map(([g, label]) => el("button", { type: "button", onclick: () => choose(g) }, label));
-  const paintButtons = () => buttons.forEach((b, i) => b.classList.toggle("on", opts[i][0] === current()));
-  async function choose(g) {
-    feedback.replaceChildren();
-    const next = { ...(a.voice_pref ?? {}), gender: g };
-    const { error } = await sb.from("accounts").update({ voice_pref: next }).eq("id", a.id);
-    if (error) return feedback.replaceChildren(msg("err", error.message));
-    a.voice_pref = next;
-    paintButtons();
-  }
-  paintButtons();
-  return el("div", { class: "card" }, el("h2", null, T.voiceTitle), el("p", { class: "muted" }, T.voiceHelp), el("div", { class: "tabs" }, buttons), feedback);
-}
-
 // Điện thoại/địa chỉ: bắt buộc từ lúc đăng ký (auth.js), sửa lại được ở đây bất cứ lúc nào.
 function contactCard() {
   const a = state.account;
@@ -132,7 +112,7 @@ function pronunciationToggle() {
     }
     a.pronunciation_enabled = want;
   });
-  return el("div", { class: "card" },
+  return el("div", { class: "pron-setting" },
     el("label", { for: "pron", style: "font-weight:700" }, box, " ", T.parentPron),
     el("p", { class: "muted" }, pronunciationSupported() ? T.parentPronHelp : T.parentPronUnsupported),
     feedback);
@@ -169,7 +149,7 @@ function childrenSection() {
 }
 
 // TODO: dashboard theo từng con (tiến độ, điểm phát âm), chế độ cùng học (từ Việt 🔊 + nghĩa 🔊),
-// cài đặt (giới hạn thời gian, bật/tắt chấm phát âm, đổi PIN), học phí + "Xin thêm tài khoản cho con".
+// cài đặt (giới hạn thời gian, đổi PIN).
 export function mount(root) {
   const a = state.account;
   const status = a.access_status === "trial" ? T.statusTrial : T.statusActive;
@@ -183,15 +163,15 @@ export function mount(root) {
       el("p", null, `${T.childSlots}: ${state.children.length}/${a.child_slots}`),
       // Cùng 1 danh sách cho mọi hồ sơ (con lẫn người học bài bản) — vào lại đều bấm avatar ở màn hình đầu như
       // nhau (avatars.js), nên KHÔNG cần nút "Vào học" riêng ở đây. Chỉ gắn nhãn nhỏ để phân biệt loại hồ sơ.
-      state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", c.nickname,
-        c.profile_type === "learner" ? el("span", { class: "pill", style: "margin-left:6px" }, T.bbProfileTag) : null)),
+      state.children.map((c) => el("p", null, avatarEmoji(c.avatar_id), " ", el("b", null, c.nickname),
+        el("span", { class: "pill" + (c.profile_type === "learner" ? "" : " good"), style: "margin-left:6px" }, c.profile_type === "learner" ? T.parentCurrBb : T.parentCurrKid))),
       canAddProfile ? el("button", {
         class: "btn small", onclick: () => { state.creatingProfile = true; render(); },
-      }, T.addProfileBtn) : null),
+      }, T.addProfileBtn) : null,
+      el("hr", { class: "soft-hr" }),
+      pronunciationToggle()),
     contactCard(),
     passwordCard(),
-    voiceCard(),
-    pronunciationToggle(),
     addChildCard(),
     childrenSection(),
     el("p", { class: "muted" }, T.soon),
