@@ -7,6 +7,7 @@ import { traceTexts } from "../../viet.js";
 import { scoreTrace } from "../../trace-score.js";
 import { SKIP } from "./phonics.js";
 import { POOLS } from "../pools.js";
+import { eachRound } from "../rounds.js";
 
 // Tô chữ theo MẪU CHỮ THẢO tiểu học Việt Nam (phông Playwrite VN, tự lưu trong app). Bé dùng ngón tay/bút cảm ứng tô lên chữ mẫu mờ.
 // Chấm bằng trace-score.js: độ phủ + nét thừa + TỪNG MẢNH (thân chữ, dấu thanh, dấu mũ…) — bỏ dấu thanh là chưa đạt. Không hiện "sai", được sửa lại 1 lần.
@@ -144,20 +145,15 @@ export async function runTrace(ctx) {
   if (pool.length < 2) return SKIP;
   if (!(await fontReady(pool.map((i) => i.text_vi).join("")))) return SKIP; // không nạp được phông mẫu → bỏ qua, không làm bé kẹt
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 3, pool.length));
-  let correct = 0;
-  for (let i = 0; i < targets.length; i++) {
-    ctx.setProgress(i, targets.length);
-    const item = targets[i];
+  return eachRound(ctx, targets, async (item, i) => {
     const texts = traceTexts(item.text_vi);
     let all = true;
     for (let k = 0; k < texts.length; k++) {
-      if (!ctx.box.isConnected) return { correct, total: i };
+      if (!ctx.box.isConnected) return null;
       all = (await traceOne(ctx, item, texts[k], texts.length > 1 ? k : -1, i === 0 && k === 0)) && all;
     }
-    ctx.record(item.id, all);
-    if (all) correct++;
-  }
-  return { correct, total: targets.length };
+    return all;
+  });
 }
 
 // 1 chuỗi cần tô: Promise<boolean> (đạt ngay hoặc sau khi sửa = true nếu đạt ở lần chấm nào đó; sai 2 lần thì false nhưng vẫn sang chữ kế).

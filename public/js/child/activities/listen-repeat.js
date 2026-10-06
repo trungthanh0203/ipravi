@@ -5,6 +5,7 @@ import { playItem, say, visual, nativeLang, nativeLabel } from "../media.js";
 import { sfx } from "../sfx.js";
 import { pronunciationSupported } from "../../pronunciation.js";
 import { PASS_SCORE, attemptRead } from "../pron-ui.js";
+import { eachRound } from "../rounds.js";
 
 // Nghe – nhắc lại. Có bật chấm phát âm: trẻ nói → nhận dạng → so với mẫu → 1–3 sao. Tối đa 3 lần thử
 // rồi vẫn cho đi tiếp; điểm thấp không khoá bài. Không bật/không hỗ trợ: trẻ tự nói rồi bấm "xong".
@@ -62,12 +63,5 @@ function round(ctx, item, withIntro) {
 export async function run(ctx) {
   const rounds = Math.min(ctx.config.rounds ?? 3, ctx.items.length);
   const targets = sample(ctx.items, rounds);
-  let correct = 0;
-  for (let i = 0; i < targets.length; i++) {
-    ctx.setProgress(i, targets.length);
-    const ok = await round(ctx, targets[i], i === 0);
-    ctx.record(targets[i].id, ok);
-    if (ok) correct++;
-  }
-  return { correct, total: targets.length };
+  return eachRound(ctx, targets, (target, i) => round(ctx, target, i === 0));
 }

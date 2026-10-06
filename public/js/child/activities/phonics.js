@@ -5,6 +5,7 @@ import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { TONES, toneOf, splitSyllable, words, bare } from "../../viet.js";
 import { POOLS, withInitial as withInitialOf } from "../pools.js";
+import { eachRound } from "../rounds.js";
 
 // Hoạt động học vần (Cấp 3). Cách chơi chung: đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
 // Mỗi hoạt động tự bỏ qua (total 0) nếu bài không có đủ mục phù hợp — vd bài toàn chữ cái không chơi được "ghép âm + vần".
@@ -56,14 +57,7 @@ export const listenBtn = (item) => el("button", { class: "btn ghost", onclick: (
 export async function rounds(ctx, pool, play) {
   if (pool.length < 2) return SKIP;
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 4, pool.length));
-  let correct = 0;
-  for (let i = 0; i < targets.length; i++) {
-    ctx.setProgress(i, targets.length);
-    const ok = await play(targets[i], i === 0);
-    ctx.record(targets[i].id, ok);
-    if (ok) correct++;
-  }
-  return { correct, total: targets.length };
+  return eachRound(ctx, targets, (target, i) => play(target, i === 0));
 }
 
 // 1) Nghe – chọn thanh: nghe 1 tiếng rồi chọn ký hiệu đúng của thanh (➖ ↗️ ↘️ ❓ 〰️ ⬇️).

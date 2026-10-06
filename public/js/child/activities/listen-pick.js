@@ -4,6 +4,7 @@ import { shuffle, sample, isLiteral } from "../util.js";
 import { playItem, say, visual } from "../media.js";
 import { sfx } from "../sfx.js";
 import { POOLS } from "../pools.js";
+import { eachRound } from "../rounds.js";
 
 // Nghe – chạm: nghe từ tiếng Việt rồi chọn đúng hình (mode "picture") hoặc đúng chữ (mode "text").
 // Đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang câu kế (không phạt).
@@ -63,14 +64,7 @@ async function play(ctx, mode) {
   if (pool.length < 2) return { correct: 0, total: 0 };
   const rounds = Math.min(ctx.config.rounds ?? 5, pool.length);
   const targets = sample(pool, rounds);
-  let correct = 0;
-  for (let i = 0; i < targets.length; i++) {
-    ctx.setProgress(i, targets.length);
-    const ok = await round(ctx, pool, targets[i], mode, i === 0);
-    ctx.record(targets[i].id, ok);
-    if (ok) correct++;
-  }
-  return { correct, total: targets.length };
+  return eachRound(ctx, targets, (target, i) => round(ctx, pool, target, mode, i === 0));
 }
 
 export const run = (ctx) => play(ctx, "picture");

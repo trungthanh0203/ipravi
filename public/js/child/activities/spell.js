@@ -7,6 +7,7 @@ import { spellParts } from "../../viet.js";
 import { arrange } from "./reading.js";
 import { SKIP } from "./phonics.js";
 import { POOLS } from "../pools.js";
+import { eachRound } from "../rounds.js";
 
 // Đánh vần theo từng phần: bờ – a – ba – huyền – bà. Mỗi vòng 2 bước:
 //  ① Nghe – nhìn: các phần lần lượt sáng lên khi được đọc (chạm phần nào nghe phần đó);
@@ -19,18 +20,12 @@ export async function runSpellAlong(ctx) {
   if (pool.length < 2) return SKIP;
   await loadPartAudio(); // tải sẵn ngân hàng âm (lỗi thì bỏ qua → dùng giọng trình duyệt)
   const targets = sample(pool, Math.min(ctx.config.rounds ?? 3, pool.length));
-  let correct = 0;
-  for (let i = 0; i < targets.length; i++) {
-    ctx.setProgress(i, targets.length);
-    const target = targets[i];
+  return eachRound(ctx, targets, async (target, i) => {
     const parts = spellParts(target.text_vi);
     await watch(ctx, target, parts, i === 0);
-    if (!ctx.box.isConnected) return { correct, total: i };
-    const ok = await selfSpell(ctx, target, parts);
-    ctx.record(target.id, ok);
-    if (ok) correct++;
-  }
-  return { correct, total: targets.length };
+    if (!ctx.box.isConnected) return null;
+    return selfSpell(ctx, target, parts);
+  });
 }
 
 const playPartOf = (target, p) => (p.role === "whole" ? playItem(target) : playPart(p.text));

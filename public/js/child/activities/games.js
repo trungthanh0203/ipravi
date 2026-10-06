@@ -6,6 +6,7 @@ import { sfx } from "../sfx.js";
 import { spellingChoices } from "../../viet.js";
 import { pick, listenBtn, rounds, SKIP } from "./phonics.js";
 import { POOLS, meaningIn, sortGroups, toneGroups } from "../pools.js";
+import { eachRound } from "../rounds.js";
 
 // Trò CHỈ có ở Luyện tập (không nằm trong bảng `activities` của bài học): chạy trên tập mục gộp từ nhiều bài/chủ đề.
 // Cùng luật chung: đúng ngay lần đầu = đúng; sai 2 lần thì hiện đáp án rồi sang lượt kế (không phạt, không hiện "sai").
@@ -66,16 +67,8 @@ export async function runSort(ctx) {
   const unitOf = new Map(units.map((u) => [u, groups.get(u)[0].unit ?? { id: u, title_vi: "", emoji: "📦" }]));
   const buckets = units.map((u) => ({ key: u, cls: "opt-bucket", node: [visual(unitOf.get(u)), el("span", { class: "bucket-name" }, unitOf.get(u).title_vi)] }));
   const wantText = age == null || age >= 5;
-  let correct = 0;
-  for (let i = 0; i < cards.length; i++) {
-    ctx.setProgress(i, cards.length);
-    const item = cards[i];
-    const ok = await pick({ ctx, instr: T.instrSort, top: shown(visual(item, "big"), wantText ? el("p", { class: "word" }, item.text_vi) : null, listenBtn(item)),
-      options: shuffle(buckets), correct: item.unit_id, target: item, intro: i === 0 });
-    ctx.record(item.id, ok);
-    if (ok) correct++;
-  }
-  return { correct, total: cards.length };
+  return eachRound(ctx, cards, (item, i) => pick({ ctx, instr: T.instrSort, top: shown(visual(item, "big"), wantText ? el("p", { class: "word" }, item.text_vi) : null, listenBtn(item)),
+    options: shuffle(buckets), correct: item.unit_id, target: item, intro: i === 0 }));
 }
 
 // 5) Trí nhớ: lật thẻ tìm cặp. Bé ≥ 5 tuổi: cặp hình ↔ chữ; bé nhỏ hơn: cặp hình ↔ hình (chạm thẻ nào nghe từ đó). Không giới hạn số lần lật.

@@ -32,6 +32,9 @@ const SRS_TYPES = new Set(["vocab", "grammar", "phonics", "dialogue"]);
 
 // Kỹ năng "bài" (đọc nhớ/nghe nhớ/hội thoại) lấy từ danh sách bài; còn lại lấy từ catalog mục rời.
 const storiesOf = (skill, data) => (skill.id === "converse" ? data.dialogueLessons : skill.id === "listenMemory" ? data.listenLessons : data.storyLessons);
+// Bài Bản: KHÔNG dùng kỹ năng "Hội thoại" (converse); "Đọc nhớ"/"Nghe nhớ" xếp vào nhóm Nghe – Nói (bên khu Trẻ em vẫn ở "Vui – Nhớ").
+const HIDDEN = new Set(["converse"]);
+const GROUP_OF = (skill) => (skill.id === "readMemory" || skill.id === "listenMemory" ? "listen" : skill.group);
 const playable = (skill, data) => (skill.story ? storySkillPlayable(skill, storiesOf(skill, data), opts()) : skillPlayable(skill, data.catalog, opts()));
 
 const medals = (data, id) => {
@@ -45,7 +48,7 @@ const medals = (data, id) => {
 // ---- Lưới trò chơi: các nhóm (Chữ–Viết / Nghe–Nói / Vui–Nhớ) CHỈ gồm trò chơi được với nội dung đã học ----
 export function gamesSection(ctx) {
   const { data } = ctx;
-  const groups = GROUPS.filter((g) => !g.comingSoon).map((g) => ({ g, list: SKILLS.filter((s) => s.group === g.id && playable(s, data)) })).filter((x) => x.list.length);
+  const groups = GROUPS.filter((g) => !g.comingSoon).map((g) => ({ g, list: SKILLS.filter((s) => !HIDDEN.has(s.id) && GROUP_OF(s) === g.id && playable(s, data)) })).filter((x) => x.list.length);
   const card = (skill) => el("button", { class: "skill-card", style: colorStyle(skill), onclick: () => start(ctx, skill, { type: "all" }) }, // vào thẳng (bộ lọc nằm ngay màn "Chơi nào!")
     el("span", { class: "sk-badge" }, goodOf(data, skill.id) >= BADGES[0].n ? (badgeOf(goodOf(data, skill.id))?.emoji ?? "") : ""),
     icon(skill.emoji), el("b", null, skill.name), el("small", null, skill.desc));
@@ -85,12 +88,12 @@ export function scopeBar(data, scope, o) {
 }
 
 // Bộ lọc của 1 trò chơi (hiện ngay trên màn "Chơi nào!" và màn báo thiếu mục): đổi bộ lọc = lập lại phiên với phạm vi mới.
-function filterBar(ctx, skill, scope) {
+function filterBar(ctx, skill, scope, beforePick = () => {}) {
   const { data } = ctx;
   return scopeBar(data, scope, {
     weak: skill.story ? 0 : scopeBb(data.catalog, { type: "weak" }, data.progress).length,
     unitIds: skill.story ? [...new Set(storiesOf(skill, data).map((g) => g.unitId))] : [...new Set(data.catalog.map((i) => i.unit_id))],
-    story: skill.story, pick: (sc) => start(ctx, skill, sc),
+    story: skill.story, pick: (sc) => { beforePick(); start(ctx, skill, sc); },
   });
 }
 
@@ -129,6 +132,8 @@ function recordAnswer(ctx, itemId, ok) {
   api.saveSrsAnswer(childId, item.src.type, item.src.id, row);
 }
 
+// Cùng MỘT trang: crumb + bộ lọc ở trên; bên dưới (`stage`) lần lượt là thẻ "Chơi nào!" → trò chơi (nút ◀ Trước / Tiếp ▶ hai bên) → kết quả.
+// Bấm "Chơi nào!" chỉ thay phần `stage`, không chuyển trang. Đổi bộ lọc/thoát giữa chừng thì dừng phiên đang chạy.
 async function runSession(ctx, skill, scope, planned) {
   const { root, data, childId } = ctx;
   const items = planned.itemIds.map((id) => data.byId.get(id)).filter(Boolean);
@@ -136,57 +141,90 @@ async function runSession(ctx, skill, scope, planned) {
   prefetchItems(items);
   prefetchEmoji(items.map((i) => i.emoji).filter(Boolean));
 
-  // Cú chạm "Chơi nào" mở khoá âm thanh trên iOS trước khi phát tự động.
   const g = groupById(skill.group);
-  await new Promise((resolve) =>
-    ctx.shell(root,
-      crumbBar(crumbOf(skill), ctx.toSkills),
-      el("div", { class: "card scope-card" }, filterBar(ctx, skill, scope)),
-      el("div", { class: "card", style: `text-align:center;${colorStyle(skill)}` },
-        icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc), medals(data, skill.id),
-        el("button", { class: "btn big", style: `background:${g.color}`, onclick: resolve }, "▶ " + T.bbPlay))));
-  say(T.practiceStartSay(skill.name));
-
   let aborted = false;
   let abort;
   const abortP = new Promise((r) => (abort = r));
+  const stop = () => { aborted = true; stopAudio(); abort(); };
+  const stage = el("div");
+  ctx.shell(root,
+    crumbBar(crumbOf(skill), () => { stop(); ctx.toSkills(); }),
+    el("div", { class: "card scope-card" }, filterBar(ctx, skill, scope, stop)),
+    stage);
+
+  // Cú chạm "Chơi nào" mở khoá âm thanh trên iOS trước khi phát tự động.
+  await new Promise((resolve) => stage.replaceChildren(
+    el("div", { class: "card", style: `text-align:center;${colorStyle(skill)}` },
+      icon(skill.emoji), el("h1", null, skill.name), el("p", { class: "muted" }, skill.desc), medals(data, skill.id),
+      el("button", { class: "btn big", style: `background:${g.color}`, onclick: resolve }, "▶ " + T.bbPlay))));
+  if (aborted) return;
+  say(T.practiceStartSay(skill.name));
+
+  const plan = planned.plan;
   const dots = Array.from({ length: planned.turns }, () => el("span", { class: "dot" }));
-  const box = el("div", { class: "lesson-box" });
   const paintDots = (n) => dots.forEach((d, i) => d.classList.toggle("on", i < n));
-  paint(root, el("div", { style: `--c:${g.color};--soft:${g.soft}` },
-    crumbBar(crumbOf(skill), () => { aborted = true; stopAudio(); abort(); ctx.toSkills(); }),
+  const beforeAt = (k) => plan.slice(0, k).reduce((n, e) => n + e.turns, 0);
+  const body = el("div", { class: "card-nav-body" });
+  let entryNav = () => {};
+  let idx = 0;
+  // Điều hướng 2 tầng: trò có vòng nhiều lượt (child/rounds.js eachRound) → Trước/Tiếp nhảy giữa các LƯỢT; hết lượt thì sang trò kế/trước.
+  // Trò 1 màn (ghép cặp, lật thẻ, truyện…) không có vòng lượt → nhảy thẳng giữa các trò trong phiên.
+  const roundNav = {
+    i: 0, n: 1, active: false, _r: null,
+    begin(i, n) { this.i = i; this.n = n; this.active = true; refresh(); },
+    wait() { return new Promise((r) => { this._r = (d) => r({ __nav: d }); }); },
+    end() { this.active = false; this._r = null; },
+  };
+  const onNav = (d) => (roundNav.active && roundNav._r ? roundNav._r(d) : entryNav(d));
+  const prev = el("button", { class: "nav-btn", type: "button", "aria-label": T.bbNavPrev, onclick: () => onNav(-1) }, el("span", null, "◀"), el("small", null, T.bbNavPrev));
+  const next = el("button", { class: "nav-btn", type: "button", "aria-label": T.bbNavNext, onclick: () => onNav(1) }, el("span", null, "▶"), el("small", null, T.bbNavNext));
+  function refresh() {
+    prev.disabled = idx === 0 && (!roundNav.active || roundNav.i === 0);
+    const isLast = idx === plan.length - 1 && (!roundNav.active || roundNav.i === roundNav.n - 1);
+    next.querySelector("span").textContent = isLast ? "✓" : "▶";
+    next.querySelector("small").textContent = isLast ? T.bbNavDone : T.bbNavNext;
+  }
+  stage.replaceChildren(el("div", { style: `--c:${g.color};--soft:${g.soft}` },
     el("div", { class: "row lesson-head" }, el("div", { class: "ribbon" }, icon(skill.emoji)), voiceToggle()),
     el("div", { class: "dots-row" }, el("b", { class: "sk-name" }, skill.name), el("span", { class: "tag" }, T.practiceLabel), el("span", { class: "dots" }, dots)),
-    box));
+    el("div", { class: "card-nav" }, prev, body, next)));
 
   const t0 = Date.now();
   const outcome = new Map(); // id mục → true nếu chưa sai lần nào trong phiên
-  const logs = [];
-  let before = 0, correct = 0, total = 0;
-  for (const entry of planned.plan) {
+  const results = new Map(); // chỉ số lượt → { kind, correct, total, seconds } (chơi lại 1 lượt thì ghi đè)
+  while (idx < plan.length) {
+    const entry = plan[idx];
     const t1 = Date.now();
+    const box = el("div", { class: "lesson-box" }); // mỗi lượt 1 khung riêng: lượt cũ lỡ chạy tiếp cũng không vẽ đè lên lượt mới
+    body.replaceChildren(box);
+    roundNav.end();
+    refresh();
+    paintDots(beforeAt(idx));
+    const navP = new Promise((r) => (entryNav = (d) => r({ nav: d })));
     const c = {
       box, account: state.account, child: state.children.find((x) => x.id === childId),
       items: entry.items.map((i) => itemById.get(i.id)).filter(Boolean), questions: entry.questions?.map((i) => itemById.get(i.id)).filter(Boolean) ?? [],
-      lang: nativeLang(), config: entry.config,
-      setProgress: (i, n) => paintDots(before + Math.floor((i / Math.max(n, 1)) * entry.turns)),
+      lang: nativeLang(), config: entry.config, nav: roundNav,
+      setProgress: (i, n) => paintDots(beforeAt(idx) + Math.floor((i / Math.max(n, 1)) * entry.turns)),
       record: (id, ok) => { outcome.set(id, (outcome.get(id) ?? true) && ok); recordAnswer(ctx, id, ok); },
       savePron: () => {}, // giọng người học không lưu (bảng pronunciation_attempts khoá vào khu Trẻ em; cũng khớp luật "không lưu" ở bb/pron.js)
     };
-    const res = await Promise.race([RUNNERS[entry.kind](c), abortP]);
+    const res = await Promise.race([RUNNERS[entry.kind](c), abortP, navP]);
     if (aborted) return;
-    before += entry.turns;
-    paintDots(before);
-    correct += res.correct;
-    total += res.total;
-    logs.push({ child_id: childId, skill: skill.id, kind: entry.kind, score: res.total ? Math.round((res.correct / res.total) * 100) : null, duration_seconds: Math.round((Date.now() - t1) / 1000) });
+    if (res.total) results.set(idx, { kind: entry.kind, correct: res.correct, total: res.total, seconds: Math.round((Date.now() - t1) / 1000) }); // các lượt đã xong vẫn tính dù thoát giữa chừng
+    if (res.nav) stopAudio();
+    idx += res.nav ?? 1; // ◀ Trước / Tiếp ▶ (res.nav = ∓1) hoặc chơi xong → trò kế
   }
-  if (total === 0) { // mọi trò đều tự bỏ qua → không ghi nhật ký, không để người học kẹt
+  paintDots(planned.turns);
+  const done = [...results.values()];
+  const total = done.reduce((n, r) => n + r.total, 0);
+  const correct = done.reduce((n, r) => n + r.correct, 0);
+  if (total === 0) { // mọi lượt đều bỏ qua → không ghi nhật ký, không để người học kẹt
     say(T.bbGameNothing);
-    return ctx.shell(root, crumbBar(crumbOf(skill), ctx.toSkills),
-      el("div", { class: "card", style: "text-align:center" }, mascotHero(), el("p", null, T.bbGameNothing), el("button", { class: "btn", onclick: ctx.toSkills }, T.bbOtherGame)));
+    return stage.replaceChildren(el("div", { class: "card", style: "text-align:center" }, mascotHero(), el("p", null, T.bbGameNothing), el("button", { class: "btn", onclick: ctx.toSkills }, T.bbOtherGame)));
   }
   const score = Math.round((correct / total) * 100);
+  const logs = done.map((r) => ({ child_id: childId, skill: skill.id, kind: r.kind, score: r.total ? Math.round((r.correct / r.total) * 100) : null, duration_seconds: r.seconds }));
   logs.push({ child_id: childId, skill: skill.id, kind: "practice", score, duration_seconds: Math.round((Date.now() - t0) / 1000) });
   api.saveGameLogs(logs);
   let gained = null;
@@ -197,17 +235,16 @@ async function runSession(ctx, skill, scope, planned) {
   data.skillGood.set(skill.id, row);
   const now = badgeOf(row.good);
   if (now && now.n !== had?.n) gained = now;
-  resultScreen(ctx, skill, scope, score, [...outcome].filter(([, ok]) => !ok).map(([id]) => itemById.get(id)).filter((i) => i && SRS_TYPES.has(i.src.type)), gained);
+  resultScreen(ctx, skill, scope, stage, score, [...outcome].filter(([, ok]) => !ok).map(([id]) => itemById.get(id)).filter((i) => i && SRS_TYPES.has(i.src.type)), gained);
 }
 
-// ---- Kết quả: sao + lời khen + các mục nên luyện lại ----
-function resultScreen(ctx, skill, scope, score, missed, gained = null) {
-  const { root, shell, data } = ctx;
+// ---- Kết quả (trong cùng trang, dưới bộ lọc): sao + lời khen + các mục nên luyện lại ----
+function resultScreen(ctx, skill, scope, stage, score, missed, gained = null) {
+  const { data } = ctx;
   sfx.star();
   say(gained ? T.bbGameNewBadge(gained.name, skill.name) : T.bbGameDone);
   const n = starsFor(score);
-  shell(root,
-    crumbBar(crumbOf(skill), ctx.toSkills),
+  stage.replaceChildren(
     el("div", { class: "card", style: "text-align:center" },
       mascotHero(),
       el("h1", null, T.bbGameDone),
@@ -220,4 +257,3 @@ function resultScreen(ctx, skill, scope, score, missed, gained = null) {
       missed.length && !skill.story ? el("div", null, el("button", { class: "btn", onclick: () => start(ctx, skill, { type: "weak" }) }, "🎯 " + T.bbGameWeakAgain)) : null,
       el("div", null, el("button", { class: "btn ghost", onclick: ctx.toSkills }, T.bbOtherGame))));
 }
-
