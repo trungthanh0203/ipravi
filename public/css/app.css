@@ -601,3 +601,15 @@ body.bb-theme .mic.sm { width: 44px; height: 44px; font-size: 20px; margin: 0; }
 .child-section .who { display: flex; align-items: center; gap: 6px; }
 .child-section[open] > summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f0ddc9; }
 .soft-hr { border: 0; border-top: 1px solid #f0ddc9; margin: 14px 0; }
+
+/* Ôn thẻ (Luyện tập Bài Bản): bộ lọc trên đầu + thẻ ở giữa, nút Trước/Tiếp hai bên */
+.scope-card { padding: 12px 16px; }
+.scope-card h2 { font-size: 17px; margin: 0 0 6px; }
+.card-nav { display: flex; align-items: stretch; gap: 8px; margin: 8px 0; }
+.card-nav-body { flex: 1; min-width: 0; }
+.card-nav-body > .card { margin: 0; }
+.nav-btn { flex: none; width: 58px; border: 0; border-radius: 16px; background: var(--brand); color: #fff; font: inherit; font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, .15); }
+.nav-btn span { font-size: 22px; line-height: 1; }
+.nav-btn small { font-size: 11px; font-weight: 700; }
+.nav-btn:disabled { opacity: .35; cursor: default; }
+@media (max-width: 420px) { .nav-btn { width: 46px; } }

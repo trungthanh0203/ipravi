@@ -1,7 +1,7 @@
 // "Tiếng Việt Bài Bản" — hàm thuần: toán Leitner (srs.js) + chọn phiên ôn tập (practice-core.js) + CSV nhập hàng
 // loạt (bb-csv.js). Chạy: node tests/bb.test.mjs
 import { INTERVAL_DAYS, nextBox, dueAfter } from "../public/js/bb/srs.js";
-import { isDue, dueCount, pickSession } from "../public/js/bb/practice-core.js";
+import { isDue, dueCount, pickSession, sampleReview, pickLessonGroup } from "../public/js/bb/practice-core.js";
 import { SKILLS } from "../public/js/bb/skills.js";
 import { parseCsv, validateRows, buildPlan, buildTemplate, aiPrompt, STEP_TYPES, GAME_KINDS } from "../public/js/admin/bb-csv.js";
 import { feasible as minigameFeasible } from "../public/js/bb/steps/minigame.js";
@@ -349,6 +349,30 @@ ok(GAME_KINDS.length === 3 && GAME_KINDS.includes("meaning_pick") && GAME_KINDS.
   ok(st.skills.length === 1 && st.skills[0].sessions === 2 && st.skills[0].good === 1, "Thống kê Bài Bản: theo kỹ năng + số phiên tốt");
   ok(st.streak === 3 && st.series.length === 14 && st.series[13].count === 2, "Thống kê Bài Bản: chuỗi ngày + chuỗi 14 ngày", JSON.stringify([st.streak, st.series[13]]));
   ok(summarizeBb({}).streak === 0 && summarizeBb({}).avgScore === null, "Thống kê Bài Bản: chưa có dữ liệu không lỗi");
+}
+
+{
+  const mk = (n) => Array.from({ length: n }, (_, k) => ({ id: k }));
+  ok(sampleReview(mk(20)).length === 20, "sampleReview: ít (≤30) thì ôn hết");
+  ok(sampleReview(mk(30)).length === 30, "sampleReview: đúng ngưỡng 30 vẫn ôn hết");
+  const big = sampleReview(mk(100));
+  ok(big.length === 50 && new Set(big.map((x) => x.id)).size === 50, "sampleReview: nhiều thì lấy 50% ngẫu nhiên, không trùng");
+  ok(sampleReview(mk(31)).length === 16, "sampleReview: làm tròn lên (31 → 16)");
+  const ordered = sampleReview(mk(100), { shuffle: false });
+  ok(ordered.every((x, k) => k === 0 || ordered[k - 1].id < x.id), "sampleReview: shuffle=false giữ thứ tự gốc");
+  ok(sampleReview([]).length === 0, "sampleReview: rỗng không lỗi");
+  ok(sampleReview(mk(100), { ratio: 0.3 }).length === 30, "sampleReview: đổi tỉ lệ 30%");
+}
+
+{
+  const rows = [{ id: 1, lesson_id: 10, lesson_title: "A" }, { id: 2, lesson_id: 11, lesson_title: "B" }, { id: 3, lesson_id: 10, lesson_title: "A" }, { id: 4, lesson_id: 12, lesson_title: "C" }];
+  for (const r of [0, 0.4, 0.7, 0.99]) {
+    const g = pickLessonGroup(rows, { rand: () => r });
+    ok(new Set(g.items.map((x) => x.lesson_id)).size === 1 && g.items.every((x) => x.lesson_id === g.lessonId), `pickLessonGroup: chỉ 1 bài (rand=${r})`);
+  }
+  ok(pickLessonGroup(rows, { rand: () => 0 }).items.map((x) => x.id).join() === "1,3", "pickLessonGroup: giữ đủ + đúng thứ tự các mục của bài được chọn");
+  ok(pickLessonGroup(rows, { rand: () => 0.4 }).lessonTitle === "B", "pickLessonGroup: trả tên bài");
+  ok(pickLessonGroup([]).items.length === 0, "pickLessonGroup: rỗng không lỗi");
 }
 
 console.log(`\n${pass} đạt, ${fail} lỗi`);

@@ -128,7 +128,8 @@ export function buildPracticeData(done, st) {
   const stepOf = new Map(done.steps.map((s) => [s.id, s]));
   const whereOf = (stepId) => {
     const unit = unitOf.get(lessonOf.get(stepOf.get(stepId)?.lesson_id)?.unit_id);
-    return { unit: unit ? { id: unit.id, title_vi: unit.title_vi, emoji: unit.emoji ?? null } : null, bbLevel: unit?.level_id ?? null };
+    const lesson = lessonOf.get(stepOf.get(stepId)?.lesson_id);
+    return { unit: unit ? { id: unit.id, title_vi: unit.title_vi, emoji: unit.emoji ?? null } : null, bbLevel: unit?.level_id ?? null, lessonId: lesson?.id ?? null, lessonTitle: lesson?.title_vi ?? null };
   };
   const catalog = [
     ...done.vocab.map((r) => vocabItem(r, whereOf(r.step_id))),
@@ -156,6 +157,6 @@ export function buildPracticeData(done, st) {
   const levels = st.levels.filter((l) => levelIds.has(l.id)).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id);
   return {
     catalog, byId, progress: progressMap(done.srs, catalog), storyLessons: readStories, listenLessons: [...listenOnly, ...readStories],
-    dialogueLessons, levels, stepWhere: new Map(done.steps.map((s) => { const w = whereOf(s.id); return [s.id, { unit_id: w.unit?.id ?? null, bbLevel: w.bbLevel }]; })), units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null, level_id: u.level_id, sort_order: u.sort_order ?? 0 }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
+    dialogueLessons, levels, stepWhere: new Map(done.steps.map((s) => { const w = whereOf(s.id); return [s.id, { unit_id: w.unit?.id ?? null, bbLevel: w.bbLevel, lesson_id: w.lessonId, lesson_title: w.lessonTitle }]; })), units: new Map(st.units.map((u) => [u.id, { id: u.id, title_vi: u.title_vi, emoji: u.emoji ?? null, level_id: u.level_id, sort_order: u.sort_order ?? 0 }])), srsPrev: new Map(done.srs.map((s) => [`${s.item_type}:${s.item_id}`, s])),
   };
 }

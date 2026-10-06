@@ -7,6 +7,17 @@ import { formatNodes } from "../format.js";
 // Công thức + mỗi câu ví dụ (`ex.vi`) đều qua formatNodes() (markdown-lite **đậm**/*nghiêng*/!!đỏ!!/xuống dòng,
 // xem bb/format.js) — công thức giờ nhập được nhiều dòng (giải thích dài hơn "Chào + đại từ"), câu ví dụ tách
 // RIÊNG dòng với bản dịch (không còn nối liền bằng " — ", khó đọc khi câu dài).
+// 1 điểm ngữ pháp (công thức + câu ví dụ) — dùng cả ở Luyện tập (bb/practice.js, từng thẻ có Trước/Tiếp).
+export function grammarCard(g, lang) {
+  return el("div", { class: "card bb-grammar-card" },
+    el("p", { class: "bb-formula" }, ...formatNodes(g.formula)),
+    g.formula_tr?.[lang] ? el("p", { class: "muted" }, g.formula_tr[lang]) : null,
+    (g.examples ?? []).length ? el("ul", { class: "bb-examples" },
+      (g.examples ?? []).map((ex) => el("li", null,
+        el("div", { class: "bb-example-vi" }, ...formatNodes(ex.vi)),
+        ex.tr?.[lang] ? el("div", { class: "muted" }, ex.tr[lang]) : null))) : null);
+}
+
 export function run(box, step) {
   return new Promise((resolve) => {
     const points = step.content ?? [];
@@ -15,13 +26,7 @@ export function run(box, step) {
       return;
     }
     const lang = nativeLang();
-    const cards = points.map((g) => el("div", { class: "card bb-grammar-card" },
-      el("p", { class: "bb-formula" }, ...formatNodes(g.formula)),
-      g.formula_tr?.[lang] ? el("p", { class: "muted" }, g.formula_tr[lang]) : null,
-      (g.examples ?? []).length ? el("ul", { class: "bb-examples" },
-        (g.examples ?? []).map((ex) => el("li", null,
-          el("div", { class: "bb-example-vi" }, ...formatNodes(ex.vi)),
-          ex.tr?.[lang] ? el("div", { class: "muted" }, ex.tr[lang]) : null))) : null));
+    const cards = points.map((g) => grammarCard(g, lang));
     paint(box, ...cards, el("button", { class: "btn block", onclick: resolve }, T.bbFinish));
   });
 }
