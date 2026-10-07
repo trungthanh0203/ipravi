@@ -149,6 +149,14 @@ export const loadUnitStats = (childId, levelId) => cached("levelstats:units:" + 
   return Object.fromEntries(data.map((r) => [r.unit_id, { lessons: r.lessons, lessonsDone: r.lessons_done, steps: r.steps, done: r.done }]));
 });
 
+// Số liệu từng BÀI của 1 chủ đề: { [lessonId]: { steps, done } } — RPC bb_lesson_stats (migration 035, 1 lượt, chạy SONG SONG với danh sách bài).
+// Chưa có migration/lỗi → null (nơi gọi rơi về loadCompletedInUnit để vẫn có ✓, chỉ thiếu thanh tiến độ). Không cache: đổi theo từng chặng người học vừa xong.
+export async function loadLessonStats(childId, unitId) {
+  const { data, error } = await sb.rpc("bb_lesson_stats", { p_child: childId, p_unit: unitId });
+  if (error || !Array.isArray(data)) return null;
+  return Object.fromEntries(data.map((r) => [r.lesson_id, { steps: r.steps, done: r.done }]));
+}
+
 // Vào 1 bài: các chặng + nội dung + chặng đã xong. Đường chính: RPC bb_lesson_content (1 lượt); lỗi/chưa có migration 032 → 2 bước cũ.
 export async function loadLessonBundle(lessonId, childId) {
   const { data, error } = await sb.rpc("bb_lesson_content", { p_lesson: lessonId, p_child: childId });

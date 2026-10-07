@@ -42,7 +42,7 @@ Không có `center_id` ở bảng nào.
 cột thừa chỉ cảnh báo. Thêm ngôn ngữ mới: cột CSV + `seed/002_title_translations.sql` +
 `tts.js DEFAULT_VOICES` nếu cần TTS; `admin/dict.js` không tự có — admin gõ tay (không bịa).
 
-Dựng bản mới: Supabase mới → chạy `001_init.sql`…`034_bb_unit_stats.sql` theo thứ tự → đăng ký
+Dựng bản mới: Supabase mới → chạy `001_init.sql`…`035_bb_lesson_stats.sql` theo thứ tự → đăng ký
 1 tài khoản → `update accounts set role='admin' where email='...'` → biến Cloudflare (+`TTS_PROVIDER`/
 `TTS_KEY`/`TTS_REGION` nếu dùng TTS) → deploy. Mẫu tuỳ chọn: `seed/001_sample_content.sql`.
 
@@ -173,6 +173,7 @@ Dựng bản mới: Supabase mới → chạy `001_init.sql`…`034_bb_unit_stat
   4 kỹ năng ôn (Từ vựng/Ngữ pháp/Hội thoại/Ngữ âm) = `practice.js runCards`: bộ lọc `scopeBar` (từ `practice-games.js`) LUÔN trên đầu, mỗi mục 1 thẻ có ◀ Trước/Tiếp ▶ hai bên; nhiều hơn 30 mục thì `sampleReview` lấy ngẫu nhiên 50%. Ngữ pháp: mỗi lượt chỉ 1 bài ngẫu nhiên (`pickLessonGroup`, dòng ôn có `lesson_id/lesson_title` từ `stepWhere`). Trò chơi cũng vào thẳng, CÙNG MỘT TRANG: bộ lọc `filterBar` ở trên, "Chơi nào!"/trò/kết quả thay phần `stage` bên dưới, nút ◀ Trước/Tiếp ▶ hai bên nhảy giữa các LƯỢT (vòng `child/rounds.js eachRound` — mọi trò chia lượt dùng nó; truyền `ctx.nav` chỉ ở Bài Bản, khu Trẻ em chạy như cũ) rồi giữa các trò. Bài Bản ẩn kỹ năng "Hội thoại" (converse); Đọc nhớ/Nghe nhớ xếp nhóm Nghe – Nói. Từ vựng: xem nghĩa mà không bấm "Nhớ rồi" = quên. Thẻ lấy từ `steps/*.js` (`grammarCard/lineCard/pairCard`).
   Màn "Chọn cấp độ" (`bai-ban-home.js showLevels`): danh sách hiện NGAY, số liệu từng cấp đến sau từ RPC `bb_level_stats` (mig. 031, 1 lượt; chưa chạy migration thì `loadLevelStatsSlow` tự lùi về nhiều truy vấn).
   Danh sách Chủ đề của 1 cấp (`showUnits`) dùng cùng khuôn `.level-card` + số liệu RPC `bb_unit_stats` (mig. 034, cần 032 trước; không có thì chỉ thiếu thanh tiến độ).
+  Danh sách Bài (`showLessons`): mỗi bài có mô tả + thanh tiến độ từ RPC `bb_lesson_stats` (mig. 035, song song với danh sách bài; ✓ = có chặng và xong hết; không có RPC thì lùi về `loadCompletedInUnit`, chỉ thiếu thanh).
   Mọi màn Bài Bản tải qua RPC 1 lượt (mig. 031/032: `bb_level_stats`, `bb_completed_lessons`, `bb_lesson_content`, `bb_practice_content`), mỗi RPC có đường lùi về cách cũ trong `api.js` khi chưa chạy migration; Home nạp sẵn (idle) cấp độ + Luyện tập (`warmPractice`). Sửa schema bb_* → rà cả hàm SQL lẫn đường lùi JS.
   **Hiệu năng:** `api.js` cache Level/Unit/Lesson 60s (`cached()`, khớp `child/api.js`) —
   `clearCache()` khi Thoát. `practice.js` giữ `catalog` trong bộ nhớ suốt 1 phiên Luyện tập (không

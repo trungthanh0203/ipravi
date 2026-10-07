@@ -149,17 +149,25 @@ async function showUnits(root, level) {
   }
 }
 
+// Thanh tiến độ + "đã học a/b chặng" của 1 bài (stats[l.id] có thể thiếu nếu bài mới tạo sau lần tải).
+function lessonMeter(st = { steps: 0, done: 0 }) {
+  const pct = st.steps ? Math.round((100 * st.done) / st.steps) : 0;
+  return el("span", { class: "lesson-meter" },
+    el("span", { class: "meter" }, el("span", { class: "meter-fill", style: `width:${pct}%` })),
+    el("small", { class: "muted" }, st.steps ? T.bbLessonMeta(st.done, st.steps) : T.bbLessonNoSteps));
+}
+
 async function showLessons(root, unit) {
   saveNav({ mode: "learn", levelId: unit.level_id, unitId: unit.id });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
     const childId = state.activeChildId;
     const lessonsP = api.loadLessons(unit.id);
-    // Danh sách bài + bài nào đã xong tải SONG SONG (trước đây nối tiếp, tốn thêm 2–3 lượt chờ mạng)
-    const [lessons, completed] = await Promise.all([
-      lessonsP,
-      api.loadCompletedInUnit(childId, unit.id, async () => (await lessonsP).map((l) => l.id)).catch(() => new Set()), // hỏng không chặn xem danh sách bài
-    ]);
+    // Danh sách bài + số liệu từng bài (1 RPC) tải SONG SONG; bài xong = có chặng và xong hết. Chưa có RPC → cách cũ chỉ lấy ✓.
+    const [lessons, stats] = await Promise.all([lessonsP, api.loadLessonStats(childId, unit.id).catch(() => null)]);
+    const completed = stats
+      ? new Set(lessons.filter((l) => stats[l.id]?.steps > 0 && stats[l.id].done >= stats[l.id].steps).map((l) => l.id))
+      : await api.loadCompletedInUnit(childId, unit.id, async () => lessons.map((l) => l.id)).catch(() => new Set()); // hỏng không chặn xem danh sách bài
     shell(root,
       crumbBar(crumbOf(unit), () => showUnits(root, unit.bb_levels ?? { id: unit.level_id })),
       el("h1", null, unit.emoji ? unit.emoji + " " : "", unit.title_vi),
@@ -177,7 +185,9 @@ async function showLessons(root, unit) {
               },
             },
             el("span", { class: "num" }, completed.has(l.id) ? "✓" : String(i + 1)),
-            el("span", { class: "title" }, l.title_vi, l.lesson_type === "review" ? el("span", { class: "lv-tag" }, T.bbLessonReview) : null, native ? el("small", { class: "title-native" }, native) : null)),
+            el("span", { class: "title" }, l.title_vi, l.lesson_type === "review" ? el("span", { class: "lv-tag" }, T.bbLessonReview) : null, native ? el("small", { class: "title-native" }, native) : null,
+              l.description ? el("small", { class: "muted lesson-desc" }, l.description) : null,
+              stats ? lessonMeter(stats[l.id]) : null)),
             titleSpeakers(l));
         })));
   } catch {

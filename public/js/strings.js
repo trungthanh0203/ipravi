@@ -288,6 +288,8 @@ export const T = {
   bbHomeTitle: "Tiếng Việt Bài Bản",
   bbHomeGreeting: (name) => `Chào, ${name}!`,
   bbLevelsTitle: "Chọn cấp độ",
+  bbLessonMeta: (done, steps) => (done >= steps ? `Đã học hết ${steps} chặng` : `Đã học ${done}/${steps} chặng`),
+  bbLessonNoSteps: "Chưa có chặng nào",
   bbUnitNo: (n) => `Chủ đề ${n}`,
   bbUnitMeta: (lessons, lessonsDone, done, steps) => `${lessons} bài (xong ${lessonsDone}) · đã học ${done}/${steps} chặng`,
   bbLevelHere: "Bạn đang ở đây",
