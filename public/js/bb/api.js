@@ -141,6 +141,14 @@ export async function loadUnitPool(unitId, excludeLessonId) {
   return (steps ?? []).map((s) => ({ ...s, content: bySortOrder(contentOf[s.step_type].get(s.id) ?? []) }));
 }
 
+// Số liệu từng Chủ đề của 1 Cấp: { [unitId]: { lessons, lessonsDone, steps, done } } — RPC bb_unit_stats (migration 034, 1 lượt). Chưa có migration/lỗi → null
+// (màn danh sách chủ đề vẫn hiện được, chỉ thiếu thanh tiến độ). Cache 60s, xoá cùng levelstats khi lưu tiến độ chặng.
+export const loadUnitStats = (childId, levelId) => cached("levelstats:units:" + levelId + ":" + childId, async () => {
+  const { data, error } = await sb.rpc("bb_unit_stats", { p_child: childId, p_level: levelId });
+  if (error || !Array.isArray(data)) return null;
+  return Object.fromEntries(data.map((r) => [r.unit_id, { lessons: r.lessons, lessonsDone: r.lessons_done, steps: r.steps, done: r.done }]));
+});
+
 // Vào 1 bài: các chặng + nội dung + chặng đã xong. Đường chính: RPC bb_lesson_content (1 lượt); lỗi/chưa có migration 032 → 2 bước cũ.
 export async function loadLessonBundle(lessonId, childId) {
   const { data, error } = await sb.rpc("bb_lesson_content", { p_lesson: lessonId, p_child: childId });

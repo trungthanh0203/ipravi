@@ -113,16 +113,37 @@ async function showUnits(root, level) {
   saveNav({ mode: "learn", levelId: level.id });
   shell(root, el("p", { class: "boot" }, T.loading));
   try {
+    // Danh sách chủ đề hiện NGAY; số bài/tiến độ từng chủ đề (1 RPC) đến sau thì điền tại chỗ — cùng cách màn "Chọn cấp độ".
     const units = await api.loadUnits(level.id);
+    const statsP = api.loadUnitStats(state.activeChildId, level.id).catch(() => null);
+    const cards = units.map((u, i) => {
+      const bar = el("div", { class: "meter-fill", style: "width:0%" });
+      const meta = el("span", { class: "muted" }, "…");
+      const native = titleIn(u, nativeLang());
+      const btn = el("button", { class: "level-card", type: "button", onclick: () => showLessons(root, u) },
+        el("span", { class: "lv-emoji" }, u.emoji ? u.emoji : el("span", { class: "bb-code-badge" }, String(i + 1))),
+        el("span", { class: "lv-body" },
+          el("div", { class: "lv-name" }, `${T.bbUnitNo(i + 1)} · ${u.title_vi}`),
+          native ? el("div", { class: "muted" }, native) : null,
+          u.description ? el("div", { class: "muted" }, u.description) : null,
+          el("div", { class: "meter" }, bar), meta));
+      return { u, btn, bar, meta };
+    });
     shell(root,
       crumbBar(`${level.code} > ${level.name_vi}`, () => showLevels(root)),
       el("h1", { style: "text-align:center" }, level.name_vi),
       level.can_do ? el("p", { class: "muted", style: "text-align:center" }, level.can_do) : null,
       units.length === 0 ? el("div", { class: "card" }, el("p", { class: "muted" }, T.bbNoUnits)) :
-        el("div", { class: "unit-grid" }, units.map((u) =>
-          el("button", { class: "unit-card", onclick: () => showLessons(root, u) },
-            u.emoji ? el("span", { class: "visual emoji" }, u.emoji) : null,
-            el("span", null, u.title_vi)))));
+        el("div", { class: "level-grid" }, cards.map((c) => c.btn)));
+    statsP.then((stats) => {
+      if (!stats || !cards.length || !cards[0].btn.isConnected) return cards.forEach((c) => c.meta.replaceChildren());
+      for (const { u, btn, bar, meta } of cards) {
+        const st = stats[u.id] ?? { lessons: 0, lessonsDone: 0, steps: 0, done: 0 };
+        bar.style.width = (st.steps ? Math.round((100 * st.done) / st.steps) : 0) + "%";
+        meta.textContent = T.bbUnitMeta(st.lessons, st.lessonsDone, st.done, st.steps);
+        if (st.lessons === 0) { btn.disabled = true; meta.textContent += " · " + T.levelSoon; }
+      }
+    });
   } catch {
     shell(root, msg("err", T.bbLoadError));
   }
